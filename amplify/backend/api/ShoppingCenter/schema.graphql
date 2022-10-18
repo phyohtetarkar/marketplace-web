@@ -1,0 +1,40 @@
+type Product @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String
+  image: String
+  price: Float
+  description: String
+  modifiedAt: Int
+  modifiedBy: String
+  available: Boolean
+  shopID: ID! @index(name: "byShop")
+  category: Category @hasOne
+}
+
+type Shop @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String
+  cover: String
+  profile: String
+  users: [User] @manyToMany(relationName: "ShopUser")
+  products: [Product] @hasMany(indexName: "byShop", fields: ["id"])
+}
+
+type User @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  phone: String
+  email: String
+  avatar: String
+  identity: String!
+  disabled: Boolean
+  modifiedAt: Int
+  shops: [Shop] @manyToMany(relationName: "ShopUser")
+}
+
+type Category @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  image: String!
+  parent: ID
+}

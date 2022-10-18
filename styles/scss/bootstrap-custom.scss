@@ -1,0 +1,121 @@
+$min-contrast-ratio: 3;
+
+$primary: #0066ff;
+
+$secondary: #dbdefe;
+$light: #f3f4f6;
+$success: #00a524;
+$danger: #d50002;
+$warning: #ff9017;
+
+// $btn-font-weight: 500;
+
+$box-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/mixins";
+
+$custom-colors: (
+  "default": #c9c9c9,
+  "dark-gray": #aaaaaa,
+  "light-gray": #dddddd,
+  "primary-dark": #0057DB,
+  "gray-900": #1f2937,
+  "accent": #f9c22e,
+);
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+  xxxl: 1600px,
+);
+
+$position-values: (
+  0: 0,
+  10: 10%,
+  25: 25%,
+  50: 50%,
+  75: 75%,
+  100: 100%,
+);
+
+$enable-negative-margins: true;
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  2h: $spacer * 0.75,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+  6: $spacer * 3.5,
+  7: $spacer * 4,
+  8: $spacer * 4.5,
+  9: $spacer * 5,
+  10: $spacer * 5.5,
+  11: $spacer * 6,
+  12: $spacer * 6.5,
+  22: $spacer * 12,
+);
+
+$negative-spacers: if($enable-negative-margins, negativify-map($spacers), null);
+
+$nav-link-color: $gray-700;
+$nav-pills-border-radius: 0;
+$nav-pills-link-active-color: $primary;
+$nav-pills-link-active-bg: none;
+
+$navbar-toggler-focus-width: 0;
+$navbar-light-color: rgba(0, 0, 0, 1);
+$navbar-light-hover-color: $primary;
+$navbar-light-active-color: $primary;
+
+$theme-colors: map-merge($theme-colors, $custom-colors);
+$theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
+$utilities-colors: map-merge($utilities-colors, $theme-colors-rgb);
+$utilities-text-colors: map-loop(
+  $utilities-colors,
+  rgba-css-var,
+  "$key",
+  "text"
+);
+$utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, "$key", "bg");
+$utilities-border-colors: map-loop(
+  $utilities-colors,
+  rgba-css-var,
+  "$key",
+  "border"
+);
+
+// $enable-rounded: false;
+
+$input-focus-border-color: tint-color($component-active-bg, 0%);
+$input-focus-box-shadow: none;
+$form-select-focus-border-color: $input-focus-border-color;
+$form-select-focus-box-shadow: none;
+
+$accordion-button-focus-box-shadow: none;
+$accordion-border-width: 0;
+$accordion-button-active-bg: none;
+$accordion-button-active-color: none;
+
+$btn-focus-width: none;
+$btn-focus-box-shadow: none;
+$btn-active-box-shadow: none;
+$btn-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+  border-color 0.15s ease-in-out;
+
+$dropdown-link-hover-color: white;
+$dropdown-link-hover-bg: $primary;
+
+$accordion-icon-color: #444;
+$accordion-button-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$accordion-icon-color}'><path fill-rule='evenodd' d='M3.333 8.667h4v4c0 0.368 0.299 0.667 0.667 0.667s0.667-0.299 0.667-0.667v-4h4c0.368 0 0.667-0.299 0.667-0.667s-0.299-0.667-0.667-0.667h-4v-4c0-0.368-0.299-0.667-0.667-0.667s-0.667 0.299-0.667 0.667v4h-4c-0.368 0-0.667 0.299-0.667 0.667s0.299 0.667 0.667 0.667z'/></svg>");
+$accordion-button-active-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$accordion-icon-active-color}'><path fill-rule='evenodd' d='M3.333 8.667h9.333c0.368 0 0.667-0.299 0.667-0.667s-0.299-0.667-0.667-0.667h-9.333c-0.368 0-0.667 0.299-0.667 0.667s0.299 0.667 0.667 0.667z'/></svg>");
+
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";

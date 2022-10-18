@@ -1,0 +1,296 @@
+@font-face {
+  font-family: Noto Sans Myanmar UI;
+  font-weight: 300;
+  src: url("/fonts/NotoSansMyanmarUI-Light.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: Noto Sans Myanmar UI;
+  font-weight: 400;
+  src: url("/fonts/NotoSansMyanmarUI-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Noto Sans Myanmar UI;
+  font-weight: 500;
+  src: url("/fonts/NotoSansMyanmarUI-Medium.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Noto Sans Myanmar UI;
+  font-weight: 600;
+  src: url("/fonts/NotoSansMyanmarUI-SemiBold.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Noto Sans Myanmar UI;
+  font-weight: 700;
+  src: url("/fonts/NotoSansMyanmarUI-Bold.ttf") format("truetype");
+  font-display: swap;
+}
+
+html,
+body {
+  padding: 35px 0 0 0;
+  margin: 0;
+  height: 100%;
+  background-color: #fff;
+  font-family: Noto Sans Myanmar UI, -apple-system, BlinkMacSystemFont, Roboto,
+    Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+    sans-serif !important;
+}
+
+svg {
+  display: block;
+}
+
+#__next {
+  height: 100%;
+}
+
+.bg-white {
+  background: white;
+}
+
+.btn-facebook {
+  background: #3b5998;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border: 0;
+  border-radius: 0.25rem;
+  color: white;
+  font-weight: 400;
+  width: 40px;
+  height: 40px;
+}
+
+.btn-google {
+  background: #db4a39;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border: 0;
+  border-radius: 0.25rem;
+  color: white;
+  font-weight: 400;
+  width: 40px;
+  height: 40px;
+}
+
+.btn-apple {
+  background: #000000;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border: 0;
+  border-radius: 0.25rem;
+  color: white;
+  font-weight: 400;
+  width: 40px;
+  height: 40px;
+}
+
+.fw-medium {
+  font-weight: 500;
+}
+
+.fw-semibold {
+  font-weight: 600;
+}
+
+.dark-link {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+}
+
+.dark-link:hover {
+  color: white;
+  text-decoration: none;
+}
+
+.dropdown-menu-macos {
+  gap: 0.25rem;
+  padding: 0.5rem;
+  max-height: 300px;
+}
+.dropdown-menu-macos .dropdown-item {
+  border-radius: 0.25rem;
+}
+
+.dropdown-menu-macos .dropdown-item:hover {
+  border-radius: 0.25rem;
+  color: #fff;
+  background-color: var(--bs-primary);
+}
+
+.dropdown-item-danger {
+  color: var(--bs-red);
+}
+.dropdown-item-danger:hover,
+.dropdown-item-danger:focus {
+  color: #fff;
+  background-color: var(--bs-red);
+}
+.dropdown-item-danger.active {
+  background-color: var(--bs-red);
+}
+
+.my-list-item {
+  color: #555;
+  text-decoration: none;
+  border-radius: 0.25rem;
+}
+
+.my-list-item svg {
+  color: #555;
+}
+
+.my-list-item:hover svg {
+  color: black;
+}
+
+.my-list-item:hover {
+  border-radius: 0.25rem;
+  color: black;
+  background-color: #f2f2f2;
+}
+
+.my-list-item.active {
+  color: var(--bs-primary);
+  background-color: var(--bs-secondary);
+  text-decoration: none;
+  border-radius: 0.25rem;
+}
+
+.my-list-item.active svg {
+  color: var(--bs-primary);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-none {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* width */
+.scrollbar-custom::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+/* Track */
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 3px;
+}
+
+/* Handle */
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+/* Handle on hover */
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+.overlay {
+  /* Height & width depends on how you want to reveal the overlay (see JS below) */
+  height: 100%;
+  width: 100%;
+  position: fixed; /* Stay in place */
+  z-index: 999; /* Sit on top */
+  left: 0;
+  top: 0;
+  background-color: rgb(1, 0, 0); /* Black fallback color */
+  background-color: rgb(1, 0, 0, 0.5); /* Black w/opacity */
+  overflow-x: hidden; /* Disable horizontal scroll */
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1080;
+}
+
+.anchor:target {
+  padding-top: 70px;
+  margin-top: -70px;
+}
+
+.custom-border-top {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.custom-border-bottom {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.custom-nav-link,
+.custom-nav-link svg {
+  color: rgb(200, 200, 200);
+  text-decoration: none;
+}
+
+.custom-nav-link:hover {
+  color: white;
+  background: rgba(220, 220, 220, 0.1);
+  text-decoration: none;
+}
+
+.custom-nav-link:hover svg {
+  color: white;
+  text-decoration: none;
+}
+
+.custom-nav-link:focus {
+  color: white;
+  background-color: var(--bs-primary);
+  text-decoration: none;
+}
+
+.custom-nav-link:focus svg {
+  color: white;
+  text-decoration: none;
+}
+
+.custom-nav-link.active {
+  color: white;
+  background-color: var(--bs-primary);
+  text-decoration: none;
+}
+
+.custom-nav-link.active svg {
+  color: white;
+  text-decoration: none;
+}
+
+.custom-tab.active {
+  border-bottom: 2px solid var(--bs-primary);
+}
+
+.lifted-card {
+  transition: box-shadow 0.25s;
+}
+
+.lifted-card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Tinymce */
+.tox-pop .tox-pop__dialog .tox-toolbar {
+  padding: 0 !important;
+}
+
+.mce-edit-focus {
+  outline: none;
+}
