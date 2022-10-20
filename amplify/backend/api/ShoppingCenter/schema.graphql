@@ -4,8 +4,8 @@ type Product @model @auth(rules: [{ allow: public }]) {
   image: String
   price: Float
   description: String
-  modifiedAt: Int
-  modifiedBy: String
+  createdBy: String
+  updatedBy: String
   available: Boolean
   shopID: ID! @index(name: "byShop")
   category: Category @hasOne
@@ -28,7 +28,6 @@ type User @model @auth(rules: [{ allow: public }]) {
   avatar: String
   identity: String!
   disabled: Boolean
-  modifiedAt: Int
   shops: [Shop] @manyToMany(relationName: "ShopUser")
 }
 
@@ -37,4 +36,5 @@ type Category @model @auth(rules: [{ allow: public }]) {
   name: String!
   image: String!
   parent: ID
+  createdAt: String!
 }

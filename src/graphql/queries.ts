@@ -10,14 +10,15 @@ export const getProduct = /* GraphQL */ `
       image
       price
       description
-      modifiedAt
-      modifiedBy
+      createdBy
+      updatedBy
       available
       shopID
       category {
         id
         name
         image
+        type
         parent
         createdAt
         updatedAt
@@ -47,8 +48,8 @@ export const listProducts = /* GraphQL */ `
         image
         price
         description
-        modifiedAt
-        modifiedBy
+        createdBy
+        updatedBy
         available
         shopID
         createdAt
@@ -82,8 +83,8 @@ export const syncProducts = /* GraphQL */ `
         image
         price
         description
-        modifiedAt
-        modifiedBy
+        createdBy
+        updatedBy
         available
         shopID
         createdAt
@@ -183,7 +184,6 @@ export const getUser = /* GraphQL */ `
       avatar
       identity
       disabled
-      modifiedAt
       shops {
         nextToken
         startedAt
@@ -211,7 +211,6 @@ export const listUsers = /* GraphQL */ `
         avatar
         identity
         disabled
-        modifiedAt
         createdAt
         updatedAt
         _version
@@ -244,7 +243,6 @@ export const syncUsers = /* GraphQL */ `
         avatar
         identity
         disabled
-        modifiedAt
         createdAt
         updatedAt
         _version
@@ -262,6 +260,7 @@ export const getCategory = /* GraphQL */ `
       id
       name
       image
+      type
       parent
       createdAt
       updatedAt
@@ -282,6 +281,7 @@ export const listCategories = /* GraphQL */ `
         id
         name
         image
+        type
         parent
         createdAt
         updatedAt
@@ -311,6 +311,75 @@ export const syncCategories = /* GraphQL */ `
         id
         name
         image
+        type
+        parent
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const categoriesByName = /* GraphQL */ `
+  query CategoriesByName(
+    $type: String!
+    $name: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    categoriesByName(
+      type: $type
+      name: $name
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        image
+        type
+        parent
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const categoriesByDate = /* GraphQL */ `
+  query CategoriesByDate(
+    $type: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    categoriesByDate(
+      type: $type
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        image
+        type
         parent
         createdAt
         updatedAt
@@ -348,7 +417,6 @@ export const getShopUser = /* GraphQL */ `
         avatar
         identity
         disabled
-        modifiedAt
         createdAt
         updatedAt
         _version

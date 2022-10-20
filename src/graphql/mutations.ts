@@ -13,14 +13,15 @@ export const createProduct = /* GraphQL */ `
       image
       price
       description
-      modifiedAt
-      modifiedBy
+      createdBy
+      updatedBy
       available
       shopID
       category {
         id
         name
         image
+        type
         parent
         createdAt
         updatedAt
@@ -48,14 +49,15 @@ export const updateProduct = /* GraphQL */ `
       image
       price
       description
-      modifiedAt
-      modifiedBy
+      createdBy
+      updatedBy
       available
       shopID
       category {
         id
         name
         image
+        type
         parent
         createdAt
         updatedAt
@@ -83,14 +85,15 @@ export const deleteProduct = /* GraphQL */ `
       image
       price
       description
-      modifiedAt
-      modifiedBy
+      createdBy
+      updatedBy
       available
       shopID
       category {
         id
         name
         image
+        type
         parent
         createdAt
         updatedAt
@@ -198,7 +201,6 @@ export const createUser = /* GraphQL */ `
       avatar
       identity
       disabled
-      modifiedAt
       shops {
         nextToken
         startedAt
@@ -224,7 +226,6 @@ export const updateUser = /* GraphQL */ `
       avatar
       identity
       disabled
-      modifiedAt
       shops {
         nextToken
         startedAt
@@ -250,7 +251,6 @@ export const deleteUser = /* GraphQL */ `
       avatar
       identity
       disabled
-      modifiedAt
       shops {
         nextToken
         startedAt
@@ -272,6 +272,7 @@ export const createCategory = /* GraphQL */ `
       id
       name
       image
+      type
       parent
       createdAt
       updatedAt
@@ -290,6 +291,7 @@ export const updateCategory = /* GraphQL */ `
       id
       name
       image
+      type
       parent
       createdAt
       updatedAt
@@ -308,6 +310,7 @@ export const deleteCategory = /* GraphQL */ `
       id
       name
       image
+      type
       parent
       createdAt
       updatedAt
@@ -345,7 +348,6 @@ export const createShopUser = /* GraphQL */ `
         avatar
         identity
         disabled
-        modifiedAt
         createdAt
         updatedAt
         _version
@@ -388,7 +390,6 @@ export const updateShopUser = /* GraphQL */ `
         avatar
         identity
         disabled
-        modifiedAt
         createdAt
         updatedAt
         _version
@@ -431,7 +432,6 @@ export const deleteShopUser = /* GraphQL */ `
         avatar
         identity
         disabled
-        modifiedAt
         createdAt
         updatedAt
         _version

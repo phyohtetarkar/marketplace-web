@@ -1,6 +1,8 @@
 import { ModelInit, MutableModel } from "@aws-amplify/datastore";
 
-
+type ProductMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
 
 type CategoryMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
@@ -11,7 +13,7 @@ type ShopMetaData = {
 }
 
 type UserMetaData = {
-  readOnlyFields: 'updatedAt';
+  readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
 type ShopUserMetaData = {
@@ -24,22 +26,23 @@ export declare class Product {
   readonly image?: string | null;
   readonly price?: number | null;
   readonly description?: string | null;
-  readonly createdAt?: number | null;
-  readonly category?: Category | null;
   readonly createdBy?: string | null;
-  readonly updatedAt?: number | null;
   readonly updatedBy?: string | null;
   readonly available?: boolean | null;
   readonly shopID: string;
+  readonly category?: Category | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
   readonly productCategoryId?: string | null;
-  constructor(init: ModelInit<Product>);
-  static copyOf(source: Product, mutator: (draft: MutableModel<Product>) => MutableModel<Product> | void): Product;
+  constructor(init: ModelInit<Product, ProductMetaData>);
+  static copyOf(source: Product, mutator: (draft: MutableModel<Product, ProductMetaData>) => MutableModel<Product, ProductMetaData> | void): Product;
 }
 
 export declare class Category {
   readonly id: string;
   readonly name: string;
   readonly image: string;
+  readonly hidden?: boolean | null;
   readonly parent?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
@@ -68,8 +71,8 @@ export declare class User {
   readonly avatar?: string | null;
   readonly identity: string;
   readonly disabled?: boolean | null;
-  readonly createdAt?: number | null;
   readonly shops?: (ShopUser | null)[] | null;
+  readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<User, UserMetaData>);
   static copyOf(source: User, mutator: (draft: MutableModel<User, UserMetaData>) => MutableModel<User, UserMetaData> | void): User;

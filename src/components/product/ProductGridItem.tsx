@@ -10,7 +10,7 @@ function ProductGridItem() {
   let image = `https://source.unsplash.com/random/200x240?random=${Math.floor(
     Math.random() * 100
   )}`;
-  let price = <>{formatPrice(1000)}</>;
+  let price = <>{formatPrice(1000)} Ks</>;
 
   //   if (data.images && data.images.length > 0) {
   //     image = `${baseImagbaePath}/books%2F${data.images[0]}?alt=media`;
@@ -50,19 +50,19 @@ function ProductGridItem() {
 
   return (
     <div className="card h-100">
-      <Link href={`/books/${1}`}>
+      <Link href={`/products/${1}`}>
         <a className="text-decoration-none">
           <div
             className="position-relative"
             onContextMenu={(e) => e.preventDefault()}
           >
-            <div className="ratio ratio-1x1 rounded-top">
+            <div className="ratio ratio-4x3">
               <Image
-                className=""
+                className="rounded-top"
                 src={image}
                 alt="Product image."
-                style={{ objectFit: "contain" }}
                 layout="fill"
+                objectFit="cover"
               />
             </div>
             {available && available}
@@ -72,7 +72,7 @@ function ProductGridItem() {
       </Link>
       <div className="card-body">
         <div className="vstack">
-          <Link href={`/books/${1}`}>
+          <Link href={`/products/${1}`}>
             <a className="text-muted text-decoration-none text-truncate mb-1">
               Product name
             </a>
@@ -80,16 +80,16 @@ function ProductGridItem() {
 
           <Link href={`/`}>
             <a className="text-success text-decoration-none text-truncate">
-              Seller
+              Category
             </a>
           </Link>
 
-          <div className="hstack gap-2 mt-3">
+          <div className="hstack gap-2 mt-1">
             <h6 className="fw-semibold mb-0">{price}</h6>
             <Tooltip title="Add to cart" className="ms-auto">
               <button
                 disabled={false}
-                className="btn btn-outline-light text-primary border"
+                className="btn btn-outline-light text-dark border"
                 onClick={() => {
                   // addToCard(data, settingContext.setting.minimumOrderLimit)
                   //   .then((result) => {
@@ -104,7 +104,7 @@ function ProductGridItem() {
                   //   });
                 }}
               >
-                <ShoppingCart />
+                <ShoppingCart size={20} />
               </button>
             </Tooltip>
           </div>

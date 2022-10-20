@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
-import { Search } from "react-feather";
+import { Search, ShoppingCart } from "react-feather";
 
 interface HeaderProps {
   hideAuth?: boolean;
@@ -79,7 +79,7 @@ function AccountMenu({ onNavClick }: { onNavClick?: () => void }) {
             outlineStyle: "none",
           }}
         >
-          <div
+          {/* <div
             className="d-none d-lg-block me-1 ratio ratio-1x1"
             style={{ width: 35, height: 35 }}
           >
@@ -90,8 +90,8 @@ function AccountMenu({ onNavClick }: { onNavClick?: () => void }) {
               layout="fill"
               objectFit="cover"
             />
-          </div>
-          <span className="d-block d-lg-none">Developer</span>
+          </div> */}
+          <span className="">Developer</span>
         </a>
         <ul
           className="dropdown-menu dropdown-menu-end"
@@ -162,98 +162,61 @@ function Header({ hideAuth }: HeaderProps) {
   }
 
   return (
-    <nav
-      className="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top"
-      style={{ height: 70 }}
-    >
-      <div className="container-fluid">
-        <Link href="/">
-          <a className="navbar-brand">
-            {/* <FontAwesomeIcon
+    <header className="fixed-top">
+      <nav
+        className="navbar navbar-expand-lg navbar-light bg-white border-bottom"
+        style={{ height: 70 }}
+      >
+        <div className="container">
+          <Link href="/">
+            <a className="navbar-brand d-none d-lg-block">
+              {/* <FontAwesomeIcon
                 icon={["fas", "shopping-basket"]}
                 className="d-inline-block"
               /> */}
-            <div className="d-flex align-items-center">
-              {/* <Image
+              <div className="d-flex align-items-center">
+                {/* <Image
                 src="/images/logo_round.png"
                 width={40}
                 height={40}
                 alt=""
               /> */}
-              <h4 className="mb-0 fw-bold text-primary">
-                {process.env.NEXT_PUBLIC_APP_NAME}
-              </h4>
-            </div>
-          </a>
-        </Link>
+                <h4 className="mb-0 fw-bold text-primary">
+                  {process.env.NEXT_PUBLIC_APP_NAME}
+                </h4>
+              </div>
+            </a>
+          </Link>
 
-        <div
-          ref={offcanvasRef}
-          className="offcanvas offcanvas-end"
-          tabIndex={-1}
-          id="offcanvasNavbar"
-          aria-labelledby="offcanvasNavbarLabel"
-        >
-          <div className="offcanvas-header">
-            <h5
-              className="offcanvas-title fw-bold text-primary mb-0 d-flex align-items-center"
-              id="offcanvasNavbarLabel"
-            >
-              {/* <Image
-                src="/images/logo_round.png"
-                width={30}
-                height={30}
-                alt=""
-              /> */}
-              <span className="">{process.env.NEXT_PUBLIC_APP_NAME}</span>
-            </h5>
-            <button
-              type="button"
-              className="btn-close text-reset shadow-none"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div className="offcanvas-body">
+          <div className="hstack w-100">
             <ul className="navbar-nav align-items-lg-center gap-2">
               <li className="nav-item">
-                <NavLink href="/">Home</NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink href="/products">Products</NavLink>
-              </li>
-              <li className="nav-item">
-                <form
-                  className="d-flex ms-lg-3 d-none d-lg-block"
-                  onSubmit={handleSubmit}
-                >
+                <form className="d-flex ms-lg-3" onSubmit={handleSubmit}>
                   <div className="input-group">
-                    <button
-                      type="submit"
-                      className="btn btn-light text-muted pe-0 rounded-end rounded-pill"
-                    >
-                      <Search size={20} strokeWidth={3} />
-                    </button>
                     <input
-                      className="form-control border-0 bg-light px-3 rounded-start rounded-pill"
+                      className="form-control"
                       type="search"
-                      placeholder="Search products..."
+                      placeholder="Search..."
                       aria-label="Search"
-                      value={search ?? ""}
+                      size={32}
+                      value={search}
                       onChange={(e) => setSearch(e.target.value)}
                       style={{
-                        height: 45,
-                        width: 250,
+                        height: 44,
                       }}
                     />
+                    <button
+                      type="submit"
+                      className="btn btn-primary shadow-none"
+                    >
+                      <Search size={20} />
+                    </button>
                   </div>
                 </form>
               </li>
             </ul>
 
             <div className="flex-grow-1"></div>
-
-            <AccountMenu onNavClick={() => offcanvas.current?.hide()} />
 
             <>
               {!hideAuth && (
@@ -264,18 +227,6 @@ function Header({ hideAuth }: HeaderProps) {
                         Sign up
                       </a>
                     </Link>
-                    <div
-                      role="button"
-                      className="btn btn-outline-primary d-block d-lg-none"
-                      data-bs-toggle="offcanvas"
-                      data-bs-target="#offcanvasNavbar"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        router.push("/sign-up");
-                      }}
-                    >
-                      Sign up
-                    </div>
                   </div>
                   <div className="nav-item">
                     <Link href="/login">
@@ -283,36 +234,113 @@ function Header({ hideAuth }: HeaderProps) {
                         Login
                       </a>
                     </Link>
-                    <div
-                      role="button"
-                      className="btn btn-primary ms-2 d-block d-lg-none"
-                      data-bs-toggle="offcanvas"
-                      data-bs-target="#offcanvasNavbar"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        router.push("/login");
-                      }}
-                    >
-                      Login
-                    </div>
                   </div>
                 </div>
               )}
             </>
+
+            <div>
+              <Link href="/shopping-cart">
+                <a className="btn btn-light border position-relative ms-2 fw-normal hstack text-nowrap">
+                  <ShoppingCart size={20} />
+                  &nbsp;Cart
+                  <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger my-auto">
+                    3
+                  </span>
+                </a>
+              </Link>
+            </div>
           </div>
         </div>
+      </nav>
+      <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+        <div className="container">
+          <div
+            ref={offcanvasRef}
+            className="offcanvas offcanvas-end"
+            tabIndex={-1}
+            id="offcanvasNavbar"
+            aria-labelledby="offcanvasNavbarLabel"
+          >
+            <div className="offcanvas-header">
+              <h5
+                className="offcanvas-title fw-bold text-primary mb-0 d-flex align-items-center"
+                id="offcanvasNavbarLabel"
+              >
+                {/* <Image
+                src="/images/logo_round.png"
+                width={30}
+                height={30}
+                alt=""
+              /> */}
+                <span className="">{process.env.NEXT_PUBLIC_APP_NAME}</span>
+              </h5>
+              <button
+                type="button"
+                className="btn-close text-reset shadow-none"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="offcanvas-body">
+              <ul className="navbar-nav align-items-lg-center gap-2">
+                <li className="nav-item">
+                  <NavLink href="/">Home</NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink href="/products">Products</NavLink>
+                </li>
+              </ul>
 
-        <button
-          className="navbar-toggler ms-3"
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasNavbar"
-          aria-controls="offcanvasNavbar"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-      </div>
-    </nav>
+              <div className="flex-grow-1"></div>
+
+              <AccountMenu onNavClick={() => offcanvas.current?.hide()} />
+
+              <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0">
+                <div className="nav-item">
+                  <div
+                    role="button"
+                    className="btn btn-outline-primary d-block d-lg-none"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasNavbar"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push("/sign-up");
+                    }}
+                  >
+                    Sign up
+                  </div>
+                </div>
+                <div className="nav-item">
+                  <div
+                    role="button"
+                    className="btn btn-primary ms-2 d-block d-lg-none"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasNavbar"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push("/login");
+                    }}
+                  >
+                    Login
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button
+            className="navbar-toggler ms-auto"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasNavbar"
+            aria-controls="offcanvasNavbar"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+        </div>
+      </nav>
+    </header>
   );
 }
 

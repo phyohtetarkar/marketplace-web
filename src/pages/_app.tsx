@@ -1,3 +1,4 @@
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "../../styles/bootstrap-custom.css";
 import "../../styles/globals.css";
 import { NextPage } from "next";
