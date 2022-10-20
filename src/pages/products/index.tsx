@@ -1,0 +1,211 @@
+import Head from "next/head";
+import { Grid, List } from "react-feather";
+import { ProductGridItem } from "../../components/product";
+
+function Filter() {
+  return (
+    <div className="accordion rounded border">
+      <div className="accordion-item">
+        <h2 className="accordion-header">
+          <button
+            className="accordion-button fw-bold"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseTwo"
+            aria-expanded="true"
+            style={{ backgroundColor: "transparent" }}
+          >
+            Filter
+          </button>
+        </h2>
+        <div
+          id="collapseTwo"
+          className="accordion-collapse collapse show border-top"
+        >
+          <div className="accordion-body p-0">
+            <div className="vstack gap-2">
+              <div className="p-3 border-bottom">
+                <div className="small text-muted mb-3">CATEGORIES</div>
+                <div className="vstack gap-2">
+                  <label>Electronics</label>
+                  <label>Watches</label>
+                  <label>Clothes</label>
+                  <label>Home items</label>
+                </div>
+              </div>
+              <div className="p-3 border-bottom">
+                <div className="small text-muted mb-3">BRAND TYPE</div>
+                <div className="vstack gap-2">
+                  <div className="form-check">
+                    <input
+                      id="beginner"
+                      type="checkbox"
+                      name="level"
+                      className="form-check-input"
+                    />
+                    <label htmlFor="beginner" className="form-check-label">
+                      Samsung
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      id="intermediate"
+                      type="checkbox"
+                      name="level"
+                      className="form-check-input"
+                    />
+                    <label htmlFor="intermediate" className="form-check-label">
+                      Panasonic
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      id="advance"
+                      type="checkbox"
+                      name="level"
+                      className="form-check-input"
+                    />
+                    <label htmlFor="advance" className="form-check-label">
+                      Huawei
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3">
+                <div className="small text-muted mb-3">SIZE</div>
+                <div className="vstack gap-2">
+                  <div className="form-check">
+                    <input
+                      id="beginner"
+                      type="checkbox"
+                      name="level"
+                      className="form-check-input"
+                    />
+                    <label htmlFor="beginner" className="form-check-label">
+                      XS
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      id="intermediate"
+                      type="checkbox"
+                      name="level"
+                      className="form-check-input"
+                    />
+                    <label htmlFor="intermediate" className="form-check-label">
+                      S
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      id="advance"
+                      type="checkbox"
+                      name="level"
+                      className="form-check-input"
+                    />
+                    <label htmlFor="advance" className="form-check-label">
+                      M
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      id="advance"
+                      type="checkbox"
+                      name="level"
+                      className="form-check-input"
+                    />
+                    <label htmlFor="advance" className="form-check-label">
+                      L
+                    </label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      id="advance"
+                      type="checkbox"
+                      name="level"
+                      className="form-check-input"
+                    />
+                    <label htmlFor="advance" className="form-check-label">
+                      XL
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Explore() {
+  function contents() {
+    return (
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div className="col">
+          <ProductGridItem />
+        </div>
+        <div className="col">
+          <ProductGridItem />
+        </div>
+        <div className="col">
+          <ProductGridItem />
+        </div>
+        <div className="col">
+          <ProductGridItem />
+        </div>
+        <div className="col">
+          <ProductGridItem />
+        </div>
+        <div className="col">
+          <ProductGridItem />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-5">
+      <Head>
+        <title>All Proudcts</title>
+      </Head>
+      <div className="bg-primary">
+        <div className="container">
+          <div className="py-4 py-lg-5">
+            <h1 className="text-light text-center text-lg-start">
+              Explore Proucts
+            </h1>
+          </div>
+        </div>
+      </div>
+      <div className="container py-4">
+        <div className="row">
+          <div className="col-lg-3">
+            <Filter />
+          </div>
+          <div className="col-lg-9 mt-3 mt-lg-0">
+            <div className="d-flex mb-3">
+              <div className="btn-group ms-auto d-none d-md-block">
+                <button className="btn py-2 btn-outline-primary">
+                  <List size={20} />
+                </button>
+                <button className="btn py-2 btn-primary">
+                  <Grid size={20} />
+                </button>
+              </div>
+            </div>
+            {contents()}
+            <div className="mt-5 d-flex justify-content-center">
+              <button className="btn btn-outline-primary rounded-pill">
+                Load more products
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Explore;
