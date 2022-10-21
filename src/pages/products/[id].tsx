@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Minus, Plus, ShoppingCart } from "react-feather";
+import { Minus, Plus } from "react-feather";
 import { formatPrice } from "../../common/utils";
-import { Carousel } from "react-responsive-carousel";
 import { ProductGridItem } from "../../components/product";
 
 function ProductDetail() {
@@ -11,27 +10,24 @@ function ProductDetail() {
   let image = `https://source.unsplash.com/random/200x240?random=${Math.floor(
     Math.random() * 100
   )}`;
-  let images = [
-    `https://source.unsplash.com/random/200x240?random=${Math.floor(
-      Math.random() * 100
-    )}`,
-  ];
+  let images = [2, 4, 6];
   let price = <>{formatPrice(1000)}</>;
 
   return (
     <div className="vstack">
-      <div className="bg-primary">
+      <div className="bg-secondary">
         <div className="container">
           <div className="row py-4 px-2">
             <nav aria-label="breadcrumb col-12">
               <ol className="breadcrumb mb-1">
-                <li className="breadcrumb-item">Product</li>
-                <li className="breadcrumb-item">Electronic</li>
-                <li
-                  className="breadcrumb-item active text-light"
-                  aria-current="page"
-                >
-                  Samsung
+                <li className="breadcrumb-item">
+                  <a href="#">All Categories</a>
+                </li>
+                <li className="breadcrumb-item">
+                  <a href="#">Electronics</a>
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+                  Product name
                 </li>
               </ol>
             </nav>
@@ -40,47 +36,39 @@ function ProductDetail() {
       </div>
       <div className="bg-white mb-4">
         <div className="container py-4">
-          <div className="row g-4">
+          <div className="row gy-3 gx-4">
             <div className="col-lg-5">
-              <div
-                className="position-relative"
-                onContextMenu={(e) => e.preventDefault()}
-              >
-                <div className="ratio ratio-1x1 rounded bg-light d-lg-block">
-                  <Image
-                    className="p-2"
-                    src={image}
-                    alt="Product image."
-                    style={{ objectFit: "contain" }}
-                    layout="fill"
-                  />
+              <div className="row">
+                <div className="col-12">
+                  <div className="ratio ratio-1x1 rounded bg-light d-lg-block">
+                    <Image
+                      className="p-2"
+                      src={image}
+                      alt="Product image."
+                      layout="fill"
+                    />
+                  </div>
                 </div>
-                {/* <Carousel
-                  className="rounded overflow-hidden"
-                  autoPlay={false}
-                  infiniteLoop={true}
-                  showArrows={false}
-                  showStatus={false}
-                  showThumbs={false}
-                >
-                  {images.map((img, i) => {
+              </div>
+              <div className="row mt-3 d-none d-lg-block">
+                <div className="col-12 d-flex justify-content-center">
+                  {images.map((i) => {
                     return (
                       <div
                         key={i}
+                        style={{ width: 80 }}
                         className="ratio ratio-1x1 rounded bg-light"
-                        onContextMenu={(e) => e.preventDefault()}
                       >
                         <Image
                           className="p-2"
-                          src={img}
-                          alt="Prdouct image."
-                          style={{ objectFit: "contain" }}
+                          src={image}
+                          alt="Product image."
                           layout="fill"
                         />
                       </div>
                     );
-                  })}
-                </Carousel> */}
+                  })}{" "}
+                </div>
               </div>
             </div>
             <div className="col-lg-7">
@@ -122,7 +110,7 @@ function ProductDetail() {
                         <Minus />
                       </button>
                       <div
-                        className="bg-light align-items-center justify-content-center d-flex flex-grow-1 border"
+                        className="bg-light align-items-center justify-content-center d-flex border"
                         style={{ minWidth: 44 }}
                       >
                         1
@@ -132,10 +120,8 @@ function ProductDetail() {
                       </button>
                     </div>
                   </div>
-                  <button className="btn btn-primary me-3">
-                    <ShoppingCart />
-                  </button>
-                  <button className="btn btn-outline-primary">Buy Now</button>
+                  <button className="btn btn-primary me-3">Add to cart</button>
+                  <button className="btn btn-outline-primary">Buy now</button>
                 </div>
               </div>
             </div>
@@ -143,7 +129,7 @@ function ProductDetail() {
         </div>
       </div>
       <div className="container">
-        <div className="row mb-12 mt-3">
+        <div className="row mb-12 g-3">
           <div className="col-lg-8">
             <div className="card">
               <div className="card-header bg-white py-3">
@@ -208,7 +194,7 @@ function ProductDetail() {
                   <div>
                     <Link href="/profile/1">
                       <a className="btn btn-outline-light border text-primary">
-                        Visit Store
+                        Visit store
                       </a>
                     </Link>
                   </div>
@@ -218,7 +204,7 @@ function ProductDetail() {
           </div>
           <div className="col-12 mt-12">
             <h4 className="mb-3">Related Products</h4>
-            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
               <div className="col">
                 <ProductGridItem />
               </div>
