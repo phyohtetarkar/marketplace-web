@@ -39,7 +39,9 @@ function ProfileOverview() {
                       <h6 className="mb-0">Your Avatar</h6>
                       <span className="mb-0 text-muted small">
                         Email: myusername@gmail.com
-                        <span className="d-flex d-none d-md-inline px-2">&#x2022;</span>
+                        <span className="d-flex d-none d-md-inline px-2">
+                          &#x2022;
+                        </span>
                         <span className="d-flex d-block d-md-none"></span>
                         Phone: +95244144442
                       </span>
@@ -95,98 +97,6 @@ function ProfileOverview() {
                           <h4 className="title">50</h4>
                           <span>Delivered items</span>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="card mb-3">
-              <div className="card-body p-md-4">
-                <h5 className="card-title mb-4">Recent orders </h5>
-                <div className="row">
-                  <div className="col-md-6 ">
-                    <div className="position-relative d-flex w-100 mb-3">
-                      <div className="position-relative flex-shrink-0">
-                        <Image
-                          src="/images/placeholder.jpeg"
-                          width={80}
-                          height={80}
-                          alt=""
-                          className="img-sm rounded border"
-                          objectFit="cover"
-                        />
-                      </div>
-                      <div className="ps-3 flex-grow-1">
-                        <span className="hstack gap-1 text-muted">
-                          <Calendar size="15" /> 15.10.2022
-                        </span>
-                        <p className="mb-0">Giorando T-Shirt</p>
-                        <span className="text-success">Order confirmed</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="position-relative d-flex w-100 mb-3">
-                      <div className="position-relative flex-shrink-0">
-                        <Image
-                          src="/images/placeholder.jpeg"
-                          width={80}
-                          height={80}
-                          alt=""
-                          className="img-sm rounded border"
-                          objectFit="cover"
-                        />
-                      </div>
-                      <div className="ps-3 flex-grow-1">
-                        <span className="hstack gap-1 text-muted">
-                          <Calendar size="15" /> 15.10.2022
-                        </span>
-                        <p className="mb-0">Giorando T-Shirt</p>
-                        <span className="text-success">Order confirmed</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="position-relative d-flex w-100 mb-3">
-                      <div className="position-relative flex-shrink-0">
-                        <Image
-                          src="/images/placeholder.jpeg"
-                          width={80}
-                          height={80}
-                          alt=""
-                          className="img-sm rounded border"
-                          objectFit="cover"
-                        />
-                      </div>
-                      <div className="ps-3 flex-grow-1">
-                        <span className="hstack gap-1 text-muted">
-                          <Calendar size="15" /> 15.10.2022
-                        </span>
-                        <p className="mb-0">Giorando T-Shirt</p>
-                        <span className="text-success">Order confirmed</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="position-relative d-flex w-100 mb-3">
-                      <div className="position-relative flex-shrink-0">
-                        <Image
-                          src="/images/placeholder.jpeg"
-                          width={80}
-                          height={80}
-                          alt=""
-                          className="img-sm rounded border"
-                          objectFit="cover"
-                        />
-                      </div>
-                      <div className="ps-3 flex-grow-1">
-                        <span className="hstack gap-1 text-muted">
-                          <Calendar size="15" /> 15.10.2022
-                        </span>
-                        <p className="mb-0">Giorando T-Shirt</p>
-                        <span className="text-success">Order confirmed</span>
                       </div>
                     </div>
                   </div>

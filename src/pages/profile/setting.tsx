@@ -23,7 +23,7 @@ function ProfileSetting() {
             <div className="card">
               <div className="card-body p-md-4">
                 <div className="row">
-                  <div className="col-lg-8">
+                  <div className="order-2 order-md-2 col-lg-8">
                     <div className="vstack">
                       <div className="row g-3">
                         <div className="col-lg-6">
@@ -37,37 +37,6 @@ function ProfileSetting() {
                         </div>
                         <div className="col-lg-6">
                           <Input
-                            className="form-control"
-                            label="Birthday"
-                            id="birthdayInput"
-                            name="dob"
-                            type="date"
-                            placeholder="Date of birth"
-                          />
-                        </div>
-                        <div className="col-lg-6">
-                         <label htmlFor="emailInput" className="form-label">
-                          Email
-                         </label>
-                          <div className="position-relative">
-                          <Input
-                            name="email"
-                            type="email"
-                            placeholder="name@domain.com"
-                            disabled
-                          />
-                          <div className="position-absolute top-50 end-0 translate-middle-y">
-                            <CheckCircle
-                                size={20}
-                                className="me-3"
-                                strokeWidth={2.5}
-                                color="#29bf12"
-                              />
-                          </div>
-                          </div>
-                        </div>
-                        <div className="col-lg-6">
-                          <Input
                             label="Phone"
                             id="phoneInput"
                             name="phone"
@@ -75,29 +44,31 @@ function ProfileSetting() {
                             placeholder="+9512345678"
                           />
                         </div>
-                        <div className="col-12">
+                        <div className="col-lg-12">
+                          <label htmlFor="emailInput" className="form-label">
+                            Email
+                          </label>
                           <div className="position-relative">
                             <Input
-                              label="Address"
-                              id="addressInput"
-                              name="address"
-                              type="text"
-                              placeholder="Current Address"
+                              name="email"
+                              type="email"
+                              placeholder="name@domain.com"
+                              disabled
                             />
+                            <div className="position-absolute top-50 end-0 translate-middle-y">
+                              <CheckCircle
+                                size={20}
+                                className="me-3"
+                                strokeWidth={2.5}
+                                color="#29bf12"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-12 mb-4">
-                          <Textarea
-                            label="About me"
-                            id="bioInput"
-                            name="biography"
-                            placeholder="Biography"
-                          />
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="col-lg-4">
+                  <div className="order-lg-2 col-lg-4">
                     <div className="text-lg-center mt-3">
                       <Image
                         src="/images/profile.png"
@@ -123,10 +94,39 @@ function ProfileSetting() {
                     </div>
                   </div>
                   <br />
-                  <div className="">
+                  <div className="col order-3 mt-3">
                     <button className="btn btn-primary p-2 flex-grow-1 flex-md-grow-0">
                       Update profile
                     </button>
+                  </div>
+                </div>
+                <hr className="bg-dark-gray" />
+                <div className="row">
+                  <div className="col-md">
+                    <div className="card bg-light mb-3">
+                      <div className="card-body">
+                        <button className="btn btn-outline-primary bg-white btn-sm border border-light-gray float-end">
+                          Change
+                        </button>
+                        <p className="mb-0">Password</p>
+                        <small className="text-muted d-block w-75">
+                          You can reset or change your password by clicking here
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md">
+                    <div className="card bg-light mb-3">
+                      <div className="card-body">
+                        <button className="btn btn-outline-danger btn-sm float-end">
+                          Deactivate
+                        </button>
+                        <p className="mb-0">Remove account</p>
+                        <small className="text-muted d-block w-75">
+                          Once you delete your account, there is no going back.
+                        </small>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
