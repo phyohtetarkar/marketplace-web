@@ -1,3 +1,4 @@
+import { Auth } from "aws-amplify";
 import { useFormik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Input, PasswordInput } from "../components/forms";
 
 interface FormValues {
-  email: string;
+  phone: string;
   password: string;
 }
 
@@ -16,14 +17,14 @@ function Login() {
 
   const formik = useFormik<FormValues>({
     initialValues: {
-      email: "",
+      phone: "",
       password: "",
     },
     validate: (values) => {
       let errors: any = {};
 
-      if (!values.email || values.email.trim().length === 0) {
-        errors.email = "Please enter email address.";
+      if (!values.phone || values.phone.trim().length === 0) {
+        errors.phone = "Please enter your phone number.";
       }
 
       if (!values.password || values.password.trim().length == 0) {
@@ -34,7 +35,9 @@ function Login() {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      processLogin(values);
+    },
   });
 
   useEffect(() => {
@@ -44,6 +47,21 @@ function Login() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
+
+  const processLogin = async (values: FormValues) => {
+    setLoading(true);
+    try {
+      const user = await Auth.signIn({
+        username: values.phone,
+        password: values.password,
+      });
+      console.log(user);
+    } catch (error) {
+      console.log("error signing in", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="container py-3">
@@ -62,14 +80,14 @@ function Login() {
               <form className="row" onSubmit={formik.handleSubmit}>
                 <div className="col-md-12 mb-3">
                   <Input
-                    label="Email"
-                    id="emailInput"
-                    type="email"
-                    name="email"
-                    placeholder="username@domain.com"
-                    value={formik.values.email}
+                    label="Phone Number"
+                    id="phoneInput"
+                    type="tel"
+                    name="phone"
+                    placeholder="09xxxxxxxx"
+                    value={formik.values.phone}
                     onChange={formik.handleChange}
-                    error={formik.errors.email}
+                    error={formik.errors.phone}
                   />
                 </div>
                 <div className="col-md-12 mb-2">

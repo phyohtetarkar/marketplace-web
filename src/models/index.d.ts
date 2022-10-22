@@ -42,7 +42,6 @@ export declare class Category {
   readonly id: string;
   readonly name: string;
   readonly image: string;
-  readonly hidden?: boolean | null;
   readonly parent?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;

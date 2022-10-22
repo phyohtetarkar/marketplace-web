@@ -162,13 +162,6 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "hidden": {
-                    "name": "hidden",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "parent": {
                     "name": "parent",
                     "isArray": false,
@@ -510,5 +503,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "aace64a39b51c74a4e7fb4cacfc76ad9"
+    "version": "003ac07f834a96b45e08f88679f99547"
 };

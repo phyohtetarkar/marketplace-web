@@ -18,7 +18,6 @@ export const getProduct = /* GraphQL */ `
         id
         name
         image
-        type
         parent
         createdAt
         updatedAt
@@ -260,7 +259,6 @@ export const getCategory = /* GraphQL */ `
       id
       name
       image
-      type
       parent
       createdAt
       updatedAt
@@ -281,7 +279,6 @@ export const listCategories = /* GraphQL */ `
         id
         name
         image
-        type
         parent
         createdAt
         updatedAt
@@ -311,75 +308,6 @@ export const syncCategories = /* GraphQL */ `
         id
         name
         image
-        type
-        parent
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const categoriesByName = /* GraphQL */ `
-  query CategoriesByName(
-    $type: String!
-    $name: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelCategoryFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    categoriesByName(
-      type: $type
-      name: $name
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        name
-        image
-        type
-        parent
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const categoriesByDate = /* GraphQL */ `
-  query CategoriesByDate(
-    $type: String!
-    $createdAt: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelCategoryFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    categoriesByDate(
-      type: $type
-      createdAt: $createdAt
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        name
-        image
-        type
         parent
         createdAt
         updatedAt

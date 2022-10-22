@@ -10,6 +10,17 @@
       "StackName": "amplify-shoppingcenter-staging-173044",
       "StackId": "arn:aws:cloudformation:ap-southeast-1:142205719585:stack/amplify-shoppingcenter-staging-173044/c4854830-4b1c-11ed-94cc-0af4b48bd33c",
       "AmplifyAppId": "d3vstngol7qq1a"
+    },
+    "categories": {
+      "auth": {
+        "shoppingcentercdcac81e": {
+          "userPoolId": "ap-southeast-1_eUlOwPOWQ",
+          "userPoolName": "shoppingcenter",
+          "webClientId": "6nuueahrlfmb4kbe6e5oovljte",
+          "nativeClientId": "2o31210hn1m35vopk93rvged6v"
+        },
+        "shoppingcenterauth": {}
+      }
     }
   }
 }

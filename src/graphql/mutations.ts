@@ -21,7 +21,6 @@ export const createProduct = /* GraphQL */ `
         id
         name
         image
-        type
         parent
         createdAt
         updatedAt
@@ -57,7 +56,6 @@ export const updateProduct = /* GraphQL */ `
         id
         name
         image
-        type
         parent
         createdAt
         updatedAt
@@ -93,7 +91,6 @@ export const deleteProduct = /* GraphQL */ `
         id
         name
         image
-        type
         parent
         createdAt
         updatedAt
@@ -272,7 +269,6 @@ export const createCategory = /* GraphQL */ `
       id
       name
       image
-      type
       parent
       createdAt
       updatedAt
@@ -291,7 +287,6 @@ export const updateCategory = /* GraphQL */ `
       id
       name
       image
-      type
       parent
       createdAt
       updatedAt
@@ -310,7 +305,6 @@ export const deleteCategory = /* GraphQL */ `
       id
       name
       image
-      type
       parent
       createdAt
       updatedAt

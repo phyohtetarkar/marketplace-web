@@ -6,6 +6,9 @@ import type { AppProps } from "next/app";
 import { ReactElement, ReactNode } from "react";
 import { Layout } from "../components/template";
 import NextNProgress from "nextjs-progressbar";
+import awsconfig from "../aws-exports";
+import { Amplify } from "aws-amplify";
+Amplify.configure(awsconfig);
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;

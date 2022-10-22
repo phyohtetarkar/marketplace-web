@@ -14,7 +14,6 @@ export type Category = {
   id: string,
   name: string,
   image: string,
-  type: string,
   parent?: string | null,
   createdAt: string,
   updatedAt: string,
@@ -299,18 +298,14 @@ export type CreateCategoryInput = {
   id?: string | null,
   name: string,
   image: string,
-  type: string,
   parent?: string | null,
-  createdAt?: string | null,
   _version?: number | null,
 };
 
 export type ModelCategoryConditionInput = {
   name?: ModelStringInput | null,
   image?: ModelStringInput | null,
-  type?: ModelStringInput | null,
   parent?: ModelIDInput | null,
-  createdAt?: ModelStringInput | null,
   and?: Array< ModelCategoryConditionInput | null > | null,
   or?: Array< ModelCategoryConditionInput | null > | null,
   not?: ModelCategoryConditionInput | null,
@@ -320,9 +315,7 @@ export type UpdateCategoryInput = {
   id: string,
   name?: string | null,
   image?: string | null,
-  type?: string | null,
   parent?: string | null,
-  createdAt?: string | null,
   _version?: number | null,
 };
 
@@ -415,29 +408,11 @@ export type ModelCategoryFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
   image?: ModelStringInput | null,
-  type?: ModelStringInput | null,
   parent?: ModelIDInput | null,
-  createdAt?: ModelStringInput | null,
   and?: Array< ModelCategoryFilterInput | null > | null,
   or?: Array< ModelCategoryFilterInput | null > | null,
   not?: ModelCategoryFilterInput | null,
 };
-
-export type ModelStringKeyConditionInput = {
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-};
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
 
 export type ModelShopUserFilterInput = {
   id?: ModelIDInput | null,
@@ -483,7 +458,6 @@ export type CreateProductMutation = {
       id: string,
       name: string,
       image: string,
-      type: string,
       parent?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -522,7 +496,6 @@ export type UpdateProductMutation = {
       id: string,
       name: string,
       image: string,
-      type: string,
       parent?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -561,7 +534,6 @@ export type DeleteProductMutation = {
       id: string,
       name: string,
       image: string,
-      type: string,
       parent?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -763,7 +735,6 @@ export type CreateCategoryMutation = {
     id: string,
     name: string,
     image: string,
-    type: string,
     parent?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -784,7 +755,6 @@ export type UpdateCategoryMutation = {
     id: string,
     name: string,
     image: string,
-    type: string,
     parent?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -805,7 +775,6 @@ export type DeleteCategoryMutation = {
     id: string,
     name: string,
     image: string,
-    type: string,
     parent?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -974,7 +943,6 @@ export type GetProductQuery = {
       id: string,
       name: string,
       image: string,
-      type: string,
       parent?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1234,7 +1202,6 @@ export type GetCategoryQuery = {
     id: string,
     name: string,
     image: string,
-    type: string,
     parent?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -1258,7 +1225,6 @@ export type ListCategoriesQuery = {
       id: string,
       name: string,
       image: string,
-      type: string,
       parent?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1286,67 +1252,6 @@ export type SyncCategoriesQuery = {
       id: string,
       name: string,
       image: string,
-      type: string,
-      parent?: string | null,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
-export type CategoriesByNameQueryVariables = {
-  type: string,
-  name?: ModelStringKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCategoryFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type CategoriesByNameQuery = {
-  categoriesByName?:  {
-    __typename: "ModelCategoryConnection",
-    items:  Array< {
-      __typename: "Category",
-      id: string,
-      name: string,
-      image: string,
-      type: string,
-      parent?: string | null,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
-export type CategoriesByDateQueryVariables = {
-  type: string,
-  createdAt?: ModelStringKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCategoryFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type CategoriesByDateQuery = {
-  categoriesByDate?:  {
-    __typename: "ModelCategoryConnection",
-    items:  Array< {
-      __typename: "Category",
-      id: string,
-      name: string,
-      image: string,
-      type: string,
       parent?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1472,7 +1377,6 @@ export type OnCreateProductSubscription = {
       id: string,
       name: string,
       image: string,
-      type: string,
       parent?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1506,7 +1410,6 @@ export type OnUpdateProductSubscription = {
       id: string,
       name: string,
       image: string,
-      type: string,
       parent?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1540,7 +1443,6 @@ export type OnDeleteProductSubscription = {
       id: string,
       name: string,
       image: string,
-      type: string,
       parent?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1707,7 +1609,6 @@ export type OnCreateCategorySubscription = {
     id: string,
     name: string,
     image: string,
-    type: string,
     parent?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -1723,7 +1624,6 @@ export type OnUpdateCategorySubscription = {
     id: string,
     name: string,
     image: string,
-    type: string,
     parent?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -1739,7 +1639,6 @@ export type OnDeleteCategorySubscription = {
     id: string,
     name: string,
     image: string,
-    type: string,
     parent?: string | null,
     createdAt: string,
     updatedAt: string,

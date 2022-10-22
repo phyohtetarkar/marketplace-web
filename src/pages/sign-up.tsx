@@ -1,3 +1,4 @@
+import { Auth } from "aws-amplify";
 import { useFormik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,14 +6,21 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Input, PasswordInput } from "../components/forms";
 
+interface FormValues {
+  fullName: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+}
+
 function Register() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const formik = useFormik({
+  const formik = useFormik<FormValues>({
     initialValues: {
       fullName: "",
-      email: "",
+      phone: "",
       password: "",
       confirmPassword: "",
     },
@@ -24,10 +32,8 @@ function Register() {
         errors.fullName = "Please enter your fullname.";
       }
 
-      if (!values.email || values.email.trim().length === 0) {
-        errors.email = "Please enter email address.";
-      } else if (values.email.toLowerCase().match(regex)) {
-        errors.email = "Please enter valid email address.";
+      if (!values.phone || values.phone.trim().length === 0) {
+        errors.phone = "Please enter your phone number.";
       }
 
       if (!values.password || values.password.trim().length < 8) {
@@ -46,6 +52,7 @@ function Register() {
       //   email: values.email,
       //   password: values.password,
       // });
+      processSignUp(values);
     },
   });
 
@@ -55,6 +62,30 @@ function Register() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
+
+  const processSignUp = async (values: FormValues) => {
+    try {
+      setLoading(true);
+      const { user } = await Auth.signUp({
+        username: values.phone,
+        password: values.password,
+        attributes: {
+          name: values.fullName,
+          phone_number: values.phone, // optional - E.164 number convention
+          // other custom attributes
+        },
+        autoSignIn: {
+          // optional - enables auto sign in after user is confirmed
+          enabled: true,
+        },
+      });
+      console.log(user);
+    } catch (error) {
+      console.log("error signing up:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="container py-3">
@@ -85,14 +116,14 @@ function Register() {
                 </div>
                 <div className="col-md-12 mb-2">
                   <Input
-                    label="Email"
-                    id="emailInput"
-                    type="email"
-                    name="email"
-                    placeholder="username@domain.com"
-                    value={formik.values.email}
+                    label="Phone Number"
+                    id="phoneInput"
+                    type="tel"
+                    name="phone"
+                    placeholder="09xxxxxxxx"
+                    value={formik.values.phone}
                     onChange={formik.handleChange}
-                    error={formik.errors.email}
+                    error={formik.errors.phone}
                   />
                 </div>
                 <div className="col-md-12 mb-2">
