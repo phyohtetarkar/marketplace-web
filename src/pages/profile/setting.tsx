@@ -68,28 +68,21 @@ function ProfileSetting() {
                       </div>
                     </div>
                   </div>
-                  <div className="order-lg-2 col-lg-4">
-                    <div className="text-lg-center mt-3">
+                  <div className="d-flex justify-content-center order-lg-2 col-lg-4">
+                    <div className="mt-3">
+                      <div className="position-relative bg-dark overflow-hidden rounded-circle" style={{width: 128, height:128}}>
                       <Image
                         src="/images/profile.png"
+                        layout="fill"
                         width={128}
                         height={128}
                         alt="User Photo"
                         className="rounded-circle"
                         objectFit="cover"
                       />
-                      <div className="ms-auto mt-2 mb-4">
-                        <button className="btn btn-sm btn-outline-primary">
-                          {/* <i className="bi bi-camera-plus-fill text-primary"></i> Upload */}
-                          Upload
-                          {/* <div className="hstack gap-2">
-                            <Camera size={16} />
-                            <p className="mt-3 text-center small">Upload</p>
-                          </div> */}
-                        </button>
-                        <button className="btn btn-sm btn-danger ms-2">
-                          <Trash size={20} />
-                        </button>
+                      <div className="ms-auto position-absolute bottom-0 py-1 btn btn-dark opacity-75 w-100 text-light text-center">
+                        Edit
+                      </div>
                       </div>
                     </div>
                   </div>
