@@ -1,39 +1,99 @@
-type Product @model @auth(rules: [{ allow: public }]) {
+enum UserRole {
+  OWNER
+  ADMIN
+  CONSUMER
+}
+
+enum MemberRole {
+  OWNER
+  ADMIN
+}
+
+type Discount {
+  value: Float
+  type: String
+}
+
+type Product
+  @model(subscriptions: null)
+  @auth(
+    rules: [
+      { allow: public, operations: [read] },
+      { allow: owner, ownerField: "editors" },
+      { allow: groups, groups: ["Admins"] }
+    ]
+  ) {
   id: ID!
   name: String
-  image: String
+  images: [String]
   price: Float
+  discount: Discount
   description: String
   createdBy: String
   updatedBy: String
   available: Boolean
+  editors: [String]
+  categoryID: ID! @index(name: "byCategory")
   shopID: ID! @index(name: "byShop")
-  category: Category @hasOne
+  category: Category @belongsTo(fields: ["categoryID"])
+  shop: Shop @belongsTo(fields: ["shopID"])
 }
 
-type Shop @model @auth(rules: [{ allow: public }]) {
+type Shop
+  @model(subscriptions: null)
+  @auth(
+    rules: [
+      { allow: public, operations: [read] },
+      { allow: owner },
+      { allow: groups, groups: ["Admins"] }
+    ]
+  ) {
   id: ID!
-  name: String
+  name: String!
   cover: String
-  profile: String
-  users: [User] @manyToMany(relationName: "ShopUser")
-  products: [Product] @hasMany(indexName: "byShop", fields: ["id"])
-}
-
-type User @model @auth(rules: [{ allow: public }]) {
-  id: ID!
-  name: String!
-  phone: String
-  email: String
   avatar: String
-  identity: String!
-  disabled: Boolean
-  shops: [Shop] @manyToMany(relationName: "ShopUser")
+  description: String
+  createdBy: String
+  updatedBy: String
+  owner: String
+    @auth(rules: [{ allow: owner }, { allow: groups, groups: ["Admins"] }])
+  products: [Product] @hasMany(indexName: "byShop", fields: ["id"])
+  members: [ShopMember] @hasMany(indexName: "byShop", fields: ["id"])
 }
 
-type Category @model @auth(rules: [{ allow: public }]) {
+type User @model(subscriptions: null) @auth(rules: [{ allow: private }]) {
   id: ID!
   name: String!
-  image: String!
+  phone: String!
+  avatar: String
+  authID: String!
+  disabled: Boolean
+  role: UserRole!
+  shops: [ShopMember] @hasMany(indexName: "byUser", fields: ["id"])
+}
+
+type Category
+  @model(subscriptions: null)
+  @auth(
+    rules: [
+      { allow: public, operations: [read] },
+      { allow: groups, groups: ["Admins"] }
+    ]
+  ) {
+  id: ID!
+  name: String!
+  image: String
   parent: ID
+  products: [Product] @hasMany(indexName: "byCategory", fields: ["id"])
+}
+
+type ShopMember
+  @model(subscriptions: null)
+  @auth(rules: [{ allow: private, operations: [read] }, { allow: owner }]) {
+  id: ID!
+  role: MemberRole!
+  shopID: ID! @index(name: "byShop")
+  userID: ID! @index(name: "byUser")
+  shop: Shop @belongsTo(fields: ["shopID"])
+  user: User @belongsTo(fields: ["userID"])
 }

@@ -8,6 +8,7 @@ import { Layout } from "../components/template";
 import NextNProgress from "nextjs-progressbar";
 import awsconfig from "../aws-exports";
 import { Amplify } from "aws-amplify";
+import { AuthenticationContextProvider } from "../common/AuthenticationContextProvider";
 Amplify.configure(awsconfig);
 
 export type NextPageWithLayout = NextPage & {
@@ -33,7 +34,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
           showSpinner: false,
         }}
       />
-      {getLayout(<Component {...pageProps} />)}
+      <AuthenticationContextProvider>
+        {getLayout(<Component {...pageProps} />)}
+      </AuthenticationContextProvider>
     </>
   );
 }

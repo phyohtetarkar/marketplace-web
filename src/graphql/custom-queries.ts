@@ -6,7 +6,6 @@ export const fetchCategories = /* GraphQL */ `
         name
       }
       nextToken
-      startedAt
     }
   }
 `;

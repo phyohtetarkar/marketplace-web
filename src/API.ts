@@ -6,49 +6,147 @@ export type ModelCategoryConnection = {
   __typename: "ModelCategoryConnection",
   items:  Array<Category | null >,
   nextToken?: string | null,
-  startedAt?: number | null,
 };
 
 export type Category = {
   __typename: "Category",
   id: string,
   name: string,
-  image: string,
+  image?: string | null,
   parent?: string | null,
+  products?: ModelProductConnection | null,
   createdAt: string,
   updatedAt: string,
-  _version: number,
-  _deleted?: boolean | null,
-  _lastChangedAt: number,
 };
 
-export type CreateProductInput = {
-  id?: string | null,
+export type ModelProductConnection = {
+  __typename: "ModelProductConnection",
+  items:  Array<Product | null >,
+  nextToken?: string | null,
+};
+
+export type Product = {
+  __typename: "Product",
+  id: string,
   name?: string | null,
-  image?: string | null,
+  images?: Array< string | null > | null,
   price?: number | null,
+  discount?: Discount | null,
   description?: string | null,
   createdBy?: string | null,
   updatedBy?: string | null,
   available?: boolean | null,
+  editors?: Array< string | null > | null,
+  categoryID: string,
   shopID: string,
-  _version?: number | null,
-  productCategoryId?: string | null,
+  category?: Category | null,
+  shop?: Shop | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type Discount = {
+  __typename: "Discount",
+  value?: number | null,
+  type?: string | null,
+};
+
+export type Shop = {
+  __typename: "Shop",
+  id: string,
+  name: string,
+  cover?: string | null,
+  avatar?: string | null,
+  description?: string | null,
+  createdBy?: string | null,
+  updatedBy?: string | null,
+  owner?: string | null,
+  products?: ModelProductConnection | null,
+  members?: ModelShopMemberConnection | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type ModelShopMemberConnection = {
+  __typename: "ModelShopMemberConnection",
+  items:  Array<ShopMember | null >,
+  nextToken?: string | null,
+};
+
+export type ShopMember = {
+  __typename: "ShopMember",
+  id: string,
+  role: MemberRole,
+  shopID: string,
+  userID: string,
+  shop?: Shop | null,
+  user?: User | null,
+  createdAt: string,
+  updatedAt: string,
+  owner?: string | null,
+};
+
+export enum MemberRole {
+  OWNER = "OWNER",
+  ADMIN = "ADMIN",
+}
+
+
+export type User = {
+  __typename: "User",
+  id: string,
+  name: string,
+  phone: string,
+  avatar?: string | null,
+  authID: string,
+  disabled?: boolean | null,
+  role: UserRole,
+  shops?: ModelShopMemberConnection | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export enum UserRole {
+  OWNER = "OWNER",
+  ADMIN = "ADMIN",
+  CONSUMER = "CONSUMER",
+}
+
+
+export type CreateProductInput = {
+  id?: string | null,
+  name?: string | null,
+  images?: Array< string | null > | null,
+  price?: number | null,
+  discount?: DiscountInput | null,
+  description?: string | null,
+  createdBy?: string | null,
+  updatedBy?: string | null,
+  available?: boolean | null,
+  editors?: Array< string | null > | null,
+  categoryID: string,
+  shopID: string,
+};
+
+export type DiscountInput = {
+  value?: number | null,
+  type?: string | null,
 };
 
 export type ModelProductConditionInput = {
   name?: ModelStringInput | null,
-  image?: ModelStringInput | null,
+  images?: ModelStringInput | null,
   price?: ModelFloatInput | null,
   description?: ModelStringInput | null,
   createdBy?: ModelStringInput | null,
   updatedBy?: ModelStringInput | null,
   available?: ModelBooleanInput | null,
+  editors?: ModelStringInput | null,
+  categoryID?: ModelIDInput | null,
   shopID?: ModelIDInput | null,
   and?: Array< ModelProductConditionInput | null > | null,
   or?: Array< ModelProductConditionInput | null > | null,
   not?: ModelProductConditionInput | null,
-  productCategoryId?: ModelIDInput | null,
 };
 
 export type ModelStringInput = {
@@ -126,180 +224,110 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
-export type Product = {
-  __typename: "Product",
-  id: string,
-  name?: string | null,
-  image?: string | null,
-  price?: number | null,
-  description?: string | null,
-  createdBy?: string | null,
-  updatedBy?: string | null,
-  available?: boolean | null,
-  shopID: string,
-  category?: Category | null,
-  createdAt: string,
-  updatedAt: string,
-  _version: number,
-  _deleted?: boolean | null,
-  _lastChangedAt: number,
-  productCategoryId?: string | null,
-};
-
 export type UpdateProductInput = {
   id: string,
   name?: string | null,
-  image?: string | null,
+  images?: Array< string | null > | null,
   price?: number | null,
+  discount?: DiscountInput | null,
   description?: string | null,
   createdBy?: string | null,
   updatedBy?: string | null,
   available?: boolean | null,
+  editors?: Array< string | null > | null,
+  categoryID?: string | null,
   shopID?: string | null,
-  _version?: number | null,
-  productCategoryId?: string | null,
 };
 
 export type DeleteProductInput = {
   id: string,
-  _version?: number | null,
 };
 
 export type CreateShopInput = {
   id?: string | null,
-  name?: string | null,
+  name: string,
   cover?: string | null,
-  profile?: string | null,
-  _version?: number | null,
+  avatar?: string | null,
+  description?: string | null,
+  createdBy?: string | null,
+  updatedBy?: string | null,
+  owner?: string | null,
 };
 
 export type ModelShopConditionInput = {
   name?: ModelStringInput | null,
   cover?: ModelStringInput | null,
-  profile?: ModelStringInput | null,
+  avatar?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  createdBy?: ModelStringInput | null,
+  updatedBy?: ModelStringInput | null,
+  owner?: ModelStringInput | null,
   and?: Array< ModelShopConditionInput | null > | null,
   or?: Array< ModelShopConditionInput | null > | null,
   not?: ModelShopConditionInput | null,
-};
-
-export type Shop = {
-  __typename: "Shop",
-  id: string,
-  name?: string | null,
-  cover?: string | null,
-  profile?: string | null,
-  users?: ModelShopUserConnection | null,
-  products?: ModelProductConnection | null,
-  createdAt: string,
-  updatedAt: string,
-  _version: number,
-  _deleted?: boolean | null,
-  _lastChangedAt: number,
-};
-
-export type ModelShopUserConnection = {
-  __typename: "ModelShopUserConnection",
-  items:  Array<ShopUser | null >,
-  nextToken?: string | null,
-  startedAt?: number | null,
-};
-
-export type ShopUser = {
-  __typename: "ShopUser",
-  id: string,
-  shopID: string,
-  userID: string,
-  shop: Shop,
-  user: User,
-  createdAt: string,
-  updatedAt: string,
-  _version: number,
-  _deleted?: boolean | null,
-  _lastChangedAt: number,
-};
-
-export type User = {
-  __typename: "User",
-  id: string,
-  name: string,
-  phone?: string | null,
-  email?: string | null,
-  avatar?: string | null,
-  identity: string,
-  disabled?: boolean | null,
-  shops?: ModelShopUserConnection | null,
-  createdAt: string,
-  updatedAt: string,
-  _version: number,
-  _deleted?: boolean | null,
-  _lastChangedAt: number,
-};
-
-export type ModelProductConnection = {
-  __typename: "ModelProductConnection",
-  items:  Array<Product | null >,
-  nextToken?: string | null,
-  startedAt?: number | null,
 };
 
 export type UpdateShopInput = {
   id: string,
   name?: string | null,
   cover?: string | null,
-  profile?: string | null,
-  _version?: number | null,
+  avatar?: string | null,
+  description?: string | null,
+  createdBy?: string | null,
+  updatedBy?: string | null,
+  owner?: string | null,
 };
 
 export type DeleteShopInput = {
   id: string,
-  _version?: number | null,
 };
 
 export type CreateUserInput = {
   id?: string | null,
   name: string,
-  phone?: string | null,
-  email?: string | null,
+  phone: string,
   avatar?: string | null,
-  identity: string,
+  authID: string,
   disabled?: boolean | null,
-  _version?: number | null,
+  role: UserRole,
 };
 
 export type ModelUserConditionInput = {
   name?: ModelStringInput | null,
   phone?: ModelStringInput | null,
-  email?: ModelStringInput | null,
   avatar?: ModelStringInput | null,
-  identity?: ModelStringInput | null,
+  authID?: ModelStringInput | null,
   disabled?: ModelBooleanInput | null,
+  role?: ModelUserRoleInput | null,
   and?: Array< ModelUserConditionInput | null > | null,
   or?: Array< ModelUserConditionInput | null > | null,
   not?: ModelUserConditionInput | null,
+};
+
+export type ModelUserRoleInput = {
+  eq?: UserRole | null,
+  ne?: UserRole | null,
 };
 
 export type UpdateUserInput = {
   id: string,
   name?: string | null,
   phone?: string | null,
-  email?: string | null,
   avatar?: string | null,
-  identity?: string | null,
+  authID?: string | null,
   disabled?: boolean | null,
-  _version?: number | null,
+  role?: UserRole | null,
 };
 
 export type DeleteUserInput = {
   id: string,
-  _version?: number | null,
 };
 
 export type CreateCategoryInput = {
   id?: string | null,
   name: string,
-  image: string,
+  image?: string | null,
   parent?: string | null,
-  _version?: number | null,
 };
 
 export type ModelCategoryConditionInput = {
@@ -316,62 +344,70 @@ export type UpdateCategoryInput = {
   name?: string | null,
   image?: string | null,
   parent?: string | null,
-  _version?: number | null,
 };
 
 export type DeleteCategoryInput = {
   id: string,
-  _version?: number | null,
 };
 
-export type CreateShopUserInput = {
+export type CreateShopMemberInput = {
   id?: string | null,
+  role: MemberRole,
   shopID: string,
   userID: string,
-  _version?: number | null,
 };
 
-export type ModelShopUserConditionInput = {
+export type ModelShopMemberConditionInput = {
+  role?: ModelMemberRoleInput | null,
   shopID?: ModelIDInput | null,
   userID?: ModelIDInput | null,
-  and?: Array< ModelShopUserConditionInput | null > | null,
-  or?: Array< ModelShopUserConditionInput | null > | null,
-  not?: ModelShopUserConditionInput | null,
+  and?: Array< ModelShopMemberConditionInput | null > | null,
+  or?: Array< ModelShopMemberConditionInput | null > | null,
+  not?: ModelShopMemberConditionInput | null,
 };
 
-export type UpdateShopUserInput = {
+export type ModelMemberRoleInput = {
+  eq?: MemberRole | null,
+  ne?: MemberRole | null,
+};
+
+export type UpdateShopMemberInput = {
   id: string,
+  role?: MemberRole | null,
   shopID?: string | null,
   userID?: string | null,
-  _version?: number | null,
 };
 
-export type DeleteShopUserInput = {
+export type DeleteShopMemberInput = {
   id: string,
-  _version?: number | null,
 };
 
 export type ModelProductFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
-  image?: ModelStringInput | null,
+  images?: ModelStringInput | null,
   price?: ModelFloatInput | null,
   description?: ModelStringInput | null,
   createdBy?: ModelStringInput | null,
   updatedBy?: ModelStringInput | null,
   available?: ModelBooleanInput | null,
+  editors?: ModelStringInput | null,
+  categoryID?: ModelIDInput | null,
   shopID?: ModelIDInput | null,
   and?: Array< ModelProductFilterInput | null > | null,
   or?: Array< ModelProductFilterInput | null > | null,
   not?: ModelProductFilterInput | null,
-  productCategoryId?: ModelIDInput | null,
 };
 
 export type ModelShopFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
   cover?: ModelStringInput | null,
-  profile?: ModelStringInput | null,
+  avatar?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  createdBy?: ModelStringInput | null,
+  updatedBy?: ModelStringInput | null,
+  owner?: ModelStringInput | null,
   and?: Array< ModelShopFilterInput | null > | null,
   or?: Array< ModelShopFilterInput | null > | null,
   not?: ModelShopFilterInput | null,
@@ -381,17 +417,16 @@ export type ModelShopConnection = {
   __typename: "ModelShopConnection",
   items:  Array<Shop | null >,
   nextToken?: string | null,
-  startedAt?: number | null,
 };
 
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
   phone?: ModelStringInput | null,
-  email?: ModelStringInput | null,
   avatar?: ModelStringInput | null,
-  identity?: ModelStringInput | null,
+  authID?: ModelStringInput | null,
   disabled?: ModelBooleanInput | null,
+  role?: ModelUserRoleInput | null,
   and?: Array< ModelUserFilterInput | null > | null,
   or?: Array< ModelUserFilterInput | null > | null,
   not?: ModelUserFilterInput | null,
@@ -401,7 +436,6 @@ export type ModelUserConnection = {
   __typename: "ModelUserConnection",
   items:  Array<User | null >,
   nextToken?: string | null,
-  startedAt?: number | null,
 };
 
 export type ModelCategoryFilterInput = {
@@ -414,13 +448,14 @@ export type ModelCategoryFilterInput = {
   not?: ModelCategoryFilterInput | null,
 };
 
-export type ModelShopUserFilterInput = {
+export type ModelShopMemberFilterInput = {
   id?: ModelIDInput | null,
+  role?: ModelMemberRoleInput | null,
   shopID?: ModelIDInput | null,
   userID?: ModelIDInput | null,
-  and?: Array< ModelShopUserFilterInput | null > | null,
-  or?: Array< ModelShopUserFilterInput | null > | null,
-  not?: ModelShopUserFilterInput | null,
+  and?: Array< ModelShopMemberFilterInput | null > | null,
+  or?: Array< ModelShopMemberFilterInput | null > | null,
+  not?: ModelShopMemberFilterInput | null,
 };
 
 export type FetchCategoriesQuery = {
@@ -432,7 +467,6 @@ export type FetchCategoriesQuery = {
       name: string,
     } | null >,
     nextToken?: string | null,
-    startedAt?: number | null,
   } | null,
 };
 
@@ -446,31 +480,56 @@ export type CreateProductMutation = {
     __typename: "Product",
     id: string,
     name?: string | null,
-    image?: string | null,
+    images?: Array< string | null > | null,
     price?: number | null,
+    discount?:  {
+      __typename: "Discount",
+      value?: number | null,
+      type?: string | null,
+    } | null,
     description?: string | null,
     createdBy?: string | null,
     updatedBy?: string | null,
     available?: boolean | null,
+    editors?: Array< string | null > | null,
+    categoryID: string,
     shopID: string,
     category?:  {
       __typename: "Category",
       id: string,
       name: string,
-      image: string,
+      image?: string | null,
       parent?: string | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
+    } | null,
+    shop?:  {
+      __typename: "Shop",
+      id: string,
+      name: string,
+      cover?: string | null,
+      avatar?: string | null,
+      description?: string | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      owner?: string | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
+      members?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-    productCategoryId?: string | null,
   } | null,
 };
 
@@ -484,31 +543,56 @@ export type UpdateProductMutation = {
     __typename: "Product",
     id: string,
     name?: string | null,
-    image?: string | null,
+    images?: Array< string | null > | null,
     price?: number | null,
+    discount?:  {
+      __typename: "Discount",
+      value?: number | null,
+      type?: string | null,
+    } | null,
     description?: string | null,
     createdBy?: string | null,
     updatedBy?: string | null,
     available?: boolean | null,
+    editors?: Array< string | null > | null,
+    categoryID: string,
     shopID: string,
     category?:  {
       __typename: "Category",
       id: string,
       name: string,
-      image: string,
+      image?: string | null,
       parent?: string | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
+    } | null,
+    shop?:  {
+      __typename: "Shop",
+      id: string,
+      name: string,
+      cover?: string | null,
+      avatar?: string | null,
+      description?: string | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      owner?: string | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
+      members?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-    productCategoryId?: string | null,
   } | null,
 };
 
@@ -522,31 +606,56 @@ export type DeleteProductMutation = {
     __typename: "Product",
     id: string,
     name?: string | null,
-    image?: string | null,
+    images?: Array< string | null > | null,
     price?: number | null,
+    discount?:  {
+      __typename: "Discount",
+      value?: number | null,
+      type?: string | null,
+    } | null,
     description?: string | null,
     createdBy?: string | null,
     updatedBy?: string | null,
     available?: boolean | null,
+    editors?: Array< string | null > | null,
+    categoryID: string,
     shopID: string,
     category?:  {
       __typename: "Category",
       id: string,
       name: string,
-      image: string,
+      image?: string | null,
       parent?: string | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
+    } | null,
+    shop?:  {
+      __typename: "Shop",
+      id: string,
+      name: string,
+      cover?: string | null,
+      avatar?: string | null,
+      description?: string | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      owner?: string | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
+      members?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-    productCategoryId?: string | null,
   } | null,
 };
 
@@ -559,24 +668,49 @@ export type CreateShopMutation = {
   createShop?:  {
     __typename: "Shop",
     id: string,
-    name?: string | null,
+    name: string,
     cover?: string | null,
-    profile?: string | null,
-    users?:  {
-      __typename: "ModelShopUserConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
+    avatar?: string | null,
+    description?: string | null,
+    createdBy?: string | null,
+    updatedBy?: string | null,
+    owner?: string | null,
     products?:  {
       __typename: "ModelProductConnection",
+      items:  Array< {
+        __typename: "Product",
+        id: string,
+        name?: string | null,
+        images?: Array< string | null > | null,
+        price?: number | null,
+        description?: string | null,
+        createdBy?: string | null,
+        updatedBy?: string | null,
+        available?: boolean | null,
+        editors?: Array< string | null > | null,
+        categoryID: string,
+        shopID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
       nextToken?: string | null,
-      startedAt?: number | null,
+    } | null,
+    members?:  {
+      __typename: "ModelShopMemberConnection",
+      items:  Array< {
+        __typename: "ShopMember",
+        id: string,
+        role: MemberRole,
+        shopID: string,
+        userID: string,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } | null >,
+      nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
   } | null,
 };
 
@@ -589,24 +723,49 @@ export type UpdateShopMutation = {
   updateShop?:  {
     __typename: "Shop",
     id: string,
-    name?: string | null,
+    name: string,
     cover?: string | null,
-    profile?: string | null,
-    users?:  {
-      __typename: "ModelShopUserConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
+    avatar?: string | null,
+    description?: string | null,
+    createdBy?: string | null,
+    updatedBy?: string | null,
+    owner?: string | null,
     products?:  {
       __typename: "ModelProductConnection",
+      items:  Array< {
+        __typename: "Product",
+        id: string,
+        name?: string | null,
+        images?: Array< string | null > | null,
+        price?: number | null,
+        description?: string | null,
+        createdBy?: string | null,
+        updatedBy?: string | null,
+        available?: boolean | null,
+        editors?: Array< string | null > | null,
+        categoryID: string,
+        shopID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
       nextToken?: string | null,
-      startedAt?: number | null,
+    } | null,
+    members?:  {
+      __typename: "ModelShopMemberConnection",
+      items:  Array< {
+        __typename: "ShopMember",
+        id: string,
+        role: MemberRole,
+        shopID: string,
+        userID: string,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } | null >,
+      nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
   } | null,
 };
 
@@ -619,24 +778,49 @@ export type DeleteShopMutation = {
   deleteShop?:  {
     __typename: "Shop",
     id: string,
-    name?: string | null,
+    name: string,
     cover?: string | null,
-    profile?: string | null,
-    users?:  {
-      __typename: "ModelShopUserConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
+    avatar?: string | null,
+    description?: string | null,
+    createdBy?: string | null,
+    updatedBy?: string | null,
+    owner?: string | null,
     products?:  {
       __typename: "ModelProductConnection",
+      items:  Array< {
+        __typename: "Product",
+        id: string,
+        name?: string | null,
+        images?: Array< string | null > | null,
+        price?: number | null,
+        description?: string | null,
+        createdBy?: string | null,
+        updatedBy?: string | null,
+        available?: boolean | null,
+        editors?: Array< string | null > | null,
+        categoryID: string,
+        shopID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
       nextToken?: string | null,
-      startedAt?: number | null,
+    } | null,
+    members?:  {
+      __typename: "ModelShopMemberConnection",
+      items:  Array< {
+        __typename: "ShopMember",
+        id: string,
+        role: MemberRole,
+        shopID: string,
+        userID: string,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } | null >,
+      nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
   } | null,
 };
 
@@ -650,21 +834,27 @@ export type CreateUserMutation = {
     __typename: "User",
     id: string,
     name: string,
-    phone?: string | null,
-    email?: string | null,
+    phone: string,
     avatar?: string | null,
-    identity: string,
+    authID: string,
     disabled?: boolean | null,
+    role: UserRole,
     shops?:  {
-      __typename: "ModelShopUserConnection",
+      __typename: "ModelShopMemberConnection",
+      items:  Array< {
+        __typename: "ShopMember",
+        id: string,
+        role: MemberRole,
+        shopID: string,
+        userID: string,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } | null >,
       nextToken?: string | null,
-      startedAt?: number | null,
     } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
   } | null,
 };
 
@@ -678,21 +868,27 @@ export type UpdateUserMutation = {
     __typename: "User",
     id: string,
     name: string,
-    phone?: string | null,
-    email?: string | null,
+    phone: string,
     avatar?: string | null,
-    identity: string,
+    authID: string,
     disabled?: boolean | null,
+    role: UserRole,
     shops?:  {
-      __typename: "ModelShopUserConnection",
+      __typename: "ModelShopMemberConnection",
+      items:  Array< {
+        __typename: "ShopMember",
+        id: string,
+        role: MemberRole,
+        shopID: string,
+        userID: string,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } | null >,
       nextToken?: string | null,
-      startedAt?: number | null,
     } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
   } | null,
 };
 
@@ -706,21 +902,27 @@ export type DeleteUserMutation = {
     __typename: "User",
     id: string,
     name: string,
-    phone?: string | null,
-    email?: string | null,
+    phone: string,
     avatar?: string | null,
-    identity: string,
+    authID: string,
     disabled?: boolean | null,
+    role: UserRole,
     shops?:  {
-      __typename: "ModelShopUserConnection",
+      __typename: "ModelShopMemberConnection",
+      items:  Array< {
+        __typename: "ShopMember",
+        id: string,
+        role: MemberRole,
+        shopID: string,
+        userID: string,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } | null >,
       nextToken?: string | null,
-      startedAt?: number | null,
     } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
   } | null,
 };
 
@@ -734,13 +936,30 @@ export type CreateCategoryMutation = {
     __typename: "Category",
     id: string,
     name: string,
-    image: string,
+    image?: string | null,
     parent?: string | null,
+    products?:  {
+      __typename: "ModelProductConnection",
+      items:  Array< {
+        __typename: "Product",
+        id: string,
+        name?: string | null,
+        images?: Array< string | null > | null,
+        price?: number | null,
+        description?: string | null,
+        createdBy?: string | null,
+        updatedBy?: string | null,
+        available?: boolean | null,
+        editors?: Array< string | null > | null,
+        categoryID: string,
+        shopID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
   } | null,
 };
 
@@ -754,13 +973,30 @@ export type UpdateCategoryMutation = {
     __typename: "Category",
     id: string,
     name: string,
-    image: string,
+    image?: string | null,
     parent?: string | null,
+    products?:  {
+      __typename: "ModelProductConnection",
+      items:  Array< {
+        __typename: "Product",
+        id: string,
+        name?: string | null,
+        images?: Array< string | null > | null,
+        price?: number | null,
+        description?: string | null,
+        createdBy?: string | null,
+        updatedBy?: string | null,
+        available?: boolean | null,
+        editors?: Array< string | null > | null,
+        categoryID: string,
+        shopID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
   } | null,
 };
 
@@ -774,151 +1010,195 @@ export type DeleteCategoryMutation = {
     __typename: "Category",
     id: string,
     name: string,
-    image: string,
+    image?: string | null,
     parent?: string | null,
+    products?:  {
+      __typename: "ModelProductConnection",
+      items:  Array< {
+        __typename: "Product",
+        id: string,
+        name?: string | null,
+        images?: Array< string | null > | null,
+        price?: number | null,
+        description?: string | null,
+        createdBy?: string | null,
+        updatedBy?: string | null,
+        available?: boolean | null,
+        editors?: Array< string | null > | null,
+        categoryID: string,
+        shopID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
   } | null,
 };
 
-export type CreateShopUserMutationVariables = {
-  input: CreateShopUserInput,
-  condition?: ModelShopUserConditionInput | null,
+export type CreateShopMemberMutationVariables = {
+  input: CreateShopMemberInput,
+  condition?: ModelShopMemberConditionInput | null,
 };
 
-export type CreateShopUserMutation = {
-  createShopUser?:  {
-    __typename: "ShopUser",
+export type CreateShopMemberMutation = {
+  createShopMember?:  {
+    __typename: "ShopMember",
     id: string,
+    role: MemberRole,
     shopID: string,
     userID: string,
-    shop:  {
+    shop?:  {
       __typename: "Shop",
       id: string,
-      name?: string | null,
+      name: string,
       cover?: string | null,
-      profile?: string | null,
+      avatar?: string | null,
+      description?: string | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      owner?: string | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
+      members?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    },
-    user:  {
+    } | null,
+    user?:  {
       __typename: "User",
       id: string,
       name: string,
-      phone?: string | null,
-      email?: string | null,
+      phone: string,
       avatar?: string | null,
-      identity: string,
+      authID: string,
       disabled?: boolean | null,
+      role: UserRole,
+      shops?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    },
+    } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
+    owner?: string | null,
   } | null,
 };
 
-export type UpdateShopUserMutationVariables = {
-  input: UpdateShopUserInput,
-  condition?: ModelShopUserConditionInput | null,
+export type UpdateShopMemberMutationVariables = {
+  input: UpdateShopMemberInput,
+  condition?: ModelShopMemberConditionInput | null,
 };
 
-export type UpdateShopUserMutation = {
-  updateShopUser?:  {
-    __typename: "ShopUser",
+export type UpdateShopMemberMutation = {
+  updateShopMember?:  {
+    __typename: "ShopMember",
     id: string,
+    role: MemberRole,
     shopID: string,
     userID: string,
-    shop:  {
+    shop?:  {
       __typename: "Shop",
       id: string,
-      name?: string | null,
+      name: string,
       cover?: string | null,
-      profile?: string | null,
+      avatar?: string | null,
+      description?: string | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      owner?: string | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
+      members?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    },
-    user:  {
+    } | null,
+    user?:  {
       __typename: "User",
       id: string,
       name: string,
-      phone?: string | null,
-      email?: string | null,
+      phone: string,
       avatar?: string | null,
-      identity: string,
+      authID: string,
       disabled?: boolean | null,
+      role: UserRole,
+      shops?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    },
+    } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
+    owner?: string | null,
   } | null,
 };
 
-export type DeleteShopUserMutationVariables = {
-  input: DeleteShopUserInput,
-  condition?: ModelShopUserConditionInput | null,
+export type DeleteShopMemberMutationVariables = {
+  input: DeleteShopMemberInput,
+  condition?: ModelShopMemberConditionInput | null,
 };
 
-export type DeleteShopUserMutation = {
-  deleteShopUser?:  {
-    __typename: "ShopUser",
+export type DeleteShopMemberMutation = {
+  deleteShopMember?:  {
+    __typename: "ShopMember",
     id: string,
+    role: MemberRole,
     shopID: string,
     userID: string,
-    shop:  {
+    shop?:  {
       __typename: "Shop",
       id: string,
-      name?: string | null,
+      name: string,
       cover?: string | null,
-      profile?: string | null,
+      avatar?: string | null,
+      description?: string | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      owner?: string | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
+      members?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    },
-    user:  {
+    } | null,
+    user?:  {
       __typename: "User",
       id: string,
       name: string,
-      phone?: string | null,
-      email?: string | null,
+      phone: string,
       avatar?: string | null,
-      identity: string,
+      authID: string,
       disabled?: boolean | null,
+      role: UserRole,
+      shops?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    },
+    } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
+    owner?: string | null,
   } | null,
 };
 
@@ -931,31 +1211,56 @@ export type GetProductQuery = {
     __typename: "Product",
     id: string,
     name?: string | null,
-    image?: string | null,
+    images?: Array< string | null > | null,
     price?: number | null,
+    discount?:  {
+      __typename: "Discount",
+      value?: number | null,
+      type?: string | null,
+    } | null,
     description?: string | null,
     createdBy?: string | null,
     updatedBy?: string | null,
     available?: boolean | null,
+    editors?: Array< string | null > | null,
+    categoryID: string,
     shopID: string,
     category?:  {
       __typename: "Category",
       id: string,
       name: string,
-      image: string,
+      image?: string | null,
       parent?: string | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
+    } | null,
+    shop?:  {
+      __typename: "Shop",
+      id: string,
+      name: string,
+      cover?: string | null,
+      avatar?: string | null,
+      description?: string | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      owner?: string | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
+      members?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-    productCategoryId?: string | null,
   } | null,
 };
 
@@ -972,55 +1277,46 @@ export type ListProductsQuery = {
       __typename: "Product",
       id: string,
       name?: string | null,
-      image?: string | null,
+      images?: Array< string | null > | null,
       price?: number | null,
+      discount?:  {
+        __typename: "Discount",
+        value?: number | null,
+        type?: string | null,
+      } | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       available?: boolean | null,
+      editors?: Array< string | null > | null,
+      categoryID: string,
       shopID: string,
+      category?:  {
+        __typename: "Category",
+        id: string,
+        name: string,
+        image?: string | null,
+        parent?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      shop?:  {
+        __typename: "Shop",
+        id: string,
+        name: string,
+        cover?: string | null,
+        avatar?: string | null,
+        description?: string | null,
+        createdBy?: string | null,
+        updatedBy?: string | null,
+        owner?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-      productCategoryId?: string | null,
     } | null >,
     nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
-export type SyncProductsQueryVariables = {
-  filter?: ModelProductFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  lastSync?: number | null,
-};
-
-export type SyncProductsQuery = {
-  syncProducts?:  {
-    __typename: "ModelProductConnection",
-    items:  Array< {
-      __typename: "Product",
-      id: string,
-      name?: string | null,
-      image?: string | null,
-      price?: number | null,
-      description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      shopID: string,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-      productCategoryId?: string | null,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
   } | null,
 };
 
@@ -1032,24 +1328,49 @@ export type GetShopQuery = {
   getShop?:  {
     __typename: "Shop",
     id: string,
-    name?: string | null,
+    name: string,
     cover?: string | null,
-    profile?: string | null,
-    users?:  {
-      __typename: "ModelShopUserConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
+    avatar?: string | null,
+    description?: string | null,
+    createdBy?: string | null,
+    updatedBy?: string | null,
+    owner?: string | null,
     products?:  {
       __typename: "ModelProductConnection",
+      items:  Array< {
+        __typename: "Product",
+        id: string,
+        name?: string | null,
+        images?: Array< string | null > | null,
+        price?: number | null,
+        description?: string | null,
+        createdBy?: string | null,
+        updatedBy?: string | null,
+        available?: boolean | null,
+        editors?: Array< string | null > | null,
+        categoryID: string,
+        shopID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
       nextToken?: string | null,
-      startedAt?: number | null,
+    } | null,
+    members?:  {
+      __typename: "ModelShopMemberConnection",
+      items:  Array< {
+        __typename: "ShopMember",
+        id: string,
+        role: MemberRole,
+        shopID: string,
+        userID: string,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } | null >,
+      nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
   } | null,
 };
 
@@ -1065,44 +1386,25 @@ export type ListShopsQuery = {
     items:  Array< {
       __typename: "Shop",
       id: string,
-      name?: string | null,
+      name: string,
       cover?: string | null,
-      profile?: string | null,
+      avatar?: string | null,
+      description?: string | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      owner?: string | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
+      members?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
     } | null >,
     nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
-export type SyncShopsQueryVariables = {
-  filter?: ModelShopFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  lastSync?: number | null,
-};
-
-export type SyncShopsQuery = {
-  syncShops?:  {
-    __typename: "ModelShopConnection",
-    items:  Array< {
-      __typename: "Shop",
-      id: string,
-      name?: string | null,
-      cover?: string | null,
-      profile?: string | null,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
   } | null,
 };
 
@@ -1115,21 +1417,27 @@ export type GetUserQuery = {
     __typename: "User",
     id: string,
     name: string,
-    phone?: string | null,
-    email?: string | null,
+    phone: string,
     avatar?: string | null,
-    identity: string,
+    authID: string,
     disabled?: boolean | null,
+    role: UserRole,
     shops?:  {
-      __typename: "ModelShopUserConnection",
+      __typename: "ModelShopMemberConnection",
+      items:  Array< {
+        __typename: "ShopMember",
+        id: string,
+        role: MemberRole,
+        shopID: string,
+        userID: string,
+        createdAt: string,
+        updatedAt: string,
+        owner?: string | null,
+      } | null >,
       nextToken?: string | null,
-      startedAt?: number | null,
     } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
   } | null,
 };
 
@@ -1146,49 +1454,19 @@ export type ListUsersQuery = {
       __typename: "User",
       id: string,
       name: string,
-      phone?: string | null,
-      email?: string | null,
+      phone: string,
       avatar?: string | null,
-      identity: string,
+      authID: string,
       disabled?: boolean | null,
+      role: UserRole,
+      shops?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
     } | null >,
     nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
-export type SyncUsersQueryVariables = {
-  filter?: ModelUserFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  lastSync?: number | null,
-};
-
-export type SyncUsersQuery = {
-  syncUsers?:  {
-    __typename: "ModelUserConnection",
-    items:  Array< {
-      __typename: "User",
-      id: string,
-      name: string,
-      phone?: string | null,
-      email?: string | null,
-      avatar?: string | null,
-      identity: string,
-      disabled?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
   } | null,
 };
 
@@ -1201,13 +1479,30 @@ export type GetCategoryQuery = {
     __typename: "Category",
     id: string,
     name: string,
-    image: string,
+    image?: string | null,
     parent?: string | null,
+    products?:  {
+      __typename: "ModelProductConnection",
+      items:  Array< {
+        __typename: "Product",
+        id: string,
+        name?: string | null,
+        images?: Array< string | null > | null,
+        price?: number | null,
+        description?: string | null,
+        createdBy?: string | null,
+        updatedBy?: string | null,
+        available?: boolean | null,
+        editors?: Array< string | null > | null,
+        categoryID: string,
+        shopID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
   } | null,
 };
 
@@ -1224,549 +1519,117 @@ export type ListCategoriesQuery = {
       __typename: "Category",
       id: string,
       name: string,
-      image: string,
+      image?: string | null,
       parent?: string | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
     } | null >,
     nextToken?: string | null,
-    startedAt?: number | null,
   } | null,
 };
 
-export type SyncCategoriesQueryVariables = {
-  filter?: ModelCategoryFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  lastSync?: number | null,
-};
-
-export type SyncCategoriesQuery = {
-  syncCategories?:  {
-    __typename: "ModelCategoryConnection",
-    items:  Array< {
-      __typename: "Category",
-      id: string,
-      name: string,
-      image: string,
-      parent?: string | null,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
-export type GetShopUserQueryVariables = {
+export type GetShopMemberQueryVariables = {
   id: string,
 };
 
-export type GetShopUserQuery = {
-  getShopUser?:  {
-    __typename: "ShopUser",
+export type GetShopMemberQuery = {
+  getShopMember?:  {
+    __typename: "ShopMember",
     id: string,
+    role: MemberRole,
     shopID: string,
     userID: string,
-    shop:  {
+    shop?:  {
       __typename: "Shop",
       id: string,
-      name?: string | null,
+      name: string,
       cover?: string | null,
-      profile?: string | null,
+      avatar?: string | null,
+      description?: string | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      owner?: string | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
+      members?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    },
-    user:  {
+    } | null,
+    user?:  {
       __typename: "User",
       id: string,
       name: string,
-      phone?: string | null,
-      email?: string | null,
+      phone: string,
       avatar?: string | null,
-      identity: string,
+      authID: string,
       disabled?: boolean | null,
+      role: UserRole,
+      shops?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    },
+    } | null,
     createdAt: string,
     updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
+    owner?: string | null,
   } | null,
 };
 
-export type ListShopUsersQueryVariables = {
-  filter?: ModelShopUserFilterInput | null,
+export type ListShopMembersQueryVariables = {
+  filter?: ModelShopMemberFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListShopUsersQuery = {
-  listShopUsers?:  {
-    __typename: "ModelShopUserConnection",
+export type ListShopMembersQuery = {
+  listShopMembers?:  {
+    __typename: "ModelShopMemberConnection",
     items:  Array< {
-      __typename: "ShopUser",
+      __typename: "ShopMember",
       id: string,
+      role: MemberRole,
       shopID: string,
       userID: string,
+      shop?:  {
+        __typename: "Shop",
+        id: string,
+        name: string,
+        cover?: string | null,
+        avatar?: string | null,
+        description?: string | null,
+        createdBy?: string | null,
+        updatedBy?: string | null,
+        owner?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      user?:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        phone: string,
+        avatar?: string | null,
+        authID: string,
+        disabled?: boolean | null,
+        role: UserRole,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
       createdAt: string,
       updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
-export type SyncShopUsersQueryVariables = {
-  filter?: ModelShopUserFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  lastSync?: number | null,
-};
-
-export type SyncShopUsersQuery = {
-  syncShopUsers?:  {
-    __typename: "ModelShopUserConnection",
-    items:  Array< {
-      __typename: "ShopUser",
-      id: string,
-      shopID: string,
-      userID: string,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
-export type OnCreateProductSubscription = {
-  onCreateProduct?:  {
-    __typename: "Product",
-    id: string,
-    name?: string | null,
-    image?: string | null,
-    price?: number | null,
-    description?: string | null,
-    createdBy?: string | null,
-    updatedBy?: string | null,
-    available?: boolean | null,
-    shopID: string,
-    category?:  {
-      __typename: "Category",
-      id: string,
-      name: string,
-      image: string,
-      parent?: string | null,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-    productCategoryId?: string | null,
-  } | null,
-};
-
-export type OnUpdateProductSubscription = {
-  onUpdateProduct?:  {
-    __typename: "Product",
-    id: string,
-    name?: string | null,
-    image?: string | null,
-    price?: number | null,
-    description?: string | null,
-    createdBy?: string | null,
-    updatedBy?: string | null,
-    available?: boolean | null,
-    shopID: string,
-    category?:  {
-      __typename: "Category",
-      id: string,
-      name: string,
-      image: string,
-      parent?: string | null,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-    productCategoryId?: string | null,
-  } | null,
-};
-
-export type OnDeleteProductSubscription = {
-  onDeleteProduct?:  {
-    __typename: "Product",
-    id: string,
-    name?: string | null,
-    image?: string | null,
-    price?: number | null,
-    description?: string | null,
-    createdBy?: string | null,
-    updatedBy?: string | null,
-    available?: boolean | null,
-    shopID: string,
-    category?:  {
-      __typename: "Category",
-      id: string,
-      name: string,
-      image: string,
-      parent?: string | null,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-    productCategoryId?: string | null,
-  } | null,
-};
-
-export type OnCreateShopSubscription = {
-  onCreateShop?:  {
-    __typename: "Shop",
-    id: string,
-    name?: string | null,
-    cover?: string | null,
-    profile?: string | null,
-    users?:  {
-      __typename: "ModelShopUserConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
-    products?:  {
-      __typename: "ModelProductConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnUpdateShopSubscription = {
-  onUpdateShop?:  {
-    __typename: "Shop",
-    id: string,
-    name?: string | null,
-    cover?: string | null,
-    profile?: string | null,
-    users?:  {
-      __typename: "ModelShopUserConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
-    products?:  {
-      __typename: "ModelProductConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnDeleteShopSubscription = {
-  onDeleteShop?:  {
-    __typename: "Shop",
-    id: string,
-    name?: string | null,
-    cover?: string | null,
-    profile?: string | null,
-    users?:  {
-      __typename: "ModelShopUserConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
-    products?:  {
-      __typename: "ModelProductConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnCreateUserSubscription = {
-  onCreateUser?:  {
-    __typename: "User",
-    id: string,
-    name: string,
-    phone?: string | null,
-    email?: string | null,
-    avatar?: string | null,
-    identity: string,
-    disabled?: boolean | null,
-    shops?:  {
-      __typename: "ModelShopUserConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnUpdateUserSubscription = {
-  onUpdateUser?:  {
-    __typename: "User",
-    id: string,
-    name: string,
-    phone?: string | null,
-    email?: string | null,
-    avatar?: string | null,
-    identity: string,
-    disabled?: boolean | null,
-    shops?:  {
-      __typename: "ModelShopUserConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnDeleteUserSubscription = {
-  onDeleteUser?:  {
-    __typename: "User",
-    id: string,
-    name: string,
-    phone?: string | null,
-    email?: string | null,
-    avatar?: string | null,
-    identity: string,
-    disabled?: boolean | null,
-    shops?:  {
-      __typename: "ModelShopUserConnection",
-      nextToken?: string | null,
-      startedAt?: number | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnCreateCategorySubscription = {
-  onCreateCategory?:  {
-    __typename: "Category",
-    id: string,
-    name: string,
-    image: string,
-    parent?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnUpdateCategorySubscription = {
-  onUpdateCategory?:  {
-    __typename: "Category",
-    id: string,
-    name: string,
-    image: string,
-    parent?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnDeleteCategorySubscription = {
-  onDeleteCategory?:  {
-    __typename: "Category",
-    id: string,
-    name: string,
-    image: string,
-    parent?: string | null,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnCreateShopUserSubscription = {
-  onCreateShopUser?:  {
-    __typename: "ShopUser",
-    id: string,
-    shopID: string,
-    userID: string,
-    shop:  {
-      __typename: "Shop",
-      id: string,
-      name?: string | null,
-      cover?: string | null,
-      profile?: string | null,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    },
-    user:  {
-      __typename: "User",
-      id: string,
-      name: string,
-      phone?: string | null,
-      email?: string | null,
-      avatar?: string | null,
-      identity: string,
-      disabled?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    },
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnUpdateShopUserSubscription = {
-  onUpdateShopUser?:  {
-    __typename: "ShopUser",
-    id: string,
-    shopID: string,
-    userID: string,
-    shop:  {
-      __typename: "Shop",
-      id: string,
-      name?: string | null,
-      cover?: string | null,
-      profile?: string | null,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    },
-    user:  {
-      __typename: "User",
-      id: string,
-      name: string,
-      phone?: string | null,
-      email?: string | null,
-      avatar?: string | null,
-      identity: string,
-      disabled?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    },
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnDeleteShopUserSubscription = {
-  onDeleteShopUser?:  {
-    __typename: "ShopUser",
-    id: string,
-    shopID: string,
-    userID: string,
-    shop:  {
-      __typename: "Shop",
-      id: string,
-      name?: string | null,
-      cover?: string | null,
-      profile?: string | null,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    },
-    user:  {
-      __typename: "User",
-      id: string,
-      name: string,
-      phone?: string | null,
-      email?: string | null,
-      avatar?: string | null,
-      identity: string,
-      disabled?: boolean | null,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    },
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
   } | null,
 };

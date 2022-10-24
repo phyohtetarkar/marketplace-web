@@ -1,9 +1,10 @@
+import { Auth } from "aws-amplify";
 import { Offcanvas } from "bootstrap";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { Search, ShoppingCart } from "react-feather";
+import { AuthenticationContext } from "../../common/contexts";
 
 interface HeaderProps {
   hideAuth?: boolean;
@@ -66,20 +67,26 @@ function AccountMenu({ onNavClick }: { onNavClick?: () => void }) {
   }, []);
 
   return (
-    <ul className="navbar-nav">
-      <li className="nav-item dropdown">
-        <a
-          ref={profileDropdownToggle}
-          href="#"
-          className="nav-link hstack dropdown-toggle"
-          role="button"
-          data-bs-toggle="dropdown"
-          id="profileMenuLink"
-          style={{
-            outlineStyle: "none",
-          }}
-        >
-          {/* <div
+    <AuthenticationContext.Consumer>
+      {({ payload, status }) => {
+        if (status !== "success" || !payload) {
+          return null;
+        }
+        return (
+          <ul className="navbar-nav">
+            <li className="nav-item dropdown">
+              <a
+                ref={profileDropdownToggle}
+                href="#"
+                className="nav-link hstack dropdown-toggle"
+                role="button"
+                data-bs-toggle="dropdown"
+                id="profileMenuLink"
+                style={{
+                  outlineStyle: "none"
+                }}
+              >
+                {/* <div
             className="d-none d-lg-block me-1 ratio ratio-1x1"
             style={{ width: 35, height: 35 }}
           >
@@ -91,45 +98,49 @@ function AccountMenu({ onNavClick }: { onNavClick?: () => void }) {
               objectFit="cover"
             />
           </div> */}
-          <span className="">Developer</span>
-        </a>
-        <ul
-          className="dropdown-menu dropdown-menu-end"
-          aria-labelledby="profileMenuLink"
-        >
-          <li className="d-none d-lg-block">
-            <div className="dropdown-header py-0">
-              <div className="mb-1">Signed in as</div>
-              <h6 className="text-dark">Developer</h6>
-            </div>
-          </li>
-          <li className="d-none d-lg-block">
-            <hr className="dropdown-divider" />
-          </li>
-          <li>
-            <Link href="/profile">
-              <a
-                className="dropdown-item text-decoration-none"
-                onClick={(e) => onNavClick && onNavClick()}
-              >
-                My profile
+                <span className="">Hi, {payload.name ?? ""}</span>
               </a>
-            </Link>
-          </li>
-          <div className="dropdown-divider"></div>
-          <li className="dropdown-item">
-            <div
-              role="button"
-              onClick={() => {
-                onNavClick && onNavClick();
-              }}
-            >
-              Logout
-            </div>
-          </li>
-        </ul>
-      </li>
-    </ul>
+              <ul
+                className="dropdown-menu dropdown-menu-end"
+                aria-labelledby="profileMenuLink"
+              >
+                {/* <li className="d-none d-lg-block">
+                  <div className="dropdown-header py-0">
+                    <div className="mb-1">Signed in as</div>
+                    <h6 className="text-dark">{payload.name ?? ""}</h6>
+                  </div>
+                </li>
+                <li className="d-none d-lg-block">
+                  <hr className="dropdown-divider" />
+                </li> */}
+                <li>
+                  <Link href="/profile/overview">
+                    <a
+                      className="dropdown-item text-decoration-none"
+                      onClick={(e) => onNavClick && onNavClick()}
+                    >
+                      My profile
+                    </a>
+                  </Link>
+                </li>
+                <div className="dropdown-divider"></div>
+                <li className="dropdown-item">
+                  <div
+                    role="button"
+                    onClick={() => {
+                      onNavClick && onNavClick();
+                      Auth.signOut().catch(console.error);
+                    }}
+                  >
+                    Logout
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        );
+      }}
+    </AuthenticationContext.Consumer>
   );
 }
 
@@ -146,7 +157,7 @@ function Header({ hideAuth }: HeaderProps) {
         return;
       }
       offcanvas.current = new Offcanvas(offcanvasRef.current, {
-        scroll: true,
+        scroll: true
       });
     };
 
@@ -202,7 +213,7 @@ function Header({ hideAuth }: HeaderProps) {
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                       style={{
-                        height: 44,
+                        height: 44
                       }}
                     />
                     <button
@@ -218,26 +229,31 @@ function Header({ hideAuth }: HeaderProps) {
 
             <div className="flex-grow-1"></div>
 
-            <>
-              {!hideAuth && (
-                <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0">
-                  <div className="nav-item">
-                    <Link href="/sign-up">
-                      <a className="btn btn-outline-primary d-none d-lg-block">
-                        Sign up
-                      </a>
-                    </Link>
+            <AuthenticationContext.Consumer>
+              {({ payload, status }) => {
+                if (payload) {
+                  return null;
+                }
+                return (
+                  <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0">
+                    <div className="nav-item">
+                      <Link href="/sign-up">
+                        <a className="btn btn-outline-primary d-none d-lg-block">
+                          Sign up
+                        </a>
+                      </Link>
+                    </div>
+                    <div className="nav-item">
+                      <Link href="/login">
+                        <a className="btn btn-primary ms-2 d-none d-lg-block">
+                          Login
+                        </a>
+                      </Link>
+                    </div>
                   </div>
-                  <div className="nav-item">
-                    <Link href="/login">
-                      <a className="btn btn-primary ms-2 d-none d-lg-block">
-                        Login
-                      </a>
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </>
+                );
+              }}
+            </AuthenticationContext.Consumer>
 
             <div>
               <Link href="/shopping-cart">
@@ -296,36 +312,45 @@ function Header({ hideAuth }: HeaderProps) {
 
               <AccountMenu onNavClick={() => offcanvas.current?.hide()} />
 
-              <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0">
-                <div className="nav-item">
-                  <div
-                    role="button"
-                    className="btn btn-outline-primary d-block d-lg-none"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasNavbar"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      router.push("/sign-up");
-                    }}
-                  >
-                    Sign up
-                  </div>
-                </div>
-                <div className="nav-item">
-                  <div
-                    role="button"
-                    className="btn btn-primary ms-2 d-block d-lg-none"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasNavbar"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      router.push("/login");
-                    }}
-                  >
-                    Login
-                  </div>
-                </div>
-              </div>
+              <AuthenticationContext.Consumer>
+                {({ payload, status }) => {
+                  if (payload) {
+                    return null;
+                  }
+                  return (
+                    <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0">
+                      <div className="nav-item">
+                        <div
+                          role="button"
+                          className="btn btn-outline-primary d-block d-lg-none"
+                          data-bs-toggle="offcanvas"
+                          data-bs-target="#offcanvasNavbar"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            router.push("/sign-up");
+                          }}
+                        >
+                          Sign up
+                        </div>
+                      </div>
+                      <div className="nav-item">
+                        <div
+                          role="button"
+                          className="btn btn-primary ms-2 d-block d-lg-none"
+                          data-bs-toggle="offcanvas"
+                          data-bs-target="#offcanvasNavbar"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            router.push("/login");
+                          }}
+                        >
+                          Login
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }}
+              </AuthenticationContext.Consumer>
             </div>
           </div>
 

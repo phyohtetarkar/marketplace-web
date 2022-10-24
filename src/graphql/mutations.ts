@@ -10,30 +10,50 @@ export const createProduct = /* GraphQL */ `
     createProduct(input: $input, condition: $condition) {
       id
       name
-      image
+      images
       price
+      discount {
+        value
+        type
+      }
       description
       createdBy
       updatedBy
       available
+      editors
+      categoryID
       shopID
       category {
         id
         name
         image
         parent
+        products {
+          nextToken
+        }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
+      }
+      shop {
+        id
+        name
+        cover
+        avatar
+        description
+        createdBy
+        updatedBy
+        owner
+        products {
+          nextToken
+        }
+        members {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      productCategoryId
     }
   }
 `;
@@ -45,30 +65,50 @@ export const updateProduct = /* GraphQL */ `
     updateProduct(input: $input, condition: $condition) {
       id
       name
-      image
+      images
       price
+      discount {
+        value
+        type
+      }
       description
       createdBy
       updatedBy
       available
+      editors
+      categoryID
       shopID
       category {
         id
         name
         image
         parent
+        products {
+          nextToken
+        }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
+      }
+      shop {
+        id
+        name
+        cover
+        avatar
+        description
+        createdBy
+        updatedBy
+        owner
+        products {
+          nextToken
+        }
+        members {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      productCategoryId
     }
   }
 `;
@@ -80,30 +120,50 @@ export const deleteProduct = /* GraphQL */ `
     deleteProduct(input: $input, condition: $condition) {
       id
       name
-      image
+      images
       price
+      discount {
+        value
+        type
+      }
       description
       createdBy
       updatedBy
       available
+      editors
+      categoryID
       shopID
       category {
         id
         name
         image
         parent
+        products {
+          nextToken
+        }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
+      }
+      shop {
+        id
+        name
+        cover
+        avatar
+        description
+        createdBy
+        updatedBy
+        owner
+        products {
+          nextToken
+        }
+        members {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      productCategoryId
     }
   }
 `;
@@ -116,20 +176,43 @@ export const createShop = /* GraphQL */ `
       id
       name
       cover
-      profile
-      users {
-        nextToken
-        startedAt
-      }
+      avatar
+      description
+      createdBy
+      updatedBy
+      owner
       products {
+        items {
+          id
+          name
+          images
+          price
+          description
+          createdBy
+          updatedBy
+          available
+          editors
+          categoryID
+          shopID
+          createdAt
+          updatedAt
+        }
         nextToken
-        startedAt
+      }
+      members {
+        items {
+          id
+          role
+          shopID
+          userID
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -142,20 +225,43 @@ export const updateShop = /* GraphQL */ `
       id
       name
       cover
-      profile
-      users {
-        nextToken
-        startedAt
-      }
+      avatar
+      description
+      createdBy
+      updatedBy
+      owner
       products {
+        items {
+          id
+          name
+          images
+          price
+          description
+          createdBy
+          updatedBy
+          available
+          editors
+          categoryID
+          shopID
+          createdAt
+          updatedAt
+        }
         nextToken
-        startedAt
+      }
+      members {
+        items {
+          id
+          role
+          shopID
+          userID
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -168,20 +274,43 @@ export const deleteShop = /* GraphQL */ `
       id
       name
       cover
-      profile
-      users {
-        nextToken
-        startedAt
-      }
+      avatar
+      description
+      createdBy
+      updatedBy
+      owner
       products {
+        items {
+          id
+          name
+          images
+          price
+          description
+          createdBy
+          updatedBy
+          available
+          editors
+          categoryID
+          shopID
+          createdAt
+          updatedAt
+        }
         nextToken
-        startedAt
+      }
+      members {
+        items {
+          id
+          role
+          shopID
+          userID
+          createdAt
+          updatedAt
+          owner
+        }
+        nextToken
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -194,19 +323,24 @@ export const createUser = /* GraphQL */ `
       id
       name
       phone
-      email
       avatar
-      identity
+      authID
       disabled
+      role
       shops {
+        items {
+          id
+          role
+          shopID
+          userID
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
-        startedAt
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -219,19 +353,24 @@ export const updateUser = /* GraphQL */ `
       id
       name
       phone
-      email
       avatar
-      identity
+      authID
       disabled
+      role
       shops {
+        items {
+          id
+          role
+          shopID
+          userID
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
-        startedAt
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -244,19 +383,24 @@ export const deleteUser = /* GraphQL */ `
       id
       name
       phone
-      email
       avatar
-      identity
+      authID
       disabled
+      role
       shops {
+        items {
+          id
+          role
+          shopID
+          userID
+          createdAt
+          updatedAt
+          owner
+        }
         nextToken
-        startedAt
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -270,11 +414,26 @@ export const createCategory = /* GraphQL */ `
       name
       image
       parent
+      products {
+        items {
+          id
+          name
+          images
+          price
+          description
+          createdBy
+          updatedBy
+          available
+          editors
+          categoryID
+          shopID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -288,11 +447,26 @@ export const updateCategory = /* GraphQL */ `
       name
       image
       parent
+      products {
+        items {
+          id
+          name
+          images
+          price
+          description
+          createdBy
+          updatedBy
+          available
+          editors
+          categoryID
+          shopID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -306,137 +480,170 @@ export const deleteCategory = /* GraphQL */ `
       name
       image
       parent
+      products {
+        items {
+          id
+          name
+          images
+          price
+          description
+          createdBy
+          updatedBy
+          available
+          editors
+          categoryID
+          shopID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
-export const createShopUser = /* GraphQL */ `
-  mutation CreateShopUser(
-    $input: CreateShopUserInput!
-    $condition: ModelShopUserConditionInput
+export const createShopMember = /* GraphQL */ `
+  mutation CreateShopMember(
+    $input: CreateShopMemberInput!
+    $condition: ModelShopMemberConditionInput
   ) {
-    createShopUser(input: $input, condition: $condition) {
+    createShopMember(input: $input, condition: $condition) {
       id
+      role
       shopID
       userID
       shop {
         id
         name
         cover
-        profile
+        avatar
+        description
+        createdBy
+        updatedBy
+        owner
+        products {
+          nextToken
+        }
+        members {
+          nextToken
+        }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       user {
         id
         name
         phone
-        email
         avatar
-        identity
+        authID
         disabled
+        role
+        shops {
+          nextToken
+        }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+      owner
     }
   }
 `;
-export const updateShopUser = /* GraphQL */ `
-  mutation UpdateShopUser(
-    $input: UpdateShopUserInput!
-    $condition: ModelShopUserConditionInput
+export const updateShopMember = /* GraphQL */ `
+  mutation UpdateShopMember(
+    $input: UpdateShopMemberInput!
+    $condition: ModelShopMemberConditionInput
   ) {
-    updateShopUser(input: $input, condition: $condition) {
+    updateShopMember(input: $input, condition: $condition) {
       id
+      role
       shopID
       userID
       shop {
         id
         name
         cover
-        profile
+        avatar
+        description
+        createdBy
+        updatedBy
+        owner
+        products {
+          nextToken
+        }
+        members {
+          nextToken
+        }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       user {
         id
         name
         phone
-        email
         avatar
-        identity
+        authID
         disabled
+        role
+        shops {
+          nextToken
+        }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+      owner
     }
   }
 `;
-export const deleteShopUser = /* GraphQL */ `
-  mutation DeleteShopUser(
-    $input: DeleteShopUserInput!
-    $condition: ModelShopUserConditionInput
+export const deleteShopMember = /* GraphQL */ `
+  mutation DeleteShopMember(
+    $input: DeleteShopMemberInput!
+    $condition: ModelShopMemberConditionInput
   ) {
-    deleteShopUser(input: $input, condition: $condition) {
+    deleteShopMember(input: $input, condition: $condition) {
       id
+      role
       shopID
       userID
       shop {
         id
         name
         cover
-        profile
+        avatar
+        description
+        createdBy
+        updatedBy
+        owner
+        products {
+          nextToken
+        }
+        members {
+          nextToken
+        }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       user {
         id
         name
         phone
-        email
         avatar
-        identity
+        authID
         disabled
+        role
+        shops {
+          nextToken
+        }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+      owner
     }
   }
 `;

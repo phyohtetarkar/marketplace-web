@@ -1,39 +1,51 @@
-import { Auth } from "aws-amplify";
 import { useFormik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Input, PasswordInput } from "../components/forms";
+import { signUp } from "../repos/AuthRepo";
 
 interface FormValues {
-  fullName: string;
-  phone: string;
-  password: string;
-  confirmPassword: string;
+  fullName?: string;
+  phone?: string;
+  password?: string;
+  confirmPassword?: string;
 }
 
 function Register() {
+  const mountedRef = useRef(true);
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
-  const formik = useFormik<FormValues>({
+  const {
+    values,
+    errors,
+    handleChange,
+    handleSubmit,
+    isSubmitting,
+    setSubmitting
+  } = useFormik<FormValues>({
     initialValues: {
       fullName: "",
       phone: "",
       password: "",
-      confirmPassword: "",
+      confirmPassword: ""
     },
     validate: (values) => {
-      const errors: any = {};
+      const errors: FormValues = {};
       const regex =
         '/^(([^<>()[].,;:s@"]+(.[^<>()[].,;:s@"]+)*)|(".+"))@(([^<>()[].,;:s@"]+.)+[^<>()[].,;:s@"]{2,})$/i';
-      if (!values.fullName || values.fullName.trim().length === 0) {
+
+      if (
+        !values.fullName ||
+        values.fullName.trim().length === 0 ||
+        !values.fullName.startsWith("09")
+      ) {
         errors.fullName = "Please enter your fullname.";
       }
 
       if (!values.phone || values.phone.trim().length === 0) {
-        errors.phone = "Please enter your phone number.";
+        errors.phone = "Please enter valid phone number.";
       }
 
       if (!values.password || values.password.trim().length < 8) {
@@ -47,14 +59,16 @@ function Register() {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: (values) => {
-      // invokeSignUp({
-      //   fullName: values.fullName,
-      //   email: values.email,
-      //   password: values.password,
-      // });
       processSignUp(values);
-    },
+    }
   });
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!router.isReady) {
@@ -65,25 +79,17 @@ function Register() {
 
   const processSignUp = async (values: FormValues) => {
     try {
-      setLoading(true);
-      const { user } = await Auth.signUp({
-        username: values.phone,
-        password: values.password,
-        attributes: {
-          name: values.fullName,
-          phone_number: values.phone, // optional - E.164 number convention
-          // other custom attributes
-        },
-        autoSignIn: {
-          // optional - enables auto sign in after user is confirmed
-          enabled: true,
-        },
+      const phone = `+95${values.phone!.substring(1)}`;
+      const { user } = await signUp({
+        name: values.fullName!,
+        phone: phone,
+        password: values.password!
       });
-      console.log(user);
+      mountedRef.current && router.push("/");
     } catch (error) {
       console.log("error signing up:", error);
     } finally {
-      setLoading(false);
+      mountedRef.current && setSubmitting(false);
     }
   };
 
@@ -101,7 +107,7 @@ function Register() {
                 </div>
               )} */}
 
-              <form className="row g-2" onSubmit={formik.handleSubmit}>
+              <form className="row g-2" onSubmit={handleSubmit}>
                 <div className="col-md-12 mb-2">
                   <Input
                     label="Full Name"
@@ -109,9 +115,9 @@ function Register() {
                     type="text"
                     name="fullName"
                     placeholder="Your full name"
-                    value={formik.values.fullName}
-                    onChange={formik.handleChange}
-                    error={formik.errors.fullName}
+                    value={values.fullName}
+                    onChange={handleChange}
+                    error={errors.fullName}
                   />
                 </div>
                 <div className="col-md-12 mb-2">
@@ -121,9 +127,9 @@ function Register() {
                     type="tel"
                     name="phone"
                     placeholder="09xxxxxxxx"
-                    value={formik.values.phone}
-                    onChange={formik.handleChange}
-                    error={formik.errors.phone}
+                    value={values.phone}
+                    onChange={handleChange}
+                    error={errors.phone}
                   />
                 </div>
                 <div className="col-md-12 mb-2">
@@ -131,9 +137,9 @@ function Register() {
                     label="Password"
                     name="password"
                     placeholder="Minimum 8 characters"
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    error={formik.errors.password}
+                    value={values.password}
+                    onChange={handleChange}
+                    error={errors.password}
                   />
                 </div>
                 <div className="col-md-12 mb-2">
@@ -141,18 +147,18 @@ function Register() {
                     label="Confirm Password"
                     name="confirmPassword"
                     placeholder="Minimum 8 characters"
-                    value={formik.values.confirmPassword}
-                    onChange={formik.handleChange}
-                    error={formik.errors.confirmPassword}
+                    value={values.confirmPassword}
+                    onChange={handleChange}
+                    error={errors.confirmPassword}
                   />
                 </div>
                 <div className="col-md-12 mt-4 mb-2">
                   <button
                     type="submit"
                     className="btn btn-primary w-100 py-2h"
-                    disabled={loading}
+                    disabled={isSubmitting}
                   >
-                    {loading && (
+                    {isSubmitting && (
                       <span
                         className="spinner-border spinner-border-sm me-2"
                         role="status"
@@ -181,7 +187,7 @@ function Register() {
                     <button
                       type="button"
                       className="btn btn-outline-light border w-50 d-flex align-items-center"
-                      disabled={loading}
+                      disabled={isSubmitting}
                     >
                       <Image
                         src="/images/icons8-facebook-48.png"
@@ -195,7 +201,7 @@ function Register() {
                     <button
                       type="button"
                       className="btn btn-outline-light border w-50 d-flex align-items-center"
-                      disabled={loading}
+                      disabled={isSubmitting}
                     >
                       <Image
                         src="/images/icons8-google-48.png"
