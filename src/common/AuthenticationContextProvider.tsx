@@ -21,21 +21,18 @@ export const AuthenticationContextProvider = ({
   });
 
   useEffect(() => {
-    let mounted = true;
     Auth.currentAuthenticatedUser()
       .then((user) => {
-        if (mounted) {
-          const attributes = user.attributes;
-          setAuthUser({
-            status: "success",
-            payload: {
-              id: attributes.sub,
-              name: attributes.name,
-              phone: attributes.phone_number,
-              verified: attributes.phone_number_verified
-            }
-          });
-        }
+        const attributes = user.attributes;
+        setAuthUser({
+          status: "success",
+          payload: {
+            id: attributes.sub,
+            name: attributes.name,
+            phone: attributes.phone_number,
+            verified: attributes.phone_number_verified
+          }
+        });
         console.log(user);
       })
       .catch((error) => {
@@ -45,15 +42,12 @@ export const AuthenticationContextProvider = ({
           status: "failure"
         });
       });
-    return () => {
-      mounted = false;
-    };
   }, []);
 
   useEffect(() => {
     const listener = (data: HubCapsule) => {
       switch (data.payload.event) {
-        case "signIn":
+        case "signIn": {
           //console.log("signed in");
           //console.log(data.payload.data);
           const attributes = data.payload.data.attributes;
@@ -67,9 +61,11 @@ export const AuthenticationContextProvider = ({
             }
           });
           break;
-        case "autoSignIn":
+        }
+        case "autoSignIn": {
           //console.log("auto signed in");
           //console.log(data.payload.data);
+          const attributes = data.payload.data.attributes;
           setAuthUser({
             status: "success",
             payload: {
@@ -80,6 +76,7 @@ export const AuthenticationContextProvider = ({
             }
           });
           break;
+        }
         case "signOut":
           // console.log("sign out");
           setAuthUser({

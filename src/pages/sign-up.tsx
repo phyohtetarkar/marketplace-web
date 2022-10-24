@@ -36,15 +36,15 @@ function Register() {
       const regex =
         '/^(([^<>()[].,;:s@"]+(.[^<>()[].,;:s@"]+)*)|(".+"))@(([^<>()[].,;:s@"]+.)+[^<>()[].,;:s@"]{2,})$/i';
 
-      if (
-        !values.fullName ||
-        values.fullName.trim().length === 0 ||
-        !values.fullName.startsWith("09")
-      ) {
+      if (!values.fullName || values.fullName.trim().length === 0) {
         errors.fullName = "Please enter your fullname.";
       }
 
-      if (!values.phone || values.phone.trim().length === 0) {
+      if (
+        !values.phone ||
+        values.phone.trim().length === 0 ||
+        !values.phone.startsWith("09")
+      ) {
         errors.phone = "Please enter valid phone number.";
       }
 
