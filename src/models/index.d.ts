@@ -37,6 +37,10 @@ type UserMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
+type BannerMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
 export declare class Product {
   readonly id: string;
   readonly name?: string | null;
@@ -47,7 +51,6 @@ export declare class Product {
   readonly createdBy?: string | null;
   readonly updatedBy?: string | null;
   readonly available?: boolean | null;
-  readonly editors?: (string | null)[] | null;
   readonly category?: Category | null;
   readonly shop?: Shop | null;
   readonly createdAt?: string | null;
@@ -76,7 +79,6 @@ export declare class Shop {
   readonly description?: string | null;
   readonly createdBy?: string | null;
   readonly updatedBy?: string | null;
-  readonly owner?: string | null;
   readonly products?: (Product | null)[] | null;
   readonly members?: (ShopMember | null)[] | null;
   readonly createdAt?: string | null;
@@ -109,4 +111,15 @@ export declare class User {
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<User, UserMetaData>);
   static copyOf(source: User, mutator: (draft: MutableModel<User, UserMetaData>) => MutableModel<User, UserMetaData> | void): User;
+}
+
+export declare class Banner {
+  readonly id: string;
+  readonly image?: string | null;
+  readonly link?: string | null;
+  readonly position: number;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+  constructor(init: ModelInit<Banner, BannerMetaData>);
+  static copyOf(source: Banner, mutator: (draft: MutableModel<Banner, BannerMetaData>) => MutableModel<Banner, BannerMetaData> | void): Banner;
 }

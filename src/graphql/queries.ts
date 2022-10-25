@@ -17,7 +17,6 @@ export const getProduct = /* GraphQL */ `
       createdBy
       updatedBy
       available
-      editors
       categoryID
       shopID
       category {
@@ -27,9 +26,13 @@ export const getProduct = /* GraphQL */ `
         parent
         products {
           nextToken
+          startedAt
         }
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
       }
       shop {
         id
@@ -39,18 +42,25 @@ export const getProduct = /* GraphQL */ `
         description
         createdBy
         updatedBy
-        owner
         products {
           nextToken
+          startedAt
         }
         members {
           nextToken
+          startedAt
         }
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
       }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
     }
   }
 `;
@@ -74,7 +84,6 @@ export const listProducts = /* GraphQL */ `
         createdBy
         updatedBy
         available
-        editors
         categoryID
         shopID
         category {
@@ -84,6 +93,9 @@ export const listProducts = /* GraphQL */ `
           parent
           createdAt
           updatedAt
+          _version
+          _deleted
+          _lastChangedAt
         }
         shop {
           id
@@ -93,14 +105,84 @@ export const listProducts = /* GraphQL */ `
           description
           createdBy
           updatedBy
-          owner
           createdAt
           updatedAt
+          _version
+          _deleted
+          _lastChangedAt
         }
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
       }
       nextToken
+      startedAt
+    }
+  }
+`;
+export const syncProducts = /* GraphQL */ `
+  query SyncProducts(
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncProducts(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        name
+        images
+        price
+        discount {
+          value
+          type
+        }
+        description
+        createdBy
+        updatedBy
+        available
+        categoryID
+        shopID
+        category {
+          id
+          name
+          image
+          parent
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        shop {
+          id
+          name
+          cover
+          avatar
+          description
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
     }
   }
 `;
@@ -114,7 +196,6 @@ export const getShop = /* GraphQL */ `
       description
       createdBy
       updatedBy
-      owner
       products {
         items {
           id
@@ -125,13 +206,16 @@ export const getShop = /* GraphQL */ `
           createdBy
           updatedBy
           available
-          editors
           categoryID
           shopID
           createdAt
           updatedAt
+          _version
+          _deleted
+          _lastChangedAt
         }
         nextToken
+        startedAt
       }
       members {
         items {
@@ -141,12 +225,19 @@ export const getShop = /* GraphQL */ `
           userID
           createdAt
           updatedAt
+          _version
+          _deleted
+          _lastChangedAt
           owner
         }
         nextToken
+        startedAt
       }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
     }
   }
 `;
@@ -165,17 +256,62 @@ export const listShops = /* GraphQL */ `
         description
         createdBy
         updatedBy
-        owner
         products {
           nextToken
+          startedAt
         }
         members {
           nextToken
+          startedAt
         }
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
       }
       nextToken
+      startedAt
+    }
+  }
+`;
+export const syncShops = /* GraphQL */ `
+  query SyncShops(
+    $filter: ModelShopFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncShops(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        name
+        cover
+        avatar
+        description
+        createdBy
+        updatedBy
+        products {
+          nextToken
+          startedAt
+        }
+        members {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
     }
   }
 `;
@@ -197,12 +333,19 @@ export const getUser = /* GraphQL */ `
           userID
           createdAt
           updatedAt
+          _version
+          _deleted
+          _lastChangedAt
           owner
         }
         nextToken
+        startedAt
       }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
     }
   }
 `;
@@ -223,11 +366,52 @@ export const listUsers = /* GraphQL */ `
         role
         shops {
           nextToken
+          startedAt
         }
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
       }
       nextToken
+      startedAt
+    }
+  }
+`;
+export const syncUsers = /* GraphQL */ `
+  query SyncUsers(
+    $filter: ModelUserFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncUsers(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        name
+        phone
+        avatar
+        authID
+        disabled
+        role
+        shops {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
     }
   }
 `;
@@ -248,16 +432,22 @@ export const getCategory = /* GraphQL */ `
           createdBy
           updatedBy
           available
-          editors
           categoryID
           shopID
           createdAt
           updatedAt
+          _version
+          _deleted
+          _lastChangedAt
         }
         nextToken
+        startedAt
       }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
     }
   }
 `;
@@ -275,11 +465,49 @@ export const listCategories = /* GraphQL */ `
         parent
         products {
           nextToken
+          startedAt
         }
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
       }
       nextToken
+      startedAt
+    }
+  }
+`;
+export const syncCategories = /* GraphQL */ `
+  query SyncCategories(
+    $filter: ModelCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncCategories(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        name
+        image
+        parent
+        products {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
     }
   }
 `;
@@ -298,15 +526,19 @@ export const getShopMember = /* GraphQL */ `
         description
         createdBy
         updatedBy
-        owner
         products {
           nextToken
+          startedAt
         }
         members {
           nextToken
+          startedAt
         }
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
       }
       user {
         id
@@ -318,12 +550,19 @@ export const getShopMember = /* GraphQL */ `
         role
         shops {
           nextToken
+          startedAt
         }
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
       }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }
@@ -348,9 +587,11 @@ export const listShopMembers = /* GraphQL */ `
           description
           createdBy
           updatedBy
-          owner
           createdAt
           updatedAt
+          _version
+          _deleted
+          _lastChangedAt
         }
         user {
           id
@@ -362,12 +603,144 @@ export const listShopMembers = /* GraphQL */ `
           role
           createdAt
           updatedAt
+          _version
+          _deleted
+          _lastChangedAt
         }
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         owner
       }
       nextToken
+      startedAt
+    }
+  }
+`;
+export const syncShopMembers = /* GraphQL */ `
+  query SyncShopMembers(
+    $filter: ModelShopMemberFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncShopMembers(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        role
+        shopID
+        userID
+        shop {
+          id
+          name
+          cover
+          avatar
+          description
+          createdBy
+          updatedBy
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        user {
+          id
+          name
+          phone
+          avatar
+          authID
+          disabled
+          role
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getBanner = /* GraphQL */ `
+  query GetBanner($id: ID!) {
+    getBanner(id: $id) {
+      id
+      image
+      link
+      position
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const listBanners = /* GraphQL */ `
+  query ListBanners(
+    $filter: ModelBannerFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listBanners(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        image
+        link
+        position
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncBanners = /* GraphQL */ `
+  query SyncBanners(
+    $filter: ModelBannerFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncBanners(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        image
+        link
+        position
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
     }
   }
 `;

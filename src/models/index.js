@@ -13,7 +13,7 @@ const MemberRole = {
   "ADMIN": "ADMIN"
 };
 
-const { Product, Category, Shop, ShopMember, User, Discount } = initSchema(schema);
+const { Product, Category, Shop, ShopMember, User, Banner, Discount } = initSchema(schema);
 
 export {
   Product,
@@ -21,6 +21,7 @@ export {
   Shop,
   ShopMember,
   User,
+  Banner,
   UserRole,
   MemberRole,
   Discount

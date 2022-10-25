@@ -2,12 +2,9 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createProduct = /* GraphQL */ `
-  mutation CreateProduct(
-    $input: CreateProductInput!
-    $condition: ModelProductConditionInput
-  ) {
-    createProduct(input: $input, condition: $condition) {
+export const onCreateProduct = /* GraphQL */ `
+  subscription OnCreateProduct {
+    onCreateProduct {
       id
       name
       images
@@ -67,12 +64,9 @@ export const createProduct = /* GraphQL */ `
     }
   }
 `;
-export const updateProduct = /* GraphQL */ `
-  mutation UpdateProduct(
-    $input: UpdateProductInput!
-    $condition: ModelProductConditionInput
-  ) {
-    updateProduct(input: $input, condition: $condition) {
+export const onUpdateProduct = /* GraphQL */ `
+  subscription OnUpdateProduct {
+    onUpdateProduct {
       id
       name
       images
@@ -132,12 +126,9 @@ export const updateProduct = /* GraphQL */ `
     }
   }
 `;
-export const deleteProduct = /* GraphQL */ `
-  mutation DeleteProduct(
-    $input: DeleteProductInput!
-    $condition: ModelProductConditionInput
-  ) {
-    deleteProduct(input: $input, condition: $condition) {
+export const onDeleteProduct = /* GraphQL */ `
+  subscription OnDeleteProduct {
+    onDeleteProduct {
       id
       name
       images
@@ -197,12 +188,9 @@ export const deleteProduct = /* GraphQL */ `
     }
   }
 `;
-export const createShop = /* GraphQL */ `
-  mutation CreateShop(
-    $input: CreateShopInput!
-    $condition: ModelShopConditionInput
-  ) {
-    createShop(input: $input, condition: $condition) {
+export const onCreateShop = /* GraphQL */ `
+  subscription OnCreateShop {
+    onCreateShop {
       id
       name
       cover
@@ -255,12 +243,9 @@ export const createShop = /* GraphQL */ `
     }
   }
 `;
-export const updateShop = /* GraphQL */ `
-  mutation UpdateShop(
-    $input: UpdateShopInput!
-    $condition: ModelShopConditionInput
-  ) {
-    updateShop(input: $input, condition: $condition) {
+export const onUpdateShop = /* GraphQL */ `
+  subscription OnUpdateShop {
+    onUpdateShop {
       id
       name
       cover
@@ -313,12 +298,9 @@ export const updateShop = /* GraphQL */ `
     }
   }
 `;
-export const deleteShop = /* GraphQL */ `
-  mutation DeleteShop(
-    $input: DeleteShopInput!
-    $condition: ModelShopConditionInput
-  ) {
-    deleteShop(input: $input, condition: $condition) {
+export const onDeleteShop = /* GraphQL */ `
+  subscription OnDeleteShop {
+    onDeleteShop {
       id
       name
       cover
@@ -371,12 +353,9 @@ export const deleteShop = /* GraphQL */ `
     }
   }
 `;
-export const createUser = /* GraphQL */ `
-  mutation CreateUser(
-    $input: CreateUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    createUser(input: $input, condition: $condition) {
+export const onCreateUser = /* GraphQL */ `
+  subscription OnCreateUser {
+    onCreateUser {
       id
       name
       phone
@@ -408,12 +387,9 @@ export const createUser = /* GraphQL */ `
     }
   }
 `;
-export const updateUser = /* GraphQL */ `
-  mutation UpdateUser(
-    $input: UpdateUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    updateUser(input: $input, condition: $condition) {
+export const onUpdateUser = /* GraphQL */ `
+  subscription OnUpdateUser {
+    onUpdateUser {
       id
       name
       phone
@@ -445,12 +421,9 @@ export const updateUser = /* GraphQL */ `
     }
   }
 `;
-export const deleteUser = /* GraphQL */ `
-  mutation DeleteUser(
-    $input: DeleteUserInput!
-    $condition: ModelUserConditionInput
-  ) {
-    deleteUser(input: $input, condition: $condition) {
+export const onDeleteUser = /* GraphQL */ `
+  subscription OnDeleteUser {
+    onDeleteUser {
       id
       name
       phone
@@ -482,12 +455,9 @@ export const deleteUser = /* GraphQL */ `
     }
   }
 `;
-export const createCategory = /* GraphQL */ `
-  mutation CreateCategory(
-    $input: CreateCategoryInput!
-    $condition: ModelCategoryConditionInput
-  ) {
-    createCategory(input: $input, condition: $condition) {
+export const onCreateCategory = /* GraphQL */ `
+  subscription OnCreateCategory {
+    onCreateCategory {
       id
       name
       image
@@ -521,12 +491,9 @@ export const createCategory = /* GraphQL */ `
     }
   }
 `;
-export const updateCategory = /* GraphQL */ `
-  mutation UpdateCategory(
-    $input: UpdateCategoryInput!
-    $condition: ModelCategoryConditionInput
-  ) {
-    updateCategory(input: $input, condition: $condition) {
+export const onUpdateCategory = /* GraphQL */ `
+  subscription OnUpdateCategory {
+    onUpdateCategory {
       id
       name
       image
@@ -560,12 +527,9 @@ export const updateCategory = /* GraphQL */ `
     }
   }
 `;
-export const deleteCategory = /* GraphQL */ `
-  mutation DeleteCategory(
-    $input: DeleteCategoryInput!
-    $condition: ModelCategoryConditionInput
-  ) {
-    deleteCategory(input: $input, condition: $condition) {
+export const onDeleteCategory = /* GraphQL */ `
+  subscription OnDeleteCategory {
+    onDeleteCategory {
       id
       name
       image
@@ -599,12 +563,9 @@ export const deleteCategory = /* GraphQL */ `
     }
   }
 `;
-export const createShopMember = /* GraphQL */ `
-  mutation CreateShopMember(
-    $input: CreateShopMemberInput!
-    $condition: ModelShopMemberConditionInput
-  ) {
-    createShopMember(input: $input, condition: $condition) {
+export const onCreateShopMember = /* GraphQL */ `
+  subscription OnCreateShopMember($owner: String) {
+    onCreateShopMember(owner: $owner) {
       id
       role
       shopID
@@ -658,12 +619,9 @@ export const createShopMember = /* GraphQL */ `
     }
   }
 `;
-export const updateShopMember = /* GraphQL */ `
-  mutation UpdateShopMember(
-    $input: UpdateShopMemberInput!
-    $condition: ModelShopMemberConditionInput
-  ) {
-    updateShopMember(input: $input, condition: $condition) {
+export const onUpdateShopMember = /* GraphQL */ `
+  subscription OnUpdateShopMember($owner: String) {
+    onUpdateShopMember(owner: $owner) {
       id
       role
       shopID
@@ -717,12 +675,9 @@ export const updateShopMember = /* GraphQL */ `
     }
   }
 `;
-export const deleteShopMember = /* GraphQL */ `
-  mutation DeleteShopMember(
-    $input: DeleteShopMemberInput!
-    $condition: ModelShopMemberConditionInput
-  ) {
-    deleteShopMember(input: $input, condition: $condition) {
+export const onDeleteShopMember = /* GraphQL */ `
+  subscription OnDeleteShopMember($owner: String) {
+    onDeleteShopMember(owner: $owner) {
       id
       role
       shopID
@@ -776,12 +731,9 @@ export const deleteShopMember = /* GraphQL */ `
     }
   }
 `;
-export const createBanner = /* GraphQL */ `
-  mutation CreateBanner(
-    $input: CreateBannerInput!
-    $condition: ModelBannerConditionInput
-  ) {
-    createBanner(input: $input, condition: $condition) {
+export const onCreateBanner = /* GraphQL */ `
+  subscription OnCreateBanner {
+    onCreateBanner {
       id
       image
       link
@@ -794,12 +746,9 @@ export const createBanner = /* GraphQL */ `
     }
   }
 `;
-export const updateBanner = /* GraphQL */ `
-  mutation UpdateBanner(
-    $input: UpdateBannerInput!
-    $condition: ModelBannerConditionInput
-  ) {
-    updateBanner(input: $input, condition: $condition) {
+export const onUpdateBanner = /* GraphQL */ `
+  subscription OnUpdateBanner {
+    onUpdateBanner {
       id
       image
       link
@@ -812,12 +761,9 @@ export const updateBanner = /* GraphQL */ `
     }
   }
 `;
-export const deleteBanner = /* GraphQL */ `
-  mutation DeleteBanner(
-    $input: DeleteBannerInput!
-    $condition: ModelBannerConditionInput
-  ) {
-    deleteBanner(input: $input, condition: $condition) {
+export const onDeleteBanner = /* GraphQL */ `
+  subscription OnDeleteBanner {
+    onDeleteBanner {
       id
       image
       link
