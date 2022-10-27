@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Clipboard, Link as Link1, Lock, User } from "react-feather";
+import { Clipboard, Heart, Link as Link1, Lock, User } from "react-feather";
 
 const iconSize = 18;
 
@@ -38,6 +38,11 @@ function AccountMenu({}) {
           href: "/profile/orders-history",
           title: "Orders history",
           icon: <Clipboard className="me-2" size={iconSize} />,
+        })}
+        {menuLink({
+          href: "/profile/favorite-list",
+          title: "My favorites",
+          icon: <Heart className="me-2" size={iconSize} />,
         })}
         {menuLink({
           href: "/profile/setting",

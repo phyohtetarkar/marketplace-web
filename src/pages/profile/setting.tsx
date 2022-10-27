@@ -45,44 +45,37 @@ function ProfileSetting() {
                           />
                         </div>
                         <div className="col-lg-12">
-                          <label htmlFor="emailInput" className="form-label">
-                            Email
-                          </label>
                           <div className="position-relative">
                             <Input
+                              label="Email"
+                              id="emailInput"
                               name="email"
                               type="email"
                               placeholder="name@domain.com"
-                              disabled
                             />
-                            <div className="position-absolute top-50 end-0 translate-middle-y">
-                              <CheckCircle
-                                size={20}
-                                className="me-3"
-                                strokeWidth={2.5}
-                                color="#29bf12"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="d-flex justify-content-center order-lg-2 col-lg-4">
-                    <div className="mt-3">
-                      <div className="position-relative bg-dark overflow-hidden rounded-circle" style={{width: 128, height:128}}>
-                      <Image
-                        src="/images/profile.png"
-                        layout="fill"
-                        width={128}
-                        height={128}
-                        alt="User Photo"
-                        className="rounded-circle"
-                        objectFit="cover"
-                      />
-                      <div className="ms-auto position-absolute bottom-0 py-1 btn btn-dark opacity-75 w-100 text-light text-center">
-                        Edit
-                      </div>
+                    <div className="mt-3 mb-2">
+                      <div
+                        className="position-relative bg-dark overflow-hidden rounded-circle"
+                        style={{ width: 128, height: 128 }}
+                      >
+                        <Image
+                          src="/images/profile.png"
+                          layout="fill"
+                          width={128}
+                          height={128}
+                          alt="User Photo"
+                          className="rounded-circle"
+                          objectFit="cover"
+                        />
+                        <div className="ms-auto position-absolute bottom-0 py-1 btn btn-dark opacity-75 w-100 text-light text-center">
+                          Edit
+                        </div>
                       </div>
                     </div>
                   </div>
