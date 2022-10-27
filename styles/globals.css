@@ -34,7 +34,7 @@
 
 html,
 body {
-  padding: 64px 0 0 0;
+  padding: 63px 0 0 0;
   margin: 0;
   height: 100%;
   background-color: #f3f4f6;
@@ -284,6 +284,16 @@ svg {
 
 .lifted-card:hover {
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Swiper */
+.swiper-pagination-bullet {
+  background-color: #fff;
+  width: 10px;
+  height: 10px;
+}
+.swiper-pagination-bullet-active {
+  background-color: #fff;
 }
 
 /* Tinymce */

@@ -1,4 +1,7 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import "../../styles/bootstrap-custom.css";
 import "../../styles/globals.css";
 import { NextPage } from "next";
@@ -31,7 +34,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         height={2}
         showOnShallow={true}
         options={{
-          showSpinner: false,
+          showSpinner: false
         }}
       />
       <AuthenticationContextProvider>

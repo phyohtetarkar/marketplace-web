@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCart } from "react-feather";
-import { formatPrice, transformDiscount } from "../../common/utils";
+import { formatPrice } from "../../common/utils";
 import Tooltip from "../Tooltip";
 
 function ProductGridItem() {
@@ -58,7 +58,7 @@ function ProductGridItem() {
           >
             <div className="ratio ratio-4x3">
               <Image
-                className="rounded-top"
+                className="card-img-top"
                 src={image}
                 alt="Product image."
                 layout="fill"
@@ -73,20 +73,21 @@ function ProductGridItem() {
       <div className="card-body">
         <div className="vstack">
           <Link href={`/products/${1}`}>
-            <a className="text-muted text-decoration-none text-truncate mb-1">
+            <a className="text-muted text-decoration-none text-truncate">
               Product name
             </a>
           </Link>
 
-          <Link href={`/`}>
-            <a className="text-success text-decoration-none text-truncate">
-              Category
+          <Link href={`/shops/shop-slug`}>
+            <a className="text-decoration-none fw-medium text-truncate">
+              Seller
             </a>
           </Link>
 
           <div className="hstack gap-2 mt-1">
             <h6 className="fw-semibold mb-0">{price}</h6>
-            <Tooltip title="Add to cart" className="ms-auto">
+            <div className="flex-grow-1"></div>
+            <Tooltip title="Add to cart">
               <button
                 disabled={false}
                 className="btn btn-outline-light text-dark border"
@@ -107,6 +108,15 @@ function ProductGridItem() {
                 <ShoppingCart size={20} />
               </button>
             </Tooltip>
+            {/* <Tooltip title="Add to favorite">
+              <button
+                disabled={false}
+                className="btn btn-outline-light text-dark border"
+                onClick={() => {}}
+              >
+                <Heart size={20} />
+              </button>
+            </Tooltip> */}
           </div>
         </div>
       </div>

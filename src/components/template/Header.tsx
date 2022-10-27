@@ -1,10 +1,12 @@
 import { Auth } from "aws-amplify";
 import { Offcanvas } from "bootstrap";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
-import { Search, ShoppingCart } from "react-feather";
+import { Box, Home, Search, ShoppingCart } from "react-feather";
 import { AuthenticationContext } from "../../common/contexts";
+import Dropdown from "../Dropdown";
 
 interface HeaderProps {
   hideAuth?: boolean;
@@ -149,6 +151,8 @@ function Header({ hideAuth }: HeaderProps) {
   const offcanvasRef = useRef<HTMLDivElement | null>(null);
   const offcanvas = useRef<Offcanvas>();
   const [search, setSearch] = useState<string>();
+  const [searchOption, setSearchOption] = useState("product");
+  const [lang, setLang] = useState("mm");
 
   useEffect(() => {
     const initOffcanvas = async () => {
@@ -171,6 +175,28 @@ function Header({ hideAuth }: HeaderProps) {
   function handleSubmit(event: FormEvent<HTMLElement>) {
     event.preventDefault();
   }
+
+  const localeImage = (
+    <Image
+      src={`/images/${lang}.png`}
+      width={28}
+      height={22}
+      alt=""
+      objectFit="cover"
+      className="rounded-1"
+    />
+  );
+
+  const localeItems = (
+    <>
+      <li role="button" className="dropdown-item" onClick={() => setLang("mm")}>
+        Myanmar
+      </li>
+      <li role="button" className="dropdown-item" onClick={() => setLang("en")}>
+        English
+      </li>
+    </>
+  );
 
   return (
     <header className="fixed-top">
@@ -204,12 +230,24 @@ function Header({ hideAuth }: HeaderProps) {
               <li className="nav-item">
                 <form className="d-flex ms-lg-3" onSubmit={handleSubmit}>
                   <div className="input-group">
+                    <div className="d-flex">
+                      <select
+                        className="form-select bg-light rounded-0 rounded-start"
+                        value={searchOption}
+                        onChange={(e) => {
+                          setSearchOption(e.target.value);
+                        }}
+                      >
+                        <option value="product">Product</option>
+                        <option value="shop">Shop</option>
+                      </select>
+                    </div>
                     <input
                       className="form-control"
                       type="search"
-                      placeholder="Search..."
+                      placeholder={`Search ${searchOption}s...`}
                       aria-label="Search"
-                      size={32}
+                      size={20}
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                       style={{
@@ -301,10 +339,10 @@ function Header({ hideAuth }: HeaderProps) {
             <div className="offcanvas-body">
               <ul className="navbar-nav align-items-lg-center gap-2">
                 <li className="nav-item">
-                  <NavLink href="/">Home</NavLink>
+                  <NavLink href="/products">Products</NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink href="/products">Products</NavLink>
+                  <NavLink href="/shops">Shops</NavLink>
                 </li>
               </ul>
 
@@ -352,6 +390,26 @@ function Header({ hideAuth }: HeaderProps) {
                 }}
               </AuthenticationContext.Consumer>
             </div>
+          </div>
+
+          <div className="navbar-nav ms-3 d-none d-lg-block">
+            <Dropdown
+              toggle={localeImage}
+              className="nav-item"
+              toggleClassName="dropdown-toggle hstack"
+              menuClassName="dropdown-menu-end"
+            >
+              {localeItems}
+            </Dropdown>
+          </div>
+
+          <div className="d-block d-lg-none">
+            <Dropdown
+              toggle={localeImage}
+              toggleClassName="dropdown-toggle hstack"
+            >
+              {localeItems}
+            </Dropdown>
           </div>
 
           <button

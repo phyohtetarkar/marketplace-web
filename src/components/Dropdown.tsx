@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useRef } from "react";
 
 interface DropdownProps {
   toggle: ReactNode;
+  className?: string;
   toggleClassName?: string;
   menuClassName?: string;
   popperConfig?: any;
@@ -11,11 +12,12 @@ interface DropdownProps {
 
 function Dropdown({
   toggle,
+  className,
   toggleClassName,
   menuClassName,
   popperConfig,
   children,
-  disabled,
+  disabled
 }: DropdownProps) {
   const dropdownToggle = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -27,7 +29,7 @@ function Dropdown({
         return;
       }
       dropdown = new Dropdown(dropdownToggle.current, {
-        popperConfig: popperConfig ?? null,
+        popperConfig: popperConfig ?? null
       });
     };
 
@@ -49,14 +51,14 @@ function Dropdown({
   }, [popperConfig]);
 
   return (
-    <div className="dropdown">
+    <div className={`dropdown ${className ?? ""}`}>
       <div
         ref={dropdownToggle}
         className={`${toggleClassName ?? ""}`}
         role="button"
         data-bs-toggle="dropdown"
         style={{
-          outlineStyle: "none",
+          outlineStyle: "none"
         }}
       >
         {toggle}

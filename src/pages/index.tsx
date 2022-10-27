@@ -2,7 +2,9 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Carousel } from "react-responsive-carousel";
-import { ProductGridItem } from "../components/product";
+import { Autoplay, Navigation, Pagination } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { ProductFavoriteItem, ProductGridItem } from "../components/product";
 
 const _categories = [
   "Electronics",
@@ -12,10 +14,19 @@ const _categories = [
   "Tools and equipments",
   "Food and drinks",
   "Sports and outdoor",
-  "Health and beauty",
+  "Health and beauty"
 ];
 
 const _banners = ["banner.jpeg", "banner.jpeg", "banner.jpeg"];
+const _shops = [
+  "Healthy Shop",
+  "Addidas",
+  "Nike",
+  "Next Generation",
+  "Sweety Home",
+  "Win Mobile World",
+  "MK"
+];
 
 const Home: NextPage = () => {
   return (
@@ -45,7 +56,7 @@ const Home: NextPage = () => {
                   </div>
                 </div>
                 <div className="col-lg-9">
-                  <Carousel
+                  {/* <Carousel
                     className="rounded-1 overflow-hidden"
                     autoPlay={true}
                     infiniteLoop={true}
@@ -107,7 +118,39 @@ const Home: NextPage = () => {
                         </div>
                       );
                     })}
-                  </Carousel>
+                  </Carousel> */}
+                  <Swiper
+                    className="rounded-1 overflow-hidden"
+                    spaceBetween={0}
+                    slidesPerView={1}
+                    pagination={{
+                      clickable: true
+                    }}
+                    autoplay={{
+                      delay: 3000,
+                      disableOnInteraction: false
+                    }}
+                    modules={[Autoplay, Pagination]}
+                  >
+                    {_banners.map((e, i) => {
+                      return (
+                        <SwiperSlide
+                          key={i}
+                          onContextMenu={(e) => e.preventDefault()}
+                          className="ratio ratio-21x9 overflow-hidden"
+                        >
+                          <Image
+                            src={`/images/${e}`}
+                            alt="Cover image"
+                            className="rounded-1"
+                            layout="fill"
+                            objectFit="cover"
+                            priority
+                          />
+                        </SwiperSlide>
+                      );
+                    })}
+                  </Swiper>
                 </div>
               </div>
             </div>
@@ -185,12 +228,76 @@ const Home: NextPage = () => {
         </>
       )} */}
 
+      <div className="d-flex align-items-center justify-content-between mb-4">
+        <h4
+          className="fw-semibold text-nowrap"
+          style={{ textOverflow: "ellipsis", overflowX: "clip" }}
+        >
+          Recommended shops
+        </h4>
+        <Link href="/shops">
+          <a className="text-decoration-none fw-medium text-nowrap">View all</a>
+        </Link>
+      </div>
+      <div className="mb-5">
+        <Swiper
+          spaceBetween={20}
+          slidesPerView={2}
+          pagination={{
+            el: ""
+          }}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false
+          }}
+          breakpoints={{
+            640: {
+              slidesPerView: 3,
+              spaceBetween: 20
+            },
+            768: {
+              slidesPerView: 5,
+              spaceBetween: 40
+            },
+            1024: {
+              slidesPerView: 6,
+              spaceBetween: 50
+            }
+          }}
+          modules={[Autoplay, Pagination]}
+        >
+          {_shops.map((e, i) => {
+            return (
+              <SwiperSlide key={i}>
+                <Link href="/shops/slug">
+                  <a className="vstack gap-3 position-relative align-items-center text-decoration-none">
+                    <div className="" onContextMenu={(e) => e.preventDefault()}>
+                      <Image
+                        src={`https://source.unsplash.com/random/200x240?random=${Math.floor(
+                          Math.random() * 100
+                        )}`}
+                        alt="Cover image"
+                        className="rounded-circle"
+                        width={100}
+                        height={100}
+                        objectFit="cover"
+                      />
+                    </div>
+                    <h6 className="text-truncate text-dark">{e}</h6>
+                  </a>
+                </Link>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      </div>
+
       <div className="d-flex align-items-center justify-content-between mb-3">
         <h4
           className="fw-semibold text-nowrap"
           style={{ textOverflow: "ellipsis", overflowX: "clip" }}
         >
-          New Arrivals
+          New arrivals
         </h4>
         <Link href="/products/new-arrivals">
           <a className="text-decoration-none fw-medium text-nowrap">View all</a>
@@ -210,6 +317,21 @@ const Home: NextPage = () => {
           <ProductGridItem />
         </div>
       </div>
+
+      {/* <div className="row row-cols-1 row-cols-md-2 g-3 mb-5">
+        <div className="col">
+          <ProductFavoriteItem />
+        </div>
+        <div className="col">
+          <ProductFavoriteItem />
+        </div>
+        <div className="col">
+          <ProductFavoriteItem />
+        </div>
+        <div className="col">
+          <ProductFavoriteItem />
+        </div>
+      </div> */}
     </div>
   );
 };

@@ -18,18 +18,19 @@ function Layout({ hideAuth, hideFooter, background, children }: LayoutProps) {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="theme-color" content="#ffffff" />
         <link rel="icon" href="/favicon.ico" />
+        <title>Shopping Center</title>
       </Head>
       <div
         className="d-flex flex-column h-100"
         style={{
-          background: background ? background : "transparent",
+          background: background ? background : "transparent"
         }}
       >
         <Header hideAuth={hideAuth} />
         <main
           className="flex-shrink-0"
           style={{
-            background: background ? background : "transparent",
+            background: background ? background : "transparent"
           }}
         >
           {/* <ToastContainer
@@ -45,7 +46,7 @@ function Layout({ hideAuth, hideFooter, background, children }: LayoutProps) {
           <div
             className="mt-auto"
             style={{
-              background: background ? background : "transparent",
+              background: background ? background : "transparent"
             }}
           >
             <Footer />
