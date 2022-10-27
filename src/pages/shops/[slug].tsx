@@ -7,19 +7,19 @@ import { ProductGridItem } from "../../components/product";
 function Shop() {
   return (
     <div className="vstack">
-      <div className="bg-secondary">
+      <div className="bg-primary">
         <div className="container">
           <div className="row py-4">
             <nav aria-label="breadcrumb col-12">
               <ol className="breadcrumb mb-1">
                 <li className="breadcrumb-item">
                   <Link href="/">
-                    <a>Home</a>
+                    <a className="text-light">Home</a>
                   </Link>
                 </li>
                 <li className="breadcrumb-item">
                   <Link href="/shops">
-                    <a>Shops</a>
+                    <a className="text-light">Shops</a>
                   </Link>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">

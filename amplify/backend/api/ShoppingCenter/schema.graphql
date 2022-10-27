@@ -51,6 +51,9 @@ type User @model @auth(rules: [{allow: private}]) {
   disabled: Boolean
   role: UserRole!
   shops: [ShopMember] @hasMany(indexName: "byUser", fields: ["id"])
+  addresses: [UserAddress] @hasMany(indexName: "byUser", fields: ["id"])
+  cartItems: [CartItem] @hasMany(indexName: "byUser", fields: ["id"])
+  favoriteProducts: [FavoriteProduct] @hasMany(indexName: "byUser", fields: ["id"])
 }
 
 type Category @model @auth(rules: [{allow: public, operations: [read]}, {allow: groups, groups: ["Admins"]}]) {
@@ -75,4 +78,28 @@ type Banner @model @auth(rules: [{allow: public, operations: [read]}, {allow: gr
   image: String
   link: String
   position: Int!
+}
+
+type UserAddress @model @auth(rules: [{allow: private}]) {
+  id: ID!
+  city: String!
+  township: String!
+  address: String!
+  primary: Boolean
+  userID: ID! @index(name: "byUser")
+}
+
+type CartItem @model @auth(rules: [{allow: owner}]) {
+  id: ID!
+  quantity: Int
+  userID: ID! @index(name: "byUser")
+  productID: ID
+  product: Product @hasOne(fields: ["productID"])
+}
+
+type FavoriteProduct @model @auth(rules: [{allow: owner}]) {
+  id: ID!
+  productID: ID
+  userID: ID! @index(name: "byUser")
+  product: Product @hasOne(fields: ["productID"])
 }

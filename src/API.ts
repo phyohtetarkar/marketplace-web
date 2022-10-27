@@ -555,6 +555,131 @@ export type ModelBannerConnection = {
   startedAt?: number | null,
 };
 
+export type ModelSubscriptionProductFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  images?: ModelSubscriptionStringInput | null,
+  price?: ModelSubscriptionFloatInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  createdBy?: ModelSubscriptionStringInput | null,
+  updatedBy?: ModelSubscriptionStringInput | null,
+  available?: ModelSubscriptionBooleanInput | null,
+  categoryID?: ModelSubscriptionIDInput | null,
+  shopID?: ModelSubscriptionIDInput | null,
+  and?: Array< ModelSubscriptionProductFilterInput | null > | null,
+  or?: Array< ModelSubscriptionProductFilterInput | null > | null,
+};
+
+export type ModelSubscriptionIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  in?: Array< string | null > | null,
+  notIn?: Array< string | null > | null,
+};
+
+export type ModelSubscriptionStringInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  in?: Array< string | null > | null,
+  notIn?: Array< string | null > | null,
+};
+
+export type ModelSubscriptionFloatInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  in?: Array< number | null > | null,
+  notIn?: Array< number | null > | null,
+};
+
+export type ModelSubscriptionBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+};
+
+export type ModelSubscriptionShopFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  cover?: ModelSubscriptionStringInput | null,
+  avatar?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  createdBy?: ModelSubscriptionStringInput | null,
+  updatedBy?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionShopFilterInput | null > | null,
+  or?: Array< ModelSubscriptionShopFilterInput | null > | null,
+};
+
+export type ModelSubscriptionUserFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  phone?: ModelSubscriptionStringInput | null,
+  avatar?: ModelSubscriptionStringInput | null,
+  authID?: ModelSubscriptionStringInput | null,
+  disabled?: ModelSubscriptionBooleanInput | null,
+  role?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionUserFilterInput | null > | null,
+  or?: Array< ModelSubscriptionUserFilterInput | null > | null,
+};
+
+export type ModelSubscriptionCategoryFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  image?: ModelSubscriptionStringInput | null,
+  parent?: ModelSubscriptionIDInput | null,
+  and?: Array< ModelSubscriptionCategoryFilterInput | null > | null,
+  or?: Array< ModelSubscriptionCategoryFilterInput | null > | null,
+};
+
+export type ModelSubscriptionShopMemberFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  role?: ModelSubscriptionStringInput | null,
+  shopID?: ModelSubscriptionIDInput | null,
+  userID?: ModelSubscriptionIDInput | null,
+  and?: Array< ModelSubscriptionShopMemberFilterInput | null > | null,
+  or?: Array< ModelSubscriptionShopMemberFilterInput | null > | null,
+};
+
+export type ModelSubscriptionBannerFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  image?: ModelSubscriptionStringInput | null,
+  link?: ModelSubscriptionStringInput | null,
+  position?: ModelSubscriptionIntInput | null,
+  and?: Array< ModelSubscriptionBannerFilterInput | null > | null,
+  or?: Array< ModelSubscriptionBannerFilterInput | null > | null,
+};
+
+export type ModelSubscriptionIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  in?: Array< number | null > | null,
+  notIn?: Array< number | null > | null,
+};
+
 export type FetchCategoriesQuery = {
   listCategories?:  {
     __typename: "ModelCategoryConnection",
@@ -2297,6 +2422,10 @@ export type SyncBannersQuery = {
   } | null,
 };
 
+export type OnCreateProductSubscriptionVariables = {
+  filter?: ModelSubscriptionProductFilterInput | null,
+};
+
 export type OnCreateProductSubscription = {
   onCreateProduct?:  {
     __typename: "Product",
@@ -2363,6 +2492,10 @@ export type OnCreateProductSubscription = {
     _deleted?: boolean | null,
     _lastChangedAt: number,
   } | null,
+};
+
+export type OnUpdateProductSubscriptionVariables = {
+  filter?: ModelSubscriptionProductFilterInput | null,
 };
 
 export type OnUpdateProductSubscription = {
@@ -2433,6 +2566,10 @@ export type OnUpdateProductSubscription = {
   } | null,
 };
 
+export type OnDeleteProductSubscriptionVariables = {
+  filter?: ModelSubscriptionProductFilterInput | null,
+};
+
 export type OnDeleteProductSubscription = {
   onDeleteProduct?:  {
     __typename: "Product",
@@ -2501,6 +2638,10 @@ export type OnDeleteProductSubscription = {
   } | null,
 };
 
+export type OnCreateShopSubscriptionVariables = {
+  filter?: ModelSubscriptionShopFilterInput | null,
+};
+
 export type OnCreateShopSubscription = {
   onCreateShop?:  {
     __typename: "Shop",
@@ -2558,6 +2699,10 @@ export type OnCreateShopSubscription = {
     _deleted?: boolean | null,
     _lastChangedAt: number,
   } | null,
+};
+
+export type OnUpdateShopSubscriptionVariables = {
+  filter?: ModelSubscriptionShopFilterInput | null,
 };
 
 export type OnUpdateShopSubscription = {
@@ -2619,6 +2764,10 @@ export type OnUpdateShopSubscription = {
   } | null,
 };
 
+export type OnDeleteShopSubscriptionVariables = {
+  filter?: ModelSubscriptionShopFilterInput | null,
+};
+
 export type OnDeleteShopSubscription = {
   onDeleteShop?:  {
     __typename: "Shop",
@@ -2678,6 +2827,10 @@ export type OnDeleteShopSubscription = {
   } | null,
 };
 
+export type OnCreateUserSubscriptionVariables = {
+  filter?: ModelSubscriptionUserFilterInput | null,
+};
+
 export type OnCreateUserSubscription = {
   onCreateUser?:  {
     __typename: "User",
@@ -2712,6 +2865,10 @@ export type OnCreateUserSubscription = {
     _deleted?: boolean | null,
     _lastChangedAt: number,
   } | null,
+};
+
+export type OnUpdateUserSubscriptionVariables = {
+  filter?: ModelSubscriptionUserFilterInput | null,
 };
 
 export type OnUpdateUserSubscription = {
@@ -2750,6 +2907,10 @@ export type OnUpdateUserSubscription = {
   } | null,
 };
 
+export type OnDeleteUserSubscriptionVariables = {
+  filter?: ModelSubscriptionUserFilterInput | null,
+};
+
 export type OnDeleteUserSubscription = {
   onDeleteUser?:  {
     __typename: "User",
@@ -2784,6 +2945,10 @@ export type OnDeleteUserSubscription = {
     _deleted?: boolean | null,
     _lastChangedAt: number,
   } | null,
+};
+
+export type OnCreateCategorySubscriptionVariables = {
+  filter?: ModelSubscriptionCategoryFilterInput | null,
 };
 
 export type OnCreateCategorySubscription = {
@@ -2824,6 +2989,10 @@ export type OnCreateCategorySubscription = {
   } | null,
 };
 
+export type OnUpdateCategorySubscriptionVariables = {
+  filter?: ModelSubscriptionCategoryFilterInput | null,
+};
+
 export type OnUpdateCategorySubscription = {
   onUpdateCategory?:  {
     __typename: "Category",
@@ -2860,6 +3029,10 @@ export type OnUpdateCategorySubscription = {
     _deleted?: boolean | null,
     _lastChangedAt: number,
   } | null,
+};
+
+export type OnDeleteCategorySubscriptionVariables = {
+  filter?: ModelSubscriptionCategoryFilterInput | null,
 };
 
 export type OnDeleteCategorySubscription = {
@@ -2901,6 +3074,7 @@ export type OnDeleteCategorySubscription = {
 };
 
 export type OnCreateShopMemberSubscriptionVariables = {
+  filter?: ModelSubscriptionShopMemberFilterInput | null,
   owner?: string | null,
 };
 
@@ -2966,6 +3140,7 @@ export type OnCreateShopMemberSubscription = {
 };
 
 export type OnUpdateShopMemberSubscriptionVariables = {
+  filter?: ModelSubscriptionShopMemberFilterInput | null,
   owner?: string | null,
 };
 
@@ -3031,6 +3206,7 @@ export type OnUpdateShopMemberSubscription = {
 };
 
 export type OnDeleteShopMemberSubscriptionVariables = {
+  filter?: ModelSubscriptionShopMemberFilterInput | null,
   owner?: string | null,
 };
 
@@ -3095,6 +3271,10 @@ export type OnDeleteShopMemberSubscription = {
   } | null,
 };
 
+export type OnCreateBannerSubscriptionVariables = {
+  filter?: ModelSubscriptionBannerFilterInput | null,
+};
+
 export type OnCreateBannerSubscription = {
   onCreateBanner?:  {
     __typename: "Banner",
@@ -3110,6 +3290,10 @@ export type OnCreateBannerSubscription = {
   } | null,
 };
 
+export type OnUpdateBannerSubscriptionVariables = {
+  filter?: ModelSubscriptionBannerFilterInput | null,
+};
+
 export type OnUpdateBannerSubscription = {
   onUpdateBanner?:  {
     __typename: "Banner",
@@ -3123,6 +3307,10 @@ export type OnUpdateBannerSubscription = {
     _deleted?: boolean | null,
     _lastChangedAt: number,
   } | null,
+};
+
+export type OnDeleteBannerSubscriptionVariables = {
+  filter?: ModelSubscriptionBannerFilterInput | null,
 };
 
 export type OnDeleteBannerSubscription = {

@@ -12,7 +12,7 @@ function ProductFavoriteItem() {
       <div className="card-body">
         <div className="hstack gap-3">
           <div
-            className="position-relative bg-light"
+            className="position-relative bg-light rounded"
             onContextMenu={(e) => e.preventDefault()}
             style={{
               minWidth: 120,
@@ -20,7 +20,7 @@ function ProductFavoriteItem() {
             }}
           >
             <Image
-              className="rounded"
+              className="p-2"
               src={image}
               alt="Product image."
               layout="fill"

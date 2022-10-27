@@ -3,8 +3,8 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateProduct = /* GraphQL */ `
-  subscription OnCreateProduct {
-    onCreateProduct {
+  subscription OnCreateProduct($filter: ModelSubscriptionProductFilterInput) {
+    onCreateProduct(filter: $filter) {
       id
       name
       images
@@ -65,8 +65,8 @@ export const onCreateProduct = /* GraphQL */ `
   }
 `;
 export const onUpdateProduct = /* GraphQL */ `
-  subscription OnUpdateProduct {
-    onUpdateProduct {
+  subscription OnUpdateProduct($filter: ModelSubscriptionProductFilterInput) {
+    onUpdateProduct(filter: $filter) {
       id
       name
       images
@@ -127,8 +127,8 @@ export const onUpdateProduct = /* GraphQL */ `
   }
 `;
 export const onDeleteProduct = /* GraphQL */ `
-  subscription OnDeleteProduct {
-    onDeleteProduct {
+  subscription OnDeleteProduct($filter: ModelSubscriptionProductFilterInput) {
+    onDeleteProduct(filter: $filter) {
       id
       name
       images
@@ -189,8 +189,8 @@ export const onDeleteProduct = /* GraphQL */ `
   }
 `;
 export const onCreateShop = /* GraphQL */ `
-  subscription OnCreateShop {
-    onCreateShop {
+  subscription OnCreateShop($filter: ModelSubscriptionShopFilterInput) {
+    onCreateShop(filter: $filter) {
       id
       name
       cover
@@ -244,8 +244,8 @@ export const onCreateShop = /* GraphQL */ `
   }
 `;
 export const onUpdateShop = /* GraphQL */ `
-  subscription OnUpdateShop {
-    onUpdateShop {
+  subscription OnUpdateShop($filter: ModelSubscriptionShopFilterInput) {
+    onUpdateShop(filter: $filter) {
       id
       name
       cover
@@ -299,8 +299,8 @@ export const onUpdateShop = /* GraphQL */ `
   }
 `;
 export const onDeleteShop = /* GraphQL */ `
-  subscription OnDeleteShop {
-    onDeleteShop {
+  subscription OnDeleteShop($filter: ModelSubscriptionShopFilterInput) {
+    onDeleteShop(filter: $filter) {
       id
       name
       cover
@@ -354,8 +354,8 @@ export const onDeleteShop = /* GraphQL */ `
   }
 `;
 export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser {
-    onCreateUser {
+  subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
+    onCreateUser(filter: $filter) {
       id
       name
       phone
@@ -388,8 +388,8 @@ export const onCreateUser = /* GraphQL */ `
   }
 `;
 export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser {
-    onUpdateUser {
+  subscription OnUpdateUser($filter: ModelSubscriptionUserFilterInput) {
+    onUpdateUser(filter: $filter) {
       id
       name
       phone
@@ -422,8 +422,8 @@ export const onUpdateUser = /* GraphQL */ `
   }
 `;
 export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser {
-    onDeleteUser {
+  subscription OnDeleteUser($filter: ModelSubscriptionUserFilterInput) {
+    onDeleteUser(filter: $filter) {
       id
       name
       phone
@@ -456,8 +456,8 @@ export const onDeleteUser = /* GraphQL */ `
   }
 `;
 export const onCreateCategory = /* GraphQL */ `
-  subscription OnCreateCategory {
-    onCreateCategory {
+  subscription OnCreateCategory($filter: ModelSubscriptionCategoryFilterInput) {
+    onCreateCategory(filter: $filter) {
       id
       name
       image
@@ -492,8 +492,8 @@ export const onCreateCategory = /* GraphQL */ `
   }
 `;
 export const onUpdateCategory = /* GraphQL */ `
-  subscription OnUpdateCategory {
-    onUpdateCategory {
+  subscription OnUpdateCategory($filter: ModelSubscriptionCategoryFilterInput) {
+    onUpdateCategory(filter: $filter) {
       id
       name
       image
@@ -528,8 +528,8 @@ export const onUpdateCategory = /* GraphQL */ `
   }
 `;
 export const onDeleteCategory = /* GraphQL */ `
-  subscription OnDeleteCategory {
-    onDeleteCategory {
+  subscription OnDeleteCategory($filter: ModelSubscriptionCategoryFilterInput) {
+    onDeleteCategory(filter: $filter) {
       id
       name
       image
@@ -564,8 +564,11 @@ export const onDeleteCategory = /* GraphQL */ `
   }
 `;
 export const onCreateShopMember = /* GraphQL */ `
-  subscription OnCreateShopMember($owner: String) {
-    onCreateShopMember(owner: $owner) {
+  subscription OnCreateShopMember(
+    $filter: ModelSubscriptionShopMemberFilterInput
+    $owner: String
+  ) {
+    onCreateShopMember(filter: $filter, owner: $owner) {
       id
       role
       shopID
@@ -620,8 +623,11 @@ export const onCreateShopMember = /* GraphQL */ `
   }
 `;
 export const onUpdateShopMember = /* GraphQL */ `
-  subscription OnUpdateShopMember($owner: String) {
-    onUpdateShopMember(owner: $owner) {
+  subscription OnUpdateShopMember(
+    $filter: ModelSubscriptionShopMemberFilterInput
+    $owner: String
+  ) {
+    onUpdateShopMember(filter: $filter, owner: $owner) {
       id
       role
       shopID
@@ -676,8 +682,11 @@ export const onUpdateShopMember = /* GraphQL */ `
   }
 `;
 export const onDeleteShopMember = /* GraphQL */ `
-  subscription OnDeleteShopMember($owner: String) {
-    onDeleteShopMember(owner: $owner) {
+  subscription OnDeleteShopMember(
+    $filter: ModelSubscriptionShopMemberFilterInput
+    $owner: String
+  ) {
+    onDeleteShopMember(filter: $filter, owner: $owner) {
       id
       role
       shopID
@@ -732,8 +741,8 @@ export const onDeleteShopMember = /* GraphQL */ `
   }
 `;
 export const onCreateBanner = /* GraphQL */ `
-  subscription OnCreateBanner {
-    onCreateBanner {
+  subscription OnCreateBanner($filter: ModelSubscriptionBannerFilterInput) {
+    onCreateBanner(filter: $filter) {
       id
       image
       link
@@ -747,8 +756,8 @@ export const onCreateBanner = /* GraphQL */ `
   }
 `;
 export const onUpdateBanner = /* GraphQL */ `
-  subscription OnUpdateBanner {
-    onUpdateBanner {
+  subscription OnUpdateBanner($filter: ModelSubscriptionBannerFilterInput) {
+    onUpdateBanner(filter: $filter) {
       id
       image
       link
@@ -762,8 +771,8 @@ export const onUpdateBanner = /* GraphQL */ `
   }
 `;
 export const onDeleteBanner = /* GraphQL */ `
-  subscription OnDeleteBanner {
-    onDeleteBanner {
+  subscription OnDeleteBanner($filter: ModelSubscriptionBannerFilterInput) {
+    onDeleteBanner(filter: $filter) {
       id
       image
       link
