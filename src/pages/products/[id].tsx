@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Minus, Plus } from "react-feather";
+import { Heart, Minus, Plus } from "react-feather";
 import { formatPrice } from "../../common/utils";
 import { ProductGridItem } from "../../components/product";
+import Tooltip from "../../components/Tooltip";
 
 function ProductDetail() {
   let popular;
@@ -73,13 +74,22 @@ function ProductDetail() {
             </div>
             <div className="col-lg-7">
               <div className="d-flex flex-column h-100">
-                <h4 className="d-inline text-muted me-3">
-                  {"Product name"}
-                  {popular && (
-                    <span className="badge bg-danger ms-2">Popular</span>
-                  )}
-                </h4>
-
+                <div className="hstack gap-2 mt-1">
+                  <h4 className="d-inline text-muted me-3">
+                    {"Product name"}
+                    {popular && (
+                      <span className="badge bg-danger ms-2">Popular</span>
+                    )}
+                  </h4>
+                  <Tooltip title="Add to favourite" className="ms-auto">
+                    <button
+                      disabled={false}
+                      className="btn btn-outline-light text-primary border"
+                    >
+                      <Heart size={20} />
+                    </button>
+                  </Tooltip>
+                </div>
                 <h4 className="fw-semibold mb-0">{price}</h4>
 
                 <hr />
