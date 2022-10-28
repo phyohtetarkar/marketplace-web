@@ -1,7 +1,7 @@
 import { Input, Textarea } from "../../components/forms";
 import Image from "next/image";
 import AccountMenu from "../../components/account/AccountMenu";
-import { Calendar, Edit2, MapPin, Plus } from "react-feather";
+import { Calendar, Edit2, MapPin, Plus, Trash, Trash2 } from "react-feather";
 import Link from "next/link";
 
 function ProfileOverview() {
@@ -88,24 +88,38 @@ function ProfileOverview() {
                 <div className="mb-1 text-muted mb-3">Addresses</div>
                 <div className="row g-2 mb-3">
                   <div className="col-md-6">
-                    <div className="border border-1 rounded p-2">
-                      <div className="hstack">
+                  <div className="border border-1 rounded p-2">
+                      <div className="d-flex hstack">
+                      <div className="mx-2 my-1 align-self-start">
                         <MapPin
-                          className="text-muted mx-2 my-1 align-self-start"
+                          className="text-muted"
                           size={17}
                         />
+                        </div>
+                        <div className="flex-fill">
                         Yangon city, Pyay Road, Building 123, House 321
+                        </div>
+                        <div className= "align-self-start mx-2 my-1">
+                          <Trash2 className="text-danger" size={19}/>
+                      </div>
                       </div>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="border border-1 rounded p-2">
                       <div className="hstack">
+                      <div className="mx-2 my-1 align-self-start">
                         <MapPin
-                          className="text-muted mx-2 my-1 align-self-start"
+                          className="text-muted"
                           size={17}
                         />
+                        </div>
+                        <div className="flex-fill">
                         Mandalay city, Insein Road, Building 224, House 11
+                        </div>
+                        <div className= "d-flex align-self-start mx-2 my-1">
+                          <Trash2 className="text-danger" size={19}/>
+                      </div>
                       </div>
                     </div>
                   </div>

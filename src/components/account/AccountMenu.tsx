@@ -40,7 +40,7 @@ function AccountMenu({}) {
           icon: <Clipboard className="me-2" size={iconSize} />,
         })}
         {menuLink({
-          href: "/profile/favorite-list",
+          href: "/profile/favorite",
           title: "My favorites",
           icon: <Heart className="me-2" size={iconSize} />,
         })}
