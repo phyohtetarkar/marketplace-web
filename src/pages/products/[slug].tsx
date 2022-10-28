@@ -16,16 +16,16 @@ function ProductDetail() {
 
   return (
     <div className="vstack">
-      <div className="bg-secondary">
+      <div className="bg-primary">
         <div className="container">
           <div className="row py-4 px-2">
             <nav aria-label="breadcrumb col-12">
               <ol className="breadcrumb mb-1">
                 <li className="breadcrumb-item">
-                  <a href="#">All Categories</a>
+                  <a href="#" className="text-light">All Categories</a>
                 </li>
                 <li className="breadcrumb-item">
-                  <a href="#">Electronics</a>
+                  <a href="#" className="text-light">Electronics</a>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
                   Product name

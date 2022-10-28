@@ -27,14 +27,14 @@ function ShoppingCart() {
 
   return (
     <div className="vstack mb-5">
-      <div className="bg-secondary">
+      <div className="bg-primary">
         <div className="container">
           <div className="row py-4 px-2">
             <nav aria-label="breadcrumb col-12">
               <ol className="breadcrumb mb-1">
                 <li className="breadcrumb-item">
                   <Link href={`/`}>
-                    <a>Home</a>
+                    <a className="text-light">Home</a>
                   </Link>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
@@ -48,8 +48,8 @@ function ShoppingCart() {
       <div className="container py-3">
         <div className="row g-3">
           <div className="col-lg-8">
-            <div className="card border-0 shadow-sm mb-3 d-none d-md-block">
-              <div className="card-header">
+            <div className="card mb-3 d-none d-md-block">
+              <div className="card-header bg-white">
                 <div className="hstack">
                   <div className="hstack gap-2">
                     <div>
@@ -72,8 +72,8 @@ function ShoppingCart() {
                 </div>
               </div>
             </div>
-            <div className="card border-0 shadow-sm mb-3 d-block d-md-none">
-              <div className="card-header">
+            <div className="card mb-3 d-block d-md-none">
+              <div className="card-header bg-white">
                 <div className="hstack">
                   <div className="hstack gap-2">
                     <div>

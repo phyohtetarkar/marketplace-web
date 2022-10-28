@@ -38,20 +38,16 @@ function ShoppingCartItem({ data = {} }) {
             <Link href={`/products/1`}>
               <a className="text-decoration-none">
                 <div
-                  className="position-relative"
+                  className="position-relative bg-light rounded"
                   onContextMenu={(e) => e.preventDefault()}
+                  style={{ height: 100, width: 100 }}
                 >
-                  <div
-                    className="ratio ratio-1x1 rounded bg-light"
-                    style={{ height: 120, width: 100 }}
-                  >
-                    <Image
-                      className="p-2"
-                      src={image}
-                      alt="Product image."
-                      layout="fill"
-                    />
-                  </div>
+                  <Image
+                    className="p-2"
+                    src={image}
+                    alt="Product image."
+                    layout="fill"
+                  />
                 </div>
               </a>
             </Link>
@@ -78,18 +74,11 @@ function ShoppingCartItem({ data = {} }) {
           <div>{getQtyInput()}</div>
         </div>
 
-        <div className="hstack gap-2">
-          <Tooltip title="Remove" className="ms-auto">
-            <button className="btn btn-danger">
-              <Trash2 />
-            </button>
-          </Tooltip>
-          <Tooltip title="Add to favourite" className="ms-auto">
-            <button className="btn btn-outline-light text-primary border">
-              <Heart />
-            </button>
-          </Tooltip>
-        </div>
+        <Tooltip title="Remove" className="ms-auto">
+          <button className="btn btn-danger">
+            <Trash2 size={20} />
+          </button>
+        </Tooltip>
       </div>
     );
   };
@@ -105,20 +94,16 @@ function ShoppingCartItem({ data = {} }) {
             <Link href={`/products/1`}>
               <a className="text-decoration-none">
                 <div
-                  className="position-relative"
+                  className="position-relative bg-light rounded"
                   onContextMenu={(e) => e.preventDefault()}
+                  style={{ height: 100, width: 100 }}
                 >
-                  <div
-                    className="ratio ratio-1x1 rounded bg-light"
-                    style={{ height: 120, width: 100 }}
-                  >
-                    <Image
-                      className="p-2"
-                      src={image}
-                      alt="Product image."
-                      layout="fill"
-                    />
-                  </div>
+                  <Image
+                    className="p-2"
+                    src={image}
+                    alt="Product image."
+                    layout="fill"
+                  />
                 </div>
               </a>
             </Link>
@@ -145,26 +130,21 @@ function ShoppingCartItem({ data = {} }) {
           <div className="d-flex">
             <div>{getQtyInput()}</div>
           </div>
-          <div className="hstack gap-2">
-            <Tooltip title="Remove" className="ms-auto">
-              <button className="btn btn-danger">
-                <Trash2 />
-              </button>
-            </Tooltip>
-            <Tooltip title="Add to favourite" className="ms-auto">
-              <button className="btn btn-outline-light text-primary border">
-                <Heart />
-              </button>
-            </Tooltip>
-          </div>
+
+          <Tooltip title="Remove" className="ms-auto">
+            <button className="btn btn-danger">
+              <Trash2 size={20} />
+            </button>
+          </Tooltip>
         </div>
       </div>
     );
   };
+  
   return (
     <div>
-      <div className="card border-0 shadow-sm mb-3 d-none d-md-block">
-        <div className="card-header">
+      <div className="card mb-3 d-none d-md-block">
+        <div className="card-header bg-white">
           <div className="hstack gap-3">
             <div>
               <input className="form-check-input" type="checkbox"></input>
@@ -173,15 +153,12 @@ function ShoppingCartItem({ data = {} }) {
           </div>
         </div>
         <div className="card-body">
-          <div>
-            {getItemInfo()}
-            <hr />
-            {getItemInfo()}
-          </div>
+          <div className="col mb-3">{getItemInfo()}</div>
+          <div className="col">{getItemInfo()}</div>
         </div>
       </div>
-      <div className="card border-0 shadow-sm mb-3 d-block d-md-none">
-        <div className="card-header">
+      <div className="card mb-3 d-block d-md-none">
+        <div className="card-header bg-white">
           <div className="hstack gap-3">
             <div>
               <input className="form-check-input" type="checkbox"></input>
@@ -190,11 +167,8 @@ function ShoppingCartItem({ data = {} }) {
           </div>
         </div>
         <div className="card-body p-3">
-          <div>
-            {getItemInfo2()}
-            <hr />
-            {getItemInfo2()}
-          </div>
+          <div className="col mb-3">{getItemInfo2()}</div>
+          <div className="col">{getItemInfo2()}</div>
         </div>
       </div>
     </div>
