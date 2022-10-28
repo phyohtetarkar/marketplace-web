@@ -49,7 +49,7 @@ function ShoppingCart() {
         <div className="row g-3">
           <div className="col-lg-8">
             <div className="card mb-3 d-none d-md-block">
-              <div className="card-header bg-white">
+              <div className="card-body">
                 <div className="hstack">
                   <div className="hstack gap-2">
                     <div>
