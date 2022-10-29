@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingCart } from "react-feather";
 import { formatPrice } from "../../common/utils";
 import Tooltip from "../Tooltip";
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 
 function ProductGridItem() {
   let popular;
@@ -105,7 +105,7 @@ function ProductGridItem() {
                   //   });
                 }}
               >
-                <ShoppingCart size={20} />
+                <ShoppingCartIcon width={24} />
               </button>
             </Tooltip>
             {/* <Tooltip title="Add to favorite">

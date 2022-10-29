@@ -1,6 +1,6 @@
+import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import { Trash2 } from "react-feather";
 
 function ProductFavoriteItem() {
   let image = `https://source.unsplash.com/random/200x240?random=${Math.floor(
@@ -55,7 +55,7 @@ function ProductFavoriteItem() {
                 className="btn btn-danger"
                 onClick={() => {}}
               >
-                <Trash2 size={20} />
+                <TrashIcon width={20} />
               </button>
             </div>
           </div>

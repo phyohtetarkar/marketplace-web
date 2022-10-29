@@ -1,5 +1,5 @@
+import { ListBulletIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import Head from "next/head";
-import { Grid, List } from "react-feather";
 import { ProductGridItem } from "../../components/product";
 
 function Filter() {
@@ -188,10 +188,10 @@ function Explore() {
             <div className="d-flex mb-3">
               <div className="btn-group ms-auto d-none d-md-block">
                 <button className="btn py-2 btn-outline-primary">
-                  <List size={20} />
+                  <ListBulletIcon width={24} />
                 </button>
                 <button className="btn py-2 btn-primary">
-                  <Grid size={20} />
+                  <Squares2X2Icon width={24} />
                 </button>
               </div>
             </div>

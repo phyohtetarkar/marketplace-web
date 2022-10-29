@@ -16,28 +16,41 @@ type Discount {
 
 type Product @model @auth(rules: [{allow: public, operations: [read]}, {allow: private}]) {
   id: ID!
-  name: String
+  name: String!
+  slug: String!
   images: [String]
-  price: Float
+  price: Float!
   discount: Discount
   description: String
   createdBy: String
   updatedBy: String
   available: Boolean
+  suspended: Boolean 
+  newArrival: Boolean 
+  deleted: Boolean
+  mainCategoryID: ID!
+  subCategoryID: ID!
   categoryID: ID! @index(name: "byCategory")
   shopID: ID! @index(name: "byShop")
   category: Category @belongsTo(fields: ["categoryID"])
   shop: Shop @belongsTo(fields: ["shopID"])
+  favoriteUsers: [FavoriteProduct] @hasMany(indexName: "byProduct", fields: ["id"])
+  cartItems: [CartItem] @hasMany(indexName: "byProduct", fields: ["id"])
+  type: String @default(value: "product") @index(name: "productsByPrice", queryField: "productsByPrice", sortKeyFields: ["price"])
 }
 
 type Shop @model @auth(rules: [{allow: public, operations: [read]}, {allow: private}]) {
   id: ID!
   name: String!
+  slug: String!
+  headline: String
   cover: String
   avatar: String
   description: String
   createdBy: String
   updatedBy: String
+  suspended: Boolean
+  recommended: Boolean
   products: [Product] @hasMany(indexName: "byShop", fields: ["id"])
   members: [ShopMember] @hasMany(indexName: "byShop", fields: ["id"])
 }
@@ -59,12 +72,13 @@ type User @model @auth(rules: [{allow: private}]) {
 type Category @model @auth(rules: [{allow: public, operations: [read]}, {allow: groups, groups: ["Admins"]}]) {
   id: ID!
   name: String!
+  slug: String!
   image: String
   parent: ID
   products: [Product] @hasMany(indexName: "byCategory", fields: ["id"])
 }
 
-type ShopMember @model @auth(rules: [{allow: private, operations: [read]}, {allow: owner}]) {
+type ShopMember @model @auth(rules: [{allow: private}]) {
   id: ID!
   role: MemberRole!
   shopID: ID! @index(name: "byShop")
@@ -92,14 +106,21 @@ type UserAddress @model @auth(rules: [{allow: private}]) {
 type CartItem @model @auth(rules: [{allow: owner}]) {
   id: ID!
   quantity: Int
-  userID: ID! @index(name: "byUser")
-  productID: ID
-  product: Product @hasOne(fields: ["productID"])
+  userID: ID! @index(name: "byUser", queryField: "cartItemsByUser")
+  productID: ID! @index(name: "byProduct")
+  product: Product @belongsTo(fields: ["productID"])
+  owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
 }
 
 type FavoriteProduct @model @auth(rules: [{allow: owner}]) {
   id: ID!
-  productID: ID
-  userID: ID! @index(name: "byUser")
-  product: Product @hasOne(fields: ["productID"])
+  userID: ID! @index(name: "byUser", queryField: "favoriteProductsByUser")
+  productID: ID! @index(name: "byProduct")
+  product: Product @belongsTo(fields: ["productID"])
+  owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
+}
+
+type Query {
+    getProductBySlug(slug: String!): Product
+    getShopBySlug(slug: String!): Shop
 }

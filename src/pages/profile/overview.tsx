@@ -1,8 +1,11 @@
-import { Input, Textarea } from "../../components/forms";
+import {
+  MapPinIcon,
+  PencilSquareIcon,
+  TrashIcon
+} from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import AccountMenu from "../../components/account/AccountMenu";
-import { Calendar, Edit2, MapPin, Plus, Trash, Trash2 } from "react-feather";
-import Link from "next/link";
 
 function ProfileOverview() {
   return (
@@ -36,12 +39,7 @@ function ProfileOverview() {
                   </div>
                   <div className="ms-3">
                     <h6 className="mb-0">Your Avatar</h6>
-                    <span className="mb-0 text-muted small">
-                      Email: myusername@gmail.com
-                      <span className="d-flex d-none d-md-inline px-2">
-                        &#x2022;
-                      </span>
-                      <span className="d-flex d-block d-md-none"></span>
+                    <span className="text-muted small">
                       Phone: +95244144442
                     </span>
                   </div>
@@ -52,13 +50,13 @@ function ProfileOverview() {
                   </div>
                   <div className="d-flex d-block d-lg-none ms-2">
                     <button className="btn btn-outline-primary">
-                      <Edit2 size={16} />
+                      <PencilSquareIcon width={16} />
                     </button>
                   </div>
                 </div>
                 <hr className="bg-dark-gray" />
                 <div className="mb-1 text-muted mb-3">Overview</div>
-                <div className="card-group card-stat mt-2">
+                <div className="card-group mt-2">
                   <div className="card bg-light">
                     <div className="p-3">
                       <h4 className="title">38</h4>
@@ -86,50 +84,29 @@ function ProfileOverview() {
                 </div>
                 <hr className="bg-dark-gray" />
                 <div className="mb-1 text-muted mb-3">Addresses</div>
-                <div className="row g-2 mb-3">
-                  <div className="col-md-6">
-                  <div className="border border-1 rounded p-2">
-                      <div className="d-flex hstack">
-                      <div className="mx-2 my-1 align-self-start">
-                        <MapPin
-                          className="text-muted"
-                          size={17}
-                        />
+                <div className="row row-cols-1 row-cols-lg-2 g-2 mb-3">
+                  <div className="col">
+                    <div className="card bg-light">
+                      <div className="card-body">
+                        <div className="hstack gap-2">
+                          <MapPinIcon className="text-muted" width={20} />
+                          <div className="flex-grow-1">
+                            Yangon city, Pyay Road, Building 123, House 321
+                          </div>
+                          <div role="button">
+                            <TrashIcon className="text-danger" width={20} />
+                          </div>
                         </div>
-                        <div className="flex-fill">
-                        Yangon city, Pyay Road, Building 123, House 321
-                        </div>
-                        <div className= "align-self-start mx-2 my-1">
-                          <Trash2 className="text-danger" size={19}/>
-                      </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="border border-1 rounded p-2">
-                      <div className="hstack">
-                      <div className="mx-2 my-1 align-self-start">
-                        <MapPin
-                          className="text-muted"
-                          size={17}
-                        />
-                        </div>
-                        <div className="flex-fill">
-                        Mandalay city, Insein Road, Building 224, House 11
-                        </div>
-                        <div className= "d-flex align-self-start mx-2 my-1">
-                          <Trash2 className="text-danger" size={19}/>
-                      </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <a className="btn btn-outline-primary">
                   <div className="hstack">
-                  <Plus className="me-2" size={17}/>
-                  Add new address
+                    <PlusIcon className="me-2" width={20} />
+                    Add new address
                   </div>
-                  </a>
+                </a>
               </div>
             </div>
           </div>

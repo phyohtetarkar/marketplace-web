@@ -1,5 +1,5 @@
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
-import { Eye, EyeOff } from "react-feather";
 import { formControlHeight } from "../../common/app.config";
 import { InputProps } from "./Input";
 
@@ -16,7 +16,7 @@ function PasswordInput({
   onChange,
   onBlur,
   error,
-  height = formControlHeight,
+  height = formControlHeight
 }: PasswordInputProps) {
   const [isPassword, setIsPassword] = useState(true);
 
@@ -36,7 +36,7 @@ function PasswordInput({
           onChange={onChange}
           onBlur={onBlur}
           style={{
-            height: height,
+            height: height
           }}
         />
         <div
@@ -44,7 +44,7 @@ function PasswordInput({
           role="button"
           onClick={() => setIsPassword(!isPassword)}
         >
-          {isPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          {isPassword ? <EyeSlashIcon width={20} /> : <EyeIcon width={20} />}
         </div>
         {error && <div className="invalid-feedback">{error}</div>}
       </div>

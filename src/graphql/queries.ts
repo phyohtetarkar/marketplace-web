@@ -2,11 +2,12 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getProduct = /* GraphQL */ `
-  query GetProduct($id: ID!) {
-    getProduct(id: $id) {
+export const getProductBySlug = /* GraphQL */ `
+  query GetProductBySlug($slug: String!) {
+    getProductBySlug(slug: $slug) {
       id
       name
+      slug
       images
       price
       discount {
@@ -17,50 +18,211 @@ export const getProduct = /* GraphQL */ `
       createdBy
       updatedBy
       available
+      suspended
+      newArrival
+      deleted
+      mainCategoryID
+      subCategoryID
       categoryID
       shopID
       category {
         id
         name
+        slug
         image
         parent
         products {
           nextToken
-          startedAt
         }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       shop {
         id
         name
+        slug
+        headline
         cover
         avatar
         description
         createdBy
         updatedBy
+        suspended
+        recommended
         products {
           nextToken
-          startedAt
         }
         members {
           nextToken
-          startedAt
         }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
+      }
+      favoriteUsers {
+        items {
+          id
+          userID
+          productID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      cartItems {
+        items {
+          id
+          quantity
+          userID
+          productID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      type
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const getShopBySlug = /* GraphQL */ `
+  query GetShopBySlug($slug: String!) {
+    getShopBySlug(slug: $slug) {
+      id
+      name
+      slug
+      headline
+      cover
+      avatar
+      description
+      createdBy
+      updatedBy
+      suspended
+      recommended
+      products {
+        items {
+          id
+          name
+          slug
+          images
+          price
+          description
+          createdBy
+          updatedBy
+          available
+          suspended
+          newArrival
+          deleted
+          mainCategoryID
+          subCategoryID
+          categoryID
+          shopID
+          type
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      members {
+        items {
+          id
+          role
+          shopID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+    }
+  }
+`;
+export const getProduct = /* GraphQL */ `
+  query GetProduct($id: ID!) {
+    getProduct(id: $id) {
+      id
+      name
+      slug
+      images
+      price
+      discount {
+        value
+        type
+      }
+      description
+      createdBy
+      updatedBy
+      available
+      suspended
+      newArrival
+      deleted
+      mainCategoryID
+      subCategoryID
+      categoryID
+      shopID
+      category {
+        id
+        name
+        slug
+        image
+        parent
+        products {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      shop {
+        id
+        name
+        slug
+        headline
+        cover
+        avatar
+        description
+        createdBy
+        updatedBy
+        suspended
+        recommended
+        products {
+          nextToken
+        }
+        members {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      favoriteUsers {
+        items {
+          id
+          userID
+          productID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      cartItems {
+        items {
+          id
+          quantity
+          userID
+          productID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      type
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -74,6 +236,7 @@ export const listProducts = /* GraphQL */ `
       items {
         id
         name
+        slug
         images
         price
         discount {
@@ -84,60 +247,72 @@ export const listProducts = /* GraphQL */ `
         createdBy
         updatedBy
         available
+        suspended
+        newArrival
+        deleted
+        mainCategoryID
+        subCategoryID
         categoryID
         shopID
         category {
           id
           name
+          slug
           image
           parent
           createdAt
           updatedAt
-          _version
-          _deleted
-          _lastChangedAt
         }
         shop {
           id
           name
+          slug
+          headline
           cover
           avatar
           description
           createdBy
           updatedBy
+          suspended
+          recommended
           createdAt
           updatedAt
-          _version
-          _deleted
-          _lastChangedAt
         }
+        favoriteUsers {
+          nextToken
+        }
+        cartItems {
+          nextToken
+        }
+        type
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       nextToken
-      startedAt
     }
   }
 `;
-export const syncProducts = /* GraphQL */ `
-  query SyncProducts(
+export const productsByPrice = /* GraphQL */ `
+  query ProductsByPrice(
+    $type: String!
+    $price: ModelFloatKeyConditionInput
+    $sortDirection: ModelSortDirection
     $filter: ModelProductFilterInput
     $limit: Int
     $nextToken: String
-    $lastSync: AWSTimestamp
   ) {
-    syncProducts(
+    productsByPrice(
+      type: $type
+      price: $price
+      sortDirection: $sortDirection
       filter: $filter
       limit: $limit
       nextToken: $nextToken
-      lastSync: $lastSync
     ) {
       items {
         id
         name
+        slug
         images
         price
         discount {
@@ -148,41 +323,48 @@ export const syncProducts = /* GraphQL */ `
         createdBy
         updatedBy
         available
+        suspended
+        newArrival
+        deleted
+        mainCategoryID
+        subCategoryID
         categoryID
         shopID
         category {
           id
           name
+          slug
           image
           parent
           createdAt
           updatedAt
-          _version
-          _deleted
-          _lastChangedAt
         }
         shop {
           id
           name
+          slug
+          headline
           cover
           avatar
           description
           createdBy
           updatedBy
+          suspended
+          recommended
           createdAt
           updatedAt
-          _version
-          _deleted
-          _lastChangedAt
         }
+        favoriteUsers {
+          nextToken
+        }
+        cartItems {
+          nextToken
+        }
+        type
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -191,31 +373,38 @@ export const getShop = /* GraphQL */ `
     getShop(id: $id) {
       id
       name
+      slug
+      headline
       cover
       avatar
       description
       createdBy
       updatedBy
+      suspended
+      recommended
       products {
         items {
           id
           name
+          slug
           images
           price
           description
           createdBy
           updatedBy
           available
+          suspended
+          newArrival
+          deleted
+          mainCategoryID
+          subCategoryID
           categoryID
           shopID
+          type
           createdAt
           updatedAt
-          _version
-          _deleted
-          _lastChangedAt
         }
         nextToken
-        startedAt
       }
       members {
         items {
@@ -225,19 +414,11 @@ export const getShop = /* GraphQL */ `
           userID
           createdAt
           updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-          owner
         }
         nextToken
-        startedAt
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -251,67 +432,25 @@ export const listShops = /* GraphQL */ `
       items {
         id
         name
+        slug
+        headline
         cover
         avatar
         description
         createdBy
         updatedBy
+        suspended
+        recommended
         products {
           nextToken
-          startedAt
         }
         members {
           nextToken
-          startedAt
         }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncShops = /* GraphQL */ `
-  query SyncShops(
-    $filter: ModelShopFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncShops(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        name
-        cover
-        avatar
-        description
-        createdBy
-        updatedBy
-        products {
-          nextToken
-          startedAt
-        }
-        members {
-          nextToken
-          startedAt
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -333,19 +472,47 @@ export const getUser = /* GraphQL */ `
           userID
           createdAt
           updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-          owner
         }
         nextToken
-        startedAt
+      }
+      addresses {
+        items {
+          id
+          city
+          township
+          address
+          primary
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      cartItems {
+        items {
+          id
+          quantity
+          userID
+          productID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      favoriteProducts {
+        items {
+          id
+          userID
+          productID
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -366,52 +533,20 @@ export const listUsers = /* GraphQL */ `
         role
         shops {
           nextToken
-          startedAt
         }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const syncUsers = /* GraphQL */ `
-  query SyncUsers(
-    $filter: ModelUserFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncUsers(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        name
-        phone
-        avatar
-        authID
-        disabled
-        role
-        shops {
+        addresses {
           nextToken
-          startedAt
+        }
+        cartItems {
+          nextToken
+        }
+        favoriteProducts {
+          nextToken
         }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       nextToken
-      startedAt
     }
   }
 `;
@@ -420,34 +555,35 @@ export const getCategory = /* GraphQL */ `
     getCategory(id: $id) {
       id
       name
+      slug
       image
       parent
       products {
         items {
           id
           name
+          slug
           images
           price
           description
           createdBy
           updatedBy
           available
+          suspended
+          newArrival
+          deleted
+          mainCategoryID
+          subCategoryID
           categoryID
           shopID
+          type
           createdAt
           updatedAt
-          _version
-          _deleted
-          _lastChangedAt
         }
         nextToken
-        startedAt
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -461,53 +597,16 @@ export const listCategories = /* GraphQL */ `
       items {
         id
         name
+        slug
         image
         parent
         products {
           nextToken
-          startedAt
         }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncCategories = /* GraphQL */ `
-  query SyncCategories(
-    $filter: ModelCategoryFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncCategories(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        name
-        image
-        parent
-        products {
-          nextToken
-          startedAt
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -521,24 +620,23 @@ export const getShopMember = /* GraphQL */ `
       shop {
         id
         name
+        slug
+        headline
         cover
         avatar
         description
         createdBy
         updatedBy
+        suspended
+        recommended
         products {
           nextToken
-          startedAt
         }
         members {
           nextToken
-          startedAt
         }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       user {
         id
@@ -550,20 +648,21 @@ export const getShopMember = /* GraphQL */ `
         role
         shops {
           nextToken
-          startedAt
+        }
+        addresses {
+          nextToken
+        }
+        cartItems {
+          nextToken
+        }
+        favoriteProducts {
+          nextToken
         }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      owner
     }
   }
 `;
@@ -582,16 +681,17 @@ export const listShopMembers = /* GraphQL */ `
         shop {
           id
           name
+          slug
+          headline
           cover
           avatar
           description
           createdBy
           updatedBy
+          suspended
+          recommended
           createdAt
           updatedAt
-          _version
-          _deleted
-          _lastChangedAt
         }
         user {
           id
@@ -603,77 +703,11 @@ export const listShopMembers = /* GraphQL */ `
           role
           createdAt
           updatedAt
-          _version
-          _deleted
-          _lastChangedAt
         }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncShopMembers = /* GraphQL */ `
-  query SyncShopMembers(
-    $filter: ModelShopMemberFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncShopMembers(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        role
-        shopID
-        userID
-        shop {
-          id
-          name
-          cover
-          avatar
-          description
-          createdBy
-          updatedBy
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        user {
-          id
-          name
-          phone
-          avatar
-          authID
-          disabled
-          role
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-        }
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -686,9 +720,6 @@ export const getBanner = /* GraphQL */ `
       position
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -706,41 +737,360 @@ export const listBanners = /* GraphQL */ `
         position
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       nextToken
-      startedAt
     }
   }
 `;
-export const syncBanners = /* GraphQL */ `
-  query SyncBanners(
-    $filter: ModelBannerFilterInput
+export const getUserAddress = /* GraphQL */ `
+  query GetUserAddress($id: ID!) {
+    getUserAddress(id: $id) {
+      id
+      city
+      township
+      address
+      primary
+      userID
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUserAddresses = /* GraphQL */ `
+  query ListUserAddresses(
+    $filter: ModelUserAddressFilterInput
     $limit: Int
     $nextToken: String
-    $lastSync: AWSTimestamp
   ) {
-    syncBanners(
+    listUserAddresses(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        city
+        township
+        address
+        primary
+        userID
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCartItem = /* GraphQL */ `
+  query GetCartItem($id: ID!) {
+    getCartItem(id: $id) {
+      id
+      quantity
+      userID
+      productID
+      product {
+        id
+        name
+        slug
+        images
+        price
+        discount {
+          value
+          type
+        }
+        description
+        createdBy
+        updatedBy
+        available
+        suspended
+        newArrival
+        deleted
+        mainCategoryID
+        subCategoryID
+        categoryID
+        shopID
+        category {
+          id
+          name
+          slug
+          image
+          parent
+          createdAt
+          updatedAt
+        }
+        shop {
+          id
+          name
+          slug
+          headline
+          cover
+          avatar
+          description
+          createdBy
+          updatedBy
+          suspended
+          recommended
+          createdAt
+          updatedAt
+        }
+        favoriteUsers {
+          nextToken
+        }
+        cartItems {
+          nextToken
+        }
+        type
+        createdAt
+        updatedAt
+      }
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCartItems = /* GraphQL */ `
+  query ListCartItems(
+    $filter: ModelCartItemFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCartItems(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        quantity
+        userID
+        productID
+        product {
+          id
+          name
+          slug
+          images
+          price
+          description
+          createdBy
+          updatedBy
+          available
+          suspended
+          newArrival
+          deleted
+          mainCategoryID
+          subCategoryID
+          categoryID
+          shopID
+          type
+          createdAt
+          updatedAt
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const cartItemsByUser = /* GraphQL */ `
+  query CartItemsByUser(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCartItemFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    cartItemsByUser(
+      userID: $userID
+      sortDirection: $sortDirection
       filter: $filter
       limit: $limit
       nextToken: $nextToken
-      lastSync: $lastSync
     ) {
       items {
         id
-        image
-        link
-        position
+        quantity
+        userID
+        productID
+        product {
+          id
+          name
+          slug
+          images
+          price
+          description
+          createdBy
+          updatedBy
+          available
+          suspended
+          newArrival
+          deleted
+          mainCategoryID
+          subCategoryID
+          categoryID
+          shopID
+          type
+          createdAt
+          updatedAt
+        }
+        owner
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
       }
       nextToken
-      startedAt
+    }
+  }
+`;
+export const getFavoriteProduct = /* GraphQL */ `
+  query GetFavoriteProduct($id: ID!) {
+    getFavoriteProduct(id: $id) {
+      id
+      userID
+      productID
+      product {
+        id
+        name
+        slug
+        images
+        price
+        discount {
+          value
+          type
+        }
+        description
+        createdBy
+        updatedBy
+        available
+        suspended
+        newArrival
+        deleted
+        mainCategoryID
+        subCategoryID
+        categoryID
+        shopID
+        category {
+          id
+          name
+          slug
+          image
+          parent
+          createdAt
+          updatedAt
+        }
+        shop {
+          id
+          name
+          slug
+          headline
+          cover
+          avatar
+          description
+          createdBy
+          updatedBy
+          suspended
+          recommended
+          createdAt
+          updatedAt
+        }
+        favoriteUsers {
+          nextToken
+        }
+        cartItems {
+          nextToken
+        }
+        type
+        createdAt
+        updatedAt
+      }
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listFavoriteProducts = /* GraphQL */ `
+  query ListFavoriteProducts(
+    $filter: ModelFavoriteProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listFavoriteProducts(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        productID
+        product {
+          id
+          name
+          slug
+          images
+          price
+          description
+          createdBy
+          updatedBy
+          available
+          suspended
+          newArrival
+          deleted
+          mainCategoryID
+          subCategoryID
+          categoryID
+          shopID
+          type
+          createdAt
+          updatedAt
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const favoriteProductsByUser = /* GraphQL */ `
+  query FavoriteProductsByUser(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelFavoriteProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    favoriteProductsByUser(
+      userID: $userID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        productID
+        product {
+          id
+          name
+          slug
+          images
+          price
+          description
+          createdBy
+          updatedBy
+          available
+          suspended
+          newArrival
+          deleted
+          mainCategoryID
+          subCategoryID
+          categoryID
+          shopID
+          type
+          createdAt
+          updatedAt
+        }
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
     }
   }
 `;

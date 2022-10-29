@@ -1,11 +1,14 @@
+import { TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { Trash2 } from "react-feather";
 import PricingCard from "../../components/order/PricingCard";
 import ShoppingCartItem from "../../components/order/ShoppingCartItem";
 import Tooltip from "../../components/Tooltip";
 
 function ShoppingCart() {
-  const list = [1, 2];
+  const list = [
+    [1, 2],
+    [3, 4]
+  ];
 
   let content = <div></div>;
   if (list && list.length === 0) {
@@ -16,11 +19,26 @@ function ShoppingCart() {
     );
   } else {
     content = (
-      <div>
-        {list &&
-          list.map((p) => {
-            return <ShoppingCartItem key={p} data={p} />;
-          })}
+      <div className="vstack gap-3">
+        {list.map((pl, i) => {
+          return (
+            <div key={i} className="card">
+              <div className="card-header bg-white py-2h">
+                <div className="form-check">
+                  <input className="form-check-input" type="checkbox"></input>
+                  <label className="form-check-label">Shop name</label>
+                </div>
+              </div>
+              <div className="card-body">
+                <div className="vstack gap-3">
+                  {pl.map((p) => {
+                    return <ShoppingCartItem key={p} />;
+                  })}
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
   }
@@ -48,51 +66,21 @@ function ShoppingCart() {
       <div className="container py-3">
         <div className="row g-3">
           <div className="col-lg-8">
-            <div className="card mb-3 d-none d-md-block">
-              <div className="card-body">
-                <div className="hstack">
-                  <div className="hstack gap-2">
-                    <div>
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                      ></input>
-                    </div>
-                    <div>SELECT ALL</div>
+            <div className="card mb-3">
+              <div className="card-body py-2h">
+                <div className="hstack gap-2 flex-grow-1">
+                  <div className="form-check">
+                    <input className="form-check-input" type="checkbox"></input>
+                    <label className="form-check-label">SELECT ALL</label>
                   </div>
-                  <div className="hstack gap-2 flex-grow-1 justify-content-end">
-                    <div>
-                      <Tooltip title="Remove all">
-                        <button disabled={false} className="btn btn-danger">
-                          <Trash2 size={20} />
-                        </button>
-                      </Tooltip>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="card mb-3 d-block d-md-none">
-              <div className="card-header bg-white">
-                <div className="hstack">
-                  <div className="hstack gap-2">
-                    <div>
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                      ></input>
-                    </div>
-                    <div>SELECT ALL</div>
-                  </div>
-                  <div className="hstack gap-2 flex-grow-1 justify-content-end">
-                    <div>
-                      <Tooltip title="Remove all">
-                        <button disabled={false} className="btn btn-danger">
-                          <Trash2 size={20} />
-                        </button>
-                      </Tooltip>
-                    </div>
-                  </div>
+
+                  <div className="flex-grow-1"></div>
+
+                  <Tooltip title="Remove all">
+                    <button disabled={false} className="btn btn-danger">
+                      <TrashIcon width={20} />
+                    </button>
+                  </Tooltip>
                 </div>
               </div>
             </div>

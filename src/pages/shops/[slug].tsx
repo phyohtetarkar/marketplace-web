@@ -1,6 +1,7 @@
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import { Edit, Facebook, Instagram, Twitter } from "react-feather";
+import { Facebook, Instagram, Twitter } from "react-feather";
 import { Input } from "../../components/forms";
 import { ProductGridItem } from "../../components/product";
 
@@ -50,7 +51,7 @@ function Shop() {
                 />
                 <Link href={`/`}>
                   <a className="btn btn-dark opacity-75 position-absolute end-0 m-3">
-                    <Edit size={20} />
+                    <PencilSquareIcon width={20} />
                   </a>
                 </Link>
               </div>

@@ -1,10 +1,9 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Carousel } from "react-responsive-carousel";
-import { Autoplay, Navigation, Pagination } from "swiper";
+import { Autoplay, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { ProductFavoriteItem, ProductGridItem } from "../components/product";
+import { ProductGridItem } from "../components/product";
 
 const _categories = [
   "Electronics",
@@ -33,7 +32,7 @@ const Home: NextPage = () => {
     <div className="container py-4">
       <div className="row mb-4 mb-lg-5">
         <div className="col-12">
-          <div className="card border-0 shadow-sm">
+          <div className="card">
             <div className="card-body p-0 p-lg-3">
               <div className="row g-3">
                 <div className="col-lg-3 d-none d-lg-inline">
@@ -243,6 +242,8 @@ const Home: NextPage = () => {
         <Swiper
           spaceBetween={20}
           slidesPerView={2}
+          preventClicks={false}
+          preventClicksPropagation={false}
           pagination={{
             el: ""
           }}

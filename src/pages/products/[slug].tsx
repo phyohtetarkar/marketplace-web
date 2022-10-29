@@ -1,6 +1,7 @@
+import { HeartIcon } from "@heroicons/react/24/outline";
+import { MinusIcon, PlusIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, Minus, Plus } from "react-feather";
 import { formatPrice } from "../../common/utils";
 import { ProductGridItem } from "../../components/product";
 import Tooltip from "../../components/Tooltip";
@@ -22,10 +23,14 @@ function ProductDetail() {
             <nav aria-label="breadcrumb col-12">
               <ol className="breadcrumb mb-1">
                 <li className="breadcrumb-item">
-                  <a href="#" className="text-light">All Categories</a>
+                  <a href="#" className="text-light">
+                    All Categories
+                  </a>
                 </li>
                 <li className="breadcrumb-item">
-                  <a href="#" className="text-light">Electronics</a>
+                  <a href="#" className="text-light">
+                    Electronics
+                  </a>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
                   Product name
@@ -39,54 +44,30 @@ function ProductDetail() {
         <div className="container py-4">
           <div className="row gy-3 gx-4">
             <div className="col-lg-5">
-              <div className="row">
-                <div className="col-12">
-                  <div className="ratio ratio-1x1 rounded bg-light d-lg-block">
-                    <Image
-                      className="p-2"
-                      src={image}
-                      alt="Product image."
-                      layout="fill"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="row mt-3 d-none d-lg-block">
-                <div className="col-12 d-flex justify-content-center">
-                  {images.map((i) => {
-                    return (
-                      <div
-                        key={i}
-                        style={{ width: 80 }}
-                        className="ratio ratio-1x1 rounded bg-light"
-                      >
-                        <Image
-                          className="p-2"
-                          src={image}
-                          alt="Product image."
-                          layout="fill"
-                        />
-                      </div>
-                    );
-                  })}{" "}
-                </div>
+              <div className="ratio ratio-1x1 rounded bg-light d-lg-block">
+                <Image
+                  className="p-2"
+                  src={image}
+                  alt="Product image."
+                  layout="fill"
+                />
               </div>
             </div>
             <div className="col-lg-7">
               <div className="d-flex flex-column h-100">
-                <div className="hstack gap-2 mt-1">
+                <div className="hstack gap-2">
                   <h4 className="d-inline text-muted me-3">
                     {"Product name"}
                     {popular && (
                       <span className="badge bg-danger ms-2">Popular</span>
                     )}
                   </h4>
-                  <Tooltip title="Add to favourite" className="ms-auto">
+                  <Tooltip title="Add to favorite" className="ms-auto">
                     <button
                       disabled={false}
                       className="btn btn-outline-light text-primary border"
                     >
-                      <Heart size={20} />
+                      <HeartIcon width={24} strokeWidth={2} />
                     </button>
                   </Tooltip>
                 </div>
@@ -113,11 +94,11 @@ function ProductDetail() {
 
                 <div className="flex-grow-1"></div>
 
-                <div className="d-flex">
-                  <div className="col col-md-auto me-3">
-                    <div className="input-group">
+                <div className="row g-3">
+                  <div className="col-12 col-lg-auto mb-3 mb-lg-0">
+                    <div className="input-group h-100">
                       <button className="btn btn-outline text-muted border border-end-0">
-                        <Minus />
+                        <MinusIcon width={20} />
                       </button>
                       <div
                         className="bg-light align-items-center justify-content-center d-flex border"
@@ -126,14 +107,42 @@ function ProductDetail() {
                         1
                       </div>
                       <button className="btn btn-outline text-muted border border-start-0">
-                        <Plus />
+                        <PlusIcon width={20} />
                       </button>
                     </div>
                   </div>
-                  <button className="btn btn-primary me-3">Add to cart</button>
-                  <button className="btn btn-outline-primary">Buy now</button>
+                  <div className="col col-lg-auto">
+                    <button className="btn btn-primary w-100">
+                      Add to cart
+                    </button>
+                  </div>
+                  <div className="col col-lg-auto">
+                    <button className="btn btn-outline-primary w-100">
+                      Buy now
+                    </button>
+                  </div>
                 </div>
               </div>
+            </div>
+          </div>
+          <div className="row mt-3 d-none d-lg-block">
+            <div className="col-5 hstack gap-2">
+              {images.map((i) => {
+                return (
+                  <div
+                    key={i}
+                    style={{ width: 80 }}
+                    className="ratio ratio-1x1 rounded bg-light"
+                  >
+                    <Image
+                      className="p-2"
+                      src={image}
+                      alt="Product image."
+                      layout="fill"
+                    />
+                  </div>
+                );
+              })}{" "}
             </div>
           </div>
         </div>
@@ -158,7 +167,7 @@ function ProductDetail() {
 <li style="line-height: 1.5;">Lorem ipsum dolor sit amet</li>
 <li style="line-height: 1.5;">Lorem ipsum dolor sit amet</li>
 </ul>
-<p>Duis facilisis ex a urna blandit ultricies. Nullam sagittis ligula non eros semper, nec mattis odio ullamcorper. Phasellus feugiat sit amet leo eget consectetur.</p>`,
+<p>Duis facilisis ex a urna blandit ultricies. Nullam sagittis ligula non eros semper, nec mattis odio ullamcorper. Phasellus feugiat sit amet leo eget consectetur.</p>`
                   }}
                 ></div>
               </div>
@@ -202,7 +211,7 @@ function ProductDetail() {
                   </p>
 
                   <div>
-                    <Link href="/profile/1">
+                    <Link href="/shops/slug">
                       <a className="btn btn-outline-light border text-primary">
                         Visit store
                       </a>

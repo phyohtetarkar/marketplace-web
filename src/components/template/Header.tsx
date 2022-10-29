@@ -4,9 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
-import { Box, Home, Search, ShoppingCart } from "react-feather";
 import { AuthenticationContext } from "../../common/contexts";
 import Dropdown from "../Dropdown";
+import {
+  MagnifyingGlassIcon,
+  ShoppingCartIcon
+} from "@heroicons/react/24/solid";
 
 interface HeaderProps {
   hideAuth?: boolean;
@@ -258,7 +261,7 @@ function Header({ hideAuth }: HeaderProps) {
                       type="submit"
                       className="btn btn-primary shadow-none"
                     >
-                      <Search size={20} />
+                      <MagnifyingGlassIcon width={20} />
                     </button>
                   </div>
                 </form>
@@ -296,7 +299,7 @@ function Header({ hideAuth }: HeaderProps) {
             <div>
               <Link href="/shopping-cart">
                 <a className="btn btn-light border position-relative ms-2 fw-normal hstack text-nowrap">
-                  <ShoppingCart size={20} />
+                  <ShoppingCartIcon width={20} />
                   &nbsp;Cart
                   <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger my-auto">
                     3

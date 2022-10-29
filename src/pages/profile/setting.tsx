@@ -1,7 +1,6 @@
-import { Input, Textarea } from "../../components/forms";
 import Image from "next/image";
 import AccountMenu from "../../components/account/AccountMenu";
-import { Camera, CheckCircle, Trash, Trash2 } from "react-feather";
+import { Input } from "../../components/forms";
 
 function ProfileSetting() {
   return (

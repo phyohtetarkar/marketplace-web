@@ -20,6 +20,9 @@
           "nativeClientId": "2o31210hn1m35vopk93rvged6v"
         },
         "shoppingcenterauth": {}
+      },
+      "api": {
+        "shoppingcenter": {}
       }
     }
   }

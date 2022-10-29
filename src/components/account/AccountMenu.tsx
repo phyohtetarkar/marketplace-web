@@ -1,13 +1,27 @@
+import {
+  Cog8ToothIcon,
+  ClipboardIcon,
+  HeartIcon,
+  UserIcon
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Clipboard, Heart, Link as Link1, Lock, User } from "react-feather";
+import { ReactNode } from "react";
 
-const iconSize = 18;
+const iconSize = 20;
 
 function AccountMenu({}) {
   const router = useRouter();
 
-  function menuLink({ href, title, icon }) {
+  function menuLink({
+    href,
+    title,
+    icon
+  }: {
+    href: string;
+    title: string;
+    icon: ReactNode;
+  }) {
     const active = router.pathname === href;
     return (
       <Link href={href}>
@@ -32,22 +46,26 @@ function AccountMenu({}) {
         {menuLink({
           href: "/profile/overview",
           title: "Profile overview",
-          icon: <User className="me-2" size={iconSize} />,
+          icon: <UserIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
           href: "/profile/orders-history",
           title: "Orders history",
-          icon: <Clipboard className="me-2" size={iconSize} />,
+          icon: (
+            <ClipboardIcon className="me-2" strokeWidth={2} width={iconSize} />
+          )
         })}
         {menuLink({
           href: "/profile/favorite",
           title: "My favorites",
-          icon: <Heart className="me-2" size={iconSize} />,
+          icon: <HeartIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
           href: "/profile/setting",
           title: "Profile Setting",
-          icon: <Link1 className="me-2" size={iconSize} />,
+          icon: (
+            <Cog8ToothIcon className="me-2" strokeWidth={2} width={iconSize} />
+          )
         })}
       </div>
     </>
@@ -58,7 +76,7 @@ function AccountMenu({}) {
       <div
         className="card d-none d-lg-block sticky-lg-top"
         style={{
-          top: 86,
+          top: 86
         }}
       >
         <div className="card-body">{content}</div>
