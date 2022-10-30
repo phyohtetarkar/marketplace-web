@@ -281,6 +281,23 @@ export type ModelCartItemFilterInput = {
   not?: ModelCartItemFilterInput | null,
 };
 
+export type ModelCategoryFilterInput = {
+  id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  slug?: ModelStringInput | null,
+  image?: ModelStringInput | null,
+  parent?: ModelIDInput | null,
+  and?: Array< ModelCategoryFilterInput | null > | null,
+  or?: Array< ModelCategoryFilterInput | null > | null,
+  not?: ModelCategoryFilterInput | null,
+};
+
+export type ModelCategoryConnection = {
+  __typename: "ModelCategoryConnection",
+  items:  Array<Category | null >,
+  nextToken?: string | null,
+};
+
 export type CreateFavoriteProductInput = {
   id?: string | null,
   userID: string,
@@ -713,23 +730,6 @@ export type ModelUserConnection = {
   nextToken?: string | null,
 };
 
-export type ModelCategoryFilterInput = {
-  id?: ModelIDInput | null,
-  name?: ModelStringInput | null,
-  slug?: ModelStringInput | null,
-  image?: ModelStringInput | null,
-  parent?: ModelIDInput | null,
-  and?: Array< ModelCategoryFilterInput | null > | null,
-  or?: Array< ModelCategoryFilterInput | null > | null,
-  not?: ModelCategoryFilterInput | null,
-};
-
-export type ModelCategoryConnection = {
-  __typename: "ModelCategoryConnection",
-  items:  Array<Category | null >,
-  nextToken?: string | null,
-};
-
 export type ModelShopMemberFilterInput = {
   id?: ModelIDInput | null,
   role?: ModelMemberRoleInput | null,
@@ -1001,6 +1001,27 @@ export type FindCartItemsByUserQuery = {
   } | null,
 };
 
+export type FindCategoriesQueryVariables = {
+  filter?: ModelCategoryFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type FindCategoriesQuery = {
+  listCategories?:  {
+    __typename: "ModelCategoryConnection",
+    items:  Array< {
+      __typename: "Category",
+      id: string,
+      name: string,
+      slug: string,
+      image?: string | null,
+      parent?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type AddFavoriteProductMutationVariables = {
   input: CreateFavoriteProductInput,
   condition?: ModelFavoriteProductConditionInput | null,
@@ -1089,6 +1110,8 @@ export type FindProductByIdQuery = {
     images?: Array< string | null > | null,
     available?: boolean | null,
     description?: string | null,
+    mainCategoryID: string,
+    subCategoryID: string,
     discount?:  {
       __typename: "Discount",
       type?: string | null,
@@ -1112,36 +1135,45 @@ export type FindProductByIdQuery = {
 
 export type FindProductBySlugQueryVariables = {
   slug: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelProductFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
 };
 
 export type FindProductBySlugQuery = {
   getProductBySlug?:  {
-    __typename: "Product",
-    id: string,
-    name: string,
-    slug: string,
-    price: number,
-    images?: Array< string | null > | null,
-    available?: boolean | null,
-    description?: string | null,
-    discount?:  {
-      __typename: "Discount",
-      type?: string | null,
-      value?: number | null,
-    } | null,
-    category?:  {
-      __typename: "Category",
+    __typename: "ModelProductConnection",
+    items:  Array< {
+      __typename: "Product",
       id: string,
       name: string,
       slug: string,
-    } | null,
-    shop?:  {
-      __typename: "Shop",
-      id: string,
-      name: string,
-      avatar?: string | null,
-      slug: string,
-    } | null,
+      price: number,
+      images?: Array< string | null > | null,
+      available?: boolean | null,
+      description?: string | null,
+      mainCategoryID: string,
+      subCategoryID: string,
+      discount?:  {
+        __typename: "Discount",
+        type?: string | null,
+        value?: number | null,
+      } | null,
+      category?:  {
+        __typename: "Category",
+        id: string,
+        name: string,
+        slug: string,
+      } | null,
+      shop?:  {
+        __typename: "Shop",
+        id: string,
+        name: string,
+        avatar?: string | null,
+        slug: string,
+      } | null,
+    } | null >,
   } | null,
 };
 
@@ -1163,6 +1195,8 @@ export type FindProductsQuery = {
       images?: Array< string | null > | null,
       available?: boolean | null,
       description?: string | null,
+      mainCategoryID: string,
+      subCategoryID: string,
       discount?:  {
         __typename: "Discount",
         type?: string | null,
@@ -1207,6 +1241,8 @@ export type FindProductsOrderByPriceQuery = {
       images?: Array< string | null > | null,
       available?: boolean | null,
       description?: string | null,
+      mainCategoryID: string,
+      subCategoryID: string,
       discount?:  {
         __typename: "Discount",
         type?: string | null,
@@ -1255,24 +1291,31 @@ export type GetShopByIdQuery = {
 
 export type FindShopBySlugQueryVariables = {
   slug: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelShopFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
 };
 
 export type FindShopBySlugQuery = {
   getShopBySlug?:  {
-    __typename: "Shop",
-    id: string,
-    name: string,
-    slug: string,
-    headline?: string | null,
-    cover?: string | null,
-    avatar?: string | null,
-    description?: string | null,
-    createdBy?: string | null,
-    updatedBy?: string | null,
-    suspended?: boolean | null,
-    recommended?: boolean | null,
-    createdAt: string,
-    updatedAt: string,
+    __typename: "ModelShopConnection",
+    items:  Array< {
+      __typename: "Shop",
+      id: string,
+      name: string,
+      slug: string,
+      headline?: string | null,
+      cover?: string | null,
+      avatar?: string | null,
+      description?: string | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      suspended?: boolean | null,
+      recommended?: boolean | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
   } | null,
 };
 
@@ -2936,167 +2979,6 @@ export type DeleteFavoriteProductMutation = {
   } | null,
 };
 
-export type GetProductBySlugQueryVariables = {
-  slug: string,
-};
-
-export type GetProductBySlugQuery = {
-  getProductBySlug?:  {
-    __typename: "Product",
-    id: string,
-    name: string,
-    slug: string,
-    images?: Array< string | null > | null,
-    price: number,
-    discount?:  {
-      __typename: "Discount",
-      value?: number | null,
-      type?: string | null,
-    } | null,
-    description?: string | null,
-    createdBy?: string | null,
-    updatedBy?: string | null,
-    available?: boolean | null,
-    suspended?: boolean | null,
-    newArrival?: boolean | null,
-    deleted?: boolean | null,
-    mainCategoryID: string,
-    subCategoryID: string,
-    categoryID: string,
-    shopID: string,
-    category?:  {
-      __typename: "Category",
-      id: string,
-      name: string,
-      slug: string,
-      image?: string | null,
-      parent?: string | null,
-      products?:  {
-        __typename: "ModelProductConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    shop?:  {
-      __typename: "Shop",
-      id: string,
-      name: string,
-      slug: string,
-      headline?: string | null,
-      cover?: string | null,
-      avatar?: string | null,
-      description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
-      products?:  {
-        __typename: "ModelProductConnection",
-        nextToken?: string | null,
-      } | null,
-      members?:  {
-        __typename: "ModelShopMemberConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    favoriteUsers?:  {
-      __typename: "ModelFavoriteProductConnection",
-      items:  Array< {
-        __typename: "FavoriteProduct",
-        id: string,
-        userID: string,
-        productID: string,
-        owner?: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    cartItems?:  {
-      __typename: "ModelCartItemConnection",
-      items:  Array< {
-        __typename: "CartItem",
-        id: string,
-        quantity?: number | null,
-        userID: string,
-        productID: string,
-        owner?: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    type?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type GetShopBySlugQueryVariables = {
-  slug: string,
-};
-
-export type GetShopBySlugQuery = {
-  getShopBySlug?:  {
-    __typename: "Shop",
-    id: string,
-    name: string,
-    slug: string,
-    headline?: string | null,
-    cover?: string | null,
-    avatar?: string | null,
-    description?: string | null,
-    createdBy?: string | null,
-    updatedBy?: string | null,
-    suspended?: boolean | null,
-    recommended?: boolean | null,
-    products?:  {
-      __typename: "ModelProductConnection",
-      items:  Array< {
-        __typename: "Product",
-        id: string,
-        name: string,
-        slug: string,
-        images?: Array< string | null > | null,
-        price: number,
-        description?: string | null,
-        createdBy?: string | null,
-        updatedBy?: string | null,
-        available?: boolean | null,
-        suspended?: boolean | null,
-        newArrival?: boolean | null,
-        deleted?: boolean | null,
-        mainCategoryID: string,
-        subCategoryID: string,
-        categoryID: string,
-        shopID: string,
-        type?: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    members?:  {
-      __typename: "ModelShopMemberConnection",
-      items:  Array< {
-        __typename: "ShopMember",
-        id: string,
-        role: MemberRole,
-        shopID: string,
-        userID: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type GetProductQueryVariables = {
   id: string,
 };
@@ -3204,6 +3086,82 @@ export type ListProductsQueryVariables = {
 
 export type ListProductsQuery = {
   listProducts?:  {
+    __typename: "ModelProductConnection",
+    items:  Array< {
+      __typename: "Product",
+      id: string,
+      name: string,
+      slug: string,
+      images?: Array< string | null > | null,
+      price: number,
+      discount?:  {
+        __typename: "Discount",
+        value?: number | null,
+        type?: string | null,
+      } | null,
+      description?: string | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      available?: boolean | null,
+      suspended?: boolean | null,
+      newArrival?: boolean | null,
+      deleted?: boolean | null,
+      mainCategoryID: string,
+      subCategoryID: string,
+      categoryID: string,
+      shopID: string,
+      category?:  {
+        __typename: "Category",
+        id: string,
+        name: string,
+        slug: string,
+        image?: string | null,
+        parent?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      shop?:  {
+        __typename: "Shop",
+        id: string,
+        name: string,
+        slug: string,
+        headline?: string | null,
+        cover?: string | null,
+        avatar?: string | null,
+        description?: string | null,
+        createdBy?: string | null,
+        updatedBy?: string | null,
+        suspended?: boolean | null,
+        recommended?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      favoriteUsers?:  {
+        __typename: "ModelFavoriteProductConnection",
+        nextToken?: string | null,
+      } | null,
+      cartItems?:  {
+        __typename: "ModelCartItemConnection",
+        nextToken?: string | null,
+      } | null,
+      type?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetProductBySlugQueryVariables = {
+  slug: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelProductFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type GetProductBySlugQuery = {
+  getProductBySlug?:  {
     __typename: "ModelProductConnection",
     items:  Array< {
       __typename: "Product",
@@ -3417,6 +3375,45 @@ export type ListShopsQueryVariables = {
 
 export type ListShopsQuery = {
   listShops?:  {
+    __typename: "ModelShopConnection",
+    items:  Array< {
+      __typename: "Shop",
+      id: string,
+      name: string,
+      slug: string,
+      headline?: string | null,
+      cover?: string | null,
+      avatar?: string | null,
+      description?: string | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      suspended?: boolean | null,
+      recommended?: boolean | null,
+      products?:  {
+        __typename: "ModelProductConnection",
+        nextToken?: string | null,
+      } | null,
+      members?:  {
+        __typename: "ModelShopMemberConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetShopBySlugQueryVariables = {
+  slug: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelShopFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type GetShopBySlugQuery = {
+  getShopBySlug?:  {
     __typename: "ModelShopConnection",
     items:  Array< {
       __typename: "Shop",

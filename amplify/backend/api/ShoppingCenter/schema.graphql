@@ -17,7 +17,7 @@ type Discount {
 type Product @model @auth(rules: [{allow: public, operations: [read]}, {allow: private}]) {
   id: ID!
   name: String!
-  slug: String!
+  slug: String! @index(name: "productBySlug", queryField: "getProductBySlug")
   images: [String]
   price: Float!
   discount: Discount
@@ -42,7 +42,7 @@ type Product @model @auth(rules: [{allow: public, operations: [read]}, {allow: p
 type Shop @model @auth(rules: [{allow: public, operations: [read]}, {allow: private}]) {
   id: ID!
   name: String!
-  slug: String!
+  slug: String! @index(name: "shopBySlug", queryField: "getShopBySlug")
   headline: String
   cover: String
   avatar: String
@@ -118,9 +118,4 @@ type FavoriteProduct @model @auth(rules: [{allow: owner}]) {
   productID: ID! @index(name: "byProduct")
   product: Product @belongsTo(fields: ["productID"])
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
-}
-
-type Query {
-    getProductBySlug(slug: String!): Product
-    getShopBySlug(slug: String!): Shop
 }

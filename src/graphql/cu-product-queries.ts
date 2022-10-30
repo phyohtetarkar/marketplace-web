@@ -8,6 +8,8 @@ export const findProductById = `
       images
       available
       description
+      mainCategoryID
+      subCategoryID
       discount {
         type
         value
@@ -28,29 +30,45 @@ export const findProductById = `
 `
 
 export const findProductBySlug = `
-  query FindProductBySlug($slug: String!) {
-    getProductBySlug(slug: $slug) {
-      id
-      name
-      slug
-      price
-      images
-      available
-      description
-      discount {
-        type
-        value
-      }
-      category {
+  query FindProductBySlug(
+    $slug: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getProductBySlug(
+      slug: $slug
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
         id
         name
         slug
-      }
-      shop {
-        id
-        name
-        avatar
-        slug
+        price
+        images
+        available
+        description
+        mainCategoryID
+        subCategoryID
+        discount {
+          type
+          value
+        }
+        category {
+          id
+          name
+          slug
+        }
+        shop {
+          id
+          name
+          avatar
+          slug
+        }
       }
     }
   }
@@ -71,6 +89,8 @@ export const findProducts = `
         images
         available
         description
+        mainCategoryID
+        subCategoryID
         discount {
           type
           value
@@ -117,6 +137,8 @@ export const findProductsOrderByPrice = `
         images
         available
         description
+        mainCategoryID
+        subCategoryID
         discount {
           type
           value

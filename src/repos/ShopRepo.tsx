@@ -12,12 +12,12 @@ export async function getShop(slug: string) {
       variables: { slug: slug }
     }) as Promise<GraphQLResult<FindShopBySlugQuery>>);
 
-    const shop = result.data?.getShopBySlug;
-    if (!shop) {
+    const shops = result.data?.getShopBySlug;
+    if (!shops || shops.items.length === 0) {
       throw Error("NOT_FOUND");
     }
 
-    return shop as Shop;
+    return shops.items[0] as Shop;
   } catch (e) {
     throw e;
   }
@@ -38,8 +38,8 @@ export async function getShops({
     let query = findShops;
     let variables: any = {};
     let filter: any = {
-      suspended: { eq: false },
-      deleted: { eq: false }
+      // suspended: { eq: false }
+      // deleted: { eq: false }
     };
 
     if (name) {
@@ -66,6 +66,7 @@ export async function getShops({
 
     return listResult.data?.listShops?.items.map((p) => p as Shop) ?? [];
   } catch (e) {
+    console.log(e);
     throw e;
   }
 }

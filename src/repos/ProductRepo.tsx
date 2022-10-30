@@ -21,12 +21,12 @@ export async function getProduct(slug: string) {
       variables: { slug: slug }
     }) as Promise<GraphQLResult<FindProductBySlugQuery>>);
 
-    const product = result.data?.getProductBySlug;
-    if (!product) {
+    const products = result.data?.getProductBySlug;
+    if (!products || products.items.length == 0) {
       throw Error("NOT_FOUND");
     }
 
-    return product as Product;
+    return products.items[0] as Product;
   } catch (e) {
     throw e;
   }

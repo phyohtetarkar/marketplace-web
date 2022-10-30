@@ -19,21 +19,35 @@ export const getShopById = `
 `
 
 export const findShopBySlug = `
-  query FindShopBySlug($slug: String!) {
-    getShopBySlug(slug: $slug) {
-      id
-      name
-      slug
-      headline
-      cover
-      avatar
-      description
-      createdBy
-      updatedBy
-      suspended
-      recommended
-      createdAt
-      updatedAt
+  query FindShopBySlug(
+    $slug: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelShopFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getShopBySlug(
+      slug: $slug
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        slug
+        headline
+        cover
+        avatar
+        description
+        createdBy
+        updatedBy
+        suspended
+        recommended
+        createdAt
+        updatedAt
+      }
     }
   }
 `

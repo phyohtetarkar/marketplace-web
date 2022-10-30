@@ -2,145 +2,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getProductBySlug = /* GraphQL */ `
-  query GetProductBySlug($slug: String!) {
-    getProductBySlug(slug: $slug) {
-      id
-      name
-      slug
-      images
-      price
-      discount {
-        value
-        type
-      }
-      description
-      createdBy
-      updatedBy
-      available
-      suspended
-      newArrival
-      deleted
-      mainCategoryID
-      subCategoryID
-      categoryID
-      shopID
-      category {
-        id
-        name
-        slug
-        image
-        parent
-        products {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      shop {
-        id
-        name
-        slug
-        headline
-        cover
-        avatar
-        description
-        createdBy
-        updatedBy
-        suspended
-        recommended
-        products {
-          nextToken
-        }
-        members {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      favoriteUsers {
-        items {
-          id
-          userID
-          productID
-          owner
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      cartItems {
-        items {
-          id
-          quantity
-          userID
-          productID
-          owner
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      type
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const getShopBySlug = /* GraphQL */ `
-  query GetShopBySlug($slug: String!) {
-    getShopBySlug(slug: $slug) {
-      id
-      name
-      slug
-      headline
-      cover
-      avatar
-      description
-      createdBy
-      updatedBy
-      suspended
-      recommended
-      products {
-        items {
-          id
-          name
-          slug
-          images
-          price
-          description
-          createdBy
-          updatedBy
-          available
-          suspended
-          newArrival
-          deleted
-          mainCategoryID
-          subCategoryID
-          categoryID
-          shopID
-          type
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      members {
-        items {
-          id
-          role
-          shopID
-          userID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const getProduct = /* GraphQL */ `
   query GetProduct($id: ID!) {
     getProduct(id: $id) {
@@ -233,6 +94,80 @@ export const listProducts = /* GraphQL */ `
     $nextToken: String
   ) {
     listProducts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        slug
+        images
+        price
+        discount {
+          value
+          type
+        }
+        description
+        createdBy
+        updatedBy
+        available
+        suspended
+        newArrival
+        deleted
+        mainCategoryID
+        subCategoryID
+        categoryID
+        shopID
+        category {
+          id
+          name
+          slug
+          image
+          parent
+          createdAt
+          updatedAt
+        }
+        shop {
+          id
+          name
+          slug
+          headline
+          cover
+          avatar
+          description
+          createdBy
+          updatedBy
+          suspended
+          recommended
+          createdAt
+          updatedAt
+        }
+        favoriteUsers {
+          nextToken
+        }
+        cartItems {
+          nextToken
+        }
+        type
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getProductBySlug = /* GraphQL */ `
+  query GetProductBySlug(
+    $slug: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getProductBySlug(
+      slug: $slug
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         name
@@ -429,6 +364,46 @@ export const listShops = /* GraphQL */ `
     $nextToken: String
   ) {
     listShops(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        slug
+        headline
+        cover
+        avatar
+        description
+        createdBy
+        updatedBy
+        suspended
+        recommended
+        products {
+          nextToken
+        }
+        members {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getShopBySlug = /* GraphQL */ `
+  query GetShopBySlug(
+    $slug: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelShopFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getShopBySlug(
+      slug: $slug
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         name

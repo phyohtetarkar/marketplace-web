@@ -4,8 +4,10 @@ import Link from "next/link";
 import { Facebook, Instagram, Twitter } from "react-feather";
 import { Input } from "../../components/forms";
 import { ProductGridItem } from "../../components/product";
+import { EagerShop } from "../../models";
+import { getShop } from "../../repos/ShopRepo";
 
-function Shop() {
+function Shop({ data }: { data: EagerShop }) {
   return (
     <div className="vstack">
       <div className="bg-primary">
@@ -24,7 +26,7 @@ function Shop() {
                   </Link>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
-                  Healthy Shop
+                  {data.name}
                 </li>
               </ol>
             </nav>
@@ -43,14 +45,14 @@ function Shop() {
                 className="position-relative"
               >
                 <Image
-                  src="/images/banner.jpeg"
+                  src={data.cover!}
                   alt=""
                   layout="fill"
                   objectFit="cover"
                   priority
                 />
                 <Link href={`/`}>
-                  <a className="btn btn-dark opacity-75 position-absolute end-0 m-3">
+                  <a className="btn btn-dark position-absolute end-0 m-3">
                     <PencilSquareIcon width={20} />
                   </a>
                 </Link>
@@ -60,7 +62,7 @@ function Shop() {
                   <div className="hstack">
                     <div className="flex-shrink-0 mt-n6">
                       <Image
-                        src="/images/profile.png"
+                        src={data.avatar!}
                         width={85}
                         height={85}
                         alt=""
@@ -69,9 +71,9 @@ function Shop() {
                       />
                     </div>
                     <div className="ms-2 d-flex flex-column mt-n2 mt-sm-n3">
-                      <h4 className="mb-0">Healthy Shop</h4>
+                      <h4 className="mb-0">{data.name}</h4>
                       <div className="text-muted small mb-1 text-truncate">
-                        Health &amp; beauty
+                        {data.headline}
                       </div>
                     </div>
                   </div>
@@ -116,12 +118,7 @@ function Shop() {
                 <h5 className="mb-0">About us</h5>
               </div>
               <div className="card-body">
-                <p className="mb-0">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
+                <p className="mb-0">{data.description}</p>
               </div>
             </div>
           </div>
@@ -150,6 +147,22 @@ function Shop() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps(context: any) {
+  try {
+    const { slug } = context.query;
+    const shop = await getShop(slug);
+    return {
+      props: { data: shop } // will be passed to the page component as props
+    };
+  } catch (e) {
+    console.log(e);
+  }
+
+  return {
+    notFound: true
+  };
 }
 
 export default Shop;

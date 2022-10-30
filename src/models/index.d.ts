@@ -2,15 +2,15 @@ import { ModelInit, MutableModel } from "@aws-amplify/datastore";
 // @ts-ignore
 import { LazyLoading, LazyLoadingDisabled, AsyncItem, AsyncCollection } from "@aws-amplify/datastore";
 
+export enum MemberRole {
+  OWNER = "OWNER",
+  ADMIN = "ADMIN"
+}
+
 export enum UserRole {
   OWNER = "OWNER",
   ADMIN = "ADMIN",
   CONSUMER = "CONSUMER"
-}
-
-export enum MemberRole {
-  OWNER = "OWNER",
-  ADMIN = "ADMIN"
 }
 
 type EagerDiscount = {
@@ -65,38 +65,50 @@ type BannerMetaData = {
 
 type EagerProduct = {
   readonly id: string;
-  readonly name?: string | null;
+  readonly name: string;
+  readonly slug: string;
   readonly images?: (string | null)[] | null;
-  readonly price?: number | null;
+  readonly price: number;
   readonly discount?: Discount | null;
   readonly description?: string | null;
   readonly createdBy?: string | null;
   readonly updatedBy?: string | null;
   readonly available?: boolean | null;
   readonly suspended?: boolean | null;
+  readonly newArrival?: boolean | null;
+  readonly deleted?: boolean | null;
+  readonly mainCategoryID: string;
+  readonly subCategoryID: string;
   readonly category?: Category | null;
   readonly shop?: Shop | null;
   readonly favoriteUsers?: (FavoriteProduct | null)[] | null;
   readonly cartItems?: (CartItem | null)[] | null;
+  readonly type?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
 type LazyProduct = {
   readonly id: string;
-  readonly name?: string | null;
+  readonly name: string;
+  readonly slug: string;
   readonly images?: (string | null)[] | null;
-  readonly price?: number | null;
+  readonly price: number;
   readonly discount?: Discount | null;
   readonly description?: string | null;
   readonly createdBy?: string | null;
   readonly updatedBy?: string | null;
   readonly available?: boolean | null;
   readonly suspended?: boolean | null;
+  readonly newArrival?: boolean | null;
+  readonly deleted?: boolean | null;
+  readonly mainCategoryID: string;
+  readonly subCategoryID: string;
   readonly category: AsyncItem<Category | undefined>;
   readonly shop: AsyncItem<Shop | undefined>;
   readonly favoriteUsers: AsyncCollection<FavoriteProduct>;
   readonly cartItems: AsyncCollection<CartItem>;
+  readonly type?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -110,6 +122,7 @@ export declare const Product: (new (init: ModelInit<Product, ProductMetaData>) =
 type EagerCategory = {
   readonly id: string;
   readonly name: string;
+  readonly slug: string;
   readonly image?: string | null;
   readonly parent?: string | null;
   readonly products?: (Product | null)[] | null;
@@ -120,6 +133,7 @@ type EagerCategory = {
 type LazyCategory = {
   readonly id: string;
   readonly name: string;
+  readonly slug: string;
   readonly image?: string | null;
   readonly parent?: string | null;
   readonly products: AsyncCollection<Product>;
@@ -136,12 +150,15 @@ export declare const Category: (new (init: ModelInit<Category, CategoryMetaData>
 type EagerShop = {
   readonly id: string;
   readonly name: string;
+  readonly slug: string;
+  readonly headline?: string | null;
   readonly cover?: string | null;
   readonly avatar?: string | null;
   readonly description?: string | null;
   readonly createdBy?: string | null;
   readonly updatedBy?: string | null;
   readonly suspended?: boolean | null;
+  readonly recommended?: boolean | null;
   readonly products?: (Product | null)[] | null;
   readonly members?: (ShopMember | null)[] | null;
   readonly createdAt?: string | null;
@@ -151,12 +168,15 @@ type EagerShop = {
 type LazyShop = {
   readonly id: string;
   readonly name: string;
+  readonly slug: string;
+  readonly headline?: string | null;
   readonly cover?: string | null;
   readonly avatar?: string | null;
   readonly description?: string | null;
   readonly createdBy?: string | null;
   readonly updatedBy?: string | null;
   readonly suspended?: boolean | null;
+  readonly recommended?: boolean | null;
   readonly products: AsyncCollection<Product>;
   readonly members: AsyncCollection<ShopMember>;
   readonly createdAt?: string | null;
@@ -264,6 +284,7 @@ type EagerCartItem = {
   readonly quantity?: number | null;
   readonly userID: string;
   readonly product?: Product | null;
+  readonly owner?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -273,6 +294,7 @@ type LazyCartItem = {
   readonly quantity?: number | null;
   readonly userID: string;
   readonly product: AsyncItem<Product | undefined>;
+  readonly owner?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -287,6 +309,7 @@ type EagerFavoriteProduct = {
   readonly id: string;
   readonly userID: string;
   readonly product?: Product | null;
+  readonly owner?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -295,6 +318,7 @@ type LazyFavoriteProduct = {
   readonly id: string;
   readonly userID: string;
   readonly product: AsyncItem<Product | undefined>;
+  readonly owner?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

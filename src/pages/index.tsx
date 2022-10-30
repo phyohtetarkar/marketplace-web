@@ -3,7 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { Autoplay, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
+import useSWR from "swr";
 import { ProductGridItem } from "../components/product";
+import { getBanners } from "../repos/BannerRepo";
+import { getCategories } from "../repos/CategoryRepo";
+import { getShops } from "../repos/ShopRepo";
 
 const _categories = [
   "Electronics",
@@ -27,7 +31,30 @@ const _shops = [
   "MK"
 ];
 
+const getData = async () => {
+  const banners = await getBanners();
+  const categories = await getCategories({});
+  const recommendedShops = await getShops({ limit: 10 });
+  return {
+    banners: banners,
+    categories: categories,
+    shops: recommendedShops
+  };
+};
+
 const Home: NextPage = () => {
+  const { data, error } = useSWR("/home", getData, {
+    revalidateOnFocus: false
+  });
+
+  if (!data) {
+    return null;
+  }
+
+  if (error) {
+    return <div>{error.message}</div>;
+  }
+
   return (
     <div className="container py-4">
       <div className="row mb-4 mb-lg-5">
@@ -39,11 +66,11 @@ const Home: NextPage = () => {
                   <div className="h-100 overflow-auto scrollbar-custom">
                     <div className="position-relative">
                       <div className="d-flex flex-column gap-1 position-absolute top-0 bottom-0 start-0 end-0">
-                        {_categories.map((e, i) => {
+                        {data.categories.map((e, i) => {
                           return (
-                            <Link key={i} href={`/${e}`}>
+                            <Link key={e.id} href={`/${e.slug}`}>
                               <a className="p-2 my-list-item user-select-none">
-                                {e}
+                                {e.name}
                               </a>
                             </Link>
                           );
@@ -131,15 +158,15 @@ const Home: NextPage = () => {
                     }}
                     modules={[Autoplay, Pagination]}
                   >
-                    {_banners.map((e, i) => {
+                    {data.banners.map((b, i) => {
                       return (
                         <SwiperSlide
-                          key={i}
+                          key={b.id}
                           onContextMenu={(e) => e.preventDefault()}
                           className="ratio ratio-21x9 overflow-hidden"
                         >
                           <Image
-                            src={`/images/${e}`}
+                            src={b.image!}
                             alt="Cover image"
                             className="rounded-1"
                             layout="fill"
@@ -158,15 +185,15 @@ const Home: NextPage = () => {
       </div>
 
       <div className="d-flex overflow-auto scrollbar-none mb-4 d-lg-none">
-        {_categories.map((e, i) => {
+        {data.categories.map((e, i) => {
           return (
-            <Link key={i} href={`/${e}`}>
+            <Link key={e.id} href={`/${e.slug}`}>
               <a
                 className={
                   "btn btn-primary text-nowrap " + (i > 0 ? "ms-2" : "")
                 }
               >
-                {e}
+                {e.name}
               </a>
             </Link>
           );
@@ -267,24 +294,22 @@ const Home: NextPage = () => {
           }}
           modules={[Autoplay, Pagination]}
         >
-          {_shops.map((e, i) => {
+          {data.shops.map((s, i) => {
             return (
-              <SwiperSlide key={i}>
-                <Link href="/shops/slug">
+              <SwiperSlide key={s.id}>
+                <Link href={`/shops/${s.slug}`}>
                   <a className="vstack gap-3 position-relative align-items-center text-decoration-none">
                     <div className="" onContextMenu={(e) => e.preventDefault()}>
                       <Image
-                        src={`https://source.unsplash.com/random/200x240?random=${Math.floor(
-                          Math.random() * 100
-                        )}`}
-                        alt="Cover image"
+                        src={s.avatar!}
+                        alt="Logo image"
                         className="rounded-circle"
                         width={100}
                         height={100}
                         objectFit="cover"
                       />
                     </div>
-                    <h6 className="text-truncate text-dark">{e}</h6>
+                    <h6 className="text-truncate text-dark">{s.name}</h6>
                   </a>
                 </Link>
               </SwiperSlide>

@@ -14,7 +14,14 @@ export const schema = {
                     "name": "name",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "slug": {
+                    "name": "slug",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
                     "attributes": []
                 },
                 "images": {
@@ -29,7 +36,7 @@ export const schema = {
                     "name": "price",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "discount": {
@@ -74,6 +81,34 @@ export const schema = {
                     "isArray": false,
                     "type": "Boolean",
                     "isRequired": false,
+                    "attributes": []
+                },
+                "newArrival": {
+                    "name": "newArrival",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "deleted": {
+                    "name": "deleted",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "mainCategoryID": {
+                    "name": "mainCategoryID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "subCategoryID": {
+                    "name": "subCategoryID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
                     "attributes": []
                 },
                 "category": {
@@ -130,6 +165,13 @@ export const schema = {
                         "associatedWith": "product"
                     }
                 },
+                "type": {
+                    "name": "type",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -173,6 +215,17 @@ export const schema = {
                     }
                 },
                 {
+                    "type": "key",
+                    "properties": {
+                        "name": "productsByPrice",
+                        "queryField": "productsByPrice",
+                        "fields": [
+                            "type",
+                            "price"
+                        ]
+                    }
+                },
+                {
                     "type": "auth",
                     "properties": {
                         "rules": [
@@ -208,6 +261,13 @@ export const schema = {
                 },
                 "name": {
                     "name": "name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "slug": {
+                    "name": "slug",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -311,6 +371,20 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "slug": {
+                    "name": "slug",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "headline": {
+                    "name": "headline",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "cover": {
                     "name": "cover",
                     "isArray": false,
@@ -348,6 +422,13 @@ export const schema = {
                 },
                 "suspended": {
                     "name": "suspended",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "recommended": {
+                    "name": "recommended",
                     "isArray": false,
                     "type": "Boolean",
                     "isRequired": false,
@@ -522,15 +603,6 @@ export const schema = {
                         "rules": [
                             {
                                 "allow": "private",
-                                "operations": [
-                                    "read"
-                                ]
-                            },
-                            {
-                                "provider": "userPools",
-                                "ownerField": "owner",
-                                "allow": "owner",
-                                "identityClaim": "cognito:username",
                                 "operations": [
                                     "create",
                                     "update",
@@ -828,6 +900,13 @@ export const schema = {
                         "targetName": "productID"
                     }
                 },
+                "owner": {
+                    "name": "owner",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -856,6 +935,7 @@ export const schema = {
                     "type": "key",
                     "properties": {
                         "name": "byUser",
+                        "queryField": "cartItemsByUser",
                         "fields": [
                             "userID"
                         ]
@@ -921,6 +1001,13 @@ export const schema = {
                         "targetName": "productID"
                     }
                 },
+                "owner": {
+                    "name": "owner",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -949,6 +1036,7 @@ export const schema = {
                     "type": "key",
                     "properties": {
                         "name": "byUser",
+                        "queryField": "favoriteProductsByUser",
                         "fields": [
                             "userID"
                         ]
@@ -1070,19 +1158,19 @@ export const schema = {
         }
     },
     "enums": {
+        "MemberRole": {
+            "name": "MemberRole",
+            "values": [
+                "OWNER",
+                "ADMIN"
+            ]
+        },
         "UserRole": {
             "name": "UserRole",
             "values": [
                 "OWNER",
                 "ADMIN",
                 "CONSUMER"
-            ]
-        },
-        "MemberRole": {
-            "name": "MemberRole",
-            "values": [
-                "OWNER",
-                "ADMIN"
             ]
         }
     },
@@ -1108,5 +1196,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.3.1",
-    "version": "81633e980e479b6dcdbb32968dfced5b"
+    "version": "3df4c7fce6f0ec3a25867926faa73134"
 };
