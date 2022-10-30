@@ -1,4 +1,6 @@
+import { fstat } from "fs";
 import Image from "next/image";
+import Link from "next/link";
 import AccountMenu from "../../components/account/AccountMenu";
 import { Input } from "../../components/forms";
 
@@ -35,11 +37,28 @@ function ProfileSetting() {
                           />
                         </div>
                         <div className="col-lg-6">
+                          <label htmlFor="phoneInput" className="form-label">
+                            Phone{" "}
+                            <text
+                              className="text-muted"
+                              style={{ fontSize: 13 }}
+                            >
+                              |{" "}
+                            </text>
+                            <Link href={"#"}>
+                              <a
+                                className="text-decoration-none"
+                                style={{ fontSize: 12 }}
+                              >
+                                Change
+                              </a>
+                            </Link>
+                          </label>
                           <Input
-                            label="Phone"
                             id="phoneInput"
                             name="phone"
                             type="text"
+                            disabled
                             placeholder="+9512345678"
                           />
                         </div>
@@ -96,19 +115,6 @@ function ProfileSetting() {
                         <p className="mb-0">Password</p>
                         <small className="text-muted d-block w-75">
                           You can reset or change your password by clicking here
-                        </small>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md">
-                    <div className="card bg-light mb-3">
-                      <div className="card-body">
-                        <button className="btn btn-outline-danger btn-sm float-end">
-                          Deactivate
-                        </button>
-                        <p className="mb-0">Remove account</p>
-                        <small className="text-muted d-block w-75">
-                          Once you delete your account, there is no going back.
                         </small>
                       </div>
                     </div>
