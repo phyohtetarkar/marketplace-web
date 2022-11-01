@@ -68,6 +68,7 @@ export async function getCartItemsByUser({
 
     return result.data?.cartItemsByUser?.items.map((p) => p as CartItem) ?? [];
   } catch (e) {
-    throw e;
+    console.log(e);
   }
+  return [];
 }

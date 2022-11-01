@@ -10,5 +10,5 @@ export interface StateContext<T> {
 
 export const AuthenticationContext = createContext<StateContext<AuthUser>>({
   payload: undefined,
-  status: "loading",
+  status: "loading"
 });

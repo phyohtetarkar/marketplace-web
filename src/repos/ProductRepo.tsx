@@ -113,6 +113,7 @@ export async function getProducts({
 
     return listResult.data?.listProducts?.items.map((p) => p as Product) ?? [];
   } catch (e) {
-    throw e;
+    console.log(e);
+    return [];
   }
 }

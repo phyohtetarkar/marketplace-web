@@ -11,7 +11,7 @@ export async function getCategories({ parentId }: { parentId?: string }) {
     if (parentId) {
       variables = {
         filter: {
-          parent: {
+          categoryID: {
             eq: parentId
           }
         }
@@ -25,6 +25,7 @@ export async function getCategories({ parentId }: { parentId?: string }) {
 
     return result.data?.listCategories?.items.map((c) => c as Category) ?? [];
   } catch (e) {
-    throw e;
+    console.log(e);
+    return [];
   }
 }

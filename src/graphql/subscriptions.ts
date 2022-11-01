@@ -30,7 +30,7 @@ export const onCreateProduct = /* GraphQL */ `
         name
         slug
         image
-        parent
+        categoryID
         products {
           nextToken
         }
@@ -115,7 +115,7 @@ export const onUpdateProduct = /* GraphQL */ `
         name
         slug
         image
-        parent
+        categoryID
         products {
           nextToken
         }
@@ -200,7 +200,7 @@ export const onDeleteProduct = /* GraphQL */ `
         name
         slug
         image
-        parent
+        categoryID
         products {
           nextToken
         }
@@ -425,8 +425,8 @@ export const onCreateUser = /* GraphQL */ `
       id
       name
       phone
+      email
       avatar
-      authID
       disabled
       role
       shops {
@@ -487,8 +487,8 @@ export const onUpdateUser = /* GraphQL */ `
       id
       name
       phone
+      email
       avatar
-      authID
       disabled
       role
       shops {
@@ -549,8 +549,8 @@ export const onDeleteUser = /* GraphQL */ `
       id
       name
       phone
+      email
       avatar
-      authID
       disabled
       role
       shops {
@@ -612,7 +612,7 @@ export const onCreateCategory = /* GraphQL */ `
       name
       slug
       image
-      parent
+      categoryID
       products {
         items {
           id
@@ -649,7 +649,7 @@ export const onUpdateCategory = /* GraphQL */ `
       name
       slug
       image
-      parent
+      categoryID
       products {
         items {
           id
@@ -686,7 +686,7 @@ export const onDeleteCategory = /* GraphQL */ `
       name
       slug
       image
-      parent
+      categoryID
       products {
         items {
           id
@@ -750,8 +750,8 @@ export const onCreateShopMember = /* GraphQL */ `
         id
         name
         phone
+        email
         avatar
-        authID
         disabled
         role
         shops {
@@ -808,8 +808,8 @@ export const onUpdateShopMember = /* GraphQL */ `
         id
         name
         phone
+        email
         avatar
-        authID
         disabled
         role
         shops {
@@ -866,8 +866,8 @@ export const onDeleteShopMember = /* GraphQL */ `
         id
         name
         phone
+        email
         avatar
-        authID
         disabled
         role
         shops {
@@ -1010,7 +1010,7 @@ export const onCreateCartItem = /* GraphQL */ `
           name
           slug
           image
-          parent
+          categoryID
           createdAt
           updatedAt
         }
@@ -1081,7 +1081,7 @@ export const onUpdateCartItem = /* GraphQL */ `
           name
           slug
           image
-          parent
+          categoryID
           createdAt
           updatedAt
         }
@@ -1152,7 +1152,7 @@ export const onDeleteCartItem = /* GraphQL */ `
           name
           slug
           image
-          parent
+          categoryID
           createdAt
           updatedAt
         }
@@ -1222,7 +1222,7 @@ export const onCreateFavoriteProduct = /* GraphQL */ `
           name
           slug
           image
-          parent
+          categoryID
           createdAt
           updatedAt
         }
@@ -1292,7 +1292,7 @@ export const onUpdateFavoriteProduct = /* GraphQL */ `
           name
           slug
           image
-          parent
+          categoryID
           createdAt
           updatedAt
         }
@@ -1362,7 +1362,7 @@ export const onDeleteFavoriteProduct = /* GraphQL */ `
           name
           slug
           image
-          parent
+          categoryID
           createdAt
           updatedAt
         }

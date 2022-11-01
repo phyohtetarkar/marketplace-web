@@ -63,5 +63,33 @@
         ]
       }
     }
+  },
+  "function": {
+    "shoppingcenterlayerawssdk": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
+    },
+    "shoppingcenterpostsignup": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "shoppingcenter",
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "shoppingcenterlayerawssdk",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
+    }
   }
 }

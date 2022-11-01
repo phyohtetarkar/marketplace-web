@@ -74,6 +74,8 @@ export async function getFavoriteProductsByUser({
       ) ?? []
     );
   } catch (e) {
-    throw e;
+    console.log(e);
   }
+
+  return [];
 }

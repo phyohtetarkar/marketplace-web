@@ -23,6 +23,9 @@
       },
       "api": {
         "shoppingcenter": {}
+      },
+      "function": {
+        "shoppingcenterpostsignup": {}
       }
     }
   }

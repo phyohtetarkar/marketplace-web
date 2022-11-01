@@ -7,6 +7,7 @@ import useSWR from "swr";
 import { ProductGridItem } from "../components/product";
 import { getBanners } from "../repos/BannerRepo";
 import { getCategories } from "../repos/CategoryRepo";
+import { getProducts } from "../repos/ProductRepo";
 import { getShops } from "../repos/ShopRepo";
 
 const _categories = [
@@ -35,10 +36,12 @@ const getData = async () => {
   const banners = await getBanners();
   const categories = await getCategories({});
   const recommendedShops = await getShops({ limit: 10 });
+  const newArrivals = await getProducts({ orderBy: "none" });
   return {
     banners: banners,
     categories: categories,
-    shops: recommendedShops
+    shops: recommendedShops,
+    newArrivals: newArrivals
   };
 };
 
@@ -330,18 +333,13 @@ const Home: NextPage = () => {
         </Link>
       </div>
       <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 mb-5">
-        <div className="col">
-          <ProductGridItem />
-        </div>
-        <div className="col">
-          <ProductGridItem />
-        </div>
-        <div className="col">
-          <ProductGridItem />
-        </div>
-        <div className="col">
-          <ProductGridItem />
-        </div>
+        {data.newArrivals.map((p, i) => {
+          return (
+            <div className="col" key={p.id}>
+              <ProductGridItem data={p} />
+            </div>
+          );
+        })}
       </div>
 
       {/* <div className="row row-cols-1 row-cols-md-2 g-3 mb-5">

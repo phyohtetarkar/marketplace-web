@@ -12,6 +12,7 @@ export async function getBanners() {
 
     return result.data?.listBanners?.items.map((b) => b as Banner) ?? [];
   } catch (e) {
-    throw e;
+    console.log(e);
+    return [];
   }
 }

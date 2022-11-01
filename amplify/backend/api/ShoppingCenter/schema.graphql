@@ -24,10 +24,10 @@ type Product @model @auth(rules: [{allow: public, operations: [read]}, {allow: p
   description: String
   createdBy: String
   updatedBy: String
-  available: Boolean
-  suspended: Boolean 
-  newArrival: Boolean 
-  deleted: Boolean
+  available: Boolean @default(value: "true")
+  suspended: Boolean @default(value: "false")
+  newArrival: Boolean @default(value: "false")
+  deleted: Boolean @default(value: "false")
   mainCategoryID: ID!
   subCategoryID: ID!
   categoryID: ID! @index(name: "byCategory")
@@ -49,8 +49,8 @@ type Shop @model @auth(rules: [{allow: public, operations: [read]}, {allow: priv
   description: String
   createdBy: String
   updatedBy: String
-  suspended: Boolean
-  recommended: Boolean
+  suspended: Boolean @default(value: "false")
+  recommended: Boolean @default(value: "false")
   products: [Product] @hasMany(indexName: "byShop", fields: ["id"])
   members: [ShopMember] @hasMany(indexName: "byShop", fields: ["id"])
 }
@@ -59,9 +59,9 @@ type User @model @auth(rules: [{allow: private}]) {
   id: ID!
   name: String!
   phone: String!
+  email: String
   avatar: String
-  authID: String!
-  disabled: Boolean
+  disabled: Boolean @default(value: "false")
   role: UserRole!
   shops: [ShopMember] @hasMany(indexName: "byUser", fields: ["id"])
   addresses: [UserAddress] @hasMany(indexName: "byUser", fields: ["id"])
@@ -74,7 +74,7 @@ type Category @model @auth(rules: [{allow: public, operations: [read]}, {allow: 
   name: String!
   slug: String!
   image: String
-  parent: ID
+  categoryID: ID
   products: [Product] @hasMany(indexName: "byCategory", fields: ["id"])
 }
 
@@ -103,7 +103,7 @@ type UserAddress @model @auth(rules: [{allow: private}]) {
   userID: ID! @index(name: "byUser")
 }
 
-type CartItem @model @auth(rules: [{allow: owner}]) {
+type CartItem @model @auth(rules: [{allow: private}]) {
   id: ID!
   quantity: Int
   userID: ID! @index(name: "byUser", queryField: "cartItemsByUser")
@@ -112,7 +112,7 @@ type CartItem @model @auth(rules: [{allow: owner}]) {
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
 }
 
-type FavoriteProduct @model @auth(rules: [{allow: owner}]) {
+type FavoriteProduct @model @auth(rules: [{allow: private}]) {
   id: ID!
   userID: ID! @index(name: "byUser", queryField: "favoriteProductsByUser")
   productID: ID! @index(name: "byProduct")

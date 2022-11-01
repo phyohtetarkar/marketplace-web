@@ -2,15 +2,15 @@ import { ModelInit, MutableModel } from "@aws-amplify/datastore";
 // @ts-ignore
 import { LazyLoading, LazyLoadingDisabled, AsyncItem, AsyncCollection } from "@aws-amplify/datastore";
 
-export enum MemberRole {
-  OWNER = "OWNER",
-  ADMIN = "ADMIN"
-}
-
 export enum UserRole {
   OWNER = "OWNER",
   ADMIN = "ADMIN",
   CONSUMER = "CONSUMER"
+}
+
+export enum MemberRole {
+  OWNER = "OWNER",
+  ADMIN = "ADMIN"
 }
 
 type EagerDiscount = {
@@ -124,7 +124,7 @@ type EagerCategory = {
   readonly name: string;
   readonly slug: string;
   readonly image?: string | null;
-  readonly parent?: string | null;
+  readonly categoryID?: string | null;
   readonly products?: (Product | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
@@ -135,7 +135,7 @@ type LazyCategory = {
   readonly name: string;
   readonly slug: string;
   readonly image?: string | null;
-  readonly parent?: string | null;
+  readonly categoryID?: string | null;
   readonly products: AsyncCollection<Product>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
@@ -217,8 +217,8 @@ type EagerUser = {
   readonly id: string;
   readonly name: string;
   readonly phone: string;
+  readonly email?: string | null;
   readonly avatar?: string | null;
-  readonly authID: string;
   readonly disabled?: boolean | null;
   readonly role: UserRole | keyof typeof UserRole;
   readonly shops?: (ShopMember | null)[] | null;
@@ -233,8 +233,8 @@ type LazyUser = {
   readonly id: string;
   readonly name: string;
   readonly phone: string;
+  readonly email?: string | null;
   readonly avatar?: string | null;
-  readonly authID: string;
   readonly disabled?: boolean | null;
   readonly role: UserRole | keyof typeof UserRole;
   readonly shops: AsyncCollection<ShopMember>;

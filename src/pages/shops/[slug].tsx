@@ -2,12 +2,21 @@ import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { Facebook, Instagram, Twitter } from "react-feather";
+import useSWR from "swr";
 import { Input } from "../../components/forms";
+import Loading from "../../components/Loading";
 import { ProductGridItem } from "../../components/product";
-import { EagerShop } from "../../models";
+import { Shop } from "../../models";
+import { getProducts } from "../../repos/ProductRepo";
 import { getShop } from "../../repos/ShopRepo";
 
-function Shop({ data }: { data: EagerShop }) {
+function ShopHome({ shop }: { shop: Shop }) {
+  const { data, error } = useSWR(
+    [shop.id],
+    (shopId) => getProducts({ shopId: shopId, orderBy: "none" }),
+    { revalidateOnFocus: false }
+  );
+
   return (
     <div className="vstack">
       <div className="bg-primary">
@@ -26,7 +35,7 @@ function Shop({ data }: { data: EagerShop }) {
                   </Link>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
-                  {data.name}
+                  {shop.name}
                 </li>
               </ol>
             </nav>
@@ -45,7 +54,7 @@ function Shop({ data }: { data: EagerShop }) {
                 className="position-relative"
               >
                 <Image
-                  src={data.cover!}
+                  src={shop.cover!}
                   alt=""
                   layout="fill"
                   objectFit="cover"
@@ -62,7 +71,7 @@ function Shop({ data }: { data: EagerShop }) {
                   <div className="hstack">
                     <div className="flex-shrink-0 mt-n6">
                       <Image
-                        src={data.avatar!}
+                        src={shop.avatar!}
                         width={85}
                         height={85}
                         alt=""
@@ -71,9 +80,9 @@ function Shop({ data }: { data: EagerShop }) {
                       />
                     </div>
                     <div className="ms-2 d-flex flex-column mt-n2 mt-sm-n3">
-                      <h4 className="mb-0">{data.name}</h4>
+                      <h4 className="mb-0">{shop.name}</h4>
                       <div className="text-muted small mb-1 text-truncate">
-                        {data.headline}
+                        {shop.headline}
                       </div>
                     </div>
                   </div>
@@ -118,7 +127,7 @@ function Shop({ data }: { data: EagerShop }) {
                 <h5 className="mb-0">About us</h5>
               </div>
               <div className="card-body">
-                <p className="mb-0">{data.description}</p>
+                <p className="mb-0">{shop.description}</p>
               </div>
             </div>
           </div>
@@ -128,19 +137,17 @@ function Shop({ data }: { data: EagerShop }) {
                 <Input type="search" placeholder="Search in shop" height={44} />
               </div>
             </div>
+            {!data && !error && <Loading />}
             <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 mb-5">
-              <div className="col">
-                <ProductGridItem />
-              </div>
-              <div className="col">
-                <ProductGridItem />
-              </div>
-              <div className="col">
-                <ProductGridItem />
-              </div>
-              <div className="col">
-                <ProductGridItem />
-              </div>
+              {data &&
+                !error &&
+                data.map((p) => {
+                  return (
+                    <div key={p.id} className="col">
+                      <ProductGridItem data={p} heading="category" />
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>
@@ -154,7 +161,7 @@ export async function getServerSideProps(context: any) {
     const { slug } = context.query;
     const shop = await getShop(slug);
     return {
-      props: { data: shop } // will be passed to the page component as props
+      props: { shop: shop } // will be passed to the page component as props
     };
   } catch (e) {
     console.log(e);
@@ -165,4 +172,4 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-export default Shop;
+export default ShopHome;

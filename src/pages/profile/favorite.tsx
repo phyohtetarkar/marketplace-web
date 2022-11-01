@@ -1,8 +1,20 @@
+import { useContext, useState } from "react";
+import useSWR from "swr";
+import { AuthenticationContext } from "../../common/contexts";
 import AccountMenu from "../../components/account/AccountMenu";
+import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
 import { ProductFavoriteItem } from "../../components/product";
+import { getFavoriteProductsByUser } from "../../repos/FavoriteProductRepo";
 
 function MyFavorites() {
+  // const authContext = useContext(AuthenticationContext);
+  // const [userId, setUserId] = useState();
+
+  // const { data, error } = useSWR([userId], (id) =>
+  //   id ? getFavoriteProductsByUser({ userId: id }) : []
+  // );
+
   return (
     <div>
       <div className="bg-primary">
@@ -19,7 +31,17 @@ function MyFavorites() {
             <AccountMenu />
           </div>
           <div className="col-lg-8 col-xl-9">
+            {/* {!data && !error && <Loading />} */}
             <div className="row row-cols-1 row-cols-md-2 g-3">
+              {/* {data &&
+                !error &&
+                data.map((p) => {
+                  return (
+                    <div key={p.id} className="col">
+                      <ProductFavoriteItem />
+                    </div>
+                  );
+                })} */}
               <div className="col">
                 <ProductFavoriteItem />
               </div>

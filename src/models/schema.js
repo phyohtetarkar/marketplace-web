@@ -199,6 +199,16 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
+                        "name": "productBySlug",
+                        "queryField": "getProductBySlug",
+                        "fields": [
+                            "slug"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
                         "name": "byCategory",
                         "fields": [
                             "categoryID"
@@ -280,8 +290,8 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "parent": {
-                    "name": "parent",
+                "categoryID": {
+                    "name": "categoryID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": false,
@@ -487,6 +497,16 @@ export const schema = {
                     "properties": {}
                 },
                 {
+                    "type": "key",
+                    "properties": {
+                        "name": "shopBySlug",
+                        "queryField": "getShopBySlug",
+                        "fields": [
+                            "slug"
+                        ]
+                    }
+                },
+                {
                     "type": "auth",
                     "properties": {
                         "rules": [
@@ -639,18 +659,18 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "avatar": {
-                    "name": "avatar",
+                "email": {
+                    "name": "email",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "authID": {
-                    "name": "authID",
+                "avatar": {
+                    "name": "avatar",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "disabled": {
@@ -955,10 +975,7 @@ export const schema = {
                     "properties": {
                         "rules": [
                             {
-                                "provider": "userPools",
-                                "ownerField": "owner",
-                                "allow": "owner",
-                                "identityClaim": "cognito:username",
+                                "allow": "private",
                                 "operations": [
                                     "create",
                                     "update",
@@ -1056,10 +1073,7 @@ export const schema = {
                     "properties": {
                         "rules": [
                             {
-                                "provider": "userPools",
-                                "ownerField": "owner",
-                                "allow": "owner",
-                                "identityClaim": "cognito:username",
+                                "allow": "private",
                                 "operations": [
                                     "create",
                                     "update",
@@ -1158,19 +1172,19 @@ export const schema = {
         }
     },
     "enums": {
-        "MemberRole": {
-            "name": "MemberRole",
-            "values": [
-                "OWNER",
-                "ADMIN"
-            ]
-        },
         "UserRole": {
             "name": "UserRole",
             "values": [
                 "OWNER",
                 "ADMIN",
                 "CONSUMER"
+            ]
+        },
+        "MemberRole": {
+            "name": "MemberRole",
+            "values": [
+                "OWNER",
+                "ADMIN"
             ]
         }
     },
@@ -1196,5 +1210,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.3.1",
-    "version": "3df4c7fce6f0ec3a25867926faa73134"
+    "version": "5745d33b0677435431a68d1fa344b6c2"
 };

@@ -30,7 +30,7 @@ export const getProduct = /* GraphQL */ `
         name
         slug
         image
-        parent
+        categoryID
         products {
           nextToken
         }
@@ -120,7 +120,7 @@ export const listProducts = /* GraphQL */ `
           name
           slug
           image
-          parent
+          categoryID
           createdAt
           updatedAt
         }
@@ -194,7 +194,7 @@ export const getProductBySlug = /* GraphQL */ `
           name
           slug
           image
-          parent
+          categoryID
           createdAt
           updatedAt
         }
@@ -270,7 +270,7 @@ export const productsByPrice = /* GraphQL */ `
           name
           slug
           image
-          parent
+          categoryID
           createdAt
           updatedAt
         }
@@ -435,8 +435,8 @@ export const getUser = /* GraphQL */ `
       id
       name
       phone
+      email
       avatar
-      authID
       disabled
       role
       shops {
@@ -502,8 +502,8 @@ export const listUsers = /* GraphQL */ `
         id
         name
         phone
+        email
         avatar
-        authID
         disabled
         role
         shops {
@@ -532,7 +532,7 @@ export const getCategory = /* GraphQL */ `
       name
       slug
       image
-      parent
+      categoryID
       products {
         items {
           id
@@ -574,7 +574,7 @@ export const listCategories = /* GraphQL */ `
         name
         slug
         image
-        parent
+        categoryID
         products {
           nextToken
         }
@@ -617,8 +617,8 @@ export const getShopMember = /* GraphQL */ `
         id
         name
         phone
+        email
         avatar
-        authID
         disabled
         role
         shops {
@@ -672,8 +672,8 @@ export const listShopMembers = /* GraphQL */ `
           id
           name
           phone
+          email
           avatar
-          authID
           disabled
           role
           createdAt
@@ -785,7 +785,7 @@ export const getCartItem = /* GraphQL */ `
           name
           slug
           image
-          parent
+          categoryID
           createdAt
           updatedAt
         }
@@ -942,7 +942,7 @@ export const getFavoriteProduct = /* GraphQL */ `
           name
           slug
           image
-          parent
+          categoryID
           createdAt
           updatedAt
         }

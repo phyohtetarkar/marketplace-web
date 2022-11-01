@@ -10,7 +10,7 @@ export const findCategories = /* GraphQL */ `
         name
         slug
         image
-        parent
+        categoryID
       }
       nextToken
     }

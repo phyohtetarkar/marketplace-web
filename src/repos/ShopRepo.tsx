@@ -67,6 +67,6 @@ export async function getShops({
     return listResult.data?.listShops?.items.map((p) => p as Shop) ?? [];
   } catch (e) {
     console.log(e);
-    throw e;
+    return [];
   }
 }
