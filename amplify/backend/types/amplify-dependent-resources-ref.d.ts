@@ -1,11 +1,4 @@
 export type AmplifyDependentResourcesAttributes = {
-    "api": {
-        "shoppingcenter": {
-            "GraphQLAPIKeyOutput": "string",
-            "GraphQLAPIIdOutput": "string",
-            "GraphQLAPIEndpointOutput": "string"
-        }
-    },
     "auth": {
         "shoppingcenterauth": {
             "IdentityPoolId": "string",
@@ -16,6 +9,14 @@ export type AmplifyDependentResourcesAttributes = {
             "AppClientIDWeb": "string",
             "AppClientID": "string",
             "CreatedSNSRole": "string"
+        }
+    },
+    "function": {
+        "CustomSmsSender": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
         }
     }
 }

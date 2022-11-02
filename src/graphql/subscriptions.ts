@@ -31,9 +31,6 @@ export const onCreateProduct = /* GraphQL */ `
         slug
         image
         categoryID
-        products {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -49,36 +46,13 @@ export const onCreateProduct = /* GraphQL */ `
         updatedBy
         suspended
         recommended
-        products {
-          nextToken
-        }
-        members {
-          nextToken
-        }
         createdAt
         updatedAt
       }
       favoriteUsers {
-        items {
-          id
-          userID
-          productID
-          owner
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       cartItems {
-        items {
-          id
-          quantity
-          userID
-          productID
-          owner
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       type
@@ -116,9 +90,6 @@ export const onUpdateProduct = /* GraphQL */ `
         slug
         image
         categoryID
-        products {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -134,36 +105,13 @@ export const onUpdateProduct = /* GraphQL */ `
         updatedBy
         suspended
         recommended
-        products {
-          nextToken
-        }
-        members {
-          nextToken
-        }
         createdAt
         updatedAt
       }
       favoriteUsers {
-        items {
-          id
-          userID
-          productID
-          owner
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       cartItems {
-        items {
-          id
-          quantity
-          userID
-          productID
-          owner
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       type
@@ -201,9 +149,6 @@ export const onDeleteProduct = /* GraphQL */ `
         slug
         image
         categoryID
-        products {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -219,36 +164,13 @@ export const onDeleteProduct = /* GraphQL */ `
         updatedBy
         suspended
         recommended
-        products {
-          nextToken
-        }
-        members {
-          nextToken
-        }
         createdAt
         updatedAt
       }
       favoriteUsers {
-        items {
-          id
-          userID
-          productID
-          owner
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       cartItems {
-        items {
-          id
-          quantity
-          userID
-          productID
-          owner
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       type
@@ -272,38 +194,9 @@ export const onCreateShop = /* GraphQL */ `
       suspended
       recommended
       products {
-        items {
-          id
-          name
-          slug
-          images
-          price
-          description
-          createdBy
-          updatedBy
-          available
-          suspended
-          newArrival
-          deleted
-          mainCategoryID
-          subCategoryID
-          categoryID
-          shopID
-          type
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       members {
-        items {
-          id
-          role
-          shopID
-          userID
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       createdAt
@@ -326,38 +219,9 @@ export const onUpdateShop = /* GraphQL */ `
       suspended
       recommended
       products {
-        items {
-          id
-          name
-          slug
-          images
-          price
-          description
-          createdBy
-          updatedBy
-          available
-          suspended
-          newArrival
-          deleted
-          mainCategoryID
-          subCategoryID
-          categoryID
-          shopID
-          type
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       members {
-        items {
-          id
-          role
-          shopID
-          userID
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       createdAt
@@ -380,38 +244,9 @@ export const onDeleteShop = /* GraphQL */ `
       suspended
       recommended
       products {
-        items {
-          id
-          name
-          slug
-          images
-          price
-          description
-          createdBy
-          updatedBy
-          available
-          suspended
-          newArrival
-          deleted
-          mainCategoryID
-          subCategoryID
-          categoryID
-          shopID
-          type
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       members {
-        items {
-          id
-          role
-          shopID
-          userID
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       createdAt
@@ -430,50 +265,15 @@ export const onCreateUser = /* GraphQL */ `
       disabled
       role
       shops {
-        items {
-          id
-          role
-          shopID
-          userID
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       addresses {
-        items {
-          id
-          city
-          township
-          address
-          primary
-          userID
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       cartItems {
-        items {
-          id
-          quantity
-          userID
-          productID
-          owner
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       favoriteProducts {
-        items {
-          id
-          userID
-          productID
-          owner
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       createdAt
@@ -492,50 +292,15 @@ export const onUpdateUser = /* GraphQL */ `
       disabled
       role
       shops {
-        items {
-          id
-          role
-          shopID
-          userID
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       addresses {
-        items {
-          id
-          city
-          township
-          address
-          primary
-          userID
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       cartItems {
-        items {
-          id
-          quantity
-          userID
-          productID
-          owner
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       favoriteProducts {
-        items {
-          id
-          userID
-          productID
-          owner
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       createdAt
@@ -554,50 +319,15 @@ export const onDeleteUser = /* GraphQL */ `
       disabled
       role
       shops {
-        items {
-          id
-          role
-          shopID
-          userID
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       addresses {
-        items {
-          id
-          city
-          township
-          address
-          primary
-          userID
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       cartItems {
-        items {
-          id
-          quantity
-          userID
-          productID
-          owner
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       favoriteProducts {
-        items {
-          id
-          userID
-          productID
-          owner
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       createdAt
@@ -614,27 +344,6 @@ export const onCreateCategory = /* GraphQL */ `
       image
       categoryID
       products {
-        items {
-          id
-          name
-          slug
-          images
-          price
-          description
-          createdBy
-          updatedBy
-          available
-          suspended
-          newArrival
-          deleted
-          mainCategoryID
-          subCategoryID
-          categoryID
-          shopID
-          type
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       createdAt
@@ -651,27 +360,6 @@ export const onUpdateCategory = /* GraphQL */ `
       image
       categoryID
       products {
-        items {
-          id
-          name
-          slug
-          images
-          price
-          description
-          createdBy
-          updatedBy
-          available
-          suspended
-          newArrival
-          deleted
-          mainCategoryID
-          subCategoryID
-          categoryID
-          shopID
-          type
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       createdAt
@@ -688,27 +376,6 @@ export const onDeleteCategory = /* GraphQL */ `
       image
       categoryID
       products {
-        items {
-          id
-          name
-          slug
-          images
-          price
-          description
-          createdBy
-          updatedBy
-          available
-          suspended
-          newArrival
-          deleted
-          mainCategoryID
-          subCategoryID
-          categoryID
-          shopID
-          type
-          createdAt
-          updatedAt
-        }
         nextToken
       }
       createdAt
@@ -737,12 +404,6 @@ export const onCreateShopMember = /* GraphQL */ `
         updatedBy
         suspended
         recommended
-        products {
-          nextToken
-        }
-        members {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -754,18 +415,6 @@ export const onCreateShopMember = /* GraphQL */ `
         avatar
         disabled
         role
-        shops {
-          nextToken
-        }
-        addresses {
-          nextToken
-        }
-        cartItems {
-          nextToken
-        }
-        favoriteProducts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -795,12 +444,6 @@ export const onUpdateShopMember = /* GraphQL */ `
         updatedBy
         suspended
         recommended
-        products {
-          nextToken
-        }
-        members {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -812,18 +455,6 @@ export const onUpdateShopMember = /* GraphQL */ `
         avatar
         disabled
         role
-        shops {
-          nextToken
-        }
-        addresses {
-          nextToken
-        }
-        cartItems {
-          nextToken
-        }
-        favoriteProducts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -853,12 +484,6 @@ export const onDeleteShopMember = /* GraphQL */ `
         updatedBy
         suspended
         recommended
-        products {
-          nextToken
-        }
-        members {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -870,18 +495,6 @@ export const onDeleteShopMember = /* GraphQL */ `
         avatar
         disabled
         role
-        shops {
-          nextToken
-        }
-        addresses {
-          nextToken
-        }
-        cartItems {
-          nextToken
-        }
-        favoriteProducts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -990,10 +603,6 @@ export const onCreateCartItem = /* GraphQL */ `
         slug
         images
         price
-        discount {
-          value
-          type
-        }
         description
         createdBy
         updatedBy
@@ -1005,36 +614,6 @@ export const onCreateCartItem = /* GraphQL */ `
         subCategoryID
         categoryID
         shopID
-        category {
-          id
-          name
-          slug
-          image
-          categoryID
-          createdAt
-          updatedAt
-        }
-        shop {
-          id
-          name
-          slug
-          headline
-          cover
-          avatar
-          description
-          createdBy
-          updatedBy
-          suspended
-          recommended
-          createdAt
-          updatedAt
-        }
-        favoriteUsers {
-          nextToken
-        }
-        cartItems {
-          nextToken
-        }
         type
         createdAt
         updatedAt
@@ -1061,10 +640,6 @@ export const onUpdateCartItem = /* GraphQL */ `
         slug
         images
         price
-        discount {
-          value
-          type
-        }
         description
         createdBy
         updatedBy
@@ -1076,36 +651,6 @@ export const onUpdateCartItem = /* GraphQL */ `
         subCategoryID
         categoryID
         shopID
-        category {
-          id
-          name
-          slug
-          image
-          categoryID
-          createdAt
-          updatedAt
-        }
-        shop {
-          id
-          name
-          slug
-          headline
-          cover
-          avatar
-          description
-          createdBy
-          updatedBy
-          suspended
-          recommended
-          createdAt
-          updatedAt
-        }
-        favoriteUsers {
-          nextToken
-        }
-        cartItems {
-          nextToken
-        }
         type
         createdAt
         updatedAt
@@ -1132,10 +677,6 @@ export const onDeleteCartItem = /* GraphQL */ `
         slug
         images
         price
-        discount {
-          value
-          type
-        }
         description
         createdBy
         updatedBy
@@ -1147,36 +688,6 @@ export const onDeleteCartItem = /* GraphQL */ `
         subCategoryID
         categoryID
         shopID
-        category {
-          id
-          name
-          slug
-          image
-          categoryID
-          createdAt
-          updatedAt
-        }
-        shop {
-          id
-          name
-          slug
-          headline
-          cover
-          avatar
-          description
-          createdBy
-          updatedBy
-          suspended
-          recommended
-          createdAt
-          updatedAt
-        }
-        favoriteUsers {
-          nextToken
-        }
-        cartItems {
-          nextToken
-        }
         type
         createdAt
         updatedAt
@@ -1202,10 +713,6 @@ export const onCreateFavoriteProduct = /* GraphQL */ `
         slug
         images
         price
-        discount {
-          value
-          type
-        }
         description
         createdBy
         updatedBy
@@ -1217,36 +724,6 @@ export const onCreateFavoriteProduct = /* GraphQL */ `
         subCategoryID
         categoryID
         shopID
-        category {
-          id
-          name
-          slug
-          image
-          categoryID
-          createdAt
-          updatedAt
-        }
-        shop {
-          id
-          name
-          slug
-          headline
-          cover
-          avatar
-          description
-          createdBy
-          updatedBy
-          suspended
-          recommended
-          createdAt
-          updatedAt
-        }
-        favoriteUsers {
-          nextToken
-        }
-        cartItems {
-          nextToken
-        }
         type
         createdAt
         updatedAt
@@ -1272,10 +749,6 @@ export const onUpdateFavoriteProduct = /* GraphQL */ `
         slug
         images
         price
-        discount {
-          value
-          type
-        }
         description
         createdBy
         updatedBy
@@ -1287,36 +760,6 @@ export const onUpdateFavoriteProduct = /* GraphQL */ `
         subCategoryID
         categoryID
         shopID
-        category {
-          id
-          name
-          slug
-          image
-          categoryID
-          createdAt
-          updatedAt
-        }
-        shop {
-          id
-          name
-          slug
-          headline
-          cover
-          avatar
-          description
-          createdBy
-          updatedBy
-          suspended
-          recommended
-          createdAt
-          updatedAt
-        }
-        favoriteUsers {
-          nextToken
-        }
-        cartItems {
-          nextToken
-        }
         type
         createdAt
         updatedAt
@@ -1342,10 +785,6 @@ export const onDeleteFavoriteProduct = /* GraphQL */ `
         slug
         images
         price
-        discount {
-          value
-          type
-        }
         description
         createdBy
         updatedBy
@@ -1357,36 +796,6 @@ export const onDeleteFavoriteProduct = /* GraphQL */ `
         subCategoryID
         categoryID
         shopID
-        category {
-          id
-          name
-          slug
-          image
-          categoryID
-          createdAt
-          updatedAt
-        }
-        shop {
-          id
-          name
-          slug
-          headline
-          cover
-          avatar
-          description
-          createdBy
-          updatedBy
-          suspended
-          recommended
-          createdAt
-          updatedAt
-        }
-        favoriteUsers {
-          nextToken
-        }
-        cartItems {
-          nextToken
-        }
         type
         createdAt
         updatedAt

@@ -17,14 +17,12 @@
           "defaultAuthentication": {
             "authenticationType": "API_KEY",
             "apiKeyConfig": {
-              "apiKeyExpirationDays": 30,
-              "description": "api key description"
+              "apiKeyExpirationDays": 7,
+              "apiKeyExpirationDate": "2022-11-09T15:37:32.856Z",
+              "description": ""
             }
           },
           "additionalAuthenticationProviders": [
-            {
-              "authenticationType": "AWS_IAM"
-            },
             {
               "authenticationType": "AMAZON_COGNITO_USER_POOLS",
               "userPoolConfig": {
@@ -65,31 +63,10 @@
     }
   },
   "function": {
-    "shoppingcenterlayerawssdk": {
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer",
-      "build": true
-    },
-    "shoppingcenterpostsignup": {
+    "CustomSmsSender": {
       "build": true,
       "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "shoppingcenter",
-          "attributes": [
-            "GraphQLAPIIdOutput"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "shoppingcenterlayerawssdk",
-          "attributes": [
-            "Arn"
-          ]
-        }
-      ]
+      "service": "Lambda"
     }
   }
 }
