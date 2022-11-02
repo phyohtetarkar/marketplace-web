@@ -37,23 +37,10 @@ function ProfileSetting() {
                           />
                         </div>
                         <div className="col-lg-6">
-                          <label htmlFor="phoneInput" className="form-label">
-                            Phone{" "}
-                            <text
-                              className="text-muted"
-                              style={{ fontSize: 13 }}
-                            >
-                              |{" "}
-                            </text>
-                            <Link href={"#"}>
-                              <a
-                                className="text-decoration-none"
-                                style={{ fontSize: 12 }}
-                              >
-                                Change
-                              </a>
-                            </Link>
-                          </label>
+                        <label htmlFor="phoneInput" className="form-label">
+                          Phone <div className="vr"></div> 
+                          <Link href={"#"}><a className="text-decoration-none" style={{fontSize: 13}}> Change</a></Link>
+                        </label>
                           <Input
                             id="phoneInput"
                             name="phone"

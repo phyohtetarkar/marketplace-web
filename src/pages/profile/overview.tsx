@@ -55,7 +55,7 @@ function ProfileOverview() {
                   </div>
                 </div>
                 <hr className="bg-dark-gray" />
-                <div className="mb-1 text-muted mb-3">Overview</div>
+                <div className="text-muted mb-3">Overview</div>
                 <div className="card-group mt-2">
                   <div className="card bg-light">
                     <div className="p-3">
@@ -83,7 +83,7 @@ function ProfileOverview() {
                   </div>
                 </div>
                 <hr className="bg-dark-gray" />
-                <div className="mb-1 text-muted mb-3">Addresses</div>
+                <div className="text-muted mb-3">Addresses</div>
                 <div className="row row-cols-1 row-cols-lg-2 g-2 mb-3">
                   <div className="col">
                     <div className="card bg-light">

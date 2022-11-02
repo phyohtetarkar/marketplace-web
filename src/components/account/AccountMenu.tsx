@@ -2,7 +2,8 @@ import {
   Cog8ToothIcon,
   ClipboardIcon,
   HeartIcon,
-  UserIcon
+  UserIcon,
+  BuildingStorefrontIcon
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -61,8 +62,13 @@ function AccountMenu({}) {
           icon: <HeartIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
+          href: "/profile/shops",
+          title: "My shops",
+          icon: <BuildingStorefrontIcon className="me-2" strokeWidth={2} width={iconSize} />
+        })}
+        {menuLink({
           href: "/profile/setting",
-          title: "Profile Setting",
+          title: "Profile setting",
           icon: (
             <Cog8ToothIcon className="me-2" strokeWidth={2} width={iconSize} />
           )
