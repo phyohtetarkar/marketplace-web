@@ -78,8 +78,8 @@ function ProductDetail() {
                 <dl className="row mb-3">
                   <dt className="col-sm-3 fw-semibold">{"Product Code"}</dt>
                   <dd className="col-sm-9">{"YFC45"}</dd>
-                  <dt className="col-sm-3 fw-semibold">{"Barcode"}</dt>
-                  <dd className="col-sm-9">{"8272504010218"}</dd>
+                  <dt className="col-sm-3 fw-semibold">{"Brand"}</dt>
+                  <dd className="col-sm-9">{"Adidas"}</dd>
                   <dt className="col-sm-3 fw-semibold">{"Category"}</dt>
                   <dd className="col-sm-9">{"Electronic"}</dd>
                   <dt className="col-sm-3 fw-semibold">{"Availability"}</dt>
