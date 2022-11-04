@@ -1,4 +1,5 @@
 import { Button } from "bootstrap";
+import Link from "next/link";
 import { ProductGridItem } from "../../../../components/product";
 
 function ShopDetail() {
@@ -9,30 +10,24 @@ function ShopDetail() {
           <div className="hstack">
             <div>
               <div className="px-2">
-                <h3 className="text-light text-lg-start">Shoes World</h3>
+                <h3 className="text-light text-lg-start">Shop Overview</h3>
               </div>
               <div className="row px-2">
                 <nav aria-label="breadcrumb col-12">
                   <ol className="breadcrumb mb-1">
                     <li className="breadcrumb-item">
-                      <a href="#" className="text-light">
-                        Profile
-                      </a>
-                    </li>
-                    <li className="breadcrumb-item">
-                      <a href="#" className="text-light">
-                        Shops
-                      </a>
+                      <Link href="/profile/shops">
+                        <a href="#" className="text-light">
+                          Shops
+                        </a>
+                      </Link>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Shop name
+                      Shoes World
                     </li>
                   </ol>
                 </nav>
               </div>
-            </div>
-            <div className="ms-auto">
-              <button className="btn btn-accent">Create Product</button>
             </div>
           </div>
         </div>
@@ -66,7 +61,14 @@ function ShopDetail() {
         </div>
         <div className="card mt-3 mb-3">
           <div className="card-header bg-white fs-4 fw-semibold p-3">
-            Products
+            <div className="hstack">
+              Products
+              <div className="ms-auto">
+                <Link href="/profile/shops/1/create-product">
+                  <a className="btn btn-accent">Create Product</a>
+                </Link>
+              </div>
+            </div>
           </div>
           <div className="card-body">
             <div className="row g-3">
