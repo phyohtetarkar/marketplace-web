@@ -68,13 +68,13 @@ function ProductEditItem({ create = {} }) {
         <div className="row g-3">
           <div className="col-lg-8 order-2 order-lg-1 d-flex">
             <div className="vstack gap-2">
-              <div className="card h-100">
+              <div className="card">
                 <div className="card-header bg-white py-3 px-md-4">
                   <h5 className="mb-0">Product description</h5>
                 </div>
                 <div className="card-body py-3 px-md-4">Type here...</div>
               </div>
-              <div className="card h-100">
+              <div className="card">
                 <div className="card-header bg-white py-3 px-md-4">
                   <h5 className="mb-0">Product specification</h5>
                 </div>
@@ -83,7 +83,7 @@ function ProductEditItem({ create = {} }) {
             </div>
           </div>
           <div className="col-lg-4 order-1 order-lg-2">
-            <div className="card ">
+            <div className="card">
               <div className="card-header bg-white py-3 px-md-4">
                 <h5 className="mb-0">Product Info</h5>
               </div>

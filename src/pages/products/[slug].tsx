@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "../../common/utils";
 import { ProductGridItem } from "../../components/product";
+import Tabs from "../../components/Tabs";
 import Tooltip from "../../components/Tooltip";
 
 function ProductDetail() {
@@ -150,14 +151,12 @@ function ProductDetail() {
       <div className="container">
         <div className="row mb-12 g-3">
           <div className="col-lg-8">
-            <div className="card">
-              <div className="card-header bg-white py-3">
-                <h5 className="mb-0">Description</h5>
-              </div>
-              <div className="card-body">
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: `<div>
+            <div className="bg-white border rounded h-100">
+              <Tabs defaultTabKey="description">
+                <Tabs.Tab tabKey="description" title="Description">
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: `<div>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ac turpis egestas integer eget aliquet. Ultricies tristique nulla aliquet enim. Ut lectus arcu bibendum at varius vel. Tempus egestas sed sed risus pretium quam vulputate dignissim.</p>
 </div>
 <h5>Specification</h5>
@@ -168,9 +167,13 @@ function ProductDetail() {
 <li style="line-height: 1.5;">Lorem ipsum dolor sit amet</li>
 </ul>
 <p>Duis facilisis ex a urna blandit ultricies. Nullam sagittis ligula non eros semper, nec mattis odio ullamcorper. Phasellus feugiat sit amet leo eget consectetur.</p>`
-                  }}
-                ></div>
-              </div>
+                    }}
+                  ></div>
+                </Tabs.Tab>
+                <Tabs.Tab tabKey="specification" title="Specification">
+                  <div>Specification</div>
+                </Tabs.Tab>
+              </Tabs>
             </div>
           </div>
           <div className="col-lg-4">

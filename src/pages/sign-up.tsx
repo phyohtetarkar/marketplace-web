@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 import { Input, PasswordInput } from "../components/forms";
-import { signUp } from "../repos/AuthRepo";
+import { signUp } from "../services/AuthService";
 
 interface FormValues {
   fullName?: string;

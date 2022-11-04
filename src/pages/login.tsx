@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useRef } from "react";
 import { AuthenticationContext } from "../common/contexts";
 import { Input, PasswordInput } from "../components/forms";
-import { login } from "../repos/AuthRepo";
+import { login } from "../services/AuthService";
 
 interface FormValues {
   phone?: string;

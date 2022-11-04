@@ -5,10 +5,10 @@ import { Autoplay, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import useSWR from "swr";
 import { ProductGridItem } from "../components/product";
-import { getBanners } from "../repos/BannerRepo";
-import { getCategories } from "../repos/CategoryRepo";
-import { getProducts } from "../repos/ProductRepo";
-import { getShops } from "../repos/ShopRepo";
+import { getBanners } from "../services/BannerService";
+import { getCategories } from "../services/CategoryService";
+import { getProducts } from "../services/ProductService";
+import { getShops } from "../services/ShopService";
 
 const _categories = [
   "Electronics",

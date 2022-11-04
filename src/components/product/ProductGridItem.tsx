@@ -1,19 +1,20 @@
+import { HeartIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import { formatPrice } from "../../common/utils";
-import Tooltip from "../Tooltip";
-import { HeartIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
-import { Product } from "../../models";
 import { useContext, useState } from "react";
-import { addToFavorite } from "../../repos/FavoriteProductRepo";
 import { AuthenticationContext } from "../../common/contexts";
+import { formatPrice } from "../../common/utils";
+import { Product } from "../../models";
+import { addToFavorite } from "../../services/FavoriteProductService";
+import Tooltip from "../Tooltip";
 
-interface ProductGridItemProps {
+interface InputProps {
   data?: Product;
   heading?: "seller" | "category";
+  owner?: Boolean;
 }
 
-function ProductGridItem({ data, heading = "seller" }: ProductGridItemProps) {
+function ProductGridItem({ data, heading = "seller", owner }: InputProps) {
   const authContext = useContext(AuthenticationContext);
   const [addingToFavorite, setAddingToFavorite] = useState(false);
 
@@ -121,7 +122,7 @@ function ProductGridItem({ data, heading = "seller" }: ProductGridItemProps) {
 
           <h6 className="fw-semibold mt-2 mb-3">{price}</h6>
 
-          <div className="hstack gap-2">
+          <div className="hstack align-items-stretch gap-2">
             <button
               disabled={false}
               className="btn btn-primary flex-grow-1"
@@ -142,10 +143,10 @@ function ProductGridItem({ data, heading = "seller" }: ProductGridItemProps) {
               Add to cart
             </button>
             <Tooltip title="Add to favorite">
-              {addToFavorite ? (
+              {!addingToFavorite ? (
                 <button
                   disabled={addingToFavorite}
-                  className="btn btn-outline-light text-primary border"
+                  className="btn btn-outline-light text-primary border h-100 hstack"
                   onClick={async () => {
                     try {
                       setAddingToFavorite(true);
@@ -166,7 +167,7 @@ function ProductGridItem({ data, heading = "seller" }: ProductGridItemProps) {
                     }
                   }}
                 >
-                  <HeartIcon width={24} />
+                  <HeartIcon width={20} strokeWidth={2} />
                 </button>
               ) : (
                 <span

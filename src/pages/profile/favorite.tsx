@@ -5,7 +5,7 @@ import AccountMenu from "../../components/account/AccountMenu";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
 import { ProductFavoriteItem } from "../../components/product";
-import { getFavoriteProductsByUser } from "../../repos/FavoriteProductRepo";
+import { getFavoriteProductsByUser } from "../../services/FavoriteProductService";
 
 function MyFavorites() {
   // const authContext = useContext(AuthenticationContext);

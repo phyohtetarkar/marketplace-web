@@ -7,8 +7,8 @@ import { Input } from "../../components/forms";
 import Loading from "../../components/Loading";
 import { ProductGridItem } from "../../components/product";
 import { Shop } from "../../models";
-import { getProducts } from "../../repos/ProductRepo";
-import { getShop } from "../../repos/ShopRepo";
+import { getProducts } from "../../services/ProductService";
+import { getShop } from "../../services/ShopService";
 
 function ShopHome({ shop }: { shop: Shop }) {
   const { data, error } = useSWR(

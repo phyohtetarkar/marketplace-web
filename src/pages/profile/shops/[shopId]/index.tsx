@@ -1,6 +1,5 @@
-import { Button } from "bootstrap";
 import Link from "next/link";
-import { ProductGridItem } from "../../../../components/product";
+import ProductManageGridItem from "../../../../components/product/ProductManageGridItem";
 
 function ShopDetail() {
   return (
@@ -71,24 +70,24 @@ function ShopDetail() {
             </div>
           </div>
           <div className="card-body">
-            <div className="row g-3">
-              <div className="col-lg-3">
-                <ProductGridItem />
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
+              <div className="col">
+                <ProductManageGridItem />
               </div>
-              <div className="col-lg-3">
-                <ProductGridItem />
+              <div className="col">
+                <ProductManageGridItem />
               </div>
-              <div className="col-lg-3">
-                <ProductGridItem />
+              <div className="col">
+                <ProductManageGridItem />
               </div>
-              <div className="col-lg-3">
-                <ProductGridItem />
+              <div className="col">
+                <ProductManageGridItem />
               </div>
-              <div className="col-lg-3">
-                <ProductGridItem />
+              <div className="col">
+                <ProductManageGridItem />
               </div>
-              <div className="col-lg-3">
-                <ProductGridItem />
+              <div className="col">
+                <ProductManageGridItem />
               </div>
             </div>
           </div>
