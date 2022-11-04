@@ -27,6 +27,15 @@ function ShopEdit() {
                     </div>
                     <div className="col-lg-12">
                       <Input
+                        label="Slug"
+                        id="slugInput"
+                        name="slug"
+                        type="text"
+                        placeholder="https://shoppingcenter.com/page/slug"
+                      />
+                    </div>
+                    <div className="col-lg-12">
+                      <Input
                         label="Headline"
                         id="headlineInput"
                         name="headline"
@@ -36,28 +45,12 @@ function ShopEdit() {
                     </div>
                     <div className="col-lg-12">
                       <Textarea
-                        label="Description"
+                        label="About us"
                         id="descriptionInput"
                         name="description"
                         type="text"
                         placeholder="Enter brief about shop..."
                       />
-                    </div>
-                    <div className="col-lg-12">
-                      <input
-                        id="isRecommendedShop"
-                        type="checkbox"
-                        name="recommended"
-                        className="form-check-input me-2"
-                      ></input>
-                      <label htmlFor="recommendedInput mb-0" className="form-label">
-                        <div className="vstack">
-                          Recommended
-                          <span className="text-dark-gray small fw-light">
-                            Mark as recommended shop
-                          </span>
-                        </div>
-                      </label>
                     </div>
                     <div className="col-lg-3 col-12">
                       <label htmlFor="avatarInput" className="form-label">

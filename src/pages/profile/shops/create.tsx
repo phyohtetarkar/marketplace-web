@@ -14,7 +14,7 @@ function CreateShop() {
               <Link href="/profile/shops">
               <a className="btn btn-light px-3 py-2" >Back to shops</a>
               </Link>
-              <button className="btn btn-warning px-3 py-2 ms-2" onClick={() => {}}>Create</button>
+              <button className="btn btn-accent px-3 py-2 ms-2" onClick={() => {}}>Create</button>
             </div>
           </div>
         </div>

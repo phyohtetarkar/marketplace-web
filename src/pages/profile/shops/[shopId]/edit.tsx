@@ -14,7 +14,7 @@ function EditShop() {
                   Back to shops
                 </a>
                 </Link>
-                <button className="btn btn-warning px-3 py-2 ms-2" onClick={() => {}}>Update</button>
+                <button className="btn btn-accent px-3 py-2 ms-2" onClick={() => {}}>Update</button>
               </div>
             </div>
           </div>
