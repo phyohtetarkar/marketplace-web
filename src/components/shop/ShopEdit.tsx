@@ -1,9 +1,65 @@
 import { PhotoIcon } from "@heroicons/react/24/solid";
+import Link from "next/link";
 import { Input, Textarea } from "../forms";
 
-function ShopEdit() {
+function ShopEdit({create ={}}) {
 
     return(
+      <div className="pb-5">
+        <div className="bg-primary">
+          <div className="container py-4">
+            <div className="hstack">
+              <div>
+              <div className="px-2">
+                {create ? (
+                  <h3 className="text-light text-lg-start">Create Shop</h3>
+                ) : (
+                  <h3 className="text-light text-lg-start">Edit Shop</h3>
+                )}
+              </div>
+              <div className="row px-2">
+                <nav aria-label="breadcrumb col-12">
+                  <ol className="breadcrumb mb-1">
+                    <li className="breadcrumb-item">
+                      <Link href="/profile/shops">
+                        <a href="#" className="text-light">
+                          Shops
+                        </a>
+                      </Link>
+                    </li>
+                    {create ? (
+                      <li
+                        className="breadcrumb-item active"
+                        aria-current="page"
+                      >
+                        Create Shop
+                      </li>
+                    ) : (
+                      <li
+                        className="breadcrumb-item active"
+                        aria-current="page"
+                      >
+                        Edit Shop
+                      </li>
+                    )}
+                  </ol>
+                </nav>
+              </div>
+              </div>
+              <div className="ms-auto">
+              {create ? (
+                <button className="btn btn-accent py-2 px-3 ms-2">Save</button>
+              ) : (
+                <button className="btn btn-accent py-2 px-3 ms-2">
+                  Update
+                </button>
+              )}
+            </div>
+            </div>
+          </div>
+        </div>
+  
+        <div className="container py-4">
         <div className="row g-3">
             <div className="col-md-8 col-lg-7">
             <div className="card">
@@ -18,7 +74,7 @@ function ShopEdit() {
                   <div className="row g-3">
                     <div className="col-lg-12">
                       <Input
-                        label="Name"
+                        label="Name *"
                         id="shopNameInput"
                         name="name"
                         type="text"
@@ -27,7 +83,7 @@ function ShopEdit() {
                     </div>
                     <div className="col-lg-12">
                       <Input
-                        label="Slug"
+                        label="Slug *"
                         id="slugInput"
                         name="slug"
                         type="text"
@@ -41,6 +97,24 @@ function ShopEdit() {
                         name="headline"
                         type="text"
                         placeholder="Enter shop headline"
+                      />
+                    </div>
+                    <div className="col-lg-6">
+                      <Input
+                        label="Latitude"
+                        id="latitudeInput"
+                        name="latitude"
+                        type="text"
+                        placeholder="Enter location latitude"
+                      />
+                    </div>
+                    <div className="col-lg-6">
+                      <Input
+                        label="Longitude"
+                        id="longitudeInput"
+                        name="longitude"
+                        type="text"
+                        placeholder="Enter location longitude"
                       />
                     </div>
                     <div className="col-lg-12">
@@ -95,6 +169,8 @@ function ShopEdit() {
             </div>
           </div>
           <div className="col-md-4 col-lg-5"></div>
+        </div>
+        </div>
         </div>
     );
 }

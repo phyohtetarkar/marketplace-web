@@ -21,6 +21,16 @@ function MyShops() {
           </div>
           <div className="col-lg-8 col-xl-9">
             <div className="card">
+              <div className="card-header bg-white fs-4 fw-semibold p-3">
+                <div className="hstack">
+                  Shops
+                  <div className="ms-auto">
+                    <Link href="/profile/shops/create">
+                      <a className="btn btn-primary">Create new</a>
+                    </Link>
+                  </div>
+                </div>
+              </div>
               <div className="card-body">
                 <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
                   <div className="col">
@@ -33,6 +43,12 @@ function MyShops() {
                     <ShopManageGridItem />
                   </div>
                 </div>
+              </div>
+              <div className="card-footer bg-white p-0">
+                <div className="float-end pt-3 px-3">
+                <Pagination hasPrev={true} hasNext={true} />
+                </div>
+              
               </div>
             </div>
           </div>
