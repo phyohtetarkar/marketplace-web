@@ -1,7 +1,7 @@
-import ProductEditItem from "../../../../components/product/ProductEditItem";
+import ProductEdit from "../../../../components/product/ProductEdit";
 
-function ProductCreate() {
-  return <ProductEditItem create={true} />;
+function CreateProduct() {
+  return <ProductEdit create={true} />;
 }
 
-export default ProductCreate;
+export default CreateProduct;

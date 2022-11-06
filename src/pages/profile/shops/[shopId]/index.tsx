@@ -64,7 +64,7 @@ function ShopDetail() {
               Products
               <div className="ms-auto">
                 <Link href="/profile/shops/1/create-product">
-                  <a className="btn btn-accent">Create Product</a>
+                  <a className="btn btn-primary">Create product</a>
                 </Link>
               </div>
             </div>
