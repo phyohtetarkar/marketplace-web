@@ -20,6 +20,7 @@ export const getProduct = /* GraphQL */ `
       available
       suspended
       newArrival
+      outOfStock
       deleted
       mainCategoryID
       subCategoryID
@@ -80,6 +81,7 @@ export const listProducts = /* GraphQL */ `
         available
         suspended
         newArrival
+        outOfStock
         deleted
         mainCategoryID
         subCategoryID
@@ -120,6 +122,7 @@ export const getProductBySlug = /* GraphQL */ `
         available
         suspended
         newArrival
+        outOfStock
         deleted
         mainCategoryID
         subCategoryID
@@ -162,6 +165,7 @@ export const productsByPrice = /* GraphQL */ `
         available
         suspended
         newArrival
+        outOfStock
         deleted
         mainCategoryID
         subCategoryID
@@ -487,6 +491,7 @@ export const getCartItem = /* GraphQL */ `
         available
         suspended
         newArrival
+        outOfStock
         deleted
         mainCategoryID
         subCategoryID
@@ -568,6 +573,7 @@ export const getFavoriteProduct = /* GraphQL */ `
         available
         suspended
         newArrival
+        outOfStock
         deleted
         mainCategoryID
         subCategoryID

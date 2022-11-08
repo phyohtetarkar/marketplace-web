@@ -37,6 +37,8 @@ next-env.d.ts
 
 .vscode
 
+/public/tinymce/
+
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*

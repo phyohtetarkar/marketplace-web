@@ -27,6 +27,7 @@ type Product @model @auth(rules: [{allow: public, operations: [read]}, {allow: p
   available: Boolean @default(value: "true")
   suspended: Boolean @default(value: "false")
   newArrival: Boolean @default(value: "false")
+  outOfStock: Boolean @default(value: "false")
   deleted: Boolean @default(value: "false")
   mainCategoryID: ID!
   subCategoryID: ID!

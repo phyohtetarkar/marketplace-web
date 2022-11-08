@@ -104,7 +104,7 @@ function ProductManageGridItem({ data }: InputProps) {
           <h6 className="fw-semibold mt-2 mb-3">{price}</h6>
 
           <div className="hstack align-items-stretch gap-2">
-            <Link href={`/profile/shops/id/products/id`}>
+            <Link href={`/profile/shops/id/id`}>
               <a className="btn btn-primary flex-grow-1">Edit</a>
             </Link>
             <button

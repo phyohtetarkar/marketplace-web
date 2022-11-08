@@ -1,8 +1,7 @@
-import { EyeIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
+import { Edit } from "react-feather";
 import { Shop } from "../../models";
-import Tooltip from "../Tooltip";
 
 interface InputProps {
   shop?: Shop;
@@ -53,16 +52,14 @@ function ShopManageGridItem({
           </Link>
 
           <div className="hstack align-items-stretch gap-2">
-            <Link href={`/profile/shops/${shop.id}/edit`}>
-              <a className="btn btn-primary flex-grow-1">Edit</a>
+            <Link href={`/profile/shops/${shop.id}`}>
+              <a className="btn btn-primary flex-grow-1">Detail</a>
             </Link>
-            <Tooltip title="View detail">
-              <Link href={`/profile/shops/${shop.id}`}>
-                <a className="btn btn-outline-light text-primary border h-100 hstack">
-                  <EyeIcon width={20} />
-                </a>
-              </Link>
-            </Tooltip>
+            <Link href={`/profile/shops/${shop.id}/edit`}>
+              <a className="btn btn-outline-light text-primary border h-100 hstack">
+                <Edit width={20} />
+              </a>
+            </Link>
           </div>
         </div>
       </div>

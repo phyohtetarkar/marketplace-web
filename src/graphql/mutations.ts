@@ -24,6 +24,7 @@ export const deleteCartItem = /* GraphQL */ `
         available
         suspended
         newArrival
+        outOfStock
         deleted
         mainCategoryID
         subCategoryID
@@ -60,6 +61,7 @@ export const deleteFavoriteProduct = /* GraphQL */ `
         available
         suspended
         newArrival
+        outOfStock
         deleted
         mainCategoryID
         subCategoryID
@@ -96,6 +98,7 @@ export const createProduct = /* GraphQL */ `
       available
       suspended
       newArrival
+      outOfStock
       deleted
       mainCategoryID
       subCategoryID
@@ -158,6 +161,7 @@ export const updateProduct = /* GraphQL */ `
       available
       suspended
       newArrival
+      outOfStock
       deleted
       mainCategoryID
       subCategoryID
@@ -220,6 +224,7 @@ export const deleteProduct = /* GraphQL */ `
       available
       suspended
       newArrival
+      outOfStock
       deleted
       mainCategoryID
       subCategoryID
@@ -733,6 +738,7 @@ export const createCartItem = /* GraphQL */ `
         available
         suspended
         newArrival
+        outOfStock
         deleted
         mainCategoryID
         subCategoryID
@@ -770,6 +776,7 @@ export const updateCartItem = /* GraphQL */ `
         available
         suspended
         newArrival
+        outOfStock
         deleted
         mainCategoryID
         subCategoryID
@@ -806,6 +813,7 @@ export const createFavoriteProduct = /* GraphQL */ `
         available
         suspended
         newArrival
+        outOfStock
         deleted
         mainCategoryID
         subCategoryID
@@ -842,6 +850,7 @@ export const updateFavoriteProduct = /* GraphQL */ `
         available
         suspended
         newArrival
+        outOfStock
         deleted
         mainCategoryID
         subCategoryID

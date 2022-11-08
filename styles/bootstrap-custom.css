@@ -2377,6 +2377,7 @@ progress {
 }
 .form-label {
   margin-bottom: 0.5rem;
+  font-weight: 500;
 }
 
 .col-form-label {
@@ -2384,6 +2385,7 @@ progress {
   padding-bottom: calc(0.375rem + 1px);
   margin-bottom: 0;
   font-size: inherit;
+  font-weight: 500;
   line-height: 1.5;
 }
 

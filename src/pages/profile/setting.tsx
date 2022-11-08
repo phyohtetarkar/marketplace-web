@@ -37,10 +37,22 @@ function ProfileSetting() {
                           />
                         </div>
                         <div className="col-lg-6">
-                        <label htmlFor="phoneInput" className="form-label">
-                          Phone <div className="vr"></div> 
-                          <Link href={"#"}><a className="text-decoration-none" style={{fontSize: 13}}> Change</a></Link>
-                        </label>
+                          <div className="hstack mb-2 gap-2">
+                            <label
+                              htmlFor="phoneInput"
+                              className="form-label mb-0"
+                            >
+                              Phone
+                            </label>
+                            <div className="d-flex align-items-center">
+                              <div className="vr"></div>
+                            </div>
+                            <Link href={"#"}>
+                              <a className="text-decoration-none small">
+                                Change
+                              </a>
+                            </Link>
+                          </div>
                           <Input
                             id="phoneInput"
                             name="phone"
