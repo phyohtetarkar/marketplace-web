@@ -4,51 +4,46 @@ import { formatPrice, formatTimestamp } from "../../../../common/utils";
 import { Input } from "../../../../components/forms";
 import Pagination from "../../../../components/Pagination";
 
-function ActionMenu() {
-  return (
-    <div className="hstack align-items-center gap-2">
-      <Link href={`/profile/shops/id/id`}>
-        <a className="btn btn-primary">
-          <PencilSquareIcon width={20} />
-        </a>
-      </Link>
-      <button
-        disabled={false}
-        className="btn btn-outline-danger"
-        onClick={async () => {}}
-      >
-        <TrashIcon width={20} />
-      </button>
-    </div>
-  );
-}
-
 function ProductRow() {
   return (
     <tr>
-      <td className="ps-3 ps-lg-4">
-        <div className="vstack">
-          <span className="text-muted text-truncate">
-            Product Name Here Product Name Here Product Name Here Product Name
-            Here
-          </span>
-          <span className="small text-warning">Category</span>
-        </div>
+      <td className="ps-3 ps-lg-4" style={{ maxWidth: 300 }}>
+        <span>
+          Product Name Here Product Name Here Product Name Here Product Name
+          Here Product Name Here
+        </span>
       </td>
       <td>
-        <span className="text-muted">{formatPrice(50000)} Ks</span>
+        <span className="text-nowrap me-3">Category</span>
       </td>
       <td>
-        <span className="text-muted">
+        <span className="text-nowrap me-3">{formatPrice(50000)} Ks</span>
+      </td>
+      <td>
+        <span className="text-nowrap me-3">
           {formatTimestamp(new Date().getTime())}
         </span>
       </td>
       <td>
-        <ActionMenu />
+        <div className="hstack align-items-center gap-2 me-3">
+          <Link href={`/profile/shops/id/id`}>
+            <a className="btn btn-primary">
+              <PencilSquareIcon width={20} />
+            </a>
+          </Link>
+          <button
+            disabled={false}
+            className="btn btn-danger"
+            onClick={async () => {}}
+          >
+            <TrashIcon width={20} />
+          </button>
+        </div>
       </td>
     </tr>
   );
 }
+
 function ShopDetail() {
   const list = [1, 2, 3, 4, 5];
 
@@ -108,59 +103,27 @@ function ShopDetail() {
             </div>
           </div>
         </div>
-        {/*  <div className="card mt-3 mb-3">
-          <div className="card-header bg-white fs-4 fw-semibold p-3">
-            <div className="hstack">
-              Products
-              <div className="ms-auto">
-                <Link href="/profile/shops/1/create-product">
-                  <a className="btn btn-primary">Create product</a>
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className="card-body">
-            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
-              <div className="col">
-                <ProductManageGridItem />
-              </div>
-              <div className="col">
-                <ProductManageGridItem />
-              </div>
-              <div className="col">
-                <ProductManageGridItem />
-              </div>
-              <div className="col">
-                <ProductManageGridItem />
-              </div>
-              <div className="col">
-                <ProductManageGridItem />
-              </div>
-              <div className="col">
-                <ProductManageGridItem />
-              </div>
-            </div>
-          </div>
-        </div> */}
         <div className="card mt-3 mb-3">
           <div className="card-header bg-white fs-4 fw-semibold p-3">
             Products
           </div>
-          <div className="card-body">
-            <div className="vstack gap-3">
-              <div className="row">
-                <div className="col">
-                  <Input
-                    id="filterProductsInput"
-                    name="filter"
-                    type="text"
-                    placeholder="Search your products"
-                  />
-                </div>
-                <div className="col-auto">
-                  <Link href="/profile/shops/1/create-product">
-                    <a className="btn btn-primary btn-lg">Create new</a>
-                  </Link>
+          <div className="card-body p-0">
+            <div className="vstack">
+              <div className="p-3 p-lg-4">
+                <div className="row g-3">
+                  <div className="col">
+                    <Input
+                      id="filterProductsInput"
+                      name="filter"
+                      type="text"
+                      placeholder="Search your products"
+                    />
+                  </div>
+                  <div className="col-auto">
+                    <Link href="/profile/shops/1/create-product">
+                      <a className="btn btn-primary h-100 hstack">Create new</a>
+                    </Link>
+                  </div>
                 </div>
               </div>
 
@@ -168,7 +131,8 @@ function ShopDetail() {
                 <table className="table bg-white align-middle">
                   <thead className="table-light text-nowrap align-middle">
                     <tr style={{ height: 50 }}>
-                      <th className="ps-3 ps-lg-4 fw-medium col-lg-8">NAME</th>
+                      <th className="ps-3 ps-lg-4 fw-medium">NAME</th>
+                      <th className="fw-medium">CATEGORY</th>
                       <th className="fw-medium">PRICE</th>
                       <th className="fw-medium">CREATED AT</th>
                       <th className="fw-medium"></th>
@@ -181,11 +145,10 @@ function ShopDetail() {
                   </tbody>
                 </table>
               </div>
-            </div>
-          </div>
-          <div className="card-footer bg-white p-0">
-            <div className="float-end pt-3 px-3">
-              <Pagination hasPrev={true} hasNext={true} />
+
+              <div className="d-flex justify-content-end pt-3 px-3">
+                <Pagination hasPrev={true} hasNext={true} />
+              </div>
             </div>
           </div>
         </div>

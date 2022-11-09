@@ -121,7 +121,7 @@ function ProductEdit({ create = {} }) {
               </div>
               <div className="card">
                 <div className="card-header bg-white py-3">
-                  <h5 className="mb-0">Product Videos</h5>
+                  <h5 className="mb-0">Product Video</h5>
                 </div>
                 <div className="card-body">
                   <div className="col-lg-12">
@@ -252,7 +252,7 @@ function ProductEdit({ create = {} }) {
                     instanceId="madeInSelect"
                     styles={reactSelectStyles}
                     theme={reactSelectTheme}
-                    placeholder="Select made in"
+                    placeholder="Select country"
                   />
                 </div>
 
