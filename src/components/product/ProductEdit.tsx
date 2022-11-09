@@ -9,7 +9,7 @@ import { reactSelectStyles, reactSelectTheme } from "../themes";
 const DynamicEditor = dynamic<RichTextEditorInputProps>(
   () => import("../forms").then((f) => f.RichTextEditor),
   {
-    ssr: false
+    ssr: false,
   }
 );
 
@@ -119,12 +119,21 @@ function ProductEdit({ create = {} }) {
                   </div>
                 </div>
               </div>
-              {/* <div className="card">
-                <div className="card-header bg-white py-3 px-md-4">
-                  <h5 className="mb-0">Specification</h5>
+              <div className="card">
+                <div className="card-header bg-white py-3">
+                  <h5 className="mb-0">Product Videos</h5>
                 </div>
-                <div className="card-body py-3 px-md-4">Type here...</div>
-              </div> */}
+                <div className="card-body">
+                  <div className="col-lg-12">
+                    <Input
+                      id="videoInput"
+                      name="video"
+                      type="text"
+                      placeholder="Enter youtube video URL"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div className="col-lg-4 order-1 order-lg-2">
@@ -201,20 +210,6 @@ function ProductEdit({ create = {} }) {
                   </div>
                 </div>
                 <div className="col-lg-12 mt-3">
-                  {/* <Select label="Brand *">
-                    <option>Adidas</option>
-                    <option>Samsung</option>
-                  </Select> */}
-                  <label className="form-label">Brand *</label>
-                  <ReactSelect
-                    id="brandSelect"
-                    instanceId="brandSelect"
-                    styles={reactSelectStyles}
-                    theme={reactSelectTheme}
-                    placeholder="Select brand"
-                  />
-                </div>
-                <div className="col-lg-12 mt-3">
                   <label className="form-label">Category *</label>
                   <ReactSelect
                     id="mainCategorySelect"
@@ -238,6 +233,26 @@ function ProductEdit({ create = {} }) {
                     styles={reactSelectStyles}
                     theme={reactSelectTheme}
                     placeholder="Select child category"
+                  />
+                </div>
+                <div className="col-lg-12 mt-3">
+                  <label className="form-label">Brand *</label>
+                  <ReactSelect
+                    id="brandSelect"
+                    instanceId="brandSelect"
+                    styles={reactSelectStyles}
+                    theme={reactSelectTheme}
+                    placeholder="Select brand"
+                  />
+                </div>
+                <div className="col-lg-12 mt-3">
+                  <label className="form-label">Made in</label>
+                  <ReactSelect
+                    id="madeInSelect"
+                    instanceId="madeInSelect"
+                    styles={reactSelectStyles}
+                    theme={reactSelectTheme}
+                    placeholder="Select made in"
                   />
                 </div>
 
