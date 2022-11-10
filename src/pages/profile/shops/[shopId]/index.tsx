@@ -1,4 +1,4 @@
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { formatPrice, formatTimestamp } from "../../../../common/utils";
 import { Input } from "../../../../components/forms";
