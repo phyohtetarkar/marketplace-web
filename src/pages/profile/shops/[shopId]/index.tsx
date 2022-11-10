@@ -7,7 +7,7 @@ import Pagination from "../../../../components/Pagination";
 function ProductRow() {
   return (
     <tr>
-      <td className="ps-3 ps-lg-4" style={{ maxWidth: 300 }}>
+      <td className="ps-3 ps-lg-4" style={{ minWidth: 300 }}>
         <span>
           Product Name Here Product Name Here Product Name Here Product Name
           Here Product Name Here
