@@ -116,9 +116,9 @@ function MyShops({
                                 </span>
                               </div>
                               <div className="d-flex align-items-center">
-                                <Link href={`/shops/${shop.id}`}>
+                                <Link href={`/profile/shops/1`}>
                                   <a
-                                    className="text-nowrap text-dark text-decoration-none "
+                                    className="text-nowrap text-dark text-decoration-none pe-3 "
                                     style={{ fontSize: 18 }}
                                   >
                                     <h6>
@@ -130,13 +130,13 @@ function MyShops({
                             </div>
                           </td>
                           <td>
-                            <span className="text-muted">
+                            <span className="text-nowrap pe-3">
                               {shop.createdAt}
                             </span>
                           </td>
                           <td>
                             <div className="d-flex">
-                              <div className="user-select-none px-2 py-1 small rounded bg-warning text-light">
+                              <div className="text-nowrap px-2 py-1 small rounded bg-warning text-light">
                                 Pending
                               </div>
                             </div>
@@ -144,12 +144,12 @@ function MyShops({
                           <td>
                             <div className="d-flex">
                             <Link href={`/profile/shops/${shop.id}/edit`}>
-                              <a className="btn btn-outline-light text-primary border">
+                              <a className="btn btn-primary">
                                 <Edit width={20} />
                               </a>
                             </Link>
                             <Link href={`/profile/shops/${shop.id}/edit`}>
-                              <a className="btn btn-outline-danger ms-2 border">
+                              <a className="btn btn-danger ms-2">
                                 <Trash2 width={20} />
                               </a>
                             </Link>
@@ -193,9 +193,9 @@ function MyShops({
                                 </span>
                               </div>
                               <div className="d-flex align-items-center">
-                                <Link href={`/shops/${shop.id}`}>
+                                <Link href={`/profile/shops/1`}>
                                   <a
-                                    className="text-nowrap text-dark text-decoration-none "
+                                    className="text-nowrap text-dark text-decoration-none pe-3"
                                     style={{ fontSize: 18 }}
                                   >
                                     <h6>
@@ -207,13 +207,13 @@ function MyShops({
                             </div>
                           </td>
                           <td>
-                            <span className="text-muted">
+                            <span className="text-nowrap pe-3">
                               {shop.createdAt}
                             </span>
                           </td>
                           <td>
                             <div className="d-flex">
-                              <div className="user-select-none px-2 py-1 small rounded bg-warning text-light">
+                              <div className="text-nowrap px-2 py-1 small rounded bg-warning text-light">
                                 Pending
                               </div>
                             </div>
@@ -221,12 +221,12 @@ function MyShops({
                           <td>
                             <div className="d-flex">
                             <Link href={`/profile/shops/${shop.id}/edit`}>
-                              <a className="btn btn-outline-light text-primary border">
+                              <a className="btn btn-primary">
                                 <Edit width={20} />
                               </a>
                             </Link>
                             <Link href={`/profile/shops/${shop.id}/edit`}>
-                              <a className="btn btn-outline-danger ms-2 border">
+                              <a className="btn btn-danger ms-2">
                                 <Trash2 width={20} />
                               </a>
                             </Link>

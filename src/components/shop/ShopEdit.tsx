@@ -64,7 +64,7 @@ function ShopEdit({ create = {} }) {
         <div className="row g-3">
           <div className="col-md-8 col-lg-7">
             <div className="card">
-              <div className="card-header bg-white py-3 px-md-4">
+              <div className="card-header bg-white py-3">
                 <h5 className="mb-0">Shop information</h5>
               </div>
               <div className="card-body">
@@ -170,7 +170,7 @@ function ShopEdit({ create = {} }) {
           </div>
           <div className="col-md-4 col-lg-5">
             <div className="card mb-4">
-              <div className="card-header bg-white py-3 px-md-4">
+              <div className="card-header bg-white py-3">
                 <h5 className="mb-0">Social</h5>
               </div>
               <div className="card-body">
@@ -194,12 +194,21 @@ function ShopEdit({ create = {} }) {
                         placeholder="Enter twitter link"
                       />
                     </div>
+                    <div className="col-lg-12">
+                      <Input
+                        label="Instagram"
+                        id="instagramInput"
+                        name="instagram"
+                        type="text"
+                        placeholder="Enter instagram link"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <div className="card mb-4">
-              <div className="card-header bg-white py-3 px-md-4">
+              <div className="card-header bg-white py-3">
               <div className="hstack">
                   <h5 className="mb-0">Shop branches</h5>
                   <div className="ms-auto">
@@ -216,7 +225,7 @@ function ShopEdit({ create = {} }) {
               </div>
             </div>
             <div className="card">
-              <div className="card-header bg-white py-3 px-md-4">
+              <div className="card-header bg-white py-3">
                 <div className="hstack">
                   <h5 className="mb-0">Members</h5>
                   <div className="ms-auto">
