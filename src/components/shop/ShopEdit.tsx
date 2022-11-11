@@ -1,6 +1,8 @@
 import { PhotoIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
+import ReactSelect from "react-select";
 import { Input, Textarea } from "../forms";
+import { reactSelectStyles, reactSelectTheme } from "../themes";
 
 function ShopEdit({ create = {} }) {
   return (
@@ -89,12 +91,14 @@ function ShopEdit({ create = {} }) {
                       />
                     </div>
                     <div className="col-lg-12">
-                      <Input
-                        label="Headline"
-                        id="headlineInput"
-                        name="headline"
-                        type="text"
-                        placeholder="Enter shop headline"
+                      <label className="form-label">Categories *</label>
+                      <ReactSelect  
+                        id="categorySelect"
+                        instanceId="categorySelect"
+                        styles={reactSelectStyles}
+                        theme={reactSelectTheme}
+                        placeholder="Select category"
+                        className="mb-2"
                       />
                     </div>
                     <div className="col-lg-6">
@@ -209,7 +213,7 @@ function ShopEdit({ create = {} }) {
             </div>
             <div className="card mb-4">
               <div className="card-header bg-white py-3">
-              <div className="hstack">
+                <div className="hstack">
                   <h5 className="mb-0">Shop branches</h5>
                   <div className="ms-auto">
                     <Link href="/profile/shops/create">

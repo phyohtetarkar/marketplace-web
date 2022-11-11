@@ -1,10 +1,9 @@
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import { Edit, Trash2 } from "react-feather";
 import AccountMenu from "../../../components/account/AccountMenu";
 import { Input, Select } from "../../../components/forms";
-import Pagination from "../../../components/Pagination";
+import Pagination from "../../../components/Pagination";  
 import ShopManageGridItem from "../../../components/shop/ShopManageGridItem";
 import { Shop } from "../../../models";
 
@@ -145,12 +144,12 @@ function MyShops({
                             <div className="d-flex">
                             <Link href={`/profile/shops/${shop.id}/edit`}>
                               <a className="btn btn-primary">
-                                <Edit width={20} />
+                                <PencilSquareIcon width={20} />
                               </a>
                             </Link>
                             <Link href={`/profile/shops/${shop.id}/edit`}>
                               <a className="btn btn-danger ms-2">
-                                <Trash2 width={20} />
+                                <TrashIcon width={20} />
                               </a>
                             </Link>
                             </div>
@@ -222,12 +221,12 @@ function MyShops({
                             <div className="d-flex">
                             <Link href={`/profile/shops/${shop.id}/edit`}>
                               <a className="btn btn-primary">
-                                <Edit width={20} />
+                                <PencilSquareIcon width={20} />
                               </a>
                             </Link>
                             <Link href={`/profile/shops/${shop.id}/edit`}>
                               <a className="btn btn-danger ms-2">
-                                <Trash2 width={20} />
+                                <TrashIcon width={20} />
                               </a>
                             </Link>
                             </div>
