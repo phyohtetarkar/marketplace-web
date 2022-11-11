@@ -16,7 +16,7 @@ function Tooltip({ title, className, children }: TooltipProps) {
       if (!tooltipRef.current) {
         return;
       }
-      tooltip = new Tooltip(tooltipRef.current, {});
+      tooltip = Tooltip.getOrCreateInstance(tooltipRef.current, {});
     };
 
     initTooltip();

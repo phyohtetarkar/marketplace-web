@@ -28,7 +28,7 @@ function Dropdown({
       if (!dropdownToggle.current) {
         return;
       }
-      dropdown = new Dropdown(dropdownToggle.current, {
+      dropdown = Dropdown.getOrCreateInstance(dropdownToggle.current, {
         popperConfig: popperConfig ?? null
       });
     };

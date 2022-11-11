@@ -2,6 +2,7 @@ import { KeyboardEvent, useEffect, useRef, useState } from "react";
 
 interface TagInputProps {
   data: string[];
+  placeholder?: string;
   onTagsChange?: (tags: string[]) => void;
 }
 
@@ -32,7 +33,7 @@ function Tag({ index, name, onRemove }: TagValues) {
   );
 }
 
-function TagInput({ data = [], onTagsChange }: TagInputProps) {
+function TagInput({ data = [], placeholder, onTagsChange }: TagInputProps) {
   const [focus, setFocus] = useState(false);
   const [tags, setTags] = useState(data);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -65,9 +66,12 @@ function TagInput({ data = [], onTagsChange }: TagInputProps) {
       setTags((old) => [...old, value]);
 
       inputRef.current!.value = "";
-    } else if (e.key === "Backspace") {
-      tags.length > 0 && handleRemove(tags.length - 1);
     }
+
+    // else if (e.key === "Backspace") {
+    //   const value = inputRef.current?.value;
+    //   tags.length > 0 && !value?.length && handleRemove(tags.length - 1);
+    // }
   }
 
   function handleRemove(index: number) {
@@ -96,7 +100,7 @@ function TagInput({ data = [], onTagsChange }: TagInputProps) {
         type="text"
         className="border-0"
         size={10}
-        placeholder="Add tags"
+        placeholder={placeholder ?? "Add tag"}
         style={{ outline: "none" }}
         onFocus={(_evt) => {
           setFocus(true);

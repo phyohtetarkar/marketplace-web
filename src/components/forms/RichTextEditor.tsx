@@ -9,6 +9,7 @@ export interface RichTextEditorInputProps {
   imageUploadPath?: string;
   onEditorChange?: OnEditorChange;
   minHeight?: number;
+  noBorder?: boolean;
 }
 
 function RichTextEditor({
@@ -17,7 +18,8 @@ function RichTextEditor({
   inline,
   imageUploadPath,
   onEditorChange,
-  minHeight = 480
+  minHeight = 480,
+  noBorder
 }: RichTextEditorInputProps) {
   if (typeof window === "undefined") {
     return null;
@@ -36,7 +38,9 @@ function RichTextEditor({
         //editorRef.current = editor;
 
         //editor.getContainer().style.borderRadius = "0.25rem 0.25rem";
-        editor.getContainer().style.border = "1px solid rgba(0, 0, 0, 0.125)";
+        editor.getContainer().style.border = `${
+          noBorder ? 0 : 1
+        }px solid rgba(0, 0, 0, 0.125)`;
       }}
       init={{
         placeholder: placeholder,
@@ -63,7 +67,9 @@ function RichTextEditor({
           "link",
           "lists",
           "preview",
-          "quickbars"
+          "quickbars",
+          "table",
+          "code"
         ],
         menu: {
           file: { title: "File", items: "preview" },
@@ -107,7 +113,8 @@ function RichTextEditor({
               "underline",
               "strikethrough",
               "bullist",
-              "numlist"
+              "numlist",
+              "table"
             ]
           },
           {
@@ -118,7 +125,7 @@ function RichTextEditor({
             name: "indentation",
             items: ["outdent", "indent"]
           },
-          { name: "view", items: ["preview", "fullscreen"] }
+          { name: "view", items: ["preview", "fullscreen", "code"] }
         ]
       }}
     />
