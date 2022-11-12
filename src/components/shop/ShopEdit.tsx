@@ -1,8 +1,19 @@
-import { PhotoIcon } from "@heroicons/react/24/solid";
+import { PhoneIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PhotoIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
 import ReactSelect from "react-select";
 import { Input, Textarea } from "../forms";
+import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import { reactSelectStyles, reactSelectTheme } from "../themes";
+
+const DynamicEditor = dynamic<RichTextEditorInputProps>(
+  () => import("../forms").then((f) => f.RichTextEditor),
+  {
+    ssr: false,
+  }
+);
 
 function ShopEdit({ create = {} }) {
   return (
@@ -63,16 +74,16 @@ function ShopEdit({ create = {} }) {
       </div>
 
       <div className="container py-4">
-        <div className="row g-3">
-          <div className="col-md-8 col-lg-7">
+        <div className="row g-4">
+          <div className="col-md-12 col-lg-12">
             <div className="card">
               <div className="card-header bg-white py-3">
-                <h5 className="mb-0">Shop information</h5>
+                <h5 className="mb-0">General</h5>
               </div>
               <div className="card-body">
                 <div className="vstack">
-                  <div className="row g-3">
-                    <div className="col-lg-12">
+                  <div className="row g-4">
+                    <div className="col-lg-6">
                       <Input
                         label="Name *"
                         id="shopNameInput"
@@ -81,7 +92,7 @@ function ShopEdit({ create = {} }) {
                         placeholder="Enter shop name"
                       />
                     </div>
-                    <div className="col-lg-12">
+                    <div className="col-lg-6">
                       <Input
                         label="Slug *"
                         id="slugInput"
@@ -90,9 +101,20 @@ function ShopEdit({ create = {} }) {
                         placeholder="https://shoppingcenter.com/page/slug"
                       />
                     </div>
-                    <div className="col-lg-12">
-                      <label className="form-label">Categories *</label>
-                      <ReactSelect  
+                    <div className="order-4 order-lg-3 order-md-4 col-lg-6">
+                      <label className="form-label">Description</label>
+                      <div className="border rounded pt-1 pb-1">
+                        <DynamicEditor
+                          id="descriptionInput"
+                          placeholder="Enter shop description..."
+                          minHeight={300}
+                          noBorder
+                        />
+                      </div>
+                    </div>
+                    <div className="order-3 order-lg-4 order-md-3 col-lg-6 ">
+                      <label className="form-label">Category *</label>
+                      <ReactSelect
                         id="categorySelect"
                         instanceId="categorySelect"
                         styles={reactSelectStyles}
@@ -101,33 +123,19 @@ function ShopEdit({ create = {} }) {
                         className="mb-2"
                       />
                     </div>
-                    <div className="col-lg-6">
-                      <Input
-                        label="Latitude"
-                        id="latitudeInput"
-                        name="latitude"
-                        type="text"
-                        placeholder="Enter location latitude"
-                      />
-                    </div>
-                    <div className="col-lg-6">
-                      <Input
-                        label="Longitude"
-                        id="longitudeInput"
-                        name="longitude"
-                        type="text"
-                        placeholder="Enter location longitude"
-                      />
-                    </div>
-                    <div className="col-lg-12">
-                      <Textarea
-                        label="About us"
-                        id="descriptionInput"
-                        name="description"
-                        type="text"
-                        placeholder="Enter brief about shop..."
-                      />
-                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-12 col-lg-12">
+            <div className="card">
+              <div className="card-header bg-white py-3">
+                <h5 className="mb-0">Images</h5>
+              </div>
+              <div className="card-body">
+                <div className="vstack">
+                  <div className="row g-4">
                     <div className="col-lg-3 col-12">
                       <label htmlFor="avatarInput" className="form-label">
                         Shop Logo
@@ -149,10 +157,8 @@ function ShopEdit({ create = {} }) {
                         />
                       </div>
                     </div>
-                    <div className="col-lg-12 mb-2">
-                      <label htmlFor="Input" className="form-label">
-                        Cover Image
-                      </label>
+                    <div className="col-lg-12">
+                      <label className="form-label">Cover Image</label>
                       <div className="card" style={{ borderStyle: "dashed" }}>
                         <div className="card-body p-0 m-0">
                           <div className="d-flex justify-content-center m-5">
@@ -172,76 +178,221 @@ function ShopEdit({ create = {} }) {
               </div>
             </div>
           </div>
-          <div className="col-md-4 col-lg-5">
-            <div className="card mb-4">
-              <div className="card-header bg-white py-3">
-                <h5 className="mb-0">Social</h5>
-              </div>
-              <div className="card-body">
-                <div className="vstack">
-                  <div className="row g-3">
-                    <div className="col-lg-12">
-                      <Input
-                        label="Facebook"
-                        id="facebookInput"
-                        name="facebook"
-                        type="text"
-                        placeholder="Enter facebook link"
-                      />
-                    </div>
-                    <div className="col-lg-12">
-                      <Input
-                        label="Twitter"
-                        id="twitterInput"
-                        name="twitter"
-                        type="text"
-                        placeholder="Enter twitter link"
-                      />
-                    </div>
-                    <div className="col-lg-12">
-                      <Input
-                        label="Instagram"
-                        id="instagramInput"
-                        name="instagram"
-                        type="text"
-                        placeholder="Enter instagram link"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="card mb-4">
-              <div className="card-header bg-white py-3">
-                <div className="hstack">
-                  <h5 className="mb-0">Shop branches</h5>
-                  <div className="ms-auto">
-                    <Link href="/profile/shops/create">
-                      <a className="btn btn-primary">Add</a>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div className="card-body">
-                <div className="vstack">
-                  <div>Type here...</div>
-                </div>
-              </div>
-            </div>
+          <div className="col-md-12 col-lg-12">
             <div className="card">
               <div className="card-header bg-white py-3">
                 <div className="hstack">
-                  <h5 className="mb-0">Members</h5>
+                  <h5 className="mb-0">Location</h5>
+                </div>
+              </div>
+              <div className="card-body">
+                <div className="vstack">
+                  <div className="row g-3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-12 col-lg-12">
+            <div className="card">
+              <div className="card-header bg-white py-3">
+                <div className="hstack">
+                  <h5 className="mb-0">Social</h5>
                   <div className="ms-auto">
                     <Link href="/profile/shops/create">
-                      <a className="btn btn-primary">Add</a>
+                      <a className="btn btn-primary">Add new</a>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="card-body p-3">
+                <div className="vstack">
+                  <div className="row g-3">
+                    <div className="col-auto">
+                      <button
+                        type="button"
+                        className="btn btn-outline-light border-0 bg-secondary align-items-center"
+                      >
+                        <div className="hstack">
+                          <Image
+                            className="flex-shrink-0"
+                            src="/images/icons8-facebook-48.png"
+                            alt="facebook"
+                            width={28}
+                            height={28}
+                          />
+                          <span className="text-dark ms-1 small">
+                            Shopping Center
+                          </span>
+                          <XMarkIcon
+                            className="ms-2 text-dark flex-shrink-0"
+                            width={20}
+                          />
+                        </div>
+                      </button>
+                    </div>
+                    <div className="col-auto">
+                      <button
+                        type="button"
+                        className="btn btn-outline-light border-0 bg-secondary align-items-center"
+                      >
+                        <div className="hstack">
+                          <Image
+                            className="flex-shrink-0"
+                            src="/images/icons8-facebook-48.png"
+                            alt="facebook"
+                            width={28}
+                            height={28}
+                          />
+                          <span className="text-dark ms-1 small">
+                            Shopping Center
+                          </span>
+                          <XMarkIcon
+                            className="ms-2 text-dark flex-shrink-0"
+                            width={20}
+                          />
+                        </div>
+                      </button>
+                    </div>
+                    <div className="col-auto">
+                      <button
+                        type="button"
+                        className="btn btn-outline-light border-0 bg-secondary align-items-center"
+                      >
+                        <div className="hstack">
+                          <Image
+                            className="flex-shrink-0"
+                            src="/images/icons8-facebook-48.png"
+                            alt="facebook"
+                            width={28}
+                            height={28}
+                          />
+                          <span className="text-dark ms-1 small">
+                            Shopping Center
+                          </span>
+                          <XMarkIcon
+                            className="ms-2 text-dark flex-shrink-0"
+                            width={20}
+                          />
+                        </div>
+                      </button>
+                    </div>
+                    <div className="col-auto">
+                      <button
+                        type="button"
+                        className="btn btn-outline-light border-0 bg-secondary align-items-center"
+                      >
+                        <div className="hstack">
+                          <Image
+                            className="flex-shrink-0"
+                            src="/images/icons8-facebook-48.png"
+                            alt="facebook"
+                            width={28}
+                            height={28}
+                          />
+                          <span className="text-dark ms-1 small">
+                            Shopping Center
+                          </span>
+                          <XMarkIcon
+                            className="ms-2 text-dark flex-shrink-0"
+                            width={20}
+                          />
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-12 col-lg-12">
+            <div className="card">
+              <div className="card-header bg-white py-3">
+                <div className="hstack">
+                  <h5 className="mb-0">Branches</h5>
+                  <div className="ms-auto">
+                    <Link href="/profile/shops/create">
+                      <a className="btn btn-primary">Add new</a>
                     </Link>
                   </div>
                 </div>
               </div>
               <div className="card-body">
-                <div className="vstack">
-                  <div>Type here...</div>
+                <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+                  <div className="col">
+                    <div className="card bg-light border-0">
+                      <div className="card-body">
+                        <div className="vstack">
+                          <div className="hstack">
+                            <h6 className="flex-grow-1 pe-2">
+                              Global Stationary Shop
+                            </h6>
+                            <a className="btn btn-outline-danger p-1">
+                              <TrashIcon className="p-0" width={16} />
+                            </a>
+                          </div>
+                          <div className="hstack mb-3">
+                            <PhoneIcon className="me-2" width={14} />
+                            <small className="text-muted">09121219987</small>
+                          </div>
+                          <div className="text-muted small">
+                            Lorem Ipsum is simply dummy text of the printing and
+                            typesetting industry. Lorem Ipsum has been the
+                            industry standard dummy text ever since the 1500s.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="card bg-light border-0">
+                      <div className="card-body">
+                        <div className="vstack">
+                          <div className="hstack">
+                            <h6 className="flex-grow-1 pe-2">
+                              Global Stationary Shop
+                            </h6>
+                            <a className="btn btn-outline-danger p-1">
+                              <TrashIcon className="p-0" width={16} />
+                            </a>
+                          </div>
+                          <div className="hstack mb-3">
+                            <PhoneIcon className="me-2" width={14} />
+                            <small className="text-muted">09121219987</small>
+                          </div>
+                          <div className="text-muted small">
+                            Lorem Ipsum is simply dummy text of the printing and
+                            typesetting industry. Lorem Ipsum has been the
+                            industry standard dummy text ever since the 1500s.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="card bg-light border-0">
+                      <div className="card-body">
+                        <div className="vstack">
+                          <div className="hstack">
+                            <h6 className="flex-grow-1 pe-2">
+                              Global Stationary Shop
+                            </h6>
+                            <a className="btn btn-outline-danger p-1">
+                              <TrashIcon className="p-0" width={16} />
+                            </a>
+                          </div>
+                          <div className="hstack mb-3">
+                            <PhoneIcon className="me-2" width={14} />
+                            <small className="text-muted">09121219987</small>
+                          </div>
+                          <div className="text-muted small">
+                            Lorem Ipsum is simply dummy text of the printing and
+                            typesetting industry. Lorem Ipsum has been the
+                            industry standard dummy text ever since the 1500s.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
