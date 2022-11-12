@@ -33,7 +33,7 @@ function Input({
   onBlur,
   error,
   className,
-  height = formControlHeight,
+  height = formControlHeight
 }: InputProps<HTMLInputElement>) {
   return (
     <>
@@ -56,7 +56,7 @@ function Input({
         onChange={onChange}
         onBlur={onBlur}
         style={{
-          height: height,
+          height: height
         }}
       />
       {error && <div className="invalid-feedback">{error}</div>}

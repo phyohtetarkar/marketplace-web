@@ -1,7 +1,7 @@
 import { PlusIcon, TrashIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ReactSelect from "react-select";
 import { Input, TagInput } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
@@ -83,7 +83,7 @@ function OptionsEdit({
                     </div>
                     <div
                       role="button"
-                      className="text-danger"
+                      className="link-danger"
                       onClick={() => {
                         const list = [...options];
                         list.splice(i, 1);
@@ -135,6 +135,7 @@ function OptionsEdit({
 }
 
 function ProductEdit({ create = {} }) {
+  const [editorHeight, setEditorHeight] = useState(300);
   const [showVariantModal, setShowVariantModal] = useState(false);
   const [options, setOptions] = useState<Option[]>([]);
   const [variants, setVariants] = useState<Variant[]>([]);
@@ -228,275 +229,313 @@ function ProductEdit({ create = {} }) {
       </div>
 
       <div className="container py-4">
-        <div className="row g-3">
-          <div className="col-lg-8 order-2 order-lg-1">
-            <div className="vstack gap-3">
-              <div className="card">
-                <div className="card-header bg-white py-3">
-                  <h5 className="mb-0">Product Images</h5>
+        <div className="vstack gap-3">
+          <div className="card">
+            <div className="card-header bg-white py-3">
+              <h5 className="mb-0">General</h5>
+            </div>
+            <div className="card-body pb-5">
+              <div className="row g-4 mb-4">
+                <div className="col-lg-6">
+                  <Input
+                    label="Name *"
+                    id="nameInput"
+                    name="name"
+                    type="text"
+                    placeholder="Enter product name"
+                  />
                 </div>
-                <div className="card-body">
-                  <div className="d-flex flex-wrap gap-2">
-                    <button
-                      className="btn btn-light-gray hstack justify-content-center"
-                      style={{ width: 120, height: 120 }}
-                    >
-                      <PlusIcon width={44} strokeWidth={2} />
-                    </button>
+
+                <div className="col-lg-6">
+                  <Input
+                    label="Slug *"
+                    id="slugInput"
+                    name="slug"
+                    type="text"
+                    placeholder="/slug"
+                  />
+                </div>
+              </div>
+              <div className="row g-4">
+                <div className="col-lg-6 order-2 order-lg-1 vstack">
+                  <label className="form-label">Description</label>
+                  <div
+                    className="flex-grow-1"
+                    ref={(e) => {
+                      const h = e?.clientHeight ?? 300;
+                      setEditorHeight(h > 250 ? h : 300);
+                    }}
+                  >
+                    <DynamicEditor
+                      id="descriptionInput"
+                      placeholder="Enter product description..."
+                      minHeight={editorHeight}
+                    />
                   </div>
                 </div>
-              </div>
-              <div className="card">
-                <div className="card-header bg-white py-3">
-                  <h5 className="mb-0">Product Description</h5>
-                </div>
-                <div className="card-body p-0">
-                  <DynamicEditor
-                    id="descriptionInput"
-                    placeholder="Enter product description..."
-                    minHeight={300}
-                    noBorder
-                  />
-                </div>
-              </div>
-              <div className="card">
-                <div className="card-header bg-white py-3">
-                  <h5 className="mb-0">Product Video</h5>
-                </div>
-                <div className="card-body">
-                  <Input
-                    id="videoInput"
-                    name="video"
-                    type="text"
-                    placeholder="Enter youtube video URL"
-                  />
+
+                <div className="col-lg-6 order-1 order-lg-2">
+                  <div className="vstack">
+                    <label className="form-label">Brand *</label>
+                    <ReactSelect
+                      id="brandSelect"
+                      instanceId="brandSelect"
+                      styles={reactSelectStyles}
+                      theme={reactSelectTheme}
+                      placeholder="Select brand"
+                    />
+
+                    <label className="form-label mt-3">Category *</label>
+                    <div className="row g-3 mb-3">
+                      <div className="col-lg-6">
+                        <ReactSelect
+                          id="mainCategorySelect"
+                          instanceId="mainCategorySelect"
+                          styles={reactSelectStyles}
+                          theme={reactSelectTheme}
+                          placeholder="Select main category"
+                        />
+                      </div>
+                      <div className="col-lg-6">
+                        <ReactSelect
+                          id="subategorySelect"
+                          instanceId="subCategorySelect"
+                          styles={reactSelectStyles}
+                          theme={reactSelectTheme}
+                          placeholder="Select sub category"
+                        />
+                      </div>
+                    </div>
+
+                    <ReactSelect
+                      id="childCategorySelect"
+                      instanceId="childCategorySelect"
+                      styles={reactSelectStyles}
+                      theme={reactSelectTheme}
+                      placeholder="Select child category"
+                    />
+
+                    <label className="form-label mt-3">Country of origin</label>
+                    <ReactSelect
+                      id="madeInSelect"
+                      instanceId="madeInSelect"
+                      styles={reactSelectStyles}
+                      theme={reactSelectTheme}
+                      placeholder="Select country"
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div className="card">
-                <div className="card-header bg-white py-3">
-                  <div className="hstack justify-content-between">
-                    <h5 className="mb-0">Product Variants</h5>
-                    <button
-                      className="btn btn-primary ms-2"
-                      onClick={() => {
-                        setShowVariantModal(true);
-                      }}
+              <hr className="bg-dark-gray my-4" />
+
+              <div className="row g-4">
+                <div className="col-auto">
+                  <div className="form-check">
+                    <input
+                      id="variantCheck"
+                      className="form-check-input"
+                      type="checkbox"
+                    ></input>
+                    <label
+                      htmlFor="variantCheck"
+                      className="form-check-label fw-medium"
                     >
-                      Edit Options
-                    </button>
+                      With variants
+                    </label>
                   </div>
                 </div>
-                <div className="card-body p-0">
-                  <div
-                    className="table-responsive scrollbar-custom"
-                    style={{ maxHeight: 360 }}
-                  >
-                    <table className="table align-middle">
-                      <thead className="table-light text-nowrap align-middle sticky-top">
-                        <tr style={{ height: 50 }}>
-                          <th className="ps-3 fw-medium w-100">VARIANT</th>
-                          <th className="pe-5 fw-medium">PRICE</th>
-                          <th className="pe-5 fw-medium"></th>
-                        </tr>
-                      </thead>
-                      <tbody className="border-top-0">
-                        {variants.map((v, i) => {
-                          return (
-                            <tr key={i}>
-                              <td className="ps-3 py-3 w-100">
-                                <span className="text-nowrap me-3">
-                                  {v.name}
-                                </span>
-                              </td>
-                              <td className="pe-5">0</td>
-                              <td className="pe-5">
-                                <button className="btn btn-outline-danger">
-                                  <TrashIcon width={20} />
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
+                <div className="col-auto">
+                  <div className="form-check">
+                    <input
+                      id="newArrivalCheck"
+                      className="form-check-input"
+                      type="checkbox"
+                    ></input>
+                    <label
+                      htmlFor="newArrivalCheck"
+                      className="form-check-label fw-medium"
+                    >
+                      New arrival
+                    </label>
                   </div>
                 </div>
-                <Modal
-                  id="varientEditModal"
-                  show={showVariantModal}
-                  variant="large"
-                >
-                  {(isShown) =>
-                    isShown ? (
-                      <OptionsEdit
-                        data={[...options]}
-                        updateOptions={(list) => {
-                          setOptions(list);
-                          setShowVariantModal(false);
-                          generateVariants(list);
-                        }}
-                        hide={() => setShowVariantModal(false)}
-                      />
-                    ) : (
-                      <></>
-                    )
-                  }
-                </Modal>
+                <div className="col-auto">
+                  <div className="form-check">
+                    <input
+                      id="outOfStockCheck"
+                      className="form-check-input"
+                      type="checkbox"
+                    ></input>
+                    <label
+                      htmlFor="outOfStockCheck"
+                      className="form-check-label fw-medium"
+                    >
+                      Out of stock
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div className="col-lg-4 order-1 order-lg-2">
-            <div className="card">
-              <div className="card-header bg-white py-3">
-                <h5 className="mb-0">Product Info</h5>
+
+          <div className="card">
+            <div className="card-header bg-white py-3">
+              <div className="hstack justify-content-between">
+                <h5 className="mb-0">Variants</h5>
+                <button
+                  className="btn btn-primary ms-2"
+                  onClick={() => {
+                    setShowVariantModal(true);
+                  }}
+                >
+                  Edit Options
+                </button>
               </div>
-              <div className="card-body">
-                <div className="row g-3">
-                  <div className="col-lg-12">
-                    <Input
-                      label="Name *"
-                      id="nameInput"
-                      name="name"
-                      type="text"
-                      placeholder="Enter product name"
-                    />
-                  </div>
-                  <div className="col-lg-12">
-                    <Input
-                      label="Slug *"
-                      id="slugInput"
-                      name="slug"
-                      type="text"
-                      placeholder="https://shopping/create/slug"
-                    />
-                    <span className="form-text">
-                      Field must contain an unique value.
-                    </span>
-                  </div>
-                  <div className="col-lg-12">
-                    <Input
-                      label="Code"
-                      id="codeInput"
-                      name="code"
-                      type="text"
-                      placeholder="Enter product code"
-                    />
-                  </div>
-                  <div className="col-lg-12">
-                    <Input
-                      label="Price *"
-                      id="priceInput"
-                      name="price"
-                      type="text"
-                      placeholder="Enter price"
-                    />
-                  </div>
-                  <div className="col-lg-12">
-                    <label className="form-label">Discount</label>
-                    <div className="input-group">
-                      <Input
-                        id="discountInput"
-                        name="discount"
-                        type="text"
-                        placeholder="Enter discount"
-                      />
-                      <div className="d-flex">
-                        <select className="form-select rounded-0 border-start-0 bg-light">
-                          <option value="fixed">.00</option>
-                          <option value="percent">%</option>
-                        </select>
-                      </div>
-                      <div className="input-group-text">
-                        <div className="form-check mb-0">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                          ></input>
-                          <label className="form-check-label">Apply</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-12 mt-3">
-                  <label className="form-label">Category *</label>
-                  <ReactSelect
-                    id="mainCategorySelect"
-                    instanceId="mainCategorySelect"
-                    styles={reactSelectStyles}
-                    theme={reactSelectTheme}
-                    placeholder="Select main category"
-                    className="mb-2"
+            </div>
+            <div className="card-body p-0">
+              <div
+                className="table-responsive scrollbar-custom"
+                style={{ maxHeight: 360 }}
+              >
+                <table className="table align-middle">
+                  <thead className="table-light text-nowrap align-middle sticky-top">
+                    <tr style={{ height: 50 }}>
+                      <th className="ps-3 fw-medium w-100">VARIANT</th>
+                      <th className="pe-3 fw-medium">PRICE</th>
+                      <th className="pe-3 fw-medium">SKU</th>
+                      <th className="pe-5 fw-medium"></th>
+                    </tr>
+                  </thead>
+                  <tbody className="border-top-0">
+                    {variants.map((v, i) => {
+                      return (
+                        <tr key={i}>
+                          <td className="ps-3 py-3 w-100">
+                            <span className="text-nowrap me-3">{v.name}</span>
+                          </td>
+                          <td className="pe-3">
+                            <div style={{ width: 150 }}>
+                              <Input
+                                name="price"
+                                type="text"
+                                placeholder="Enter price"
+                                defaultValue={0}
+                                height={40}
+                              />
+                            </div>
+                          </td>
+                          <td className="pe-3">
+                            <div style={{ width: 200 }}>
+                              <Input
+                                name="sku"
+                                type="text"
+                                placeholder="Enter sku"
+                                height={40}
+                              />
+                            </div>
+                          </td>
+                          <td className="pe-5">
+                            <div role="button" className="link-danger">
+                              <TrashIcon width={20} />
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <Modal
+              id="varientEditModal"
+              show={showVariantModal}
+              variant="large"
+            >
+              {(isShown) =>
+                isShown ? (
+                  <OptionsEdit
+                    data={[...options]}
+                    updateOptions={(list) => {
+                      setOptions(list);
+                      setShowVariantModal(false);
+                      generateVariants(list);
+                    }}
+                    hide={() => setShowVariantModal(false)}
                   />
-                  <ReactSelect
-                    id="subategorySelect"
-                    instanceId="subCategorySelect"
-                    styles={reactSelectStyles}
-                    theme={reactSelectTheme}
-                    placeholder="Select sub category"
-                    className="mb-2"
-                  />
-                  <ReactSelect
-                    id="childCategorySelect"
-                    instanceId="childCategorySelect"
-                    styles={reactSelectStyles}
-                    theme={reactSelectTheme}
-                    placeholder="Select child category"
-                  />
-                </div>
-                <div className="col-lg-12 mt-3">
-                  <label className="form-label">Brand *</label>
-                  <ReactSelect
-                    id="brandSelect"
-                    instanceId="brandSelect"
-                    styles={reactSelectStyles}
-                    theme={reactSelectTheme}
-                    placeholder="Select brand"
-                  />
-                </div>
-                <div className="col-lg-12 mt-3">
-                  <label className="form-label">Made in</label>
-                  <ReactSelect
-                    id="madeInSelect"
-                    instanceId="madeInSelect"
-                    styles={reactSelectStyles}
-                    theme={reactSelectTheme}
-                    placeholder="Select country"
-                  />
-                </div>
+                ) : (
+                  <></>
+                )
+              }
+            </Modal>
+          </div>
 
-                <hr className="bg-dark-gray my-4" />
-
-                <div className="row g-3">
-                  <div className="col-6">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                      ></input>
-                      <label className="form-check-label">Out of stock</label>
-                    </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                      ></input>
-                      <label className="form-check-label">New arrival</label>
-                    </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                      ></input>
-                      <label className="form-check-label">Hidden</label>
-                    </div>
-                  </div>
+          <div className="card">
+            <div className="card-header bg-white py-3">
+              <h5 className="mb-0">Pricing</h5>
+            </div>
+            <div className="card-body">
+              <div className="row g-4">
+                <div className="col-lg-6">
+                  <Input
+                    label="Price *"
+                    id="priceInput"
+                    name="price"
+                    type="text"
+                    placeholder="Enter price"
+                  />
                 </div>
+                <div className="col-lg-6">
+                  <Input
+                    label="SKU"
+                    id="skuInput"
+                    name="sku"
+                    type="text"
+                    placeholder="Enter product sku"
+                  />
+                </div>
+                {/* <div className="col-lg-12">
+                  <label className="form-label">Discount</label>
+                  <div className="input-group">
+                    <Input
+                      id="discountInput"
+                      name="discount"
+                      type="text"
+                      placeholder="Enter discount"
+                    />
+                    <div className="d-flex">
+                      <select className="form-select rounded-0 border-start-0 bg-light">
+                        <option value="fixed">.00</option>
+                        <option value="percent">%</option>
+                      </select>
+                    </div>
+                    <div className="input-group-text">
+                      <div className="form-check mb-0">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                        ></input>
+                        <label className="form-check-label">Apply</label>
+                      </div>
+                    </div>
+                  </div>
+                </div> */}
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-header bg-white py-3">
+              <h5 className="mb-0">Images</h5>
+            </div>
+            <div className="card-body">
+              <div className="d-flex flex-wrap gap-2">
+                <button
+                  className="btn btn-light-gray hstack justify-content-center"
+                  style={{ width: 120, height: 120 }}
+                >
+                  <PlusIcon width={44} strokeWidth={2} />
+                </button>
               </div>
             </div>
           </div>

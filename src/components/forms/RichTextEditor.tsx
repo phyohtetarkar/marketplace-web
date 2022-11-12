@@ -8,7 +8,7 @@ export interface RichTextEditorInputProps {
   inline?: boolean;
   imageUploadPath?: string;
   onEditorChange?: OnEditorChange;
-  minHeight?: number;
+  minHeight?: number | string;
   noBorder?: boolean;
 }
 
@@ -37,7 +37,12 @@ function RichTextEditor({
       onInit={(evt, editor) => {
         //editorRef.current = editor;
 
-        //editor.getContainer().style.borderRadius = "0.25rem 0.25rem";
+        editor
+          .getContainer()
+          .getElementsByClassName("tox-edit-area__iframe")
+          .item(0)
+          ?.setAttribute("style", "background-color: #f9fafb");
+        editor.getContainer().style.borderRadius = "0.25rem 0.25rem";
         editor.getContainer().style.border = `${
           noBorder ? 0 : 1
         }px solid rgba(0, 0, 0, 0.125)`;

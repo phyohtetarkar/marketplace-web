@@ -95,11 +95,16 @@ $utilities-border-colors: map-loop(
 
 // $enable-rounded: false;
 
+$input-bg: #f9fafb;
+$input-focus-bg: #f9fafb;
+$input-border-color: #e5e7eb;
 $input-focus-border-color: tint-color($component-active-bg, 0%);
 $input-focus-box-shadow: none;
 $form-select-focus-border-color: $input-focus-border-color;
 $form-select-focus-box-shadow: none;
 $form-label-font-weight: 500;
+$form-select-bg: $input-bg;
+$form-select-border-color: $input-border-color;
 
 $accordion-button-focus-box-shadow: none;
 $accordion-border-width: 0;

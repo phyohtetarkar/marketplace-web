@@ -6,7 +6,6 @@ export const findProductById = `
       slug
       price
       images
-      available
       description
       mainCategoryID
       subCategoryID
@@ -50,7 +49,6 @@ export const findProductBySlug = `
         slug
         price
         images
-        available
         description
         mainCategoryID
         subCategoryID
@@ -87,7 +85,6 @@ export const findProducts = `
         slug
         price
         images
-        available
         description
         mainCategoryID
         subCategoryID
@@ -135,7 +132,6 @@ export const findProductsOrderByPrice = `
         slug
         price
         images
-        available
         description
         mainCategoryID
         subCategoryID

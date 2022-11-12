@@ -22,7 +22,6 @@ export const findFavoriteProductsByUser = `
             slug
             price
             images
-            available
             description
             discount {
               type

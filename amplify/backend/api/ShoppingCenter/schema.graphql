@@ -9,26 +9,64 @@ enum MemberRole {
   ADMIN
 }
 
-type Discount {
-  value: Float
-  type: String
+enum DiscountType {
+  PERCENT
+  VALUE
+}
+
+enum ProductStatus {
+  PUBLISHED
+  DRAFT
+}
+
+type ProductOption {
+  name: String!
+}
+
+type Banner @model @auth(rules: [{allow: public, operations: [read]}, {allow: groups, groups: ["Admins"]}]) {
+  id: ID!
+  image: String
+  link: String
+  position: Int!
+}
+
+type Category @model @auth(rules: [{allow: public, operations: [read]}, {allow: groups, groups: ["Admins"]}]) {
+  id: ID!
+  name: String!
+  slug: String!
+  image: String
+  categoryID: ID
+  products: [Product] @hasMany(indexName: "byCategory", fields: ["id"])
+}
+
+type Discount @model @auth(rules: [{allow: public, operations: [read]}, {allow: private}]) {
+  id: ID!
+  title: String!
+  value: Float!
+  type: DiscountType!
+  productCount: Int @default(value: "0")
+  shopID: ID! @index(name: "byShop", queryField: "getDiscountsByShop")
 }
 
 type Product @model @auth(rules: [{allow: public, operations: [read]}, {allow: private}]) {
   id: ID!
   name: String!
   slug: String! @index(name: "productBySlug", queryField: "getProductBySlug")
+  thumbnail: String
   images: [String]
-  price: Float!
-  discount: Discount
+  price: Float
+  sku: String
   description: String
-  createdBy: String
-  updatedBy: String
-  available: Boolean @default(value: "true")
-  suspended: Boolean @default(value: "false")
+  hasVariant: Boolean @default(value: "false")
   newArrival: Boolean @default(value: "false")
   outOfStock: Boolean @default(value: "false")
   deleted: Boolean @default(value: "false")
+  status: ProductStatus @default(value: "DRAFT")
+  suspended: Boolean @default(value: "false")
+  createdBy: String
+  updatedBy: String
+  discountID: ID
+  discount: Discount
   mainCategoryID: ID!
   subCategoryID: ID!
   categoryID: ID! @index(name: "byCategory")
@@ -45,8 +83,8 @@ type Shop @model @auth(rules: [{allow: public, operations: [read]}, {allow: priv
   name: String!
   slug: String! @index(name: "shopBySlug", queryField: "getShopBySlug")
   headline: String
+  logo: String
   cover: String
-  avatar: String
   description: String
   createdBy: String
   updatedBy: String
@@ -54,6 +92,7 @@ type Shop @model @auth(rules: [{allow: public, operations: [read]}, {allow: priv
   recommended: Boolean @default(value: "false")
   products: [Product] @hasMany(indexName: "byShop", fields: ["id"])
   members: [ShopMember] @hasMany(indexName: "byShop", fields: ["id"])
+  discounts: [Discount] @hasMany(indexName: "byShop", fields: ["id"])
 }
 
 type User @model @auth(rules: [{allow: private}]) {
@@ -70,15 +109,6 @@ type User @model @auth(rules: [{allow: private}]) {
   favoriteProducts: [FavoriteProduct] @hasMany(indexName: "byUser", fields: ["id"])
 }
 
-type Category @model @auth(rules: [{allow: public, operations: [read]}, {allow: groups, groups: ["Admins"]}]) {
-  id: ID!
-  name: String!
-  slug: String!
-  image: String
-  categoryID: ID
-  products: [Product] @hasMany(indexName: "byCategory", fields: ["id"])
-}
-
 type ShopMember @model @auth(rules: [{allow: private}]) {
   id: ID!
   role: MemberRole!
@@ -86,13 +116,6 @@ type ShopMember @model @auth(rules: [{allow: private}]) {
   userID: ID! @index(name: "byUser")
   shop: Shop @belongsTo(fields: ["shopID"])
   user: User @belongsTo(fields: ["userID"])
-}
-
-type Banner @model @auth(rules: [{allow: public, operations: [read]}, {allow: groups, groups: ["Admins"]}]) {
-  id: ID!
-  image: String
-  link: String
-  position: Int!
 }
 
 type UserAddress @model @auth(rules: [{allow: private}]) {
@@ -106,7 +129,7 @@ type UserAddress @model @auth(rules: [{allow: private}]) {
 
 type CartItem @model @auth(rules: [{allow: private}]) {
   id: ID!
-  quantity: Int
+  quantity: Int @default(value: "1")
   userID: ID! @index(name: "byUser", queryField: "cartItemsByUser")
   productID: ID! @index(name: "byProduct")
   product: Product @belongsTo(fields: ["productID"])
