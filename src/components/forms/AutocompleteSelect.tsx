@@ -4,11 +4,13 @@ import { usePopper } from "react-popper";
 import Input from "./Input";
 
 interface AutocompleteSelectProps<T, Value> {
-  id?: string;
+  referenceId?: string;
+  popperId?: string;
   options?: readonly T[];
   defaultValue?: T;
   placeholder?: string;
   maxHeight?: number;
+  error?: string;
   getOptionLabel: (op: T) => string;
   getOptionValue: (op: T) => Value;
   formatOptionLabel?: (op: T, selected: boolean) => ReactNode;
@@ -90,10 +92,6 @@ function AutocompleteSelect<T, Value>(
   }
 
   function renderPopper() {
-    if (!open) {
-      return null;
-    }
-
     const list = props.options ?? [];
 
     return (
@@ -105,12 +103,14 @@ function AutocompleteSelect<T, Value>(
           {list.length > 0 && (
             <>
               <div className="p-2">
-                <Input
-                  height={44}
-                  value={filter}
-                  onChange={(e) => setFilter(e.target.value)}
-                  autoFocus
-                />
+                {open && (
+                  <Input
+                    height={44}
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
+                    autoFocus={true}
+                  />
+                )}
               </div>
               <ul
                 className="list-unstyled mb-0 pb-2 scrollbar-custom"
@@ -153,40 +153,46 @@ function AutocompleteSelect<T, Value>(
     <>
       <div className="position-relative">
         <Input
-          id={props.id}
+          id={props.referenceId}
           value={selectedOption?.label ?? ""}
           className={open ? "border-primary" : ""}
           placeholder={props.placeholder ?? "Select"}
           ref={setReferenceElement}
           onClick={() => setOpen(!open)}
           onChange={() => {}}
+          error={props.error}
           style={{
             cursor: "default",
             caretColor: "transparent",
             paddingRight: "60px !important"
           }}
         />
-        <div
-          className="hstack gap-2 position-absolute end-0 top-50 translate-middle-y me-3"
-          style={{
-            pointerEvents: "none"
-          }}
-        >
-          {/* <div className="vr"></div> */}
-          <ChevronDownIcon
-            width={18}
-            strokeWidth={2.5}
-            className="text-dark-gray"
-          />
-        </div>
+        {!props.error && (
+          <div
+            className="hstack gap-2 position-absolute end-0 top-50 translate-middle-y me-3"
+            style={{
+              pointerEvents: "none"
+            }}
+          >
+            {/* <div className="vr"></div> */}
+            <ChevronDownIcon
+              width={18}
+              strokeWidth={2.5}
+              className="text-dark-gray"
+            />
+          </div>
+        )}
       </div>
 
       <div
+        id={props.popperId}
         ref={setPopperElement}
         style={{
           ...styles.popper,
           zIndex: 999,
-          width: referenceElement?.offsetWidth
+          width: referenceElement?.offsetWidth,
+          visibility: open ? "visible" : "hidden",
+          pointerEvents: open ? "auto" : "none"
         }}
         {...attributes.popper}
       >

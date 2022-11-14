@@ -2,35 +2,222 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateBanner = /* GraphQL */ `
+  subscription OnCreateBanner($filter: ModelSubscriptionBannerFilterInput) {
+    onCreateBanner(filter: $filter) {
+      id
+      image
+      link
+      position
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateBanner = /* GraphQL */ `
+  subscription OnUpdateBanner($filter: ModelSubscriptionBannerFilterInput) {
+    onUpdateBanner(filter: $filter) {
+      id
+      image
+      link
+      position
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteBanner = /* GraphQL */ `
+  subscription OnDeleteBanner($filter: ModelSubscriptionBannerFilterInput) {
+    onDeleteBanner(filter: $filter) {
+      id
+      image
+      link
+      position
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateCategory = /* GraphQL */ `
+  subscription OnCreateCategory($filter: ModelSubscriptionCategoryFilterInput) {
+    onCreateCategory(filter: $filter) {
+      id
+      name
+      slug
+      image
+      isMain
+      categoryID
+      category {
+        id
+        name
+        slug
+        image
+        isMain
+        categoryID
+        createdAt
+        updatedAt
+      }
+      products {
+        nextToken
+      }
+      categories {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCategory = /* GraphQL */ `
+  subscription OnUpdateCategory($filter: ModelSubscriptionCategoryFilterInput) {
+    onUpdateCategory(filter: $filter) {
+      id
+      name
+      slug
+      image
+      isMain
+      categoryID
+      category {
+        id
+        name
+        slug
+        image
+        isMain
+        categoryID
+        createdAt
+        updatedAt
+      }
+      products {
+        nextToken
+      }
+      categories {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCategory = /* GraphQL */ `
+  subscription OnDeleteCategory($filter: ModelSubscriptionCategoryFilterInput) {
+    onDeleteCategory(filter: $filter) {
+      id
+      name
+      slug
+      image
+      isMain
+      categoryID
+      category {
+        id
+        name
+        slug
+        image
+        isMain
+        categoryID
+        createdAt
+        updatedAt
+      }
+      products {
+        nextToken
+      }
+      categories {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateDiscount = /* GraphQL */ `
+  subscription OnCreateDiscount($filter: ModelSubscriptionDiscountFilterInput) {
+    onCreateDiscount(filter: $filter) {
+      id
+      title
+      value
+      type
+      productCount
+      shopID
+      products {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateDiscount = /* GraphQL */ `
+  subscription OnUpdateDiscount($filter: ModelSubscriptionDiscountFilterInput) {
+    onUpdateDiscount(filter: $filter) {
+      id
+      title
+      value
+      type
+      productCount
+      shopID
+      products {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteDiscount = /* GraphQL */ `
+  subscription OnDeleteDiscount($filter: ModelSubscriptionDiscountFilterInput) {
+    onDeleteDiscount(filter: $filter) {
+      id
+      title
+      value
+      type
+      productCount
+      shopID
+      products {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateProduct = /* GraphQL */ `
   subscription OnCreateProduct($filter: ModelSubscriptionProductFilterInput) {
     onCreateProduct(filter: $filter) {
       id
       name
       slug
+      thumbnail
       images
       price
-      discount {
-        value
-        type
-      }
+      sku
       description
-      createdBy
-      updatedBy
-      available
-      suspended
+      hasVariant
       newArrival
       outOfStock
       deleted
-      mainCategoryID
-      subCategoryID
+      featured
+      status
+      suspended
+      createdBy
+      updatedBy
+      discountID
       categoryID
       shopID
+      discount {
+        id
+        title
+        value
+        type
+        productCount
+        shopID
+        createdAt
+        updatedAt
+      }
       category {
         id
         name
         slug
         image
+        isMain
         categoryID
         createdAt
         updatedAt
@@ -40,8 +227,8 @@ export const onCreateProduct = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -68,29 +255,39 @@ export const onUpdateProduct = /* GraphQL */ `
       id
       name
       slug
+      thumbnail
       images
       price
-      discount {
-        value
-        type
-      }
+      sku
       description
-      createdBy
-      updatedBy
-      available
-      suspended
+      hasVariant
       newArrival
       outOfStock
       deleted
-      mainCategoryID
-      subCategoryID
+      featured
+      status
+      suspended
+      createdBy
+      updatedBy
+      discountID
       categoryID
       shopID
+      discount {
+        id
+        title
+        value
+        type
+        productCount
+        shopID
+        createdAt
+        updatedAt
+      }
       category {
         id
         name
         slug
         image
+        isMain
         categoryID
         createdAt
         updatedAt
@@ -100,8 +297,8 @@ export const onUpdateProduct = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -128,29 +325,39 @@ export const onDeleteProduct = /* GraphQL */ `
       id
       name
       slug
+      thumbnail
       images
       price
-      discount {
-        value
-        type
-      }
+      sku
       description
-      createdBy
-      updatedBy
-      available
-      suspended
+      hasVariant
       newArrival
       outOfStock
       deleted
-      mainCategoryID
-      subCategoryID
+      featured
+      status
+      suspended
+      createdBy
+      updatedBy
+      discountID
       categoryID
       shopID
+      discount {
+        id
+        title
+        value
+        type
+        productCount
+        shopID
+        createdAt
+        updatedAt
+      }
       category {
         id
         name
         slug
         image
+        isMain
         categoryID
         createdAt
         updatedAt
@@ -160,8 +367,8 @@ export const onDeleteProduct = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -189,8 +396,8 @@ export const onCreateShop = /* GraphQL */ `
       name
       slug
       headline
+      logo
       cover
-      avatar
       description
       createdBy
       updatedBy
@@ -200,6 +407,9 @@ export const onCreateShop = /* GraphQL */ `
         nextToken
       }
       members {
+        nextToken
+      }
+      discounts {
         nextToken
       }
       createdAt
@@ -214,8 +424,8 @@ export const onUpdateShop = /* GraphQL */ `
       name
       slug
       headline
+      logo
       cover
-      avatar
       description
       createdBy
       updatedBy
@@ -225,6 +435,9 @@ export const onUpdateShop = /* GraphQL */ `
         nextToken
       }
       members {
+        nextToken
+      }
+      discounts {
         nextToken
       }
       createdAt
@@ -239,8 +452,8 @@ export const onDeleteShop = /* GraphQL */ `
       name
       slug
       headline
+      logo
       cover
-      avatar
       description
       createdBy
       updatedBy
@@ -250,6 +463,9 @@ export const onDeleteShop = /* GraphQL */ `
         nextToken
       }
       members {
+        nextToken
+      }
+      discounts {
         nextToken
       }
       createdAt
@@ -338,54 +554,6 @@ export const onDeleteUser = /* GraphQL */ `
     }
   }
 `;
-export const onCreateCategory = /* GraphQL */ `
-  subscription OnCreateCategory($filter: ModelSubscriptionCategoryFilterInput) {
-    onCreateCategory(filter: $filter) {
-      id
-      name
-      slug
-      image
-      categoryID
-      products {
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateCategory = /* GraphQL */ `
-  subscription OnUpdateCategory($filter: ModelSubscriptionCategoryFilterInput) {
-    onUpdateCategory(filter: $filter) {
-      id
-      name
-      slug
-      image
-      categoryID
-      products {
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteCategory = /* GraphQL */ `
-  subscription OnDeleteCategory($filter: ModelSubscriptionCategoryFilterInput) {
-    onDeleteCategory(filter: $filter) {
-      id
-      name
-      slug
-      image
-      categoryID
-      products {
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateShopMember = /* GraphQL */ `
   subscription OnCreateShopMember(
     $filter: ModelSubscriptionShopMemberFilterInput
@@ -400,8 +568,8 @@ export const onCreateShopMember = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -440,8 +608,8 @@ export const onUpdateShopMember = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -480,8 +648,8 @@ export const onDeleteShopMember = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -501,42 +669,6 @@ export const onDeleteShopMember = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateBanner = /* GraphQL */ `
-  subscription OnCreateBanner($filter: ModelSubscriptionBannerFilterInput) {
-    onCreateBanner(filter: $filter) {
-      id
-      image
-      link
-      position
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateBanner = /* GraphQL */ `
-  subscription OnUpdateBanner($filter: ModelSubscriptionBannerFilterInput) {
-    onUpdateBanner(filter: $filter) {
-      id
-      image
-      link
-      position
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteBanner = /* GraphQL */ `
-  subscription OnDeleteBanner($filter: ModelSubscriptionBannerFilterInput) {
-    onDeleteBanner(filter: $filter) {
-      id
-      image
-      link
-      position
       createdAt
       updatedAt
     }
@@ -604,18 +736,21 @@ export const onCreateCartItem = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type
@@ -642,18 +777,21 @@ export const onUpdateCartItem = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type
@@ -680,18 +818,21 @@ export const onDeleteCartItem = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type
@@ -717,18 +858,21 @@ export const onCreateFavoriteProduct = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type
@@ -754,18 +898,21 @@ export const onUpdateFavoriteProduct = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type
@@ -791,18 +938,21 @@ export const onDeleteFavoriteProduct = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type

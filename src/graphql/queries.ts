@@ -2,35 +2,194 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getBanner = /* GraphQL */ `
+  query GetBanner($id: ID!) {
+    getBanner(id: $id) {
+      id
+      image
+      link
+      position
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listBanners = /* GraphQL */ `
+  query ListBanners(
+    $filter: ModelBannerFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listBanners(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        image
+        link
+        position
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getCategory = /* GraphQL */ `
+  query GetCategory($id: ID!) {
+    getCategory(id: $id) {
+      id
+      name
+      slug
+      image
+      isMain
+      categoryID
+      category {
+        id
+        name
+        slug
+        image
+        isMain
+        categoryID
+        createdAt
+        updatedAt
+      }
+      products {
+        nextToken
+      }
+      categories {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listCategories = /* GraphQL */ `
+  query ListCategories(
+    $filter: ModelCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCategories(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        slug
+        image
+        isMain
+        categoryID
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getDiscount = /* GraphQL */ `
+  query GetDiscount($id: ID!) {
+    getDiscount(id: $id) {
+      id
+      title
+      value
+      type
+      productCount
+      shopID
+      products {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listDiscounts = /* GraphQL */ `
+  query ListDiscounts(
+    $filter: ModelDiscountFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listDiscounts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        value
+        type
+        productCount
+        shopID
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getDiscountsByShop = /* GraphQL */ `
+  query GetDiscountsByShop(
+    $shopID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelDiscountFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getDiscountsByShop(
+      shopID: $shopID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        value
+        type
+        productCount
+        shopID
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getProduct = /* GraphQL */ `
   query GetProduct($id: ID!) {
     getProduct(id: $id) {
       id
       name
       slug
+      thumbnail
       images
       price
-      discount {
-        value
-        type
-      }
+      sku
       description
-      createdBy
-      updatedBy
-      available
-      suspended
+      hasVariant
       newArrival
       outOfStock
       deleted
-      mainCategoryID
-      subCategoryID
+      featured
+      status
+      suspended
+      createdBy
+      updatedBy
+      discountID
       categoryID
       shopID
+      discount {
+        id
+        title
+        value
+        type
+        productCount
+        shopID
+        createdAt
+        updatedAt
+      }
       category {
         id
         name
         slug
         image
+        isMain
         categoryID
         createdAt
         updatedAt
@@ -40,8 +199,8 @@ export const getProduct = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -73,18 +232,21 @@ export const listProducts = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type
@@ -114,18 +276,21 @@ export const getProductBySlug = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type
@@ -157,18 +322,21 @@ export const productsByPrice = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type
@@ -186,8 +354,8 @@ export const getShop = /* GraphQL */ `
       name
       slug
       headline
+      logo
       cover
-      avatar
       description
       createdBy
       updatedBy
@@ -197,6 +365,9 @@ export const getShop = /* GraphQL */ `
         nextToken
       }
       members {
+        nextToken
+      }
+      discounts {
         nextToken
       }
       createdAt
@@ -216,8 +387,8 @@ export const listShops = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -250,8 +421,8 @@ export const getShopBySlug = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -313,42 +484,6 @@ export const listUsers = /* GraphQL */ `
     }
   }
 `;
-export const getCategory = /* GraphQL */ `
-  query GetCategory($id: ID!) {
-    getCategory(id: $id) {
-      id
-      name
-      slug
-      image
-      categoryID
-      products {
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listCategories = /* GraphQL */ `
-  query ListCategories(
-    $filter: ModelCategoryFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listCategories(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        slug
-        image
-        categoryID
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getShopMember = /* GraphQL */ `
   query GetShopMember($id: ID!) {
     getShopMember(id: $id) {
@@ -361,8 +496,8 @@ export const getShopMember = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -399,37 +534,6 @@ export const listShopMembers = /* GraphQL */ `
         role
         shopID
         userID
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getBanner = /* GraphQL */ `
-  query GetBanner($id: ID!) {
-    getBanner(id: $id) {
-      id
-      image
-      link
-      position
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listBanners = /* GraphQL */ `
-  query ListBanners(
-    $filter: ModelBannerFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listBanners(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        image
-        link
-        position
         createdAt
         updatedAt
       }
@@ -483,18 +587,21 @@ export const getCartItem = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type
@@ -565,18 +672,21 @@ export const getFavoriteProduct = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type

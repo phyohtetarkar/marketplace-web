@@ -7,12 +7,6 @@ export const findProductById = `
       price
       images
       description
-      mainCategoryID
-      subCategoryID
-      discount {
-        type
-        value
-      }
       category {
         id
         name
@@ -21,7 +15,7 @@ export const findProductById = `
       shop {
         id
         name
-        avatar
+        logo
         slug
       }
     }
@@ -50,12 +44,6 @@ export const findProductBySlug = `
         price
         images
         description
-        mainCategoryID
-        subCategoryID
-        discount {
-          type
-          value
-        }
         category {
           id
           name
@@ -64,7 +52,7 @@ export const findProductBySlug = `
         shop {
           id
           name
-          avatar
+          logo
           slug
         }
       }
@@ -86,12 +74,6 @@ export const findProducts = `
         price
         images
         description
-        mainCategoryID
-        subCategoryID
-        discount {
-          type
-          value
-        }
         category {
           id
           name
@@ -100,7 +82,7 @@ export const findProducts = `
         shop {
           id
           name
-          avatar
+          logo
           slug
         }
       }
@@ -133,12 +115,6 @@ export const findProductsOrderByPrice = `
         price
         images
         description
-        mainCategoryID
-        subCategoryID
-        discount {
-          type
-          value
-        }
         category {
           id
           name
@@ -147,7 +123,7 @@ export const findProductsOrderByPrice = `
         shop {
           id
           name
-          avatar
+          logo
           slug
         }
       }

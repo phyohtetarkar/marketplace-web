@@ -105,21 +105,24 @@ export type Product = {
   id: string,
   name: string,
   slug: string,
+  thumbnail?: string | null,
   images?: Array< string | null > | null,
-  price: number,
-  discount?: Discount | null,
+  price?: number | null,
+  sku?: string | null,
   description?: string | null,
-  createdBy?: string | null,
-  updatedBy?: string | null,
-  available?: boolean | null,
-  suspended?: boolean | null,
+  hasVariant?: boolean | null,
   newArrival?: boolean | null,
   outOfStock?: boolean | null,
   deleted?: boolean | null,
-  mainCategoryID: string,
-  subCategoryID: string,
+  featured?: boolean | null,
+  status?: ProductStatus | null,
+  suspended?: boolean | null,
+  createdBy?: string | null,
+  updatedBy?: string | null,
+  discountID?: string | null,
   categoryID: string,
   shopID: string,
+  discount?: Discount | null,
   category?: Category | null,
   shop?: Shop | null,
   favoriteUsers?: ModelFavoriteProductConnection | null,
@@ -129,10 +132,37 @@ export type Product = {
   updatedAt: string,
 };
 
+export enum ProductStatus {
+  PUBLISHED = "PUBLISHED",
+  DRAFT = "DRAFT",
+  ARCHIVED = "ARCHIVED",
+  DENIED = "DENIED",
+}
+
+
 export type Discount = {
   __typename: "Discount",
-  value?: number | null,
-  type?: string | null,
+  id: string,
+  title: string,
+  value: number,
+  type: DiscountType,
+  productCount?: number | null,
+  shopID: string,
+  products?: ModelProductConnection | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export enum DiscountType {
+  PERCENTAGE = "PERCENTAGE",
+  FIXED_AMOUNT = "FIXED_AMOUNT",
+}
+
+
+export type ModelProductConnection = {
+  __typename: "ModelProductConnection",
+  items:  Array<Product | null >,
+  nextToken?: string | null,
 };
 
 export type Category = {
@@ -141,15 +171,18 @@ export type Category = {
   name: string,
   slug: string,
   image?: string | null,
+  isMain?: boolean | null,
   categoryID?: string | null,
+  category?: Category | null,
   products?: ModelProductConnection | null,
+  categories?: ModelCategoryConnection | null,
   createdAt: string,
   updatedAt: string,
 };
 
-export type ModelProductConnection = {
-  __typename: "ModelProductConnection",
-  items:  Array<Product | null >,
+export type ModelCategoryConnection = {
+  __typename: "ModelCategoryConnection",
+  items:  Array<Category | null >,
   nextToken?: string | null,
 };
 
@@ -159,8 +192,8 @@ export type Shop = {
   name: string,
   slug: string,
   headline?: string | null,
+  logo?: string | null,
   cover?: string | null,
-  avatar?: string | null,
   description?: string | null,
   createdBy?: string | null,
   updatedBy?: string | null,
@@ -168,6 +201,7 @@ export type Shop = {
   recommended?: boolean | null,
   products?: ModelProductConnection | null,
   members?: ModelShopMemberConnection | null,
+  discounts?: ModelDiscountConnection | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -261,6 +295,12 @@ export type FavoriteProduct = {
   updatedAt: string,
 };
 
+export type ModelDiscountConnection = {
+  __typename: "ModelDiscountConnection",
+  items:  Array<Discount | null >,
+  nextToken?: string | null,
+};
+
 export type DeleteCartItemInput = {
   id: string,
 };
@@ -287,16 +327,18 @@ export type ModelCategoryFilterInput = {
   name?: ModelStringInput | null,
   slug?: ModelStringInput | null,
   image?: ModelStringInput | null,
+  isMain?: ModelBooleanInput | null,
   categoryID?: ModelIDInput | null,
   and?: Array< ModelCategoryFilterInput | null > | null,
   or?: Array< ModelCategoryFilterInput | null > | null,
   not?: ModelCategoryFilterInput | null,
 };
 
-export type ModelCategoryConnection = {
-  __typename: "ModelCategoryConnection",
-  items:  Array<Category | null >,
-  nextToken?: string | null,
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
 };
 
 export type CreateFavoriteProductInput = {
@@ -333,18 +375,21 @@ export type ModelProductFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
   slug?: ModelStringInput | null,
+  thumbnail?: ModelStringInput | null,
   images?: ModelStringInput | null,
   price?: ModelFloatInput | null,
+  sku?: ModelStringInput | null,
   description?: ModelStringInput | null,
-  createdBy?: ModelStringInput | null,
-  updatedBy?: ModelStringInput | null,
-  available?: ModelBooleanInput | null,
-  suspended?: ModelBooleanInput | null,
+  hasVariant?: ModelBooleanInput | null,
   newArrival?: ModelBooleanInput | null,
   outOfStock?: ModelBooleanInput | null,
   deleted?: ModelBooleanInput | null,
-  mainCategoryID?: ModelIDInput | null,
-  subCategoryID?: ModelIDInput | null,
+  featured?: ModelBooleanInput | null,
+  status?: ModelProductStatusInput | null,
+  suspended?: ModelBooleanInput | null,
+  createdBy?: ModelStringInput | null,
+  updatedBy?: ModelStringInput | null,
+  discountID?: ModelIDInput | null,
   categoryID?: ModelIDInput | null,
   shopID?: ModelIDInput | null,
   type?: ModelStringInput | null,
@@ -365,11 +410,9 @@ export type ModelFloatInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
+export type ModelProductStatusInput = {
+  eq?: ProductStatus | null,
+  ne?: ProductStatus | null,
 };
 
 export type ModelFloatKeyConditionInput = {
@@ -386,8 +429,8 @@ export type ModelShopFilterInput = {
   name?: ModelStringInput | null,
   slug?: ModelStringInput | null,
   headline?: ModelStringInput | null,
+  logo?: ModelStringInput | null,
   cover?: ModelStringInput | null,
-  avatar?: ModelStringInput | null,
   description?: ModelStringInput | null,
   createdBy?: ModelStringInput | null,
   updatedBy?: ModelStringInput | null,
@@ -404,48 +447,156 @@ export type ModelShopConnection = {
   nextToken?: string | null,
 };
 
+export type CreateBannerInput = {
+  id?: string | null,
+  image?: string | null,
+  link?: string | null,
+  position: number,
+};
+
+export type ModelBannerConditionInput = {
+  image?: ModelStringInput | null,
+  link?: ModelStringInput | null,
+  position?: ModelIntInput | null,
+  and?: Array< ModelBannerConditionInput | null > | null,
+  or?: Array< ModelBannerConditionInput | null > | null,
+  not?: ModelBannerConditionInput | null,
+};
+
+export type Banner = {
+  __typename: "Banner",
+  id: string,
+  image?: string | null,
+  link?: string | null,
+  position: number,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateBannerInput = {
+  id: string,
+  image?: string | null,
+  link?: string | null,
+  position?: number | null,
+};
+
+export type DeleteBannerInput = {
+  id: string,
+};
+
+export type CreateCategoryInput = {
+  id?: string | null,
+  name: string,
+  slug: string,
+  image?: string | null,
+  isMain?: boolean | null,
+  categoryID?: string | null,
+};
+
+export type ModelCategoryConditionInput = {
+  name?: ModelStringInput | null,
+  slug?: ModelStringInput | null,
+  image?: ModelStringInput | null,
+  isMain?: ModelBooleanInput | null,
+  categoryID?: ModelIDInput | null,
+  and?: Array< ModelCategoryConditionInput | null > | null,
+  or?: Array< ModelCategoryConditionInput | null > | null,
+  not?: ModelCategoryConditionInput | null,
+};
+
+export type UpdateCategoryInput = {
+  id: string,
+  name?: string | null,
+  slug?: string | null,
+  image?: string | null,
+  isMain?: boolean | null,
+  categoryID?: string | null,
+};
+
+export type DeleteCategoryInput = {
+  id: string,
+};
+
+export type CreateDiscountInput = {
+  id?: string | null,
+  title: string,
+  value: number,
+  type: DiscountType,
+  productCount?: number | null,
+  shopID: string,
+};
+
+export type ModelDiscountConditionInput = {
+  title?: ModelStringInput | null,
+  value?: ModelFloatInput | null,
+  type?: ModelDiscountTypeInput | null,
+  productCount?: ModelIntInput | null,
+  shopID?: ModelIDInput | null,
+  and?: Array< ModelDiscountConditionInput | null > | null,
+  or?: Array< ModelDiscountConditionInput | null > | null,
+  not?: ModelDiscountConditionInput | null,
+};
+
+export type ModelDiscountTypeInput = {
+  eq?: DiscountType | null,
+  ne?: DiscountType | null,
+};
+
+export type UpdateDiscountInput = {
+  id: string,
+  title?: string | null,
+  value?: number | null,
+  type?: DiscountType | null,
+  productCount?: number | null,
+  shopID?: string | null,
+};
+
+export type DeleteDiscountInput = {
+  id: string,
+};
+
 export type CreateProductInput = {
   id?: string | null,
   name: string,
   slug: string,
+  thumbnail?: string | null,
   images?: Array< string | null > | null,
-  price: number,
-  discount?: DiscountInput | null,
+  price?: number | null,
+  sku?: string | null,
   description?: string | null,
-  createdBy?: string | null,
-  updatedBy?: string | null,
-  available?: boolean | null,
-  suspended?: boolean | null,
+  hasVariant?: boolean | null,
   newArrival?: boolean | null,
   outOfStock?: boolean | null,
   deleted?: boolean | null,
-  mainCategoryID: string,
-  subCategoryID: string,
+  featured?: boolean | null,
+  status?: ProductStatus | null,
+  suspended?: boolean | null,
+  createdBy?: string | null,
+  updatedBy?: string | null,
+  discountID?: string | null,
   categoryID: string,
   shopID: string,
-  type?: string | null,
-};
-
-export type DiscountInput = {
-  value?: number | null,
   type?: string | null,
 };
 
 export type ModelProductConditionInput = {
   name?: ModelStringInput | null,
   slug?: ModelStringInput | null,
+  thumbnail?: ModelStringInput | null,
   images?: ModelStringInput | null,
   price?: ModelFloatInput | null,
+  sku?: ModelStringInput | null,
   description?: ModelStringInput | null,
-  createdBy?: ModelStringInput | null,
-  updatedBy?: ModelStringInput | null,
-  available?: ModelBooleanInput | null,
-  suspended?: ModelBooleanInput | null,
+  hasVariant?: ModelBooleanInput | null,
   newArrival?: ModelBooleanInput | null,
   outOfStock?: ModelBooleanInput | null,
   deleted?: ModelBooleanInput | null,
-  mainCategoryID?: ModelIDInput | null,
-  subCategoryID?: ModelIDInput | null,
+  featured?: ModelBooleanInput | null,
+  status?: ModelProductStatusInput | null,
+  suspended?: ModelBooleanInput | null,
+  createdBy?: ModelStringInput | null,
+  updatedBy?: ModelStringInput | null,
+  discountID?: ModelIDInput | null,
   categoryID?: ModelIDInput | null,
   shopID?: ModelIDInput | null,
   type?: ModelStringInput | null,
@@ -458,19 +609,21 @@ export type UpdateProductInput = {
   id: string,
   name?: string | null,
   slug?: string | null,
+  thumbnail?: string | null,
   images?: Array< string | null > | null,
   price?: number | null,
-  discount?: DiscountInput | null,
+  sku?: string | null,
   description?: string | null,
-  createdBy?: string | null,
-  updatedBy?: string | null,
-  available?: boolean | null,
-  suspended?: boolean | null,
+  hasVariant?: boolean | null,
   newArrival?: boolean | null,
   outOfStock?: boolean | null,
   deleted?: boolean | null,
-  mainCategoryID?: string | null,
-  subCategoryID?: string | null,
+  featured?: boolean | null,
+  status?: ProductStatus | null,
+  suspended?: boolean | null,
+  createdBy?: string | null,
+  updatedBy?: string | null,
+  discountID?: string | null,
   categoryID?: string | null,
   shopID?: string | null,
   type?: string | null,
@@ -485,8 +638,8 @@ export type CreateShopInput = {
   name: string,
   slug: string,
   headline?: string | null,
+  logo?: string | null,
   cover?: string | null,
-  avatar?: string | null,
   description?: string | null,
   createdBy?: string | null,
   updatedBy?: string | null,
@@ -498,8 +651,8 @@ export type ModelShopConditionInput = {
   name?: ModelStringInput | null,
   slug?: ModelStringInput | null,
   headline?: ModelStringInput | null,
+  logo?: ModelStringInput | null,
   cover?: ModelStringInput | null,
-  avatar?: ModelStringInput | null,
   description?: ModelStringInput | null,
   createdBy?: ModelStringInput | null,
   updatedBy?: ModelStringInput | null,
@@ -515,8 +668,8 @@ export type UpdateShopInput = {
   name?: string | null,
   slug?: string | null,
   headline?: string | null,
+  logo?: string | null,
   cover?: string | null,
-  avatar?: string | null,
   description?: string | null,
   createdBy?: string | null,
   updatedBy?: string | null,
@@ -569,36 +722,6 @@ export type DeleteUserInput = {
   id: string,
 };
 
-export type CreateCategoryInput = {
-  id?: string | null,
-  name: string,
-  slug: string,
-  image?: string | null,
-  categoryID?: string | null,
-};
-
-export type ModelCategoryConditionInput = {
-  name?: ModelStringInput | null,
-  slug?: ModelStringInput | null,
-  image?: ModelStringInput | null,
-  categoryID?: ModelIDInput | null,
-  and?: Array< ModelCategoryConditionInput | null > | null,
-  or?: Array< ModelCategoryConditionInput | null > | null,
-  not?: ModelCategoryConditionInput | null,
-};
-
-export type UpdateCategoryInput = {
-  id: string,
-  name?: string | null,
-  slug?: string | null,
-  image?: string | null,
-  categoryID?: string | null,
-};
-
-export type DeleteCategoryInput = {
-  id: string,
-};
-
 export type CreateShopMemberInput = {
   id?: string | null,
   role: MemberRole,
@@ -628,43 +751,6 @@ export type UpdateShopMemberInput = {
 };
 
 export type DeleteShopMemberInput = {
-  id: string,
-};
-
-export type CreateBannerInput = {
-  id?: string | null,
-  image?: string | null,
-  link?: string | null,
-  position: number,
-};
-
-export type ModelBannerConditionInput = {
-  image?: ModelStringInput | null,
-  link?: ModelStringInput | null,
-  position?: ModelIntInput | null,
-  and?: Array< ModelBannerConditionInput | null > | null,
-  or?: Array< ModelBannerConditionInput | null > | null,
-  not?: ModelBannerConditionInput | null,
-};
-
-export type Banner = {
-  __typename: "Banner",
-  id: string,
-  image?: string | null,
-  link?: string | null,
-  position: number,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type UpdateBannerInput = {
-  id: string,
-  image?: string | null,
-  link?: string | null,
-  position?: number | null,
-};
-
-export type DeleteBannerInput = {
   id: string,
 };
 
@@ -716,6 +802,34 @@ export type UpdateFavoriteProductInput = {
   owner?: string | null,
 };
 
+export type ModelBannerFilterInput = {
+  id?: ModelIDInput | null,
+  image?: ModelStringInput | null,
+  link?: ModelStringInput | null,
+  position?: ModelIntInput | null,
+  and?: Array< ModelBannerFilterInput | null > | null,
+  or?: Array< ModelBannerFilterInput | null > | null,
+  not?: ModelBannerFilterInput | null,
+};
+
+export type ModelBannerConnection = {
+  __typename: "ModelBannerConnection",
+  items:  Array<Banner | null >,
+  nextToken?: string | null,
+};
+
+export type ModelDiscountFilterInput = {
+  id?: ModelIDInput | null,
+  title?: ModelStringInput | null,
+  value?: ModelFloatInput | null,
+  type?: ModelDiscountTypeInput | null,
+  productCount?: ModelIntInput | null,
+  shopID?: ModelIDInput | null,
+  and?: Array< ModelDiscountFilterInput | null > | null,
+  or?: Array< ModelDiscountFilterInput | null > | null,
+  not?: ModelDiscountFilterInput | null,
+};
+
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -745,22 +859,6 @@ export type ModelShopMemberFilterInput = {
   not?: ModelShopMemberFilterInput | null,
 };
 
-export type ModelBannerFilterInput = {
-  id?: ModelIDInput | null,
-  image?: ModelStringInput | null,
-  link?: ModelStringInput | null,
-  position?: ModelIntInput | null,
-  and?: Array< ModelBannerFilterInput | null > | null,
-  or?: Array< ModelBannerFilterInput | null > | null,
-  not?: ModelBannerFilterInput | null,
-};
-
-export type ModelBannerConnection = {
-  __typename: "ModelBannerConnection",
-  items:  Array<Banner | null >,
-  nextToken?: string | null,
-};
-
 export type ModelUserAddressFilterInput = {
   id?: ModelIDInput | null,
   city?: ModelStringInput | null,
@@ -773,27 +871,13 @@ export type ModelUserAddressFilterInput = {
   not?: ModelUserAddressFilterInput | null,
 };
 
-export type ModelSubscriptionProductFilterInput = {
+export type ModelSubscriptionBannerFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  slug?: ModelSubscriptionStringInput | null,
-  images?: ModelSubscriptionStringInput | null,
-  price?: ModelSubscriptionFloatInput | null,
-  description?: ModelSubscriptionStringInput | null,
-  createdBy?: ModelSubscriptionStringInput | null,
-  updatedBy?: ModelSubscriptionStringInput | null,
-  available?: ModelSubscriptionBooleanInput | null,
-  suspended?: ModelSubscriptionBooleanInput | null,
-  newArrival?: ModelSubscriptionBooleanInput | null,
-  outOfStock?: ModelSubscriptionBooleanInput | null,
-  deleted?: ModelSubscriptionBooleanInput | null,
-  mainCategoryID?: ModelSubscriptionIDInput | null,
-  subCategoryID?: ModelSubscriptionIDInput | null,
-  categoryID?: ModelSubscriptionIDInput | null,
-  shopID?: ModelSubscriptionIDInput | null,
-  type?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionProductFilterInput | null > | null,
-  or?: Array< ModelSubscriptionProductFilterInput | null > | null,
+  image?: ModelSubscriptionStringInput | null,
+  link?: ModelSubscriptionStringInput | null,
+  position?: ModelSubscriptionIntInput | null,
+  and?: Array< ModelSubscriptionBannerFilterInput | null > | null,
+  or?: Array< ModelSubscriptionBannerFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -826,6 +910,45 @@ export type ModelSubscriptionStringInput = {
   notIn?: Array< string | null > | null,
 };
 
+export type ModelSubscriptionIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  in?: Array< number | null > | null,
+  notIn?: Array< number | null > | null,
+};
+
+export type ModelSubscriptionCategoryFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  slug?: ModelSubscriptionStringInput | null,
+  image?: ModelSubscriptionStringInput | null,
+  isMain?: ModelSubscriptionBooleanInput | null,
+  categoryID?: ModelSubscriptionIDInput | null,
+  and?: Array< ModelSubscriptionCategoryFilterInput | null > | null,
+  or?: Array< ModelSubscriptionCategoryFilterInput | null > | null,
+};
+
+export type ModelSubscriptionBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+};
+
+export type ModelSubscriptionDiscountFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  title?: ModelSubscriptionStringInput | null,
+  value?: ModelSubscriptionFloatInput | null,
+  type?: ModelSubscriptionStringInput | null,
+  productCount?: ModelSubscriptionIntInput | null,
+  shopID?: ModelSubscriptionIDInput | null,
+  and?: Array< ModelSubscriptionDiscountFilterInput | null > | null,
+  or?: Array< ModelSubscriptionDiscountFilterInput | null > | null,
+};
+
 export type ModelSubscriptionFloatInput = {
   ne?: number | null,
   eq?: number | null,
@@ -838,9 +961,30 @@ export type ModelSubscriptionFloatInput = {
   notIn?: Array< number | null > | null,
 };
 
-export type ModelSubscriptionBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
+export type ModelSubscriptionProductFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  slug?: ModelSubscriptionStringInput | null,
+  thumbnail?: ModelSubscriptionStringInput | null,
+  images?: ModelSubscriptionStringInput | null,
+  price?: ModelSubscriptionFloatInput | null,
+  sku?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  hasVariant?: ModelSubscriptionBooleanInput | null,
+  newArrival?: ModelSubscriptionBooleanInput | null,
+  outOfStock?: ModelSubscriptionBooleanInput | null,
+  deleted?: ModelSubscriptionBooleanInput | null,
+  featured?: ModelSubscriptionBooleanInput | null,
+  status?: ModelSubscriptionStringInput | null,
+  suspended?: ModelSubscriptionBooleanInput | null,
+  createdBy?: ModelSubscriptionStringInput | null,
+  updatedBy?: ModelSubscriptionStringInput | null,
+  discountID?: ModelSubscriptionIDInput | null,
+  categoryID?: ModelSubscriptionIDInput | null,
+  shopID?: ModelSubscriptionIDInput | null,
+  type?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionProductFilterInput | null > | null,
+  or?: Array< ModelSubscriptionProductFilterInput | null > | null,
 };
 
 export type ModelSubscriptionShopFilterInput = {
@@ -848,8 +992,8 @@ export type ModelSubscriptionShopFilterInput = {
   name?: ModelSubscriptionStringInput | null,
   slug?: ModelSubscriptionStringInput | null,
   headline?: ModelSubscriptionStringInput | null,
+  logo?: ModelSubscriptionStringInput | null,
   cover?: ModelSubscriptionStringInput | null,
-  avatar?: ModelSubscriptionStringInput | null,
   description?: ModelSubscriptionStringInput | null,
   createdBy?: ModelSubscriptionStringInput | null,
   updatedBy?: ModelSubscriptionStringInput | null,
@@ -871,16 +1015,6 @@ export type ModelSubscriptionUserFilterInput = {
   or?: Array< ModelSubscriptionUserFilterInput | null > | null,
 };
 
-export type ModelSubscriptionCategoryFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  slug?: ModelSubscriptionStringInput | null,
-  image?: ModelSubscriptionStringInput | null,
-  categoryID?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionCategoryFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCategoryFilterInput | null > | null,
-};
-
 export type ModelSubscriptionShopMemberFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   role?: ModelSubscriptionStringInput | null,
@@ -888,27 +1022,6 @@ export type ModelSubscriptionShopMemberFilterInput = {
   userID?: ModelSubscriptionIDInput | null,
   and?: Array< ModelSubscriptionShopMemberFilterInput | null > | null,
   or?: Array< ModelSubscriptionShopMemberFilterInput | null > | null,
-};
-
-export type ModelSubscriptionBannerFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  image?: ModelSubscriptionStringInput | null,
-  link?: ModelSubscriptionStringInput | null,
-  position?: ModelSubscriptionIntInput | null,
-  and?: Array< ModelSubscriptionBannerFilterInput | null > | null,
-  or?: Array< ModelSubscriptionBannerFilterInput | null > | null,
-};
-
-export type ModelSubscriptionIntInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  in?: Array< number | null > | null,
-  notIn?: Array< number | null > | null,
 };
 
 export type ModelSubscriptionUserAddressFilterInput = {
@@ -988,7 +1101,7 @@ export type FindCartItemsByUserQuery = {
         name: string,
         slug: string,
         images?: Array< string | null > | null,
-        price: number,
+        price?: number | null,
         category?:  {
           __typename: "Category",
           id: string,
@@ -1074,15 +1187,9 @@ export type FindFavoriteProductsByUserQuery = {
         id: string,
         name: string,
         slug: string,
-        price: number,
+        price?: number | null,
         images?: Array< string | null > | null,
-        available?: boolean | null,
         description?: string | null,
-        discount?:  {
-          __typename: "Discount",
-          type?: string | null,
-          value?: number | null,
-        } | null,
         category?:  {
           __typename: "Category",
           id: string,
@@ -1093,7 +1200,7 @@ export type FindFavoriteProductsByUserQuery = {
           __typename: "Shop",
           id: string,
           name: string,
-          avatar?: string | null,
+          logo?: string | null,
           slug: string,
         } | null,
       } | null,
@@ -1112,17 +1219,9 @@ export type FindProductByIdQuery = {
     id: string,
     name: string,
     slug: string,
-    price: number,
+    price?: number | null,
     images?: Array< string | null > | null,
-    available?: boolean | null,
     description?: string | null,
-    mainCategoryID: string,
-    subCategoryID: string,
-    discount?:  {
-      __typename: "Discount",
-      type?: string | null,
-      value?: number | null,
-    } | null,
     category?:  {
       __typename: "Category",
       id: string,
@@ -1133,7 +1232,7 @@ export type FindProductByIdQuery = {
       __typename: "Shop",
       id: string,
       name: string,
-      avatar?: string | null,
+      logo?: string | null,
       slug: string,
     } | null,
   } | null,
@@ -1155,17 +1254,9 @@ export type FindProductBySlugQuery = {
       id: string,
       name: string,
       slug: string,
-      price: number,
+      price?: number | null,
       images?: Array< string | null > | null,
-      available?: boolean | null,
       description?: string | null,
-      mainCategoryID: string,
-      subCategoryID: string,
-      discount?:  {
-        __typename: "Discount",
-        type?: string | null,
-        value?: number | null,
-      } | null,
       category?:  {
         __typename: "Category",
         id: string,
@@ -1176,7 +1267,7 @@ export type FindProductBySlugQuery = {
         __typename: "Shop",
         id: string,
         name: string,
-        avatar?: string | null,
+        logo?: string | null,
         slug: string,
       } | null,
     } | null >,
@@ -1197,17 +1288,9 @@ export type FindProductsQuery = {
       id: string,
       name: string,
       slug: string,
-      price: number,
+      price?: number | null,
       images?: Array< string | null > | null,
-      available?: boolean | null,
       description?: string | null,
-      mainCategoryID: string,
-      subCategoryID: string,
-      discount?:  {
-        __typename: "Discount",
-        type?: string | null,
-        value?: number | null,
-      } | null,
       category?:  {
         __typename: "Category",
         id: string,
@@ -1218,7 +1301,7 @@ export type FindProductsQuery = {
         __typename: "Shop",
         id: string,
         name: string,
-        avatar?: string | null,
+        logo?: string | null,
         slug: string,
       } | null,
     } | null >,
@@ -1243,17 +1326,9 @@ export type FindProductsOrderByPriceQuery = {
       id: string,
       name: string,
       slug: string,
-      price: number,
+      price?: number | null,
       images?: Array< string | null > | null,
-      available?: boolean | null,
       description?: string | null,
-      mainCategoryID: string,
-      subCategoryID: string,
-      discount?:  {
-        __typename: "Discount",
-        type?: string | null,
-        value?: number | null,
-      } | null,
       category?:  {
         __typename: "Category",
         id: string,
@@ -1264,7 +1339,7 @@ export type FindProductsOrderByPriceQuery = {
         __typename: "Shop",
         id: string,
         name: string,
-        avatar?: string | null,
+        logo?: string | null,
         slug: string,
       } | null,
     } | null >,
@@ -1284,7 +1359,7 @@ export type GetShopByIdQuery = {
     slug: string,
     headline?: string | null,
     cover?: string | null,
-    avatar?: string | null,
+    logo?: string | null,
     description?: string | null,
     createdBy?: string | null,
     updatedBy?: string | null,
@@ -1313,7 +1388,7 @@ export type FindShopBySlugQuery = {
       slug: string,
       headline?: string | null,
       cover?: string | null,
-      avatar?: string | null,
+      logo?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -1341,7 +1416,7 @@ export type FindShopsQuery = {
       slug: string,
       headline?: string | null,
       cover?: string | null,
-      avatar?: string | null,
+      logo?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       suspended?: boolean | null,
@@ -1389,18 +1464,21 @@ export type DeleteCartItemMutation = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -1429,18 +1507,21 @@ export type DeleteFavoriteProductMutation = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -1448,6 +1529,240 @@ export type DeleteFavoriteProductMutation = {
       updatedAt: string,
     } | null,
     owner?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateBannerMutationVariables = {
+  input: CreateBannerInput,
+  condition?: ModelBannerConditionInput | null,
+};
+
+export type CreateBannerMutation = {
+  createBanner?:  {
+    __typename: "Banner",
+    id: string,
+    image?: string | null,
+    link?: string | null,
+    position: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateBannerMutationVariables = {
+  input: UpdateBannerInput,
+  condition?: ModelBannerConditionInput | null,
+};
+
+export type UpdateBannerMutation = {
+  updateBanner?:  {
+    __typename: "Banner",
+    id: string,
+    image?: string | null,
+    link?: string | null,
+    position: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteBannerMutationVariables = {
+  input: DeleteBannerInput,
+  condition?: ModelBannerConditionInput | null,
+};
+
+export type DeleteBannerMutation = {
+  deleteBanner?:  {
+    __typename: "Banner",
+    id: string,
+    image?: string | null,
+    link?: string | null,
+    position: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateCategoryMutationVariables = {
+  input: CreateCategoryInput,
+  condition?: ModelCategoryConditionInput | null,
+};
+
+export type CreateCategoryMutation = {
+  createCategory?:  {
+    __typename: "Category",
+    id: string,
+    name: string,
+    slug: string,
+    image?: string | null,
+    isMain?: boolean | null,
+    categoryID?: string | null,
+    category?:  {
+      __typename: "Category",
+      id: string,
+      name: string,
+      slug: string,
+      image?: string | null,
+      isMain?: boolean | null,
+      categoryID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    products?:  {
+      __typename: "ModelProductConnection",
+      nextToken?: string | null,
+    } | null,
+    categories?:  {
+      __typename: "ModelCategoryConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateCategoryMutationVariables = {
+  input: UpdateCategoryInput,
+  condition?: ModelCategoryConditionInput | null,
+};
+
+export type UpdateCategoryMutation = {
+  updateCategory?:  {
+    __typename: "Category",
+    id: string,
+    name: string,
+    slug: string,
+    image?: string | null,
+    isMain?: boolean | null,
+    categoryID?: string | null,
+    category?:  {
+      __typename: "Category",
+      id: string,
+      name: string,
+      slug: string,
+      image?: string | null,
+      isMain?: boolean | null,
+      categoryID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    products?:  {
+      __typename: "ModelProductConnection",
+      nextToken?: string | null,
+    } | null,
+    categories?:  {
+      __typename: "ModelCategoryConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteCategoryMutationVariables = {
+  input: DeleteCategoryInput,
+  condition?: ModelCategoryConditionInput | null,
+};
+
+export type DeleteCategoryMutation = {
+  deleteCategory?:  {
+    __typename: "Category",
+    id: string,
+    name: string,
+    slug: string,
+    image?: string | null,
+    isMain?: boolean | null,
+    categoryID?: string | null,
+    category?:  {
+      __typename: "Category",
+      id: string,
+      name: string,
+      slug: string,
+      image?: string | null,
+      isMain?: boolean | null,
+      categoryID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    products?:  {
+      __typename: "ModelProductConnection",
+      nextToken?: string | null,
+    } | null,
+    categories?:  {
+      __typename: "ModelCategoryConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateDiscountMutationVariables = {
+  input: CreateDiscountInput,
+  condition?: ModelDiscountConditionInput | null,
+};
+
+export type CreateDiscountMutation = {
+  createDiscount?:  {
+    __typename: "Discount",
+    id: string,
+    title: string,
+    value: number,
+    type: DiscountType,
+    productCount?: number | null,
+    shopID: string,
+    products?:  {
+      __typename: "ModelProductConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateDiscountMutationVariables = {
+  input: UpdateDiscountInput,
+  condition?: ModelDiscountConditionInput | null,
+};
+
+export type UpdateDiscountMutation = {
+  updateDiscount?:  {
+    __typename: "Discount",
+    id: string,
+    title: string,
+    value: number,
+    type: DiscountType,
+    productCount?: number | null,
+    shopID: string,
+    products?:  {
+      __typename: "ModelProductConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteDiscountMutationVariables = {
+  input: DeleteDiscountInput,
+  condition?: ModelDiscountConditionInput | null,
+};
+
+export type DeleteDiscountMutation = {
+  deleteDiscount?:  {
+    __typename: "Discount",
+    id: string,
+    title: string,
+    value: number,
+    type: DiscountType,
+    productCount?: number | null,
+    shopID: string,
+    products?:  {
+      __typename: "ModelProductConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1464,31 +1779,41 @@ export type CreateProductMutation = {
     id: string,
     name: string,
     slug: string,
+    thumbnail?: string | null,
     images?: Array< string | null > | null,
-    price: number,
-    discount?:  {
-      __typename: "Discount",
-      value?: number | null,
-      type?: string | null,
-    } | null,
+    price?: number | null,
+    sku?: string | null,
     description?: string | null,
-    createdBy?: string | null,
-    updatedBy?: string | null,
-    available?: boolean | null,
-    suspended?: boolean | null,
+    hasVariant?: boolean | null,
     newArrival?: boolean | null,
     outOfStock?: boolean | null,
     deleted?: boolean | null,
-    mainCategoryID: string,
-    subCategoryID: string,
+    featured?: boolean | null,
+    status?: ProductStatus | null,
+    suspended?: boolean | null,
+    createdBy?: string | null,
+    updatedBy?: string | null,
+    discountID?: string | null,
     categoryID: string,
     shopID: string,
+    discount?:  {
+      __typename: "Discount",
+      id: string,
+      title: string,
+      value: number,
+      type: DiscountType,
+      productCount?: number | null,
+      shopID: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     category?:  {
       __typename: "Category",
       id: string,
       name: string,
       slug: string,
       image?: string | null,
+      isMain?: boolean | null,
       categoryID?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1499,8 +1824,8 @@ export type CreateProductMutation = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -1534,31 +1859,41 @@ export type UpdateProductMutation = {
     id: string,
     name: string,
     slug: string,
+    thumbnail?: string | null,
     images?: Array< string | null > | null,
-    price: number,
-    discount?:  {
-      __typename: "Discount",
-      value?: number | null,
-      type?: string | null,
-    } | null,
+    price?: number | null,
+    sku?: string | null,
     description?: string | null,
-    createdBy?: string | null,
-    updatedBy?: string | null,
-    available?: boolean | null,
-    suspended?: boolean | null,
+    hasVariant?: boolean | null,
     newArrival?: boolean | null,
     outOfStock?: boolean | null,
     deleted?: boolean | null,
-    mainCategoryID: string,
-    subCategoryID: string,
+    featured?: boolean | null,
+    status?: ProductStatus | null,
+    suspended?: boolean | null,
+    createdBy?: string | null,
+    updatedBy?: string | null,
+    discountID?: string | null,
     categoryID: string,
     shopID: string,
+    discount?:  {
+      __typename: "Discount",
+      id: string,
+      title: string,
+      value: number,
+      type: DiscountType,
+      productCount?: number | null,
+      shopID: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     category?:  {
       __typename: "Category",
       id: string,
       name: string,
       slug: string,
       image?: string | null,
+      isMain?: boolean | null,
       categoryID?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1569,8 +1904,8 @@ export type UpdateProductMutation = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -1604,31 +1939,41 @@ export type DeleteProductMutation = {
     id: string,
     name: string,
     slug: string,
+    thumbnail?: string | null,
     images?: Array< string | null > | null,
-    price: number,
-    discount?:  {
-      __typename: "Discount",
-      value?: number | null,
-      type?: string | null,
-    } | null,
+    price?: number | null,
+    sku?: string | null,
     description?: string | null,
-    createdBy?: string | null,
-    updatedBy?: string | null,
-    available?: boolean | null,
-    suspended?: boolean | null,
+    hasVariant?: boolean | null,
     newArrival?: boolean | null,
     outOfStock?: boolean | null,
     deleted?: boolean | null,
-    mainCategoryID: string,
-    subCategoryID: string,
+    featured?: boolean | null,
+    status?: ProductStatus | null,
+    suspended?: boolean | null,
+    createdBy?: string | null,
+    updatedBy?: string | null,
+    discountID?: string | null,
     categoryID: string,
     shopID: string,
+    discount?:  {
+      __typename: "Discount",
+      id: string,
+      title: string,
+      value: number,
+      type: DiscountType,
+      productCount?: number | null,
+      shopID: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     category?:  {
       __typename: "Category",
       id: string,
       name: string,
       slug: string,
       image?: string | null,
+      isMain?: boolean | null,
       categoryID?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1639,8 +1984,8 @@ export type DeleteProductMutation = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -1675,8 +2020,8 @@ export type CreateShopMutation = {
     name: string,
     slug: string,
     headline?: string | null,
+    logo?: string | null,
     cover?: string | null,
-    avatar?: string | null,
     description?: string | null,
     createdBy?: string | null,
     updatedBy?: string | null,
@@ -1688,6 +2033,10 @@ export type CreateShopMutation = {
     } | null,
     members?:  {
       __typename: "ModelShopMemberConnection",
+      nextToken?: string | null,
+    } | null,
+    discounts?:  {
+      __typename: "ModelDiscountConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -1707,8 +2056,8 @@ export type UpdateShopMutation = {
     name: string,
     slug: string,
     headline?: string | null,
+    logo?: string | null,
     cover?: string | null,
-    avatar?: string | null,
     description?: string | null,
     createdBy?: string | null,
     updatedBy?: string | null,
@@ -1720,6 +2069,10 @@ export type UpdateShopMutation = {
     } | null,
     members?:  {
       __typename: "ModelShopMemberConnection",
+      nextToken?: string | null,
+    } | null,
+    discounts?:  {
+      __typename: "ModelDiscountConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -1739,8 +2092,8 @@ export type DeleteShopMutation = {
     name: string,
     slug: string,
     headline?: string | null,
+    logo?: string | null,
     cover?: string | null,
-    avatar?: string | null,
     description?: string | null,
     createdBy?: string | null,
     updatedBy?: string | null,
@@ -1752,6 +2105,10 @@ export type DeleteShopMutation = {
     } | null,
     members?:  {
       __typename: "ModelShopMemberConnection",
+      nextToken?: string | null,
+    } | null,
+    discounts?:  {
+      __typename: "ModelDiscountConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -1867,72 +2224,6 @@ export type DeleteUserMutation = {
   } | null,
 };
 
-export type CreateCategoryMutationVariables = {
-  input: CreateCategoryInput,
-  condition?: ModelCategoryConditionInput | null,
-};
-
-export type CreateCategoryMutation = {
-  createCategory?:  {
-    __typename: "Category",
-    id: string,
-    name: string,
-    slug: string,
-    image?: string | null,
-    categoryID?: string | null,
-    products?:  {
-      __typename: "ModelProductConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateCategoryMutationVariables = {
-  input: UpdateCategoryInput,
-  condition?: ModelCategoryConditionInput | null,
-};
-
-export type UpdateCategoryMutation = {
-  updateCategory?:  {
-    __typename: "Category",
-    id: string,
-    name: string,
-    slug: string,
-    image?: string | null,
-    categoryID?: string | null,
-    products?:  {
-      __typename: "ModelProductConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteCategoryMutationVariables = {
-  input: DeleteCategoryInput,
-  condition?: ModelCategoryConditionInput | null,
-};
-
-export type DeleteCategoryMutation = {
-  deleteCategory?:  {
-    __typename: "Category",
-    id: string,
-    name: string,
-    slug: string,
-    image?: string | null,
-    categoryID?: string | null,
-    products?:  {
-      __typename: "ModelProductConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type CreateShopMemberMutationVariables = {
   input: CreateShopMemberInput,
   condition?: ModelShopMemberConditionInput | null,
@@ -1951,8 +2242,8 @@ export type CreateShopMemberMutation = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -1996,8 +2287,8 @@ export type UpdateShopMemberMutation = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -2041,8 +2332,8 @@ export type DeleteShopMemberMutation = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -2063,57 +2354,6 @@ export type DeleteShopMemberMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateBannerMutationVariables = {
-  input: CreateBannerInput,
-  condition?: ModelBannerConditionInput | null,
-};
-
-export type CreateBannerMutation = {
-  createBanner?:  {
-    __typename: "Banner",
-    id: string,
-    image?: string | null,
-    link?: string | null,
-    position: number,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateBannerMutationVariables = {
-  input: UpdateBannerInput,
-  condition?: ModelBannerConditionInput | null,
-};
-
-export type UpdateBannerMutation = {
-  updateBanner?:  {
-    __typename: "Banner",
-    id: string,
-    image?: string | null,
-    link?: string | null,
-    position: number,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteBannerMutationVariables = {
-  input: DeleteBannerInput,
-  condition?: ModelBannerConditionInput | null,
-};
-
-export type DeleteBannerMutation = {
-  deleteBanner?:  {
-    __typename: "Banner",
-    id: string,
-    image?: string | null,
-    link?: string | null,
-    position: number,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2193,18 +2433,21 @@ export type CreateCartItemMutation = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -2234,18 +2477,21 @@ export type UpdateCartItemMutation = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -2274,18 +2520,21 @@ export type CreateFavoriteProductMutation = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -2314,18 +2563,21 @@ export type UpdateFavoriteProductMutation = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -2335,6 +2587,177 @@ export type UpdateFavoriteProductMutation = {
     owner?: string | null,
     createdAt: string,
     updatedAt: string,
+  } | null,
+};
+
+export type GetBannerQueryVariables = {
+  id: string,
+};
+
+export type GetBannerQuery = {
+  getBanner?:  {
+    __typename: "Banner",
+    id: string,
+    image?: string | null,
+    link?: string | null,
+    position: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListBannersQueryVariables = {
+  filter?: ModelBannerFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListBannersQuery = {
+  listBanners?:  {
+    __typename: "ModelBannerConnection",
+    items:  Array< {
+      __typename: "Banner",
+      id: string,
+      image?: string | null,
+      link?: string | null,
+      position: number,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetCategoryQueryVariables = {
+  id: string,
+};
+
+export type GetCategoryQuery = {
+  getCategory?:  {
+    __typename: "Category",
+    id: string,
+    name: string,
+    slug: string,
+    image?: string | null,
+    isMain?: boolean | null,
+    categoryID?: string | null,
+    category?:  {
+      __typename: "Category",
+      id: string,
+      name: string,
+      slug: string,
+      image?: string | null,
+      isMain?: boolean | null,
+      categoryID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    products?:  {
+      __typename: "ModelProductConnection",
+      nextToken?: string | null,
+    } | null,
+    categories?:  {
+      __typename: "ModelCategoryConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListCategoriesQueryVariables = {
+  filter?: ModelCategoryFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListCategoriesQuery = {
+  listCategories?:  {
+    __typename: "ModelCategoryConnection",
+    items:  Array< {
+      __typename: "Category",
+      id: string,
+      name: string,
+      slug: string,
+      image?: string | null,
+      isMain?: boolean | null,
+      categoryID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetDiscountQueryVariables = {
+  id: string,
+};
+
+export type GetDiscountQuery = {
+  getDiscount?:  {
+    __typename: "Discount",
+    id: string,
+    title: string,
+    value: number,
+    type: DiscountType,
+    productCount?: number | null,
+    shopID: string,
+    products?:  {
+      __typename: "ModelProductConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListDiscountsQueryVariables = {
+  filter?: ModelDiscountFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListDiscountsQuery = {
+  listDiscounts?:  {
+    __typename: "ModelDiscountConnection",
+    items:  Array< {
+      __typename: "Discount",
+      id: string,
+      title: string,
+      value: number,
+      type: DiscountType,
+      productCount?: number | null,
+      shopID: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetDiscountsByShopQueryVariables = {
+  shopID: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelDiscountFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type GetDiscountsByShopQuery = {
+  getDiscountsByShop?:  {
+    __typename: "ModelDiscountConnection",
+    items:  Array< {
+      __typename: "Discount",
+      id: string,
+      title: string,
+      value: number,
+      type: DiscountType,
+      productCount?: number | null,
+      shopID: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
   } | null,
 };
 
@@ -2348,31 +2771,41 @@ export type GetProductQuery = {
     id: string,
     name: string,
     slug: string,
+    thumbnail?: string | null,
     images?: Array< string | null > | null,
-    price: number,
-    discount?:  {
-      __typename: "Discount",
-      value?: number | null,
-      type?: string | null,
-    } | null,
+    price?: number | null,
+    sku?: string | null,
     description?: string | null,
-    createdBy?: string | null,
-    updatedBy?: string | null,
-    available?: boolean | null,
-    suspended?: boolean | null,
+    hasVariant?: boolean | null,
     newArrival?: boolean | null,
     outOfStock?: boolean | null,
     deleted?: boolean | null,
-    mainCategoryID: string,
-    subCategoryID: string,
+    featured?: boolean | null,
+    status?: ProductStatus | null,
+    suspended?: boolean | null,
+    createdBy?: string | null,
+    updatedBy?: string | null,
+    discountID?: string | null,
     categoryID: string,
     shopID: string,
+    discount?:  {
+      __typename: "Discount",
+      id: string,
+      title: string,
+      value: number,
+      type: DiscountType,
+      productCount?: number | null,
+      shopID: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     category?:  {
       __typename: "Category",
       id: string,
       name: string,
       slug: string,
       image?: string | null,
+      isMain?: boolean | null,
       categoryID?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -2383,8 +2816,8 @@ export type GetProductQuery = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -2421,18 +2854,21 @@ export type ListProductsQuery = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -2459,18 +2895,21 @@ export type GetProductBySlugQuery = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -2498,18 +2937,21 @@ export type ProductsByPriceQuery = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -2531,8 +2973,8 @@ export type GetShopQuery = {
     name: string,
     slug: string,
     headline?: string | null,
+    logo?: string | null,
     cover?: string | null,
-    avatar?: string | null,
     description?: string | null,
     createdBy?: string | null,
     updatedBy?: string | null,
@@ -2544,6 +2986,10 @@ export type GetShopQuery = {
     } | null,
     members?:  {
       __typename: "ModelShopMemberConnection",
+      nextToken?: string | null,
+    } | null,
+    discounts?:  {
+      __typename: "ModelDiscountConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -2566,8 +3012,8 @@ export type ListShopsQuery = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -2597,8 +3043,8 @@ export type GetShopBySlugQuery = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -2671,50 +3117,6 @@ export type ListUsersQuery = {
   } | null,
 };
 
-export type GetCategoryQueryVariables = {
-  id: string,
-};
-
-export type GetCategoryQuery = {
-  getCategory?:  {
-    __typename: "Category",
-    id: string,
-    name: string,
-    slug: string,
-    image?: string | null,
-    categoryID?: string | null,
-    products?:  {
-      __typename: "ModelProductConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListCategoriesQueryVariables = {
-  filter?: ModelCategoryFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListCategoriesQuery = {
-  listCategories?:  {
-    __typename: "ModelCategoryConnection",
-    items:  Array< {
-      __typename: "Category",
-      id: string,
-      name: string,
-      slug: string,
-      image?: string | null,
-      categoryID?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type GetShopMemberQueryVariables = {
   id: string,
 };
@@ -2732,8 +3134,8 @@ export type GetShopMemberQuery = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -2774,44 +3176,6 @@ export type ListShopMembersQuery = {
       role: MemberRole,
       shopID: string,
       userID: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetBannerQueryVariables = {
-  id: string,
-};
-
-export type GetBannerQuery = {
-  getBanner?:  {
-    __typename: "Banner",
-    id: string,
-    image?: string | null,
-    link?: string | null,
-    position: number,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListBannersQueryVariables = {
-  filter?: ModelBannerFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListBannersQuery = {
-  listBanners?:  {
-    __typename: "ModelBannerConnection",
-    items:  Array< {
-      __typename: "Banner",
-      id: string,
-      image?: string | null,
-      link?: string | null,
-      position: number,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -2877,18 +3241,21 @@ export type GetCartItemQuery = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -2964,18 +3331,21 @@ export type GetFavoriteProductQuery = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -3034,6 +3404,231 @@ export type FavoriteProductsByUserQuery = {
   } | null,
 };
 
+export type OnCreateBannerSubscriptionVariables = {
+  filter?: ModelSubscriptionBannerFilterInput | null,
+};
+
+export type OnCreateBannerSubscription = {
+  onCreateBanner?:  {
+    __typename: "Banner",
+    id: string,
+    image?: string | null,
+    link?: string | null,
+    position: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateBannerSubscriptionVariables = {
+  filter?: ModelSubscriptionBannerFilterInput | null,
+};
+
+export type OnUpdateBannerSubscription = {
+  onUpdateBanner?:  {
+    __typename: "Banner",
+    id: string,
+    image?: string | null,
+    link?: string | null,
+    position: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteBannerSubscriptionVariables = {
+  filter?: ModelSubscriptionBannerFilterInput | null,
+};
+
+export type OnDeleteBannerSubscription = {
+  onDeleteBanner?:  {
+    __typename: "Banner",
+    id: string,
+    image?: string | null,
+    link?: string | null,
+    position: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateCategorySubscriptionVariables = {
+  filter?: ModelSubscriptionCategoryFilterInput | null,
+};
+
+export type OnCreateCategorySubscription = {
+  onCreateCategory?:  {
+    __typename: "Category",
+    id: string,
+    name: string,
+    slug: string,
+    image?: string | null,
+    isMain?: boolean | null,
+    categoryID?: string | null,
+    category?:  {
+      __typename: "Category",
+      id: string,
+      name: string,
+      slug: string,
+      image?: string | null,
+      isMain?: boolean | null,
+      categoryID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    products?:  {
+      __typename: "ModelProductConnection",
+      nextToken?: string | null,
+    } | null,
+    categories?:  {
+      __typename: "ModelCategoryConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateCategorySubscriptionVariables = {
+  filter?: ModelSubscriptionCategoryFilterInput | null,
+};
+
+export type OnUpdateCategorySubscription = {
+  onUpdateCategory?:  {
+    __typename: "Category",
+    id: string,
+    name: string,
+    slug: string,
+    image?: string | null,
+    isMain?: boolean | null,
+    categoryID?: string | null,
+    category?:  {
+      __typename: "Category",
+      id: string,
+      name: string,
+      slug: string,
+      image?: string | null,
+      isMain?: boolean | null,
+      categoryID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    products?:  {
+      __typename: "ModelProductConnection",
+      nextToken?: string | null,
+    } | null,
+    categories?:  {
+      __typename: "ModelCategoryConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteCategorySubscriptionVariables = {
+  filter?: ModelSubscriptionCategoryFilterInput | null,
+};
+
+export type OnDeleteCategorySubscription = {
+  onDeleteCategory?:  {
+    __typename: "Category",
+    id: string,
+    name: string,
+    slug: string,
+    image?: string | null,
+    isMain?: boolean | null,
+    categoryID?: string | null,
+    category?:  {
+      __typename: "Category",
+      id: string,
+      name: string,
+      slug: string,
+      image?: string | null,
+      isMain?: boolean | null,
+      categoryID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    products?:  {
+      __typename: "ModelProductConnection",
+      nextToken?: string | null,
+    } | null,
+    categories?:  {
+      __typename: "ModelCategoryConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateDiscountSubscriptionVariables = {
+  filter?: ModelSubscriptionDiscountFilterInput | null,
+};
+
+export type OnCreateDiscountSubscription = {
+  onCreateDiscount?:  {
+    __typename: "Discount",
+    id: string,
+    title: string,
+    value: number,
+    type: DiscountType,
+    productCount?: number | null,
+    shopID: string,
+    products?:  {
+      __typename: "ModelProductConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateDiscountSubscriptionVariables = {
+  filter?: ModelSubscriptionDiscountFilterInput | null,
+};
+
+export type OnUpdateDiscountSubscription = {
+  onUpdateDiscount?:  {
+    __typename: "Discount",
+    id: string,
+    title: string,
+    value: number,
+    type: DiscountType,
+    productCount?: number | null,
+    shopID: string,
+    products?:  {
+      __typename: "ModelProductConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteDiscountSubscriptionVariables = {
+  filter?: ModelSubscriptionDiscountFilterInput | null,
+};
+
+export type OnDeleteDiscountSubscription = {
+  onDeleteDiscount?:  {
+    __typename: "Discount",
+    id: string,
+    title: string,
+    value: number,
+    type: DiscountType,
+    productCount?: number | null,
+    shopID: string,
+    products?:  {
+      __typename: "ModelProductConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreateProductSubscriptionVariables = {
   filter?: ModelSubscriptionProductFilterInput | null,
 };
@@ -3044,31 +3639,41 @@ export type OnCreateProductSubscription = {
     id: string,
     name: string,
     slug: string,
+    thumbnail?: string | null,
     images?: Array< string | null > | null,
-    price: number,
-    discount?:  {
-      __typename: "Discount",
-      value?: number | null,
-      type?: string | null,
-    } | null,
+    price?: number | null,
+    sku?: string | null,
     description?: string | null,
-    createdBy?: string | null,
-    updatedBy?: string | null,
-    available?: boolean | null,
-    suspended?: boolean | null,
+    hasVariant?: boolean | null,
     newArrival?: boolean | null,
     outOfStock?: boolean | null,
     deleted?: boolean | null,
-    mainCategoryID: string,
-    subCategoryID: string,
+    featured?: boolean | null,
+    status?: ProductStatus | null,
+    suspended?: boolean | null,
+    createdBy?: string | null,
+    updatedBy?: string | null,
+    discountID?: string | null,
     categoryID: string,
     shopID: string,
+    discount?:  {
+      __typename: "Discount",
+      id: string,
+      title: string,
+      value: number,
+      type: DiscountType,
+      productCount?: number | null,
+      shopID: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     category?:  {
       __typename: "Category",
       id: string,
       name: string,
       slug: string,
       image?: string | null,
+      isMain?: boolean | null,
       categoryID?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -3079,8 +3684,8 @@ export type OnCreateProductSubscription = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -3113,31 +3718,41 @@ export type OnUpdateProductSubscription = {
     id: string,
     name: string,
     slug: string,
+    thumbnail?: string | null,
     images?: Array< string | null > | null,
-    price: number,
-    discount?:  {
-      __typename: "Discount",
-      value?: number | null,
-      type?: string | null,
-    } | null,
+    price?: number | null,
+    sku?: string | null,
     description?: string | null,
-    createdBy?: string | null,
-    updatedBy?: string | null,
-    available?: boolean | null,
-    suspended?: boolean | null,
+    hasVariant?: boolean | null,
     newArrival?: boolean | null,
     outOfStock?: boolean | null,
     deleted?: boolean | null,
-    mainCategoryID: string,
-    subCategoryID: string,
+    featured?: boolean | null,
+    status?: ProductStatus | null,
+    suspended?: boolean | null,
+    createdBy?: string | null,
+    updatedBy?: string | null,
+    discountID?: string | null,
     categoryID: string,
     shopID: string,
+    discount?:  {
+      __typename: "Discount",
+      id: string,
+      title: string,
+      value: number,
+      type: DiscountType,
+      productCount?: number | null,
+      shopID: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     category?:  {
       __typename: "Category",
       id: string,
       name: string,
       slug: string,
       image?: string | null,
+      isMain?: boolean | null,
       categoryID?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -3148,8 +3763,8 @@ export type OnUpdateProductSubscription = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -3182,31 +3797,41 @@ export type OnDeleteProductSubscription = {
     id: string,
     name: string,
     slug: string,
+    thumbnail?: string | null,
     images?: Array< string | null > | null,
-    price: number,
-    discount?:  {
-      __typename: "Discount",
-      value?: number | null,
-      type?: string | null,
-    } | null,
+    price?: number | null,
+    sku?: string | null,
     description?: string | null,
-    createdBy?: string | null,
-    updatedBy?: string | null,
-    available?: boolean | null,
-    suspended?: boolean | null,
+    hasVariant?: boolean | null,
     newArrival?: boolean | null,
     outOfStock?: boolean | null,
     deleted?: boolean | null,
-    mainCategoryID: string,
-    subCategoryID: string,
+    featured?: boolean | null,
+    status?: ProductStatus | null,
+    suspended?: boolean | null,
+    createdBy?: string | null,
+    updatedBy?: string | null,
+    discountID?: string | null,
     categoryID: string,
     shopID: string,
+    discount?:  {
+      __typename: "Discount",
+      id: string,
+      title: string,
+      value: number,
+      type: DiscountType,
+      productCount?: number | null,
+      shopID: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     category?:  {
       __typename: "Category",
       id: string,
       name: string,
       slug: string,
       image?: string | null,
+      isMain?: boolean | null,
       categoryID?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -3217,8 +3842,8 @@ export type OnDeleteProductSubscription = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -3252,8 +3877,8 @@ export type OnCreateShopSubscription = {
     name: string,
     slug: string,
     headline?: string | null,
+    logo?: string | null,
     cover?: string | null,
-    avatar?: string | null,
     description?: string | null,
     createdBy?: string | null,
     updatedBy?: string | null,
@@ -3265,6 +3890,10 @@ export type OnCreateShopSubscription = {
     } | null,
     members?:  {
       __typename: "ModelShopMemberConnection",
+      nextToken?: string | null,
+    } | null,
+    discounts?:  {
+      __typename: "ModelDiscountConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -3283,8 +3912,8 @@ export type OnUpdateShopSubscription = {
     name: string,
     slug: string,
     headline?: string | null,
+    logo?: string | null,
     cover?: string | null,
-    avatar?: string | null,
     description?: string | null,
     createdBy?: string | null,
     updatedBy?: string | null,
@@ -3296,6 +3925,10 @@ export type OnUpdateShopSubscription = {
     } | null,
     members?:  {
       __typename: "ModelShopMemberConnection",
+      nextToken?: string | null,
+    } | null,
+    discounts?:  {
+      __typename: "ModelDiscountConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -3314,8 +3947,8 @@ export type OnDeleteShopSubscription = {
     name: string,
     slug: string,
     headline?: string | null,
+    logo?: string | null,
     cover?: string | null,
-    avatar?: string | null,
     description?: string | null,
     createdBy?: string | null,
     updatedBy?: string | null,
@@ -3327,6 +3960,10 @@ export type OnDeleteShopSubscription = {
     } | null,
     members?:  {
       __typename: "ModelShopMemberConnection",
+      nextToken?: string | null,
+    } | null,
+    discounts?:  {
+      __typename: "ModelDiscountConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -3439,69 +4076,6 @@ export type OnDeleteUserSubscription = {
   } | null,
 };
 
-export type OnCreateCategorySubscriptionVariables = {
-  filter?: ModelSubscriptionCategoryFilterInput | null,
-};
-
-export type OnCreateCategorySubscription = {
-  onCreateCategory?:  {
-    __typename: "Category",
-    id: string,
-    name: string,
-    slug: string,
-    image?: string | null,
-    categoryID?: string | null,
-    products?:  {
-      __typename: "ModelProductConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateCategorySubscriptionVariables = {
-  filter?: ModelSubscriptionCategoryFilterInput | null,
-};
-
-export type OnUpdateCategorySubscription = {
-  onUpdateCategory?:  {
-    __typename: "Category",
-    id: string,
-    name: string,
-    slug: string,
-    image?: string | null,
-    categoryID?: string | null,
-    products?:  {
-      __typename: "ModelProductConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteCategorySubscriptionVariables = {
-  filter?: ModelSubscriptionCategoryFilterInput | null,
-};
-
-export type OnDeleteCategorySubscription = {
-  onDeleteCategory?:  {
-    __typename: "Category",
-    id: string,
-    name: string,
-    slug: string,
-    image?: string | null,
-    categoryID?: string | null,
-    products?:  {
-      __typename: "ModelProductConnection",
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type OnCreateShopMemberSubscriptionVariables = {
   filter?: ModelSubscriptionShopMemberFilterInput | null,
 };
@@ -3519,8 +4093,8 @@ export type OnCreateShopMemberSubscription = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -3563,8 +4137,8 @@ export type OnUpdateShopMemberSubscription = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -3607,8 +4181,8 @@ export type OnDeleteShopMemberSubscription = {
       name: string,
       slug: string,
       headline?: string | null,
+      logo?: string | null,
       cover?: string | null,
-      avatar?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
@@ -3629,54 +4203,6 @@ export type OnDeleteShopMemberSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateBannerSubscriptionVariables = {
-  filter?: ModelSubscriptionBannerFilterInput | null,
-};
-
-export type OnCreateBannerSubscription = {
-  onCreateBanner?:  {
-    __typename: "Banner",
-    id: string,
-    image?: string | null,
-    link?: string | null,
-    position: number,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateBannerSubscriptionVariables = {
-  filter?: ModelSubscriptionBannerFilterInput | null,
-};
-
-export type OnUpdateBannerSubscription = {
-  onUpdateBanner?:  {
-    __typename: "Banner",
-    id: string,
-    image?: string | null,
-    link?: string | null,
-    position: number,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteBannerSubscriptionVariables = {
-  filter?: ModelSubscriptionBannerFilterInput | null,
-};
-
-export type OnDeleteBannerSubscription = {
-  onDeleteBanner?:  {
-    __typename: "Banner",
-    id: string,
-    image?: string | null,
-    link?: string | null,
-    position: number,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3753,18 +4279,21 @@ export type OnCreateCartItemSubscription = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -3794,18 +4323,21 @@ export type OnUpdateCartItemSubscription = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -3835,18 +4367,21 @@ export type OnDeleteCartItemSubscription = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -3875,18 +4410,21 @@ export type OnCreateFavoriteProductSubscription = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -3915,18 +4453,21 @@ export type OnUpdateFavoriteProductSubscription = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,
@@ -3955,18 +4496,21 @@ export type OnDeleteFavoriteProductSubscription = {
       id: string,
       name: string,
       slug: string,
+      thumbnail?: string | null,
       images?: Array< string | null > | null,
-      price: number,
+      price?: number | null,
+      sku?: string | null,
       description?: string | null,
-      createdBy?: string | null,
-      updatedBy?: string | null,
-      available?: boolean | null,
-      suspended?: boolean | null,
+      hasVariant?: boolean | null,
       newArrival?: boolean | null,
       outOfStock?: boolean | null,
       deleted?: boolean | null,
-      mainCategoryID: string,
-      subCategoryID: string,
+      featured?: boolean | null,
+      status?: ProductStatus | null,
+      suspended?: boolean | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      discountID?: string | null,
       categoryID: string,
       shopID: string,
       type?: string | null,

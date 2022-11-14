@@ -170,13 +170,11 @@ function Explore() {
       <Head>
         <title>All Proudcts</title>
       </Head>
-      <div className="bg-primary">
-        <div className="container">
-          <div className="py-4 py-lg-5">
-            <h1 className="text-light text-center text-lg-start">
-              Explore Proucts
-            </h1>
-          </div>
+      <div className="header-bar">
+        <div className="container py-4">
+          <h1 className="text-center text-lg-start fw-bold">
+            Explore Products
+          </h1>
         </div>
       </div>
       <div className="container py-4">

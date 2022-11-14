@@ -6,7 +6,7 @@ export const getShopById = `
       slug
       headline
       cover
-      avatar
+      logo
       description
       createdBy
       updatedBy
@@ -39,7 +39,7 @@ export const findShopBySlug = `
         slug
         headline
         cover
-        avatar
+        logo
         description
         createdBy
         updatedBy
@@ -65,7 +65,7 @@ export const findShops = `
         slug
         headline
         cover
-        avatar
+        logo
         createdBy
         updatedBy
         suspended

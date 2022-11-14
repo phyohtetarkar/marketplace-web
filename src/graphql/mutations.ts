@@ -16,18 +16,21 @@ export const deleteCartItem = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type
@@ -53,18 +56,21 @@ export const deleteFavoriteProduct = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type
@@ -72,6 +78,210 @@ export const deleteFavoriteProduct = /* GraphQL */ `
         updatedAt
       }
       owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createBanner = /* GraphQL */ `
+  mutation CreateBanner(
+    $input: CreateBannerInput!
+    $condition: ModelBannerConditionInput
+  ) {
+    createBanner(input: $input, condition: $condition) {
+      id
+      image
+      link
+      position
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateBanner = /* GraphQL */ `
+  mutation UpdateBanner(
+    $input: UpdateBannerInput!
+    $condition: ModelBannerConditionInput
+  ) {
+    updateBanner(input: $input, condition: $condition) {
+      id
+      image
+      link
+      position
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteBanner = /* GraphQL */ `
+  mutation DeleteBanner(
+    $input: DeleteBannerInput!
+    $condition: ModelBannerConditionInput
+  ) {
+    deleteBanner(input: $input, condition: $condition) {
+      id
+      image
+      link
+      position
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCategory = /* GraphQL */ `
+  mutation CreateCategory(
+    $input: CreateCategoryInput!
+    $condition: ModelCategoryConditionInput
+  ) {
+    createCategory(input: $input, condition: $condition) {
+      id
+      name
+      slug
+      image
+      isMain
+      categoryID
+      category {
+        id
+        name
+        slug
+        image
+        isMain
+        categoryID
+        createdAt
+        updatedAt
+      }
+      products {
+        nextToken
+      }
+      categories {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCategory = /* GraphQL */ `
+  mutation UpdateCategory(
+    $input: UpdateCategoryInput!
+    $condition: ModelCategoryConditionInput
+  ) {
+    updateCategory(input: $input, condition: $condition) {
+      id
+      name
+      slug
+      image
+      isMain
+      categoryID
+      category {
+        id
+        name
+        slug
+        image
+        isMain
+        categoryID
+        createdAt
+        updatedAt
+      }
+      products {
+        nextToken
+      }
+      categories {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCategory = /* GraphQL */ `
+  mutation DeleteCategory(
+    $input: DeleteCategoryInput!
+    $condition: ModelCategoryConditionInput
+  ) {
+    deleteCategory(input: $input, condition: $condition) {
+      id
+      name
+      slug
+      image
+      isMain
+      categoryID
+      category {
+        id
+        name
+        slug
+        image
+        isMain
+        categoryID
+        createdAt
+        updatedAt
+      }
+      products {
+        nextToken
+      }
+      categories {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createDiscount = /* GraphQL */ `
+  mutation CreateDiscount(
+    $input: CreateDiscountInput!
+    $condition: ModelDiscountConditionInput
+  ) {
+    createDiscount(input: $input, condition: $condition) {
+      id
+      title
+      value
+      type
+      productCount
+      shopID
+      products {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateDiscount = /* GraphQL */ `
+  mutation UpdateDiscount(
+    $input: UpdateDiscountInput!
+    $condition: ModelDiscountConditionInput
+  ) {
+    updateDiscount(input: $input, condition: $condition) {
+      id
+      title
+      value
+      type
+      productCount
+      shopID
+      products {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteDiscount = /* GraphQL */ `
+  mutation DeleteDiscount(
+    $input: DeleteDiscountInput!
+    $condition: ModelDiscountConditionInput
+  ) {
+    deleteDiscount(input: $input, condition: $condition) {
+      id
+      title
+      value
+      type
+      productCount
+      shopID
+      products {
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -86,29 +296,39 @@ export const createProduct = /* GraphQL */ `
       id
       name
       slug
+      thumbnail
       images
       price
-      discount {
-        value
-        type
-      }
+      sku
       description
-      createdBy
-      updatedBy
-      available
-      suspended
+      hasVariant
       newArrival
       outOfStock
       deleted
-      mainCategoryID
-      subCategoryID
+      featured
+      status
+      suspended
+      createdBy
+      updatedBy
+      discountID
       categoryID
       shopID
+      discount {
+        id
+        title
+        value
+        type
+        productCount
+        shopID
+        createdAt
+        updatedAt
+      }
       category {
         id
         name
         slug
         image
+        isMain
         categoryID
         createdAt
         updatedAt
@@ -118,8 +338,8 @@ export const createProduct = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -149,29 +369,39 @@ export const updateProduct = /* GraphQL */ `
       id
       name
       slug
+      thumbnail
       images
       price
-      discount {
-        value
-        type
-      }
+      sku
       description
-      createdBy
-      updatedBy
-      available
-      suspended
+      hasVariant
       newArrival
       outOfStock
       deleted
-      mainCategoryID
-      subCategoryID
+      featured
+      status
+      suspended
+      createdBy
+      updatedBy
+      discountID
       categoryID
       shopID
+      discount {
+        id
+        title
+        value
+        type
+        productCount
+        shopID
+        createdAt
+        updatedAt
+      }
       category {
         id
         name
         slug
         image
+        isMain
         categoryID
         createdAt
         updatedAt
@@ -181,8 +411,8 @@ export const updateProduct = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -212,29 +442,39 @@ export const deleteProduct = /* GraphQL */ `
       id
       name
       slug
+      thumbnail
       images
       price
-      discount {
-        value
-        type
-      }
+      sku
       description
-      createdBy
-      updatedBy
-      available
-      suspended
+      hasVariant
       newArrival
       outOfStock
       deleted
-      mainCategoryID
-      subCategoryID
+      featured
+      status
+      suspended
+      createdBy
+      updatedBy
+      discountID
       categoryID
       shopID
+      discount {
+        id
+        title
+        value
+        type
+        productCount
+        shopID
+        createdAt
+        updatedAt
+      }
       category {
         id
         name
         slug
         image
+        isMain
         categoryID
         createdAt
         updatedAt
@@ -244,8 +484,8 @@ export const deleteProduct = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -276,8 +516,8 @@ export const createShop = /* GraphQL */ `
       name
       slug
       headline
+      logo
       cover
-      avatar
       description
       createdBy
       updatedBy
@@ -287,6 +527,9 @@ export const createShop = /* GraphQL */ `
         nextToken
       }
       members {
+        nextToken
+      }
+      discounts {
         nextToken
       }
       createdAt
@@ -304,8 +547,8 @@ export const updateShop = /* GraphQL */ `
       name
       slug
       headline
+      logo
       cover
-      avatar
       description
       createdBy
       updatedBy
@@ -315,6 +558,9 @@ export const updateShop = /* GraphQL */ `
         nextToken
       }
       members {
+        nextToken
+      }
+      discounts {
         nextToken
       }
       createdAt
@@ -332,8 +578,8 @@ export const deleteShop = /* GraphQL */ `
       name
       slug
       headline
+      logo
       cover
-      avatar
       description
       createdBy
       updatedBy
@@ -343,6 +589,9 @@ export const deleteShop = /* GraphQL */ `
         nextToken
       }
       members {
+        nextToken
+      }
+      discounts {
         nextToken
       }
       createdAt
@@ -440,63 +689,6 @@ export const deleteUser = /* GraphQL */ `
     }
   }
 `;
-export const createCategory = /* GraphQL */ `
-  mutation CreateCategory(
-    $input: CreateCategoryInput!
-    $condition: ModelCategoryConditionInput
-  ) {
-    createCategory(input: $input, condition: $condition) {
-      id
-      name
-      slug
-      image
-      categoryID
-      products {
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateCategory = /* GraphQL */ `
-  mutation UpdateCategory(
-    $input: UpdateCategoryInput!
-    $condition: ModelCategoryConditionInput
-  ) {
-    updateCategory(input: $input, condition: $condition) {
-      id
-      name
-      slug
-      image
-      categoryID
-      products {
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteCategory = /* GraphQL */ `
-  mutation DeleteCategory(
-    $input: DeleteCategoryInput!
-    $condition: ModelCategoryConditionInput
-  ) {
-    deleteCategory(input: $input, condition: $condition) {
-      id
-      name
-      slug
-      image
-      categoryID
-      products {
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createShopMember = /* GraphQL */ `
   mutation CreateShopMember(
     $input: CreateShopMemberInput!
@@ -512,8 +704,8 @@ export const createShopMember = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -553,8 +745,8 @@ export const updateShopMember = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -594,8 +786,8 @@ export const deleteShopMember = /* GraphQL */ `
         name
         slug
         headline
+        logo
         cover
-        avatar
         description
         createdBy
         updatedBy
@@ -615,51 +807,6 @@ export const deleteShopMember = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createBanner = /* GraphQL */ `
-  mutation CreateBanner(
-    $input: CreateBannerInput!
-    $condition: ModelBannerConditionInput
-  ) {
-    createBanner(input: $input, condition: $condition) {
-      id
-      image
-      link
-      position
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateBanner = /* GraphQL */ `
-  mutation UpdateBanner(
-    $input: UpdateBannerInput!
-    $condition: ModelBannerConditionInput
-  ) {
-    updateBanner(input: $input, condition: $condition) {
-      id
-      image
-      link
-      position
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteBanner = /* GraphQL */ `
-  mutation DeleteBanner(
-    $input: DeleteBannerInput!
-    $condition: ModelBannerConditionInput
-  ) {
-    deleteBanner(input: $input, condition: $condition) {
-      id
-      image
-      link
-      position
       createdAt
       updatedAt
     }
@@ -730,18 +877,21 @@ export const createCartItem = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type
@@ -768,18 +918,21 @@ export const updateCartItem = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type
@@ -805,18 +958,21 @@ export const createFavoriteProduct = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type
@@ -842,18 +998,21 @@ export const updateFavoriteProduct = /* GraphQL */ `
         id
         name
         slug
+        thumbnail
         images
         price
+        sku
         description
-        createdBy
-        updatedBy
-        available
-        suspended
+        hasVariant
         newArrival
         outOfStock
         deleted
-        mainCategoryID
-        subCategoryID
+        featured
+        status
+        suspended
+        createdBy
+        updatedBy
+        discountID
         categoryID
         shopID
         type

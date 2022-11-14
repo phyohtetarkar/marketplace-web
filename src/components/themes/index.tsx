@@ -1,4 +1,9 @@
-import { StylesConfig, ThemeConfig } from "react-select";
+import {
+  ControlProps,
+  CSSObjectWithLabel,
+  StylesConfig,
+  ThemeConfig
+} from "react-select";
 
 export const reactSelectStyles: StylesConfig = {
   control: (css, state) => {
@@ -11,6 +16,19 @@ export const reactSelectStyles: StylesConfig = {
     };
   }
 };
+
+export function reactSelectControl<T>(
+  css: CSSObjectWithLabel,
+  state: ControlProps<T>
+): CSSObjectWithLabel {
+  return {
+    ...css,
+    padding: "0.375rem 0.375rem",
+    boxShadow: "none",
+    backgroundColor: "#f9fafb",
+    borderColor: "#e5e7eb"
+  };
+}
 
 export const reactSelectTheme: ThemeConfig = (theme) => {
   return {

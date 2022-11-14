@@ -10,13 +10,20 @@ enum MemberRole {
 }
 
 enum DiscountType {
-  PERCENT
-  VALUE
+  PERCENTAGE
+  FIXED_AMOUNT
 }
 
 enum ProductStatus {
   PUBLISHED
   DRAFT
+  ARCHIVED
+  DENIED
+}
+
+enum ShopStatus {
+  LIVE
+  DENIED
 }
 
 type ProductOption {
@@ -35,8 +42,11 @@ type Category @model @auth(rules: [{allow: public, operations: [read]}, {allow: 
   name: String!
   slug: String!
   image: String
-  categoryID: ID
+  isMain: Boolean @default(value: "false")
+  categoryID: ID @index(name: "byCategory")
+  category: Category @belongsTo(fields: ["categoryID"])
   products: [Product] @hasMany(indexName: "byCategory", fields: ["id"])
+  categories: [Category] @hasMany(indexName: "byCategory", fields: ["id"])
 }
 
 type Discount @model @auth(rules: [{allow: public, operations: [read]}, {allow: private}]) {
@@ -46,6 +56,7 @@ type Discount @model @auth(rules: [{allow: public, operations: [read]}, {allow: 
   type: DiscountType!
   productCount: Int @default(value: "0")
   shopID: ID! @index(name: "byShop", queryField: "getDiscountsByShop")
+  products: [Product] @hasMany(indexName: "byDiscount", fields: ["id"])
 }
 
 type Product @model @auth(rules: [{allow: public, operations: [read]}, {allow: private}]) {
@@ -61,16 +72,15 @@ type Product @model @auth(rules: [{allow: public, operations: [read]}, {allow: p
   newArrival: Boolean @default(value: "false")
   outOfStock: Boolean @default(value: "false")
   deleted: Boolean @default(value: "false")
+  featured: Boolean @default(value: "false")
   status: ProductStatus @default(value: "DRAFT")
   suspended: Boolean @default(value: "false")
   createdBy: String
   updatedBy: String
-  discountID: ID
-  discount: Discount
-  mainCategoryID: ID!
-  subCategoryID: ID!
+  discountID: ID @index(name: "byDiscount")
   categoryID: ID! @index(name: "byCategory")
   shopID: ID! @index(name: "byShop")
+  discount: Discount @belongsTo(fields: ["discountID"])
   category: Category @belongsTo(fields: ["categoryID"])
   shop: Shop @belongsTo(fields: ["shopID"])
   favoriteUsers: [FavoriteProduct] @hasMany(indexName: "byProduct", fields: ["id"])

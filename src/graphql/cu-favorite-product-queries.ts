@@ -23,10 +23,6 @@ export const findFavoriteProductsByUser = `
             price
             images
             description
-            discount {
-              type
-              value
-            }
             category {
               id
               name
@@ -35,7 +31,7 @@ export const findFavoriteProductsByUser = `
             shop {
               id
               name
-              avatar
+              logo
               slug
             }
         }
