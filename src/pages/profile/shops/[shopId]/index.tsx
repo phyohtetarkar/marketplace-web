@@ -42,7 +42,7 @@ function ShopDetail() {
       <div className="container py-4">
         <div className="row">
           <div className="col-12">
-            <div className="border rounded bg-white vstack overflow-hidden">
+            <div className="border rounded bg-white vstack">
               <div
                 style={{
                   width: "100%",
@@ -58,7 +58,7 @@ function ShopDetail() {
                   priority
                 />
               </div>
-              <div className="row p-3 py-sm-4">
+              <div className="row p-3 py-sm-4 position-relative">
                 <div className="col">
                   <div className="hstack">
                     <div className="flex-shrink-0 mt-n9">
@@ -86,8 +86,12 @@ function ShopDetail() {
                   >
                     <div className="flex-grow-1 d-none d-md-block"></div>
                     <Dropdown
-                      toggle={"Shop Action"}
-                      toggleClassName="dropdown-toggle"
+                      toggle={
+                        <button className="btn btn-outline-light text-muted dropdown-toggle">
+                          Shop Action
+                        </button>
+                      }
+                      menuClassName="dropdown-menu-end"
                     >
                       <li role="button" className="dropdown-item">
                         Edit
@@ -114,24 +118,18 @@ function ShopDetail() {
             </div>
           </div>
           <div className="card-body">
-            <div className="vstack">
-              <div className="card-body">
-                <div className="vstack">
-                  <div className="row g-3">
-                    {list.map((i) => {
-                      return (
-                        <div className="col-lg-3" key={i}>
-                          <ProductManageGridItem />
-                        </div>
-                      );
-                    })}
+            <div className="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+              {list.map((i) => {
+                return (
+                  <div className="col" key={i}>
+                    <ProductManageGridItem />
                   </div>
+                );
+              })}
+            </div>
 
-                  <div className="d-flex justify-content-end pt-3 px-3">
-                    <Pagination hasPrev={true} hasNext={true} />
-                  </div>
-                </div>
-              </div>
+            <div className="d-flex justify-content-end pt-3 px-3">
+              <Pagination hasPrev={true} hasNext={true} />
             </div>
           </div>
         </div>
