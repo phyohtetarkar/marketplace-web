@@ -135,7 +135,7 @@ function MyShops({
                           </td>
                           <td>
                             <div className="d-flex">
-                              <div className="text-nowrap px-2 py-1 small rounded bg-warning text-light">
+                              <div className="text-nowrap px-2 py-1 small rounded bg-warning bg-opacity-10 text-warning">
                                 Pending
                               </div>
                             </div>
@@ -212,8 +212,8 @@ function MyShops({
                           </td>
                           <td>
                             <div className="d-flex">
-                              <div className="text-nowrap px-2 py-1 small rounded bg-warning text-light">
-                                Pending
+                              <div className="text-nowrap px-2 py-1 small rounded bg-success bg-opacity-10 text-success">
+                                Active
                               </div>
                             </div>
                           </td>

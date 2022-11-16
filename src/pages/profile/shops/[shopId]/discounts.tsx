@@ -1,54 +1,56 @@
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  PencilSquareIcon,
+  TagIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { formatPrice, formatTimestamp } from "../../../../common/utils";
 import { Input } from "../../../../components/forms";
 import Pagination from "../../../../components/Pagination";
 
 function DiscountRow() {
-    return (
-      <tr>
-        <td className="ps-3 ps-lg-4" style={{ minWidth: 300 }}>
-          <span>
-            Name
-          </span>
-        </td>
-        <td>
-          <span className="text-nowrap me-3">%</span>
-        </td>
-        <td>
-          <span className="text-nowrap me-3">10</span>
-        </td>
-        <td>
-          <div className="hstack align-items-center gap-2 me-3">
-            <Link href="#">
-              <a className="btn btn-primary">
-                <PencilSquareIcon width={20} />
-              </a>
-            </Link>
-            <button
-              disabled={false}
-              className="btn btn-danger"
-              onClick={async () => {}}
-            >
-              <TrashIcon width={20} />
-            </button>
-          </div>
-        </td>
-      </tr>
-    );
-  }
+  return (
+    <tr>
+      <td className="ps-3 ps-lg-4 w-100">
+        <span>Name</span>
+      </td>
+      <td>
+        <span className="text-nowrap me-3">%</span>
+      </td>
+      <td>
+        <span className="text-nowrap me-3">10</span>
+      </td>
+      <td>
+        <div className="hstack align-items-center gap-2 me-3">
+          <Link href="#">
+            <a className="btn btn-primary">
+              <PencilSquareIcon width={20} />
+            </a>
+          </Link>
+          <button
+            disabled={false}
+            className="btn btn-danger"
+            onClick={async () => {}}
+          >
+            <TrashIcon width={20} />
+          </button>
+        </div>
+      </td>
+    </tr>
+  );
+}
 
+function DiscountList() {
+  const list = [1, 2, 3];
 
-function Discount() {
-    const list = [1, 2, 3, 4, 5];
-
-    return (
-        <div className="vstack">
+  return (
+    <div className="vstack">
       <div className="bg-primary">
         <div className="container py-4">
           <div className="hstack">
             <div>
               <div className="px-2">
-                <h3 className="text-light text-lg-start">Discount</h3>
+                <h3 className="text-light text-lg-start">Discounts</h3>
               </div>
               <div className="row px-2">
                 <nav aria-label="breadcrumb col-12">
@@ -61,14 +63,14 @@ function Discount() {
                       </Link>
                     </li>
                     <li className="breadcrumb-item">
-                    <Link href="/profile/shops/1">
+                      <Link href="/profile/shops/1">
                         <a href="#" className="text-light">
-                        Shoes World
+                          Shoes World
                         </a>
                       </Link>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                        Discount
+                      Discount
                     </li>
                   </ol>
                 </nav>
@@ -80,14 +82,16 @@ function Discount() {
       <div className="container py-4">
         <div className="card mt-2 mb-3">
           <div className="card-header bg-white fs-4 fw-semibold p-3">
-            Discounts
+            <div className="hstack">
+              Discounts
+            </div>
           </div>
           <div className="card-body p-0">
             <div className="vstack">
               <div className="p-3 p-lg-4">
                 <div className="row g-3">
                   <div className="col">
-                    <Input
+                    <Input  
                       id="filterProductsInput"
                       name="filter"
                       type="text"
@@ -128,7 +132,7 @@ function Discount() {
         </div>
       </div>
     </div>
-    );
+  );
 }
 
-export default Discount;
+export default DiscountList;

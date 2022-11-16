@@ -3,10 +3,10 @@ import { PhotoIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import ReactSelect from "react-select";
-import { Input, Textarea } from "../forms";
+import { AutocompleteSelect, Input, Textarea } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
-import { reactSelectStyles, reactSelectTheme } from "../themes";
+
+const groupList = ["Electronic", "Stationary", "Health & Beauty"];
 
 const DynamicEditor = dynamic<RichTextEditorInputProps>(
   () => import("../forms").then((f) => f.RichTextEditor),
@@ -15,7 +15,68 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
   }
 );
 
+function SocialRow() {
+  return (
+    <div className="col-auto">
+      <div
+        className="border-0 rounded bg-secondary align-items-center"
+        style={{
+          paddingTop: 6,
+          paddingBottom: 6,
+          paddingLeft: 12,
+          paddingRight: 12,
+        }}
+      >
+        <div className="hstack">
+          <Image
+            className="flex-shrink-0"
+            src="/images/icons8-facebook-48.png"
+            alt="facebook"
+            width={28}
+            height={28}
+          />
+          <span className="text-dark ms-1 small">Shopping Center</span>
+          <Link href="#">
+            <a>
+              <XMarkIcon className="ms-2 text-dark flex-shrink-0" width={20} />
+            </a>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BranchesRow() {
+  return (
+    <div className="col">
+      <div className="bg-light border-0 rounded p-3">
+        <div className="vstack">
+          <div className="hstack align-items-start">
+            <div className="vstack">
+              <h6 className="flex-grow-1 pe-2 mb-1">Global Stationary Shop</h6>
+              <div className="hstack mb-3">
+                <PhoneIcon className="me-2" width={14} />
+                <small className="text-muted">09121219987</small>
+              </div>
+            </div>
+
+            <a className="btn btn-outline-danger px-2">
+              <TrashIcon className="p-0" width={16} strokeWidth={1.5} />
+            </a>
+          </div>
+          <div className="text-muted small">
+            Yangon city, Pyay Road, Building 123, House 321
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ShopEdit({ create = {} }) {
+  const list = [1, 2, 3];
+
   return (
     <div className="pb-5">
       <div className="bg-primary">
@@ -77,10 +138,10 @@ function ShopEdit({ create = {} }) {
         <div className="row g-4">
           <div className="col-md-12 col-lg-12">
             <div className="card">
-              <div className="card-header bg-white py-3">
+              <div className="card-header bg-white py-3 px-md-4">
                 <h5 className="mb-0">General</h5>
               </div>
-              <div className="card-body">
+              <div className="card-body px-md-4">
                 <div className="vstack">
                   <div className="row g-4">
                     <div className="col-lg-6">
@@ -114,14 +175,11 @@ function ShopEdit({ create = {} }) {
                     </div>
                     <div className="order-3 order-lg-4 order-md-3 col-lg-6 ">
                       <label className="form-label">Category *</label>
-                      <ReactSelect
-                        id="categorySelect"
-                        instanceId="categorySelect"
-                        styles={reactSelectStyles}
-                        theme={reactSelectTheme}
-                        placeholder="Select category"
-                        className="mb-2"
-                      />
+                      <AutocompleteSelect<string, string>
+                      options={groupList}
+                      getOptionLabel={(v) => v}
+                      getOptionValue={(v) => v}
+                    />
                     </div>
                   </div>
                 </div>
@@ -130,10 +188,10 @@ function ShopEdit({ create = {} }) {
           </div>
           <div className="col-md-12 col-lg-12">
             <div className="card">
-              <div className="card-header bg-white py-3">
+              <div className="card-header bg-white py-3 px-md-4">
                 <h5 className="mb-0">Images</h5>
               </div>
-              <div className="card-body">
+              <div className="card-body px-md-4">
                 <div className="vstack">
                   <div className="row g-4">
                     <div className="col-lg-3 col-12">
@@ -180,12 +238,12 @@ function ShopEdit({ create = {} }) {
           </div>
           <div className="col-md-12 col-lg-12">
             <div className="card">
-              <div className="card-header bg-white py-3">
+              <div className="card-header bg-white py-3 px-md-4">
                 <div className="hstack">
                   <h5 className="mb-0">Location</h5>
                 </div>
               </div>
-              <div className="card-body">
+              <div className="card-body px-md-4">
                 <div className="vstack">
                   <div className="row g-3"></div>
                 </div>
@@ -194,7 +252,7 @@ function ShopEdit({ create = {} }) {
           </div>
           <div className="col-md-12 col-lg-12">
             <div className="card">
-              <div className="card-header bg-white py-3">
+              <div className="card-header bg-white py-3 px-md-4">
                 <div className="hstack">
                   <h5 className="mb-0">Social</h5>
                   <div className="ms-auto">
@@ -204,101 +262,12 @@ function ShopEdit({ create = {} }) {
                   </div>
                 </div>
               </div>
-              <div className="card-body p-3">
+              <div className="card-body p-3 px-md-4">
                 <div className="vstack">
                   <div className="row g-3">
-                    <div className="col-auto">
-                      <button
-                        type="button"
-                        className="btn btn-outline-light border-0 bg-secondary align-items-center"
-                      >
-                        <div className="hstack">
-                          <Image
-                            className="flex-shrink-0"
-                            src="/images/icons8-facebook-48.png"
-                            alt="facebook"
-                            width={28}
-                            height={28}
-                          />
-                          <span className="text-dark ms-1 small">
-                            Shopping Center
-                          </span>
-                          <XMarkIcon
-                            className="ms-2 text-dark flex-shrink-0"
-                            width={20}
-                          />
-                        </div>
-                      </button>
-                    </div>
-                    <div className="col-auto">
-                      <button
-                        type="button"
-                        className="btn btn-outline-light border-0 bg-secondary align-items-center"
-                      >
-                        <div className="hstack">
-                          <Image
-                            className="flex-shrink-0"
-                            src="/images/icons8-facebook-48.png"
-                            alt="facebook"
-                            width={28}
-                            height={28}
-                          />
-                          <span className="text-dark ms-1 small">
-                            Shopping Center
-                          </span>
-                          <XMarkIcon
-                            className="ms-2 text-dark flex-shrink-0"
-                            width={20}
-                          />
-                        </div>
-                      </button>
-                    </div>
-                    <div className="col-auto">
-                      <button
-                        type="button"
-                        className="btn btn-outline-light border-0 bg-secondary align-items-center"
-                      >
-                        <div className="hstack">
-                          <Image
-                            className="flex-shrink-0"
-                            src="/images/icons8-facebook-48.png"
-                            alt="facebook"
-                            width={28}
-                            height={28}
-                          />
-                          <span className="text-dark ms-1 small">
-                            Shopping Center
-                          </span>
-                          <XMarkIcon
-                            className="ms-2 text-dark flex-shrink-0"
-                            width={20}
-                          />
-                        </div>
-                      </button>
-                    </div>
-                    <div className="col-auto">
-                      <button
-                        type="button"
-                        className="btn btn-outline-light border-0 bg-secondary align-items-center"
-                      >
-                        <div className="hstack">
-                          <Image
-                            className="flex-shrink-0"
-                            src="/images/icons8-facebook-48.png"
-                            alt="facebook"
-                            width={28}
-                            height={28}
-                          />
-                          <span className="text-dark ms-1 small">
-                            Shopping Center
-                          </span>
-                          <XMarkIcon
-                            className="ms-2 text-dark flex-shrink-0"
-                            width={20}
-                          />
-                        </div>
-                      </button>
-                    </div>
+                    {list.map((i) => (
+                      <SocialRow key={i} />
+                    ))}
                   </div>
                 </div>
               </div>
@@ -306,7 +275,7 @@ function ShopEdit({ create = {} }) {
           </div>
           <div className="col-md-12 col-lg-12">
             <div className="card">
-              <div className="card-header bg-white py-3">
+              <div className="card-header bg-white py-3 px-md-4">
                 <div className="hstack">
                   <h5 className="mb-0">Branches</h5>
                   <div className="ms-auto">
@@ -316,83 +285,11 @@ function ShopEdit({ create = {} }) {
                   </div>
                 </div>
               </div>
-              <div className="card-body">
+              <div className="card-body px-md-4">
                 <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
-                  <div className="col">
-                    <div className="card bg-light border-0">
-                      <div className="card-body">
-                        <div className="vstack">
-                          <div className="hstack">
-                            <h6 className="flex-grow-1 pe-2">
-                              Global Stationary Shop
-                            </h6>
-                            <a className="btn btn-outline-danger p-1">
-                              <TrashIcon className="p-0" width={16} />
-                            </a>
-                          </div>
-                          <div className="hstack mb-3">
-                            <PhoneIcon className="me-2" width={14} />
-                            <small className="text-muted">09121219987</small>
-                          </div>
-                          <div className="text-muted small">
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry. Lorem Ipsum has been the
-                            industry standard dummy text ever since the 1500s.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="card bg-light border-0">
-                      <div className="card-body">
-                        <div className="vstack">
-                          <div className="hstack">
-                            <h6 className="flex-grow-1 pe-2">
-                              Global Stationary Shop
-                            </h6>
-                            <a className="btn btn-outline-danger p-1">
-                              <TrashIcon className="p-0" width={16} />
-                            </a>
-                          </div>
-                          <div className="hstack mb-3">
-                            <PhoneIcon className="me-2" width={14} />
-                            <small className="text-muted">09121219987</small>
-                          </div>
-                          <div className="text-muted small">
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry. Lorem Ipsum has been the
-                            industry standard dummy text ever since the 1500s.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="card bg-light border-0">
-                      <div className="card-body">
-                        <div className="vstack">
-                          <div className="hstack">
-                            <h6 className="flex-grow-1 pe-2">
-                              Global Stationary Shop
-                            </h6>
-                            <a className="btn btn-outline-danger p-1">
-                              <TrashIcon className="p-0" width={16} />
-                            </a>
-                          </div>
-                          <div className="hstack mb-3">
-                            <PhoneIcon className="me-2" width={14} />
-                            <small className="text-muted">09121219987</small>
-                          </div>
-                          <div className="text-muted small">
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry. Lorem Ipsum has been the
-                            industry standard dummy text ever since the 1500s.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  {list.map((i) => (
+                    <BranchesRow key={i} />
+                  ))}
                 </div>
               </div>
             </div>
