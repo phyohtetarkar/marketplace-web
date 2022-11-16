@@ -5,7 +5,7 @@ export const getUserById = /* GraphQL */ `
       name
       phone
       email
-      avatar
+      image
       disabled
       role
       createdAt

@@ -27,7 +27,6 @@ export const deleteCartItem = /* GraphQL */ `
         deleted
         featured
         status
-        suspended
         createdBy
         updatedBy
         discountID
@@ -67,7 +66,6 @@ export const deleteFavoriteProduct = /* GraphQL */ `
         deleted
         featured
         status
-        suspended
         createdBy
         updatedBy
         discountID
@@ -227,6 +225,54 @@ export const deleteCategory = /* GraphQL */ `
     }
   }
 `;
+export const createShopCategory = /* GraphQL */ `
+  mutation CreateShopCategory(
+    $input: CreateShopCategoryInput!
+    $condition: ModelShopCategoryConditionInput
+  ) {
+    createShopCategory(input: $input, condition: $condition) {
+      id
+      name
+      shops {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateShopCategory = /* GraphQL */ `
+  mutation UpdateShopCategory(
+    $input: UpdateShopCategoryInput!
+    $condition: ModelShopCategoryConditionInput
+  ) {
+    updateShopCategory(input: $input, condition: $condition) {
+      id
+      name
+      shops {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteShopCategory = /* GraphQL */ `
+  mutation DeleteShopCategory(
+    $input: DeleteShopCategoryInput!
+    $condition: ModelShopCategoryConditionInput
+  ) {
+    deleteShopCategory(input: $input, condition: $condition) {
+      id
+      name
+      shops {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createDiscount = /* GraphQL */ `
   mutation CreateDiscount(
     $input: CreateDiscountInput!
@@ -307,9 +353,18 @@ export const createProduct = /* GraphQL */ `
       deleted
       featured
       status
-      suspended
       createdBy
       updatedBy
+      options {
+        key
+        name
+      }
+      variants {
+        key
+        title
+        price
+        sku
+      }
       discountID
       categoryID
       shopID
@@ -337,14 +392,14 @@ export const createProduct = /* GraphQL */ `
         id
         name
         slug
-        headline
         logo
         cover
         description
+        recommended
+        status
         createdBy
         updatedBy
-        suspended
-        recommended
+        categoryID
         createdAt
         updatedAt
       }
@@ -380,9 +435,18 @@ export const updateProduct = /* GraphQL */ `
       deleted
       featured
       status
-      suspended
       createdBy
       updatedBy
+      options {
+        key
+        name
+      }
+      variants {
+        key
+        title
+        price
+        sku
+      }
       discountID
       categoryID
       shopID
@@ -410,14 +474,14 @@ export const updateProduct = /* GraphQL */ `
         id
         name
         slug
-        headline
         logo
         cover
         description
+        recommended
+        status
         createdBy
         updatedBy
-        suspended
-        recommended
+        categoryID
         createdAt
         updatedAt
       }
@@ -453,9 +517,18 @@ export const deleteProduct = /* GraphQL */ `
       deleted
       featured
       status
-      suspended
       createdBy
       updatedBy
+      options {
+        key
+        name
+      }
+      variants {
+        key
+        title
+        price
+        sku
+      }
       discountID
       categoryID
       shopID
@@ -483,14 +556,14 @@ export const deleteProduct = /* GraphQL */ `
         id
         name
         slug
-        headline
         logo
         cover
         description
+        recommended
+        status
         createdBy
         updatedBy
-        suspended
-        recommended
+        categoryID
         createdAt
         updatedAt
       }
@@ -515,14 +588,24 @@ export const createShop = /* GraphQL */ `
       id
       name
       slug
-      headline
       logo
       cover
       description
+      location {
+        lat
+        long
+      }
+      recommended
+      status
       createdBy
       updatedBy
-      suspended
-      recommended
+      categoryID
+      category {
+        id
+        name
+        createdAt
+        updatedAt
+      }
       products {
         nextToken
       }
@@ -546,14 +629,24 @@ export const updateShop = /* GraphQL */ `
       id
       name
       slug
-      headline
       logo
       cover
       description
+      location {
+        lat
+        long
+      }
+      recommended
+      status
       createdBy
       updatedBy
-      suspended
-      recommended
+      categoryID
+      category {
+        id
+        name
+        createdAt
+        updatedAt
+      }
       products {
         nextToken
       }
@@ -577,14 +670,24 @@ export const deleteShop = /* GraphQL */ `
       id
       name
       slug
-      headline
       logo
       cover
       description
+      location {
+        lat
+        long
+      }
+      recommended
+      status
       createdBy
       updatedBy
-      suspended
-      recommended
+      categoryID
+      category {
+        id
+        name
+        createdAt
+        updatedAt
+      }
       products {
         nextToken
       }
@@ -609,7 +712,7 @@ export const createUser = /* GraphQL */ `
       name
       phone
       email
-      avatar
+      image
       disabled
       role
       shops {
@@ -639,7 +742,7 @@ export const updateUser = /* GraphQL */ `
       name
       phone
       email
-      avatar
+      image
       disabled
       role
       shops {
@@ -669,7 +772,7 @@ export const deleteUser = /* GraphQL */ `
       name
       phone
       email
-      avatar
+      image
       disabled
       role
       shops {
@@ -703,14 +806,14 @@ export const createShopMember = /* GraphQL */ `
         id
         name
         slug
-        headline
         logo
         cover
         description
+        recommended
+        status
         createdBy
         updatedBy
-        suspended
-        recommended
+        categoryID
         createdAt
         updatedAt
       }
@@ -719,7 +822,7 @@ export const createShopMember = /* GraphQL */ `
         name
         phone
         email
-        avatar
+        image
         disabled
         role
         createdAt
@@ -744,14 +847,14 @@ export const updateShopMember = /* GraphQL */ `
         id
         name
         slug
-        headline
         logo
         cover
         description
+        recommended
+        status
         createdBy
         updatedBy
-        suspended
-        recommended
+        categoryID
         createdAt
         updatedAt
       }
@@ -760,7 +863,7 @@ export const updateShopMember = /* GraphQL */ `
         name
         phone
         email
-        avatar
+        image
         disabled
         role
         createdAt
@@ -785,14 +888,14 @@ export const deleteShopMember = /* GraphQL */ `
         id
         name
         slug
-        headline
         logo
         cover
         description
+        recommended
+        status
         createdBy
         updatedBy
-        suspended
-        recommended
+        categoryID
         createdAt
         updatedAt
       }
@@ -801,7 +904,7 @@ export const deleteShopMember = /* GraphQL */ `
         name
         phone
         email
-        avatar
+        image
         disabled
         role
         createdAt
@@ -888,7 +991,6 @@ export const createCartItem = /* GraphQL */ `
         deleted
         featured
         status
-        suspended
         createdBy
         updatedBy
         discountID
@@ -929,7 +1031,6 @@ export const updateCartItem = /* GraphQL */ `
         deleted
         featured
         status
-        suspended
         createdBy
         updatedBy
         discountID
@@ -969,7 +1070,6 @@ export const createFavoriteProduct = /* GraphQL */ `
         deleted
         featured
         status
-        suspended
         createdBy
         updatedBy
         discountID
@@ -1009,7 +1109,6 @@ export const updateFavoriteProduct = /* GraphQL */ `
         deleted
         featured
         status
-        suspended
         createdBy
         updatedBy
         discountID

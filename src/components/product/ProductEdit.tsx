@@ -2,7 +2,7 @@ import { PlusIcon, TrashIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
-import { Input, TagInput, AutocompleteSelect, Select } from "../forms";
+import { AutocompleteSelect, Input, TagInput } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import Modal from "../Modal";
 
@@ -310,6 +310,7 @@ function ProductEdit({ create = {} }) {
                       id="variantCheck"
                       className="form-check-input"
                       type="checkbox"
+                      role="switch"
                     ></input>
                     <label
                       htmlFor="variantCheck"
@@ -325,6 +326,7 @@ function ProductEdit({ create = {} }) {
                       id="newArrivalCheck"
                       className="form-check-input"
                       type="checkbox"
+                      role="switch"
                     ></input>
                     <label
                       htmlFor="newArrivalCheck"
@@ -340,6 +342,7 @@ function ProductEdit({ create = {} }) {
                       id="outOfStockCheck"
                       className="form-check-input"
                       type="checkbox"
+                      role="switch"
                     ></input>
                     <label
                       htmlFor="outOfStockCheck"
@@ -537,6 +540,22 @@ function ProductEdit({ create = {} }) {
                 Product image can upload up to <strong>5</strong> images with
                 dimension constraint of at most <strong>600x600</strong> pixels.
               </span>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-header bg-white py-3 px-md-4">
+              <h5 className="mb-0">Video</h5>
+            </div>
+            <div className="card-body p-md-4">
+              <div className="vstack gap-4">
+                <Input
+                  id="videoInput"
+                  name="video"
+                  type="text"
+                  placeholder="Enter youtube ID"
+                />
+              </div>
             </div>
           </div>
         </div>

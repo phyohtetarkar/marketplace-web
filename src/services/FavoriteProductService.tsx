@@ -69,7 +69,7 @@ export async function getFavoriteProductsByUser({
     }) as Promise<GraphQLResult<FindFavoriteProductsByUserQuery>>);
 
     return (
-      result.data?.favoriteProductsByUser?.items.map(
+      result.data?.getFavoriteProductsByUser?.items.map(
         (p) => p as FavoriteProduct
       ) ?? []
     );

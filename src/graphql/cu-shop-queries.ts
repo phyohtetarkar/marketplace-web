@@ -4,13 +4,11 @@ export const getShopById = `
       id
       name
       slug
-      headline
       cover
       logo
       description
       createdBy
       updatedBy
-      suspended
       recommended
       createdAt
       updatedAt
@@ -37,13 +35,11 @@ export const findShopBySlug = `
         id
         name
         slug
-        headline
         cover
         logo
         description
         createdBy
         updatedBy
-        suspended
         recommended
         createdAt
         updatedAt
@@ -63,12 +59,10 @@ export const findShops = `
         id
         name
         slug
-        headline
-        cover
         logo
+        cover
         createdBy
         updatedBy
-        suspended
         recommended
         createdAt
         updatedAt

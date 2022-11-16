@@ -116,9 +116,10 @@ export type Product = {
   deleted?: boolean | null,
   featured?: boolean | null,
   status?: ProductStatus | null,
-  suspended?: boolean | null,
   createdBy?: string | null,
   updatedBy?: string | null,
+  options?:  Array<ProductOption | null > | null,
+  variants?:  Array<ProductVariant | null > | null,
   discountID?: string | null,
   categoryID: string,
   shopID: string,
@@ -139,6 +140,27 @@ export enum ProductStatus {
   DENIED = "DENIED",
 }
 
+
+export type ProductOption = {
+  __typename: "ProductOption",
+  key: string,
+  name: string,
+};
+
+export type ProductVariant = {
+  __typename: "ProductVariant",
+  key: string,
+  title: string,
+  price?: number | null,
+  sku?: string | null,
+  options?:  Array<ProductOptionValue | null > | null,
+};
+
+export type ProductOptionValue = {
+  __typename: "ProductOptionValue",
+  option: string,
+  value: string,
+};
 
 export type Discount = {
   __typename: "Discount",
@@ -191,19 +213,49 @@ export type Shop = {
   id: string,
   name: string,
   slug: string,
-  headline?: string | null,
   logo?: string | null,
   cover?: string | null,
   description?: string | null,
+  location?: Location | null,
+  recommended?: boolean | null,
+  status?: ShopStatus | null,
   createdBy?: string | null,
   updatedBy?: string | null,
-  suspended?: boolean | null,
-  recommended?: boolean | null,
+  categoryID: string,
+  category?: ShopCategory | null,
   products?: ModelProductConnection | null,
   members?: ModelShopMemberConnection | null,
   discounts?: ModelDiscountConnection | null,
   createdAt: string,
   updatedAt: string,
+};
+
+export type Location = {
+  __typename: "Location",
+  lat: string,
+  long: string,
+};
+
+export enum ShopStatus {
+  LIVE = "LIVE",
+  PENDING = "PENDING",
+  DENIED = "DENIED",
+}
+
+
+export type ShopCategory = {
+  __typename: "ShopCategory",
+  id: string,
+  name: string,
+  shops?: ModelShopConnection | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type ModelShopConnection = {
+  __typename: "ModelShopConnection",
+  items:  Array<Shop | null >,
+  nextToken?: string | null,
 };
 
 export type ModelShopMemberConnection = {
@@ -236,7 +288,7 @@ export type User = {
   name: string,
   phone: string,
   email?: string | null,
-  avatar?: string | null,
+  image?: string | null,
   disabled?: boolean | null,
   role: UserRole,
   shops?: ModelShopMemberConnection | null,
@@ -386,7 +438,6 @@ export type ModelProductFilterInput = {
   deleted?: ModelBooleanInput | null,
   featured?: ModelBooleanInput | null,
   status?: ModelProductStatusInput | null,
-  suspended?: ModelBooleanInput | null,
   createdBy?: ModelStringInput | null,
   updatedBy?: ModelStringInput | null,
   discountID?: ModelIDInput | null,
@@ -428,23 +479,22 @@ export type ModelShopFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
   slug?: ModelStringInput | null,
-  headline?: ModelStringInput | null,
   logo?: ModelStringInput | null,
   cover?: ModelStringInput | null,
   description?: ModelStringInput | null,
+  recommended?: ModelBooleanInput | null,
+  status?: ModelShopStatusInput | null,
   createdBy?: ModelStringInput | null,
   updatedBy?: ModelStringInput | null,
-  suspended?: ModelBooleanInput | null,
-  recommended?: ModelBooleanInput | null,
+  categoryID?: ModelIDInput | null,
   and?: Array< ModelShopFilterInput | null > | null,
   or?: Array< ModelShopFilterInput | null > | null,
   not?: ModelShopFilterInput | null,
 };
 
-export type ModelShopConnection = {
-  __typename: "ModelShopConnection",
-  items:  Array<Shop | null >,
-  nextToken?: string | null,
+export type ModelShopStatusInput = {
+  eq?: ShopStatus | null,
+  ne?: ShopStatus | null,
 };
 
 export type CreateBannerInput = {
@@ -517,6 +567,27 @@ export type DeleteCategoryInput = {
   id: string,
 };
 
+export type CreateShopCategoryInput = {
+  id?: string | null,
+  name: string,
+};
+
+export type ModelShopCategoryConditionInput = {
+  name?: ModelStringInput | null,
+  and?: Array< ModelShopCategoryConditionInput | null > | null,
+  or?: Array< ModelShopCategoryConditionInput | null > | null,
+  not?: ModelShopCategoryConditionInput | null,
+};
+
+export type UpdateShopCategoryInput = {
+  id: string,
+  name?: string | null,
+};
+
+export type DeleteShopCategoryInput = {
+  id: string,
+};
+
 export type CreateDiscountInput = {
   id?: string | null,
   title: string,
@@ -570,13 +641,32 @@ export type CreateProductInput = {
   deleted?: boolean | null,
   featured?: boolean | null,
   status?: ProductStatus | null,
-  suspended?: boolean | null,
   createdBy?: string | null,
   updatedBy?: string | null,
+  options?: Array< ProductOptionInput | null > | null,
+  variants?: Array< ProductVariantInput | null > | null,
   discountID?: string | null,
   categoryID: string,
   shopID: string,
   type?: string | null,
+};
+
+export type ProductOptionInput = {
+  key: string,
+  name: string,
+};
+
+export type ProductVariantInput = {
+  key: string,
+  title: string,
+  price?: number | null,
+  sku?: string | null,
+  options?: Array< ProductOptionValueInput | null > | null,
+};
+
+export type ProductOptionValueInput = {
+  option: string,
+  value: string,
 };
 
 export type ModelProductConditionInput = {
@@ -593,7 +683,6 @@ export type ModelProductConditionInput = {
   deleted?: ModelBooleanInput | null,
   featured?: ModelBooleanInput | null,
   status?: ModelProductStatusInput | null,
-  suspended?: ModelBooleanInput | null,
   createdBy?: ModelStringInput | null,
   updatedBy?: ModelStringInput | null,
   discountID?: ModelIDInput | null,
@@ -620,9 +709,10 @@ export type UpdateProductInput = {
   deleted?: boolean | null,
   featured?: boolean | null,
   status?: ProductStatus | null,
-  suspended?: boolean | null,
   createdBy?: string | null,
   updatedBy?: string | null,
+  options?: Array< ProductOptionInput | null > | null,
+  variants?: Array< ProductVariantInput | null > | null,
   discountID?: string | null,
   categoryID?: string | null,
   shopID?: string | null,
@@ -637,27 +727,33 @@ export type CreateShopInput = {
   id?: string | null,
   name: string,
   slug: string,
-  headline?: string | null,
   logo?: string | null,
   cover?: string | null,
   description?: string | null,
+  location?: LocationInput | null,
+  recommended?: boolean | null,
+  status?: ShopStatus | null,
   createdBy?: string | null,
   updatedBy?: string | null,
-  suspended?: boolean | null,
-  recommended?: boolean | null,
+  categoryID: string,
+};
+
+export type LocationInput = {
+  lat: string,
+  long: string,
 };
 
 export type ModelShopConditionInput = {
   name?: ModelStringInput | null,
   slug?: ModelStringInput | null,
-  headline?: ModelStringInput | null,
   logo?: ModelStringInput | null,
   cover?: ModelStringInput | null,
   description?: ModelStringInput | null,
+  recommended?: ModelBooleanInput | null,
+  status?: ModelShopStatusInput | null,
   createdBy?: ModelStringInput | null,
   updatedBy?: ModelStringInput | null,
-  suspended?: ModelBooleanInput | null,
-  recommended?: ModelBooleanInput | null,
+  categoryID?: ModelIDInput | null,
   and?: Array< ModelShopConditionInput | null > | null,
   or?: Array< ModelShopConditionInput | null > | null,
   not?: ModelShopConditionInput | null,
@@ -667,14 +763,15 @@ export type UpdateShopInput = {
   id: string,
   name?: string | null,
   slug?: string | null,
-  headline?: string | null,
   logo?: string | null,
   cover?: string | null,
   description?: string | null,
+  location?: LocationInput | null,
+  recommended?: boolean | null,
+  status?: ShopStatus | null,
   createdBy?: string | null,
   updatedBy?: string | null,
-  suspended?: boolean | null,
-  recommended?: boolean | null,
+  categoryID?: string | null,
 };
 
 export type DeleteShopInput = {
@@ -686,7 +783,7 @@ export type CreateUserInput = {
   name: string,
   phone: string,
   email?: string | null,
-  avatar?: string | null,
+  image?: string | null,
   disabled?: boolean | null,
   role: UserRole,
 };
@@ -695,7 +792,7 @@ export type ModelUserConditionInput = {
   name?: ModelStringInput | null,
   phone?: ModelStringInput | null,
   email?: ModelStringInput | null,
-  avatar?: ModelStringInput | null,
+  image?: ModelStringInput | null,
   disabled?: ModelBooleanInput | null,
   role?: ModelUserRoleInput | null,
   and?: Array< ModelUserConditionInput | null > | null,
@@ -713,7 +810,7 @@ export type UpdateUserInput = {
   name?: string | null,
   phone?: string | null,
   email?: string | null,
-  avatar?: string | null,
+  image?: string | null,
   disabled?: boolean | null,
   role?: UserRole | null,
 };
@@ -818,6 +915,20 @@ export type ModelBannerConnection = {
   nextToken?: string | null,
 };
 
+export type ModelShopCategoryFilterInput = {
+  id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  and?: Array< ModelShopCategoryFilterInput | null > | null,
+  or?: Array< ModelShopCategoryFilterInput | null > | null,
+  not?: ModelShopCategoryFilterInput | null,
+};
+
+export type ModelShopCategoryConnection = {
+  __typename: "ModelShopCategoryConnection",
+  items:  Array<ShopCategory | null >,
+  nextToken?: string | null,
+};
+
 export type ModelDiscountFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
@@ -835,7 +946,7 @@ export type ModelUserFilterInput = {
   name?: ModelStringInput | null,
   phone?: ModelStringInput | null,
   email?: ModelStringInput | null,
-  avatar?: ModelStringInput | null,
+  image?: ModelStringInput | null,
   disabled?: ModelBooleanInput | null,
   role?: ModelUserRoleInput | null,
   and?: Array< ModelUserFilterInput | null > | null,
@@ -938,6 +1049,13 @@ export type ModelSubscriptionBooleanInput = {
   eq?: boolean | null,
 };
 
+export type ModelSubscriptionShopCategoryFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionShopCategoryFilterInput | null > | null,
+  or?: Array< ModelSubscriptionShopCategoryFilterInput | null > | null,
+};
+
 export type ModelSubscriptionDiscountFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   title?: ModelSubscriptionStringInput | null,
@@ -976,7 +1094,6 @@ export type ModelSubscriptionProductFilterInput = {
   deleted?: ModelSubscriptionBooleanInput | null,
   featured?: ModelSubscriptionBooleanInput | null,
   status?: ModelSubscriptionStringInput | null,
-  suspended?: ModelSubscriptionBooleanInput | null,
   createdBy?: ModelSubscriptionStringInput | null,
   updatedBy?: ModelSubscriptionStringInput | null,
   discountID?: ModelSubscriptionIDInput | null,
@@ -991,14 +1108,14 @@ export type ModelSubscriptionShopFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   name?: ModelSubscriptionStringInput | null,
   slug?: ModelSubscriptionStringInput | null,
-  headline?: ModelSubscriptionStringInput | null,
   logo?: ModelSubscriptionStringInput | null,
   cover?: ModelSubscriptionStringInput | null,
   description?: ModelSubscriptionStringInput | null,
+  recommended?: ModelSubscriptionBooleanInput | null,
+  status?: ModelSubscriptionStringInput | null,
   createdBy?: ModelSubscriptionStringInput | null,
   updatedBy?: ModelSubscriptionStringInput | null,
-  suspended?: ModelSubscriptionBooleanInput | null,
-  recommended?: ModelSubscriptionBooleanInput | null,
+  categoryID?: ModelSubscriptionIDInput | null,
   and?: Array< ModelSubscriptionShopFilterInput | null > | null,
   or?: Array< ModelSubscriptionShopFilterInput | null > | null,
 };
@@ -1008,7 +1125,7 @@ export type ModelSubscriptionUserFilterInput = {
   name?: ModelSubscriptionStringInput | null,
   phone?: ModelSubscriptionStringInput | null,
   email?: ModelSubscriptionStringInput | null,
-  avatar?: ModelSubscriptionStringInput | null,
+  image?: ModelSubscriptionStringInput | null,
   disabled?: ModelSubscriptionBooleanInput | null,
   role?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionUserFilterInput | null > | null,
@@ -1088,7 +1205,7 @@ export type FindCartItemsByUserQueryVariables = {
 };
 
 export type FindCartItemsByUserQuery = {
-  cartItemsByUser?:  {
+  getCartItemsByUser?:  {
     __typename: "ModelCartItemConnection",
     items:  Array< {
       __typename: "CartItem",
@@ -1176,7 +1293,7 @@ export type FindFavoriteProductsByUserQueryVariables = {
 };
 
 export type FindFavoriteProductsByUserQuery = {
-  favoriteProductsByUser?:  {
+  getFavoriteProductsByUser?:  {
     __typename: "ModelFavoriteProductConnection",
     items:  Array< {
       __typename: "FavoriteProduct",
@@ -1189,7 +1306,6 @@ export type FindFavoriteProductsByUserQuery = {
         slug: string,
         price?: number | null,
         images?: Array< string | null > | null,
-        description?: string | null,
         category?:  {
           __typename: "Category",
           id: string,
@@ -1290,7 +1406,6 @@ export type FindProductsQuery = {
       slug: string,
       price?: number | null,
       images?: Array< string | null > | null,
-      description?: string | null,
       category?:  {
         __typename: "Category",
         id: string,
@@ -1319,7 +1434,7 @@ export type FindProductsOrderByPriceQueryVariables = {
 };
 
 export type FindProductsOrderByPriceQuery = {
-  productsByPrice?:  {
+  getProductsOrderByPrice?:  {
     __typename: "ModelProductConnection",
     items:  Array< {
       __typename: "Product",
@@ -1328,7 +1443,6 @@ export type FindProductsOrderByPriceQuery = {
       slug: string,
       price?: number | null,
       images?: Array< string | null > | null,
-      description?: string | null,
       category?:  {
         __typename: "Category",
         id: string,
@@ -1357,13 +1471,11 @@ export type GetShopByIdQuery = {
     id: string,
     name: string,
     slug: string,
-    headline?: string | null,
     cover?: string | null,
     logo?: string | null,
     description?: string | null,
     createdBy?: string | null,
     updatedBy?: string | null,
-    suspended?: boolean | null,
     recommended?: boolean | null,
     createdAt: string,
     updatedAt: string,
@@ -1386,13 +1498,11 @@ export type FindShopBySlugQuery = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       cover?: string | null,
       logo?: string | null,
       description?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
       recommended?: boolean | null,
       createdAt: string,
       updatedAt: string,
@@ -1414,12 +1524,10 @@ export type FindShopsQuery = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
-      cover?: string | null,
       logo?: string | null,
+      cover?: string | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
       recommended?: boolean | null,
       createdAt: string,
       updatedAt: string,
@@ -1439,7 +1547,7 @@ export type GetUserByIdQuery = {
     name: string,
     phone: string,
     email?: string | null,
-    avatar?: string | null,
+    image?: string | null,
     disabled?: boolean | null,
     role: UserRole,
     createdAt: string,
@@ -1475,7 +1583,6 @@ export type DeleteCartItemMutation = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -1518,7 +1625,6 @@ export type DeleteFavoriteProductMutation = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -1699,6 +1805,63 @@ export type DeleteCategoryMutation = {
   } | null,
 };
 
+export type CreateShopCategoryMutationVariables = {
+  input: CreateShopCategoryInput,
+  condition?: ModelShopCategoryConditionInput | null,
+};
+
+export type CreateShopCategoryMutation = {
+  createShopCategory?:  {
+    __typename: "ShopCategory",
+    id: string,
+    name: string,
+    shops?:  {
+      __typename: "ModelShopConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateShopCategoryMutationVariables = {
+  input: UpdateShopCategoryInput,
+  condition?: ModelShopCategoryConditionInput | null,
+};
+
+export type UpdateShopCategoryMutation = {
+  updateShopCategory?:  {
+    __typename: "ShopCategory",
+    id: string,
+    name: string,
+    shops?:  {
+      __typename: "ModelShopConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteShopCategoryMutationVariables = {
+  input: DeleteShopCategoryInput,
+  condition?: ModelShopCategoryConditionInput | null,
+};
+
+export type DeleteShopCategoryMutation = {
+  deleteShopCategory?:  {
+    __typename: "ShopCategory",
+    id: string,
+    name: string,
+    shops?:  {
+      __typename: "ModelShopConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateDiscountMutationVariables = {
   input: CreateDiscountInput,
   condition?: ModelDiscountConditionInput | null,
@@ -1790,9 +1953,20 @@ export type CreateProductMutation = {
     deleted?: boolean | null,
     featured?: boolean | null,
     status?: ProductStatus | null,
-    suspended?: boolean | null,
     createdBy?: string | null,
     updatedBy?: string | null,
+    options?:  Array< {
+      __typename: "ProductOption",
+      key: string,
+      name: string,
+    } | null > | null,
+    variants?:  Array< {
+      __typename: "ProductVariant",
+      key: string,
+      title: string,
+      price?: number | null,
+      sku?: string | null,
+    } | null > | null,
     discountID?: string | null,
     categoryID: string,
     shopID: string,
@@ -1823,14 +1997,14 @@ export type CreateProductMutation = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -1870,9 +2044,20 @@ export type UpdateProductMutation = {
     deleted?: boolean | null,
     featured?: boolean | null,
     status?: ProductStatus | null,
-    suspended?: boolean | null,
     createdBy?: string | null,
     updatedBy?: string | null,
+    options?:  Array< {
+      __typename: "ProductOption",
+      key: string,
+      name: string,
+    } | null > | null,
+    variants?:  Array< {
+      __typename: "ProductVariant",
+      key: string,
+      title: string,
+      price?: number | null,
+      sku?: string | null,
+    } | null > | null,
     discountID?: string | null,
     categoryID: string,
     shopID: string,
@@ -1903,14 +2088,14 @@ export type UpdateProductMutation = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -1950,9 +2135,20 @@ export type DeleteProductMutation = {
     deleted?: boolean | null,
     featured?: boolean | null,
     status?: ProductStatus | null,
-    suspended?: boolean | null,
     createdBy?: string | null,
     updatedBy?: string | null,
+    options?:  Array< {
+      __typename: "ProductOption",
+      key: string,
+      name: string,
+    } | null > | null,
+    variants?:  Array< {
+      __typename: "ProductVariant",
+      key: string,
+      title: string,
+      price?: number | null,
+      sku?: string | null,
+    } | null > | null,
     discountID?: string | null,
     categoryID: string,
     shopID: string,
@@ -1983,14 +2179,14 @@ export type DeleteProductMutation = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -2019,14 +2215,26 @@ export type CreateShopMutation = {
     id: string,
     name: string,
     slug: string,
-    headline?: string | null,
     logo?: string | null,
     cover?: string | null,
     description?: string | null,
+    location?:  {
+      __typename: "Location",
+      lat: string,
+      long: string,
+    } | null,
+    recommended?: boolean | null,
+    status?: ShopStatus | null,
     createdBy?: string | null,
     updatedBy?: string | null,
-    suspended?: boolean | null,
-    recommended?: boolean | null,
+    categoryID: string,
+    category?:  {
+      __typename: "ShopCategory",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     products?:  {
       __typename: "ModelProductConnection",
       nextToken?: string | null,
@@ -2055,14 +2263,26 @@ export type UpdateShopMutation = {
     id: string,
     name: string,
     slug: string,
-    headline?: string | null,
     logo?: string | null,
     cover?: string | null,
     description?: string | null,
+    location?:  {
+      __typename: "Location",
+      lat: string,
+      long: string,
+    } | null,
+    recommended?: boolean | null,
+    status?: ShopStatus | null,
     createdBy?: string | null,
     updatedBy?: string | null,
-    suspended?: boolean | null,
-    recommended?: boolean | null,
+    categoryID: string,
+    category?:  {
+      __typename: "ShopCategory",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     products?:  {
       __typename: "ModelProductConnection",
       nextToken?: string | null,
@@ -2091,14 +2311,26 @@ export type DeleteShopMutation = {
     id: string,
     name: string,
     slug: string,
-    headline?: string | null,
     logo?: string | null,
     cover?: string | null,
     description?: string | null,
+    location?:  {
+      __typename: "Location",
+      lat: string,
+      long: string,
+    } | null,
+    recommended?: boolean | null,
+    status?: ShopStatus | null,
     createdBy?: string | null,
     updatedBy?: string | null,
-    suspended?: boolean | null,
-    recommended?: boolean | null,
+    categoryID: string,
+    category?:  {
+      __typename: "ShopCategory",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     products?:  {
       __typename: "ModelProductConnection",
       nextToken?: string | null,
@@ -2128,7 +2360,7 @@ export type CreateUserMutation = {
     name: string,
     phone: string,
     email?: string | null,
-    avatar?: string | null,
+    image?: string | null,
     disabled?: boolean | null,
     role: UserRole,
     shops?:  {
@@ -2164,7 +2396,7 @@ export type UpdateUserMutation = {
     name: string,
     phone: string,
     email?: string | null,
-    avatar?: string | null,
+    image?: string | null,
     disabled?: boolean | null,
     role: UserRole,
     shops?:  {
@@ -2200,7 +2432,7 @@ export type DeleteUserMutation = {
     name: string,
     phone: string,
     email?: string | null,
-    avatar?: string | null,
+    image?: string | null,
     disabled?: boolean | null,
     role: UserRole,
     shops?:  {
@@ -2241,14 +2473,14 @@ export type CreateShopMemberMutation = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -2258,7 +2490,7 @@ export type CreateShopMemberMutation = {
       name: string,
       phone: string,
       email?: string | null,
-      avatar?: string | null,
+      image?: string | null,
       disabled?: boolean | null,
       role: UserRole,
       createdAt: string,
@@ -2286,14 +2518,14 @@ export type UpdateShopMemberMutation = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -2303,7 +2535,7 @@ export type UpdateShopMemberMutation = {
       name: string,
       phone: string,
       email?: string | null,
-      avatar?: string | null,
+      image?: string | null,
       disabled?: boolean | null,
       role: UserRole,
       createdAt: string,
@@ -2331,14 +2563,14 @@ export type DeleteShopMemberMutation = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -2348,7 +2580,7 @@ export type DeleteShopMemberMutation = {
       name: string,
       phone: string,
       email?: string | null,
-      avatar?: string | null,
+      image?: string | null,
       disabled?: boolean | null,
       role: UserRole,
       createdAt: string,
@@ -2444,7 +2676,6 @@ export type CreateCartItemMutation = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -2488,7 +2719,6 @@ export type UpdateCartItemMutation = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -2531,7 +2761,6 @@ export type CreateFavoriteProductMutation = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -2574,7 +2803,6 @@ export type UpdateFavoriteProductMutation = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -2689,6 +2917,44 @@ export type ListCategoriesQuery = {
   } | null,
 };
 
+export type GetShopCategoryQueryVariables = {
+  id: string,
+};
+
+export type GetShopCategoryQuery = {
+  getShopCategory?:  {
+    __typename: "ShopCategory",
+    id: string,
+    name: string,
+    shops?:  {
+      __typename: "ModelShopConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListShopCategoriesQueryVariables = {
+  filter?: ModelShopCategoryFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListShopCategoriesQuery = {
+  listShopCategories?:  {
+    __typename: "ModelShopCategoryConnection",
+    items:  Array< {
+      __typename: "ShopCategory",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetDiscountQueryVariables = {
   id: string,
 };
@@ -2782,9 +3048,20 @@ export type GetProductQuery = {
     deleted?: boolean | null,
     featured?: boolean | null,
     status?: ProductStatus | null,
-    suspended?: boolean | null,
     createdBy?: string | null,
     updatedBy?: string | null,
+    options?:  Array< {
+      __typename: "ProductOption",
+      key: string,
+      name: string,
+    } | null > | null,
+    variants?:  Array< {
+      __typename: "ProductVariant",
+      key: string,
+      title: string,
+      price?: number | null,
+      sku?: string | null,
+    } | null > | null,
     discountID?: string | null,
     categoryID: string,
     shopID: string,
@@ -2815,14 +3092,14 @@ export type GetProductQuery = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -2865,7 +3142,6 @@ export type ListProductsQuery = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -2906,7 +3182,6 @@ export type GetProductBySlugQuery = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -2920,7 +3195,7 @@ export type GetProductBySlugQuery = {
   } | null,
 };
 
-export type ProductsByPriceQueryVariables = {
+export type GetProductsOrderByPriceQueryVariables = {
   type: string,
   price?: ModelFloatKeyConditionInput | null,
   sortDirection?: ModelSortDirection | null,
@@ -2929,8 +3204,8 @@ export type ProductsByPriceQueryVariables = {
   nextToken?: string | null,
 };
 
-export type ProductsByPriceQuery = {
-  productsByPrice?:  {
+export type GetProductsOrderByPriceQuery = {
+  getProductsOrderByPrice?:  {
     __typename: "ModelProductConnection",
     items:  Array< {
       __typename: "Product",
@@ -2948,7 +3223,6 @@ export type ProductsByPriceQuery = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -2972,14 +3246,26 @@ export type GetShopQuery = {
     id: string,
     name: string,
     slug: string,
-    headline?: string | null,
     logo?: string | null,
     cover?: string | null,
     description?: string | null,
+    location?:  {
+      __typename: "Location",
+      lat: string,
+      long: string,
+    } | null,
+    recommended?: boolean | null,
+    status?: ShopStatus | null,
     createdBy?: string | null,
     updatedBy?: string | null,
-    suspended?: boolean | null,
-    recommended?: boolean | null,
+    categoryID: string,
+    category?:  {
+      __typename: "ShopCategory",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     products?:  {
       __typename: "ModelProductConnection",
       nextToken?: string | null,
@@ -3011,14 +3297,14 @@ export type ListShopsQuery = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -3042,14 +3328,45 @@ export type GetShopBySlugQuery = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
+      categoryID: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetShopsByCategoryQueryVariables = {
+  categoryID: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelShopFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type GetShopsByCategoryQuery = {
+  getShopsByCategory?:  {
+    __typename: "ModelShopConnection",
+    items:  Array< {
+      __typename: "Shop",
+      id: string,
+      name: string,
+      slug: string,
+      logo?: string | null,
+      cover?: string | null,
+      description?: string | null,
       recommended?: boolean | null,
+      status?: ShopStatus | null,
+      createdBy?: string | null,
+      updatedBy?: string | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -3068,7 +3385,7 @@ export type GetUserQuery = {
     name: string,
     phone: string,
     email?: string | null,
-    avatar?: string | null,
+    image?: string | null,
     disabled?: boolean | null,
     role: UserRole,
     shops?:  {
@@ -3107,7 +3424,7 @@ export type ListUsersQuery = {
       name: string,
       phone: string,
       email?: string | null,
-      avatar?: string | null,
+      image?: string | null,
       disabled?: boolean | null,
       role: UserRole,
       createdAt: string,
@@ -3133,14 +3450,14 @@ export type GetShopMemberQuery = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3150,7 +3467,7 @@ export type GetShopMemberQuery = {
       name: string,
       phone: string,
       email?: string | null,
-      avatar?: string | null,
+      image?: string | null,
       disabled?: boolean | null,
       role: UserRole,
       createdAt: string,
@@ -3252,7 +3569,6 @@ export type GetCartItemQuery = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -3291,7 +3607,7 @@ export type ListCartItemsQuery = {
   } | null,
 };
 
-export type CartItemsByUserQueryVariables = {
+export type GetCartItemsByUserQueryVariables = {
   userID: string,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelCartItemFilterInput | null,
@@ -3299,8 +3615,8 @@ export type CartItemsByUserQueryVariables = {
   nextToken?: string | null,
 };
 
-export type CartItemsByUserQuery = {
-  cartItemsByUser?:  {
+export type GetCartItemsByUserQuery = {
+  getCartItemsByUser?:  {
     __typename: "ModelCartItemConnection",
     items:  Array< {
       __typename: "CartItem",
@@ -3342,7 +3658,6 @@ export type GetFavoriteProductQuery = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -3380,7 +3695,7 @@ export type ListFavoriteProductsQuery = {
   } | null,
 };
 
-export type FavoriteProductsByUserQueryVariables = {
+export type GetFavoriteProductsByUserQueryVariables = {
   userID: string,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelFavoriteProductFilterInput | null,
@@ -3388,8 +3703,8 @@ export type FavoriteProductsByUserQueryVariables = {
   nextToken?: string | null,
 };
 
-export type FavoriteProductsByUserQuery = {
-  favoriteProductsByUser?:  {
+export type GetFavoriteProductsByUserQuery = {
+  getFavoriteProductsByUser?:  {
     __typename: "ModelFavoriteProductConnection",
     items:  Array< {
       __typename: "FavoriteProduct",
@@ -3563,6 +3878,60 @@ export type OnDeleteCategorySubscription = {
   } | null,
 };
 
+export type OnCreateShopCategorySubscriptionVariables = {
+  filter?: ModelSubscriptionShopCategoryFilterInput | null,
+};
+
+export type OnCreateShopCategorySubscription = {
+  onCreateShopCategory?:  {
+    __typename: "ShopCategory",
+    id: string,
+    name: string,
+    shops?:  {
+      __typename: "ModelShopConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateShopCategorySubscriptionVariables = {
+  filter?: ModelSubscriptionShopCategoryFilterInput | null,
+};
+
+export type OnUpdateShopCategorySubscription = {
+  onUpdateShopCategory?:  {
+    __typename: "ShopCategory",
+    id: string,
+    name: string,
+    shops?:  {
+      __typename: "ModelShopConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteShopCategorySubscriptionVariables = {
+  filter?: ModelSubscriptionShopCategoryFilterInput | null,
+};
+
+export type OnDeleteShopCategorySubscription = {
+  onDeleteShopCategory?:  {
+    __typename: "ShopCategory",
+    id: string,
+    name: string,
+    shops?:  {
+      __typename: "ModelShopConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreateDiscountSubscriptionVariables = {
   filter?: ModelSubscriptionDiscountFilterInput | null,
 };
@@ -3650,9 +4019,20 @@ export type OnCreateProductSubscription = {
     deleted?: boolean | null,
     featured?: boolean | null,
     status?: ProductStatus | null,
-    suspended?: boolean | null,
     createdBy?: string | null,
     updatedBy?: string | null,
+    options?:  Array< {
+      __typename: "ProductOption",
+      key: string,
+      name: string,
+    } | null > | null,
+    variants?:  Array< {
+      __typename: "ProductVariant",
+      key: string,
+      title: string,
+      price?: number | null,
+      sku?: string | null,
+    } | null > | null,
     discountID?: string | null,
     categoryID: string,
     shopID: string,
@@ -3683,14 +4063,14 @@ export type OnCreateProductSubscription = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3729,9 +4109,20 @@ export type OnUpdateProductSubscription = {
     deleted?: boolean | null,
     featured?: boolean | null,
     status?: ProductStatus | null,
-    suspended?: boolean | null,
     createdBy?: string | null,
     updatedBy?: string | null,
+    options?:  Array< {
+      __typename: "ProductOption",
+      key: string,
+      name: string,
+    } | null > | null,
+    variants?:  Array< {
+      __typename: "ProductVariant",
+      key: string,
+      title: string,
+      price?: number | null,
+      sku?: string | null,
+    } | null > | null,
     discountID?: string | null,
     categoryID: string,
     shopID: string,
@@ -3762,14 +4153,14 @@ export type OnUpdateProductSubscription = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3808,9 +4199,20 @@ export type OnDeleteProductSubscription = {
     deleted?: boolean | null,
     featured?: boolean | null,
     status?: ProductStatus | null,
-    suspended?: boolean | null,
     createdBy?: string | null,
     updatedBy?: string | null,
+    options?:  Array< {
+      __typename: "ProductOption",
+      key: string,
+      name: string,
+    } | null > | null,
+    variants?:  Array< {
+      __typename: "ProductVariant",
+      key: string,
+      title: string,
+      price?: number | null,
+      sku?: string | null,
+    } | null > | null,
     discountID?: string | null,
     categoryID: string,
     shopID: string,
@@ -3841,14 +4243,14 @@ export type OnDeleteProductSubscription = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -3876,14 +4278,26 @@ export type OnCreateShopSubscription = {
     id: string,
     name: string,
     slug: string,
-    headline?: string | null,
     logo?: string | null,
     cover?: string | null,
     description?: string | null,
+    location?:  {
+      __typename: "Location",
+      lat: string,
+      long: string,
+    } | null,
+    recommended?: boolean | null,
+    status?: ShopStatus | null,
     createdBy?: string | null,
     updatedBy?: string | null,
-    suspended?: boolean | null,
-    recommended?: boolean | null,
+    categoryID: string,
+    category?:  {
+      __typename: "ShopCategory",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     products?:  {
       __typename: "ModelProductConnection",
       nextToken?: string | null,
@@ -3911,14 +4325,26 @@ export type OnUpdateShopSubscription = {
     id: string,
     name: string,
     slug: string,
-    headline?: string | null,
     logo?: string | null,
     cover?: string | null,
     description?: string | null,
+    location?:  {
+      __typename: "Location",
+      lat: string,
+      long: string,
+    } | null,
+    recommended?: boolean | null,
+    status?: ShopStatus | null,
     createdBy?: string | null,
     updatedBy?: string | null,
-    suspended?: boolean | null,
-    recommended?: boolean | null,
+    categoryID: string,
+    category?:  {
+      __typename: "ShopCategory",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     products?:  {
       __typename: "ModelProductConnection",
       nextToken?: string | null,
@@ -3946,14 +4372,26 @@ export type OnDeleteShopSubscription = {
     id: string,
     name: string,
     slug: string,
-    headline?: string | null,
     logo?: string | null,
     cover?: string | null,
     description?: string | null,
+    location?:  {
+      __typename: "Location",
+      lat: string,
+      long: string,
+    } | null,
+    recommended?: boolean | null,
+    status?: ShopStatus | null,
     createdBy?: string | null,
     updatedBy?: string | null,
-    suspended?: boolean | null,
-    recommended?: boolean | null,
+    categoryID: string,
+    category?:  {
+      __typename: "ShopCategory",
+      id: string,
+      name: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     products?:  {
       __typename: "ModelProductConnection",
       nextToken?: string | null,
@@ -3982,7 +4420,7 @@ export type OnCreateUserSubscription = {
     name: string,
     phone: string,
     email?: string | null,
-    avatar?: string | null,
+    image?: string | null,
     disabled?: boolean | null,
     role: UserRole,
     shops?:  {
@@ -4017,7 +4455,7 @@ export type OnUpdateUserSubscription = {
     name: string,
     phone: string,
     email?: string | null,
-    avatar?: string | null,
+    image?: string | null,
     disabled?: boolean | null,
     role: UserRole,
     shops?:  {
@@ -4052,7 +4490,7 @@ export type OnDeleteUserSubscription = {
     name: string,
     phone: string,
     email?: string | null,
-    avatar?: string | null,
+    image?: string | null,
     disabled?: boolean | null,
     role: UserRole,
     shops?:  {
@@ -4092,14 +4530,14 @@ export type OnCreateShopMemberSubscription = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4109,7 +4547,7 @@ export type OnCreateShopMemberSubscription = {
       name: string,
       phone: string,
       email?: string | null,
-      avatar?: string | null,
+      image?: string | null,
       disabled?: boolean | null,
       role: UserRole,
       createdAt: string,
@@ -4136,14 +4574,14 @@ export type OnUpdateShopMemberSubscription = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4153,7 +4591,7 @@ export type OnUpdateShopMemberSubscription = {
       name: string,
       phone: string,
       email?: string | null,
-      avatar?: string | null,
+      image?: string | null,
       disabled?: boolean | null,
       role: UserRole,
       createdAt: string,
@@ -4180,14 +4618,14 @@ export type OnDeleteShopMemberSubscription = {
       id: string,
       name: string,
       slug: string,
-      headline?: string | null,
       logo?: string | null,
       cover?: string | null,
       description?: string | null,
+      recommended?: boolean | null,
+      status?: ShopStatus | null,
       createdBy?: string | null,
       updatedBy?: string | null,
-      suspended?: boolean | null,
-      recommended?: boolean | null,
+      categoryID: string,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -4197,7 +4635,7 @@ export type OnDeleteShopMemberSubscription = {
       name: string,
       phone: string,
       email?: string | null,
-      avatar?: string | null,
+      image?: string | null,
       disabled?: boolean | null,
       role: UserRole,
       createdAt: string,
@@ -4290,7 +4728,6 @@ export type OnCreateCartItemSubscription = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -4334,7 +4771,6 @@ export type OnUpdateCartItemSubscription = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -4378,7 +4814,6 @@ export type OnDeleteCartItemSubscription = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -4421,7 +4856,6 @@ export type OnCreateFavoriteProductSubscription = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -4464,7 +4898,6 @@ export type OnUpdateFavoriteProductSubscription = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,
@@ -4507,7 +4940,6 @@ export type OnDeleteFavoriteProductSubscription = {
       deleted?: boolean | null,
       featured?: boolean | null,
       status?: ProductStatus | null,
-      suspended?: boolean | null,
       createdBy?: string | null,
       updatedBy?: string | null,
       discountID?: string | null,

@@ -1,4 +1,4 @@
-import { PhoneIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PhoneIcon, TrashIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { PhotoIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -11,63 +11,47 @@ const groupList = ["Electronic", "Stationary", "Health & Beauty"];
 const DynamicEditor = dynamic<RichTextEditorInputProps>(
   () => import("../forms").then((f) => f.RichTextEditor),
   {
-    ssr: false,
+    ssr: false
   }
 );
 
-function SocialRow() {
+function SocialChip() {
   return (
-    <div className="col-auto">
-      <div
-        className="border-0 rounded bg-secondary align-items-center"
-        style={{
-          paddingTop: 6,
-          paddingBottom: 6,
-          paddingLeft: 12,
-          paddingRight: 12,
-        }}
-      >
-        <div className="hstack">
-          <Image
-            className="flex-shrink-0"
-            src="/images/icons8-facebook-48.png"
-            alt="facebook"
-            width={28}
-            height={28}
-          />
-          <span className="text-dark ms-1 small">Shopping Center</span>
-          <Link href="#">
-            <a>
-              <XMarkIcon className="ms-2 text-dark flex-shrink-0" width={20} />
-            </a>
-          </Link>
-        </div>
+    <div className="hstack rounded border p-2">
+      <Image
+        className="flex-shrink-0"
+        src="/images/icons8-facebook-48.png"
+        alt="facebook"
+        width={28}
+        height={28}
+      />
+      <span className="text-dark ms-1 small">Shopping Center</span>
+      <div role="button" className="link-danger ms-2">
+        <XCircleIcon className="flex-shrink-0" width={20} />
       </div>
     </div>
   );
 }
 
-function BranchesRow() {
+function BranchCard() {
   return (
-    <div className="col">
-      <div className="bg-light border-0 rounded p-3">
-        <div className="vstack">
-          <div className="hstack align-items-start">
-            <div className="vstack">
-              <h6 className="flex-grow-1 pe-2 mb-1">Global Stationary Shop</h6>
-              <div className="hstack mb-3">
-                <PhoneIcon className="me-2" width={14} />
-                <small className="text-muted">09121219987</small>
-              </div>
+    <div className="bg-light border-0 rounded p-3">
+      <div className="vstack">
+        <div className="hstack align-items-start">
+          <div className="vstack">
+            <h6 className="flex-grow-1 pe-2 mb-1">Global Stationary Shop</h6>
+            <div className="hstack mb-3">
+              <PhoneIcon className="me-2" width={14} />
+              <small className="text-muted">09121219987</small>
             </div>
+          </div>
 
-            <a className="btn btn-outline-danger px-2">
-              <TrashIcon className="p-0" width={16} strokeWidth={1.5} />
-            </a>
-          </div>
-          <div className="text-muted small">
-            Yangon city, Pyay Road, Building 123, House 321
-          </div>
+          <a className="btn btn-outline-danger px-2">
+            <TrashIcon className="p-0" width={16} strokeWidth={1.5} />
+          </a>
+        </div>
+        <div className="text-muted small">
+          Yangon city, Pyay Road, Building 123, House 321
         </div>
       </div>
     </div>
@@ -164,22 +148,19 @@ function ShopEdit({ create = {} }) {
                     </div>
                     <div className="order-4 order-lg-3 order-md-4 col-lg-6">
                       <label className="form-label">Description</label>
-                      <div className="border rounded pt-1 pb-1">
-                        <DynamicEditor
-                          id="descriptionInput"
-                          placeholder="Enter shop description..."
-                          minHeight={300}
-                          noBorder
-                        />
-                      </div>
+                      <DynamicEditor
+                        id="descriptionInput"
+                        placeholder="Enter shop description..."
+                        minHeight={300}
+                      />
                     </div>
                     <div className="order-3 order-lg-4 order-md-3 col-lg-6 ">
                       <label className="form-label">Category *</label>
                       <AutocompleteSelect<string, string>
-                      options={groupList}
-                      getOptionLabel={(v) => v}
-                      getOptionValue={(v) => v}
-                    />
+                        options={groupList}
+                        getOptionLabel={(v) => v}
+                        getOptionValue={(v) => v}
+                      />
                     </div>
                   </div>
                 </div>
@@ -262,13 +243,11 @@ function ShopEdit({ create = {} }) {
                   </div>
                 </div>
               </div>
-              <div className="card-body p-3 px-md-4">
-                <div className="vstack">
-                  <div className="row g-3">
-                    {list.map((i) => (
-                      <SocialRow key={i} />
-                    ))}
-                  </div>
+              <div className="card-body px-md-4">
+                <div className="d-flex flex-wrap gap-3">
+                  {list.map((i) => (
+                    <SocialChip key={i} />
+                  ))}
                 </div>
               </div>
             </div>
@@ -288,7 +267,9 @@ function ShopEdit({ create = {} }) {
               <div className="card-body px-md-4">
                 <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
                   {list.map((i) => (
-                    <BranchesRow key={i} />
+                    <div className="col" key={i}>
+                      <BranchCard />
+                    </div>
                   ))}
                 </div>
               </div>

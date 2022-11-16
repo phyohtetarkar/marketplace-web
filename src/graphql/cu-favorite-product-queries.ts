@@ -6,7 +6,7 @@ export const findFavoriteProductsByUser = `
     $limit: Int
     $nextToken: String
   ) {
-    favoriteProductsByUser(
+    getFavoriteProductsByUser(
         userID: $userID
         sortDirection: $sortDirection
         filter: $filter
@@ -22,7 +22,6 @@ export const findFavoriteProductsByUser = `
             slug
             price
             images
-            description
             category {
               id
               name

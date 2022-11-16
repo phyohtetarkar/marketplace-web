@@ -32,7 +32,9 @@ function Login() {
     validate: (values) => {
       let errors: FormValues = {};
 
-      if (!values.phone || values.phone.trim().length === 0) {
+      const phoneRegex = "^(09)\\d{7,12}$";
+
+      if (!values.phone || !values.phone.match(phoneRegex)) {
         errors.phone = "Please enter valid phone number.";
       }
 

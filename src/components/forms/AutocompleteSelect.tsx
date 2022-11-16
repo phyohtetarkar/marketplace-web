@@ -3,7 +3,7 @@ import { ReactNode, useCallback, useEffect, useState } from "react";
 import { usePopper } from "react-popper";
 import Input from "./Input";
 
-interface AutocompleteSelectProps<T, Value> {
+interface AutocompleteSelectProps<T = string, Key = string> {
   referenceId?: string;
   popperId?: string;
   options?: readonly T[];
@@ -12,15 +12,13 @@ interface AutocompleteSelectProps<T, Value> {
   maxHeight?: number;
   error?: string;
   getOptionLabel: (op: T) => string;
-  getOptionValue: (op: T) => Value;
+  getOptionValue: (op: T) => Key;
   formatOptionLabel?: (op: T, selected: boolean) => ReactNode;
-  formatSelectionLabel?: (op: T) => string;
+  formatSelectedOption?: (op: T) => string;
   onChange?: (newValue: T) => void;
 }
 
-function AutocompleteSelect<T, Value>(
-  props: AutocompleteSelectProps<T, Value>
-) {
+function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
   const [referenceElement, setReferenceElement] = useState<HTMLElement | null>(
     null
   );
@@ -42,10 +40,8 @@ function AutocompleteSelect<T, Value>(
   const [selectedOption, setSelectedOption] = useState(() => {
     if (props.defaultValue) {
       return {
-        label: props.formatSelectionLabel
-          ? props.formatSelectionLabel(props.defaultValue)
-          : props.getOptionLabel(props.defaultValue),
-        value: props.getOptionValue(props.defaultValue)
+        key: props.getOptionValue(props.defaultValue),
+        value: props.defaultValue
       };
     }
     return null;
@@ -91,6 +87,14 @@ function AutocompleteSelect<T, Value>(
       .startsWith(filter.toLocaleLowerCase());
   }
 
+  function formatSelectedOption() {
+    const value = selectedOption?.value;
+    if (value) {
+      return props.formatSelectedOption?.(value) ?? props.getOptionLabel(value);
+    }
+    return "";
+  }
+
   function renderPopper() {
     const list = props.options ?? [];
 
@@ -117,16 +121,24 @@ function AutocompleteSelect<T, Value>(
                 style={{ maxHeight: props.maxHeight ?? 350, overflowY: "auto" }}
               >
                 {list.filter(handleFilter).map((v, i) => {
-                  const value = props.getOptionValue(v);
+                  const key = props.getOptionValue(v);
                   const label = props.getOptionLabel(v);
-                  const selected = value === selectedOption?.value;
+                  const selected = key === selectedOption?.key;
                   const handleClick = () => {
                     if (!selected) {
-                      setSelectedOption({ label: label, value: value });
+                      setSelectedOption({ key: key, value: v });
                       setOpen(false);
-                      props.onChange && props.onChange(v);
+                      props.onChange?.(v);
                     }
                   };
+
+                  if (props.formatOptionLabel) {
+                    return (
+                      <li key={i} onClick={handleClick} role="button">
+                        {props.formatOptionLabel(v, selected)}
+                      </li>
+                    );
+                  }
                   return (
                     <li key={i} onClick={handleClick} role="button">
                       <div
@@ -134,9 +146,7 @@ function AutocompleteSelect<T, Value>(
                           selected ? "active" : ""
                         }`}
                       >
-                        {props.formatOptionLabel
-                          ? props.formatOptionLabel(v, selected)
-                          : label}
+                        {label}
                       </div>
                     </li>
                   );
@@ -154,7 +164,7 @@ function AutocompleteSelect<T, Value>(
       <div className="position-relative">
         <Input
           id={props.referenceId}
-          value={selectedOption?.label ?? ""}
+          value={formatSelectedOption()}
           className={open ? "border-primary" : ""}
           placeholder={props.placeholder ?? "Select"}
           ref={setReferenceElement}

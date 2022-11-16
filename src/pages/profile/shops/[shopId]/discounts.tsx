@@ -1,10 +1,5 @@
-import {
-  PencilSquareIcon,
-  TagIcon,
-  TrashIcon,
-} from "@heroicons/react/24/outline";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { formatPrice, formatTimestamp } from "../../../../common/utils";
 import { Input } from "../../../../components/forms";
 import Pagination from "../../../../components/Pagination";
 
@@ -15,13 +10,13 @@ function DiscountRow() {
         <span>Name</span>
       </td>
       <td>
-        <span className="text-nowrap me-3">%</span>
+        <span className="text-nowrap">%</span>
       </td>
       <td>
-        <span className="text-nowrap me-3">10</span>
+        <span className="text-nowrap">10</span>
       </td>
       <td>
-        <div className="hstack align-items-center gap-2 me-3">
+        <div className="hstack align-items-center gap-2">
           <Link href="#">
             <a className="btn btn-primary">
               <PencilSquareIcon width={20} />
@@ -82,16 +77,14 @@ function DiscountList() {
       <div className="container py-4">
         <div className="card mt-2 mb-3">
           <div className="card-header bg-white fs-4 fw-semibold p-3">
-            <div className="hstack">
-              Discounts
-            </div>
+            <div className="hstack">Discounts</div>
           </div>
           <div className="card-body p-0">
             <div className="vstack">
               <div className="p-3 p-lg-4">
                 <div className="row g-3">
                   <div className="col">
-                    <Input  
+                    <Input
                       id="filterProductsInput"
                       name="filter"
                       type="text"
@@ -110,10 +103,19 @@ function DiscountList() {
                 <table className="table bg-white align-middle">
                   <thead className="table-light text-nowrap align-middle">
                     <tr style={{ height: 50 }}>
-                      <th className="ps-3 ps-lg-4 fw-medium">NAME</th>
-                      <th className="fw-medium">TYPE</th>
-                      <th className="fw-medium">VALUE</th>
-                      <th className="fw-medium"></th>
+                      <th
+                        className="ps-3 ps-lg-4 fw-medium"
+                        style={{ minWidth: 200 }}
+                      >
+                        NAME
+                      </th>
+                      <th className="fw-medium" style={{ minWidth: 150 }}>
+                        TYPE
+                      </th>
+                      <th className="fw-medium" style={{ minWidth: 100 }}>
+                        VALUE
+                      </th>
+                      <th className="fw-medium" style={{ minWidth: 200 }}></th>
                     </tr>
                   </thead>
                   <tbody className="border-top-0">

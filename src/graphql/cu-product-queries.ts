@@ -73,7 +73,6 @@ export const findProducts = `
         slug
         price
         images
-        description
         category {
           id
           name
@@ -100,7 +99,7 @@ export const findProductsOrderByPrice = `
     $limit: Int
     $nextToken: String
   ) {
-    productsByPrice(
+    getProductsOrderByPrice(
       type: $type
       price: $price
       sortDirection: $sortDirection
@@ -114,7 +113,6 @@ export const findProductsOrderByPrice = `
         slug
         price
         images
-        description
         category {
           id
           name

@@ -34,7 +34,7 @@ function ProductGridItem({ data, heading = "seller", owner }: InputProps) {
   let popular;
   let available;
   let image = product.images![0]!;
-  let price = <>{formatPrice(product.price)} Ks</>;
+  let price = <>{formatPrice(product.price ?? 0)} Ks</>;
 
   //   if (data.images && data.images.length > 0) {
   //     image = `${baseImagbaePath}/books%2F${data.images[0]}?alt=media`;

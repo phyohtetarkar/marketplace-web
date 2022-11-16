@@ -25,7 +25,7 @@ function ProductManageGridItem({ data }: InputProps) {
   let popular;
   let available;
   let image = product.images![0]!;
-  let price = <>{formatPrice(product.price)} Ks</>;
+  let price = <>{formatPrice(product.price ?? 0)} Ks</>;
 
   //   if (data.images && data.images.length > 0) {
   //     image = `${baseImagbaePath}/books%2F${data.images[0]}?alt=media`;
@@ -71,7 +71,7 @@ function ProductManageGridItem({ data }: InputProps) {
             className="position-relative"
             onContextMenu={(e) => e.preventDefault()}
           >
-            <div className="ratio ratio-1x1">
+            <div className="ratio ratio-4x3">
               <Image
                 className="card-img-top"
                 src={image}

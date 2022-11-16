@@ -33,18 +33,13 @@ function Register() {
     },
     validate: (values) => {
       const errors: FormValues = {};
-      const regex =
-        '/^(([^<>()[].,;:s@"]+(.[^<>()[].,;:s@"]+)*)|(".+"))@(([^<>()[].,;:s@"]+.)+[^<>()[].,;:s@"]{2,})$/i';
+      const phoneRegex = "^(09)\\d{7,12}$";
 
       if (!values.fullName || values.fullName.trim().length === 0) {
         errors.fullName = "Please enter your fullname.";
       }
 
-      if (
-        !values.phone ||
-        values.phone.trim().length === 0 ||
-        !values.phone.startsWith("09")
-      ) {
+      if (!values.phone || !values.phone.match(phoneRegex)) {
         errors.phone = "Please enter valid phone number.";
       }
 

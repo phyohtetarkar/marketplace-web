@@ -6,7 +6,7 @@ export const findCartItemsByUser = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    cartItemsByUser(
+    getCartItemsByUser(
       userID: $userID
       sortDirection: $sortDirection
       filter: $filter

@@ -13,19 +13,45 @@ const MemberRole = {
   "ADMIN": "ADMIN"
 };
 
-const { Product, Category, Shop, ShopMember, User, UserAddress, CartItem, FavoriteProduct, Banner, Discount } = initSchema(schema);
+const DiscountType = {
+  "PERCENTAGE": "PERCENTAGE",
+  "FIXED_AMOUNT": "FIXED_AMOUNT"
+};
+
+const ProductStatus = {
+  "PUBLISHED": "PUBLISHED",
+  "DRAFT": "DRAFT",
+  "ARCHIVED": "ARCHIVED",
+  "DENIED": "DENIED"
+};
+
+const ShopStatus = {
+  "LIVE": "LIVE",
+  "PENDING": "PENDING",
+  "DENIED": "DENIED"
+};
+
+const { Banner, Category, Product, Discount, Shop, ShopCategory, ShopMember, User, UserAddress, CartItem, FavoriteProduct, ProductOption, ProductOptionValue, ProductVariant, Location } = initSchema(schema);
 
 export {
-  Product,
+  Banner,
   Category,
+  Product,
+  Discount,
   Shop,
+  ShopCategory,
   ShopMember,
   User,
   UserAddress,
   CartItem,
   FavoriteProduct,
-  Banner,
   UserRole,
   MemberRole,
-  Discount
+  DiscountType,
+  ProductStatus,
+  ShopStatus,
+  ProductOption,
+  ProductOptionValue,
+  ProductVariant,
+  Location
 };

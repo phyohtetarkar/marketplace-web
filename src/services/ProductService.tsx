@@ -55,7 +55,6 @@ export async function getProducts({
     let query = findProducts;
     let variables: any = {};
     let filter: any = {
-      suspended: { eq: false },
       deleted: { eq: false }
     };
 
@@ -104,8 +103,9 @@ export async function getProducts({
         result as GraphQLResult<FindProductsOrderByPriceQuery>;
 
       return (
-        orderedResult.data?.productsByPrice?.items.map((p) => p as Product) ??
-        []
+        orderedResult.data?.getProductsOrderByPrice?.items.map(
+          (p) => p as Product
+        ) ?? []
       );
     }
 

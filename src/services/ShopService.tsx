@@ -5,6 +5,12 @@ import { Shop } from "../models";
 import { FindShopBySlugQuery, FindShopsQuery } from "../API";
 import { pageSizeLimit } from "../common/app.config";
 
+export async function createShop() {}
+
+export async function updateShop() {}
+
+export async function deleteShop(shopId: string) {}
+
 export async function getShop(slug: string) {
   try {
     const result = await (API.graphql({

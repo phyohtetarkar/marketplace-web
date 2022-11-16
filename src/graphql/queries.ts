@@ -84,6 +84,36 @@ export const listCategories = /* GraphQL */ `
     }
   }
 `;
+export const getShopCategory = /* GraphQL */ `
+  query GetShopCategory($id: ID!) {
+    getShopCategory(id: $id) {
+      id
+      name
+      shops {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listShopCategories = /* GraphQL */ `
+  query ListShopCategories(
+    $filter: ModelShopCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listShopCategories(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getDiscount = /* GraphQL */ `
   query GetDiscount($id: ID!) {
     getDiscount(id: $id) {
@@ -168,9 +198,18 @@ export const getProduct = /* GraphQL */ `
       deleted
       featured
       status
-      suspended
       createdBy
       updatedBy
+      options {
+        key
+        name
+      }
+      variants {
+        key
+        title
+        price
+        sku
+      }
       discountID
       categoryID
       shopID
@@ -198,14 +237,14 @@ export const getProduct = /* GraphQL */ `
         id
         name
         slug
-        headline
         logo
         cover
         description
+        recommended
+        status
         createdBy
         updatedBy
-        suspended
-        recommended
+        categoryID
         createdAt
         updatedAt
       }
@@ -243,7 +282,6 @@ export const listProducts = /* GraphQL */ `
         deleted
         featured
         status
-        suspended
         createdBy
         updatedBy
         discountID
@@ -287,7 +325,6 @@ export const getProductBySlug = /* GraphQL */ `
         deleted
         featured
         status
-        suspended
         createdBy
         updatedBy
         discountID
@@ -301,8 +338,8 @@ export const getProductBySlug = /* GraphQL */ `
     }
   }
 `;
-export const productsByPrice = /* GraphQL */ `
-  query ProductsByPrice(
+export const getProductsOrderByPrice = /* GraphQL */ `
+  query GetProductsOrderByPrice(
     $type: String!
     $price: ModelFloatKeyConditionInput
     $sortDirection: ModelSortDirection
@@ -310,7 +347,7 @@ export const productsByPrice = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    productsByPrice(
+    getProductsOrderByPrice(
       type: $type
       price: $price
       sortDirection: $sortDirection
@@ -333,7 +370,6 @@ export const productsByPrice = /* GraphQL */ `
         deleted
         featured
         status
-        suspended
         createdBy
         updatedBy
         discountID
@@ -353,14 +389,24 @@ export const getShop = /* GraphQL */ `
       id
       name
       slug
-      headline
       logo
       cover
       description
+      location {
+        lat
+        long
+      }
+      recommended
+      status
       createdBy
       updatedBy
-      suspended
-      recommended
+      categoryID
+      category {
+        id
+        name
+        createdAt
+        updatedAt
+      }
       products {
         nextToken
       }
@@ -386,14 +432,14 @@ export const listShops = /* GraphQL */ `
         id
         name
         slug
-        headline
         logo
         cover
         description
+        recommended
+        status
         createdBy
         updatedBy
-        suspended
-        recommended
+        categoryID
         createdAt
         updatedAt
       }
@@ -420,14 +466,48 @@ export const getShopBySlug = /* GraphQL */ `
         id
         name
         slug
-        headline
         logo
         cover
         description
+        recommended
+        status
         createdBy
         updatedBy
-        suspended
+        categoryID
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getShopsByCategory = /* GraphQL */ `
+  query GetShopsByCategory(
+    $categoryID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelShopFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getShopsByCategory(
+      categoryID: $categoryID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        slug
+        logo
+        cover
+        description
         recommended
+        status
+        createdBy
+        updatedBy
+        categoryID
         createdAt
         updatedAt
       }
@@ -442,7 +522,7 @@ export const getUser = /* GraphQL */ `
       name
       phone
       email
-      avatar
+      image
       disabled
       role
       shops {
@@ -474,7 +554,7 @@ export const listUsers = /* GraphQL */ `
         name
         phone
         email
-        avatar
+        image
         disabled
         role
         createdAt
@@ -495,14 +575,14 @@ export const getShopMember = /* GraphQL */ `
         id
         name
         slug
-        headline
         logo
         cover
         description
+        recommended
+        status
         createdBy
         updatedBy
-        suspended
-        recommended
+        categoryID
         createdAt
         updatedAt
       }
@@ -511,7 +591,7 @@ export const getShopMember = /* GraphQL */ `
         name
         phone
         email
-        avatar
+        image
         disabled
         role
         createdAt
@@ -598,7 +678,6 @@ export const getCartItem = /* GraphQL */ `
         deleted
         featured
         status
-        suspended
         createdBy
         updatedBy
         discountID
@@ -634,15 +713,15 @@ export const listCartItems = /* GraphQL */ `
     }
   }
 `;
-export const cartItemsByUser = /* GraphQL */ `
-  query CartItemsByUser(
+export const getCartItemsByUser = /* GraphQL */ `
+  query GetCartItemsByUser(
     $userID: ID!
     $sortDirection: ModelSortDirection
     $filter: ModelCartItemFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    cartItemsByUser(
+    getCartItemsByUser(
       userID: $userID
       sortDirection: $sortDirection
       filter: $filter
@@ -683,7 +762,6 @@ export const getFavoriteProduct = /* GraphQL */ `
         deleted
         featured
         status
-        suspended
         createdBy
         updatedBy
         discountID
@@ -722,15 +800,15 @@ export const listFavoriteProducts = /* GraphQL */ `
     }
   }
 `;
-export const favoriteProductsByUser = /* GraphQL */ `
-  query FavoriteProductsByUser(
+export const getFavoriteProductsByUser = /* GraphQL */ `
+  query GetFavoriteProductsByUser(
     $userID: ID!
     $sortDirection: ModelSortDirection
     $filter: ModelFavoriteProductFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    favoriteProductsByUser(
+    getFavoriteProductsByUser(
       userID: $userID
       sortDirection: $sortDirection
       filter: $filter

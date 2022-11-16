@@ -66,7 +66,9 @@ export async function getCartItemsByUser({
       variables: variables
     }) as Promise<GraphQLResult<FindCartItemsByUserQuery>>);
 
-    return result.data?.cartItemsByUser?.items.map((p) => p as CartItem) ?? [];
+    return (
+      result.data?.getCartItemsByUser?.items.map((p) => p as CartItem) ?? []
+    );
   } catch (e) {
     console.log(e);
   }

@@ -71,7 +71,7 @@ function ShopHome({ shop }: { shop: Shop }) {
                   <div className="hstack">
                     <div className="flex-shrink-0 mt-n6">
                       <Image
-                        src={shop.avatar!}
+                        src={shop.logo!}
                         width={85}
                         height={85}
                         alt=""
@@ -82,7 +82,7 @@ function ShopHome({ shop }: { shop: Shop }) {
                     <div className="ms-2 d-flex flex-column mt-n2 mt-sm-n3">
                       <h4 className="mb-0">{shop.name}</h4>
                       <div className="text-muted small mb-1 text-truncate">
-                        {shop.headline}
+                        Headline
                       </div>
                     </div>
                   </div>
