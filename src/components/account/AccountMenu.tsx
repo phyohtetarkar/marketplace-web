@@ -50,7 +50,7 @@ function AccountMenu({}) {
           icon: <UserIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
-          href: "/profile/orders-history",
+          href: "/profile/orders",
           title: "Orders history",
           icon: (
             <ClipboardIcon className="me-2" strokeWidth={2} width={iconSize} />
