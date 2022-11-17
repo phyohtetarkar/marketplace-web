@@ -3,25 +3,19 @@ import Image from "next/image";
 import Link from "next/link";
 import AccountMenu from "../../../components/account/AccountMenu";
 import { Input, Select } from "../../../components/forms";
-import Pagination from "../../../components/Pagination";  
-import ShopManageGridItem from "../../../components/shop/ShopManageGridItem";
-import { Shop } from "../../../models";
+import Pagination from "../../../components/Pagination";
 
-interface InputProps {
-  shop?: Shop;
-}
-
-function MyShops({
-  shop = {
+function MyShops() {
+  const shop = {
     id: "id",
     name: "Shop Name",
     slug: "slug",
     createdAt: "7 July, 2021 1:42pm",
     cover: `https://source.unsplash.com/random/200x240?random=${Math.floor(
       Math.random() * 100
-    )}`,
-  },
-}: InputProps) {
+    )}`
+  };
+
   return (
     <div>
       <div className="bg-primary">
@@ -99,7 +93,7 @@ function MyShops({
                                     margin: 0,
                                     padding: 0,
                                     position: "absolute",
-                                    inset: 0,
+                                    inset: 0
                                   }}
                                 >
                                   {shop.cover && (
@@ -120,9 +114,7 @@ function MyShops({
                                     className="text-nowrap text-dark text-decoration-none pe-3 "
                                     style={{ fontSize: 18 }}
                                   >
-                                    <h6>
-                                      {shop.name}
-                                    </h6>
+                                    <h6>{shop.name}</h6>
                                   </a>
                                 </Link>
                               </div>
@@ -142,18 +134,17 @@ function MyShops({
                           </td>
                           <td>
                             <div className="d-flex">
-                            <Link href={`/profile/shops/${shop.id}/edit`}>
-                              <a className="btn btn-primary">
-                                <PencilSquareIcon width={20} />
-                              </a>
-                            </Link>
-                            <Link href={`/profile/shops/${shop.id}/edit`}>
-                              <a className="btn btn-danger ms-2">
-                                <TrashIcon width={20} />
-                              </a>
-                            </Link>
+                              <Link href={`/profile/shops/${shop.id}/edit`}>
+                                <a className="btn btn-primary">
+                                  <PencilSquareIcon width={20} />
+                                </a>
+                              </Link>
+                              <Link href={`/profile/shops/${shop.id}/edit`}>
+                                <a className="btn btn-danger ms-2">
+                                  <TrashIcon width={20} />
+                                </a>
+                              </Link>
                             </div>
-                            
                           </td>
                         </tr>
                         <tr style={{ height: 95 }}>
@@ -176,7 +167,7 @@ function MyShops({
                                     margin: 0,
                                     padding: 0,
                                     position: "absolute",
-                                    inset: 0,
+                                    inset: 0
                                   }}
                                 >
                                   {shop.cover && (
@@ -197,9 +188,7 @@ function MyShops({
                                     className="text-nowrap text-dark text-decoration-none pe-3"
                                     style={{ fontSize: 18 }}
                                   >
-                                    <h6>
-                                      {shop.name}
-                                    </h6>
+                                    <h6>{shop.name}</h6>
                                   </a>
                                 </Link>
                               </div>
@@ -219,18 +208,17 @@ function MyShops({
                           </td>
                           <td>
                             <div className="d-flex">
-                            <Link href={`/profile/shops/${shop.id}/edit`}>
-                              <a className="btn btn-primary">
-                                <PencilSquareIcon width={20} />
-                              </a>
-                            </Link>
-                            <Link href={`/profile/shops/${shop.id}/edit`}>
-                              <a className="btn btn-danger ms-2">
-                                <TrashIcon width={20} />
-                              </a>
-                            </Link>
+                              <Link href={`/profile/shops/${shop.id}/edit`}>
+                                <a className="btn btn-primary">
+                                  <PencilSquareIcon width={20} />
+                                </a>
+                              </Link>
+                              <Link href={`/profile/shops/${shop.id}/edit`}>
+                                <a className="btn btn-danger ms-2">
+                                  <TrashIcon width={20} />
+                                </a>
+                              </Link>
                             </div>
-                            
                           </td>
                         </tr>
                       </tbody>

@@ -1,14 +1,42 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import Dropdown from "../../../../components/Dropdown";
 import Pagination from "../../../../components/Pagination";
 import ProductManageGridItem from "../../../../components/product/ProductManageGridItem";
 
+type PageTab = "dashboard" | "products" | "discounts";
+
 function ShopDetail() {
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<PageTab | null>(null);
+
   const list = [1, 2, 3, 4, 5];
   let image = `https://source.unsplash.com/random/200x240?random=${Math.floor(
     Math.random() * 100
   )}`;
+
+  useEffect(() => {
+    if (router.isReady) {
+      const array = router.asPath.split("#");
+      const tab = array[array.length - 1];
+      console.log(tab);
+    }
+  }, [router]);
+
+  const activeContent = () => {
+    switch (activeTab) {
+      case "dashboard":
+        return "";
+      case "products":
+        return "";
+      case "discounts":
+        return "";
+    }
+
+    return null;
+  };
 
   return (
     <div className="vstack">
@@ -46,7 +74,7 @@ function ShopDetail() {
               <div
                 style={{
                   width: "100%",
-                  height: 200,
+                  height: 200
                 }}
                 className="position-relative"
               >
@@ -93,10 +121,22 @@ function ShopDetail() {
                       }
                       menuClassName="dropdown-menu-end"
                     >
-                      <li role="button" className="dropdown-item">
+                      <li
+                        role="button"
+                        className="dropdown-item"
+                        onClick={() => {
+                          router.replace("/profile/shops/1#dashboard");
+                        }}
+                      >
                         Edit
                       </li>
-                      <li role="button" className="dropdown-item">
+                      <li
+                        role="button"
+                        className="dropdown-item"
+                        onClick={() => {
+                          router.replace("/profile/shops/1#products");
+                        }}
+                      >
                         Delete
                       </li>
                     </Dropdown>
