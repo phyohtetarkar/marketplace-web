@@ -1,10 +1,8 @@
 import type { NextPage } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { Autoplay, Pagination } from "swiper";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper } from "swiper/react";
 import useSWR from "swr";
-import { ProductGridItem } from "../components/product";
 import { getBanners } from "../services/BannerService";
 import { getCategories } from "../services/CategoryService";
 import { getProducts } from "../services/ProductService";
@@ -69,7 +67,7 @@ const Home: NextPage = () => {
                   <div className="h-100 overflow-auto scrollbar-custom">
                     <div className="position-relative">
                       <div className="d-flex flex-column gap-1 position-absolute top-0 bottom-0 start-0 end-0">
-                        {data.categories.map((e, i) => {
+                        {/* {data.categories.map((e, i) => {
                           return (
                             <Link key={e.id} href={`/${e.slug}`}>
                               <a className="p-2 my-list-item user-select-none">
@@ -77,7 +75,7 @@ const Home: NextPage = () => {
                               </a>
                             </Link>
                           );
-                        })}
+                        })} */}
 
                         <a href="#" className="invisible p-1"></a>
                       </div>
@@ -161,7 +159,7 @@ const Home: NextPage = () => {
                     }}
                     modules={[Autoplay, Pagination]}
                   >
-                    {data.banners.map((b, i) => {
+                    {/* {data.banners.map((b, i) => {
                       return (
                         <SwiperSlide
                           key={b.id}
@@ -178,7 +176,7 @@ const Home: NextPage = () => {
                           />
                         </SwiperSlide>
                       );
-                    })}
+                    })} */}
                   </Swiper>
                 </div>
               </div>
@@ -188,7 +186,7 @@ const Home: NextPage = () => {
       </div>
 
       <div className="d-flex overflow-auto scrollbar-none mb-4 d-lg-none">
-        {data.categories.map((e, i) => {
+        {/* {data.categories.map((e, i) => {
           return (
             <Link key={e.id} href={`/${e.slug}`}>
               <a
@@ -200,7 +198,7 @@ const Home: NextPage = () => {
               </a>
             </Link>
           );
-        })}
+        })} */}
       </div>
 
       {/* {data.promotions && data.promotions.length > 0 && (
@@ -297,7 +295,7 @@ const Home: NextPage = () => {
           }}
           modules={[Autoplay, Pagination]}
         >
-          {data.shops.map((s, i) => {
+          {/* {data.shops.map((s, i) => {
             return (
               <SwiperSlide key={s.id}>
                 <Link href={`/shops/${s.slug}`}>
@@ -317,7 +315,7 @@ const Home: NextPage = () => {
                 </Link>
               </SwiperSlide>
             );
-          })}
+          })} */}
         </Swiper>
       </div>
 
@@ -333,13 +331,13 @@ const Home: NextPage = () => {
         </Link>
       </div>
       <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 mb-5">
-        {data.newArrivals.map((p, i) => {
+        {/* {data.newArrivals.map((p, i) => {
           return (
             <div className="col" key={p.id}>
               <ProductGridItem data={p} />
             </div>
           );
-        })}
+        })} */}
       </div>
 
       {/* <div className="row row-cols-1 row-cols-md-2 g-3 mb-5">

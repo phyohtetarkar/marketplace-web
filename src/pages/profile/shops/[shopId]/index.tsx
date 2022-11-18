@@ -1,7 +1,10 @@
 import {
+  ChartBarIcon,
+  CubeIcon,
   DocumentChartBarIcon,
   GiftTopIcon,
   ReceiptPercentIcon,
+  TagIcon
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,13 +32,14 @@ function ShopDetail() {
       const array = router.asPath.split("#");
       const tab = array[array.length - 1];
       console.log(tab);
+      setActiveTab(tab as PageTab);
     }
   }, [router]);
 
   function menuLink({
     href,
     title,
-    icon,
+    icon
   }: {
     href: string;
     title: string;
@@ -55,37 +59,25 @@ function ShopDetail() {
       </Link>
     );
   }
-  const content = (
+  const menus = (
     <>
       <div className="vstack gap-1">
         {menuLink({
           href: "/profile/shops/id#dashboard",
           title: "Dashboard",
           icon: (
-            <DocumentChartBarIcon
-              className="me-2"
-              strokeWidth={2}
-              width={iconSize}
-            />
-          ),
+            <ChartBarIcon className="me-2" strokeWidth={2} width={iconSize} />
+          )
         })}
         {menuLink({
           href: "/profile/shops/id#products",
           title: "Products",
-          icon: (
-            <GiftTopIcon className="me-2" strokeWidth={2} width={iconSize} />
-          ),
+          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
           href: "/profile/shops/id#discount",
           title: "Discount",
-          icon: (
-            <ReceiptPercentIcon
-              className="me-2"
-              strokeWidth={2}
-              width={iconSize}
-            />
-          ),
+          icon: <TagIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
       </div>
     </>
@@ -94,13 +86,10 @@ function ShopDetail() {
   const activeContent = () => {
     switch (activeTab) {
       case "dashboard":
-        setActiveTab("dashboard");
         return <Dashboard />;
       case "products":
-        setActiveTab("products");
         return <ProductListing />;
       case "discounts":
-        setActiveTab("discounts");
         return <DiscountListing />;
     }
   };
@@ -141,7 +130,7 @@ function ShopDetail() {
               <div
                 style={{
                   width: "100%",
-                  height: 200,
+                  height: 200
                 }}
                 className="position-relative"
               >
@@ -216,13 +205,8 @@ function ShopDetail() {
         <div className="row py-4 g-4">
           <div className="col-lg-3">
             <>
-              <div
-                className="card d-none d-lg-block sticky-lg-top"
-                style={{
-                  top: 86,
-                }}
-              >
-                <div className="card-body">{content}</div>
+              <div className="card d-none d-lg-block">
+                <div className="card-body">{menus}</div>
               </div>
               <div className="accordion border rounded d-block d-lg-none">
                 <div className="accordion-item">
@@ -242,15 +226,13 @@ function ShopDetail() {
                     id="collapseMenu"
                     className="accordion-collapse collapse border-top"
                   >
-                    <div className="accordion-body p-3">{content}</div>
+                    <div className="accordion-body p-3">{menus}</div>
                   </div>
                 </div>
               </div>
             </>
           </div>
-          <div className="col-lg-9">
-            <ProductListing />
-          </div>
+          <div className="col-lg-9">{activeContent()}</div>
         </div>
       </div>
     </div>

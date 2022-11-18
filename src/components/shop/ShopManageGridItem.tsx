@@ -1,10 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Edit } from "react-feather";
-import { Shop } from "../../models";
 
 interface InputProps {
-  shop?: Shop;
+  shop?: any;
 }
 
 function ShopManageGridItem({
@@ -25,7 +24,7 @@ function ShopManageGridItem({
             className="position-relative bg-light"
             onContextMenu={(e) => e.preventDefault()}
           >
-            <div className="ratio ratio-1x1">
+            <div className="ratio ratio-4x3">
               {shop.cover && (
                 <Image
                   className="card-img-top"

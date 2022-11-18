@@ -1,39 +1,5 @@
 {
-  "api": {
-    "shoppingcenter": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "shoppingcenterauth",
-          "attributes": [
-            "UserPoolId"
-          ]
-        }
-      ],
-      "output": {
-        "authConfig": {
-          "defaultAuthentication": {
-            "authenticationType": "API_KEY",
-            "apiKeyConfig": {
-              "apiKeyExpirationDays": 7,
-              "apiKeyExpirationDate": "2022-11-09T15:37:32.856Z",
-              "description": ""
-            }
-          },
-          "additionalAuthenticationProviders": [
-            {
-              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-              "userPoolConfig": {
-                "userPoolId": "authshoppingcenterauth"
-              }
-            }
-          ]
-        }
-      }
-    }
-  },
+  "api": {},
   "auth": {
     "shoppingcenterauth": {
       "service": "Cognito",

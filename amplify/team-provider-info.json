@@ -26,9 +26,6 @@
           "deploymentBucketName": "amplify-shoppingcenter-staging-173044-deployment",
           "s3Key": "amplify-builds/CustomSmsSender-7a336a326c3854747472-build.zip"
         }
-      },
-      "api": {
-        "shoppingcenter": {}
       }
     }
   }

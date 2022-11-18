@@ -4,12 +4,11 @@ import Link from "next/link";
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../../common/contexts";
 import { formatPrice } from "../../common/utils";
-import { Product } from "../../models";
 import { addToFavorite } from "../../services/FavoriteProductService";
 import Tooltip from "../Tooltip";
 
 interface InputProps {
-  data?: Product;
+  data?: any;
   heading?: "seller" | "category";
   owner?: Boolean;
 }

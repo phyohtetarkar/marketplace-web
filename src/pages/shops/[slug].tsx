@@ -6,11 +6,10 @@ import useSWR from "swr";
 import { Input } from "../../components/forms";
 import Loading from "../../components/Loading";
 import { ProductGridItem } from "../../components/product";
-import { Shop } from "../../models";
 import { getProducts } from "../../services/ProductService";
 import { getShop } from "../../services/ShopService";
 
-function ShopHome({ shop }: { shop: Shop }) {
+function ShopHome({ shop }: { shop: any }) {
   const { data, error } = useSWR(
     [shop.id],
     (shopId) => getProducts({ shopId: shopId, orderBy: "none" }),
@@ -141,9 +140,9 @@ function ShopHome({ shop }: { shop: Shop }) {
             <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 mb-5">
               {data &&
                 !error &&
-                data.map((p) => {
+                data.map((p: any, i: number) => {
                   return (
-                    <div key={p.id} className="col">
+                    <div key={i} className="col">
                       <ProductGridItem data={p} heading="category" />
                     </div>
                   );
