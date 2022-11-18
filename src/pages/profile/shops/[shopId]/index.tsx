@@ -1,18 +1,25 @@
+import {
+  DocumentChartBarIcon,
+  GiftTopIcon,
+  ReceiptPercentIcon,
+} from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Dropdown from "../../../../components/Dropdown";
-import Pagination from "../../../../components/Pagination";
-import ProductManageGridItem from "../../../../components/product/ProductManageGridItem";
+import Dashboard from "../../../../components/merchant/Dashboard";
+import DiscountListing from "../../../../components/merchant/DiscountListing";
+import ProductListing from "../../../../components/merchant/ProductListing";
 
 type PageTab = "dashboard" | "products" | "discounts";
 
 function ShopDetail() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<PageTab | null>(null);
+  const [activeTab, setActiveTab] = useState<PageTab>("dashboard");
 
-  const list = [1, 2, 3, 4, 5];
+  const iconSize = 20;
+
   let image = `https://source.unsplash.com/random/200x240?random=${Math.floor(
     Math.random() * 100
   )}`;
@@ -25,21 +32,81 @@ function ShopDetail() {
     }
   }, [router]);
 
+  function menuLink({
+    href,
+    title,
+    icon,
+  }: {
+    href: string;
+    title: string;
+    icon: ReactNode;
+  }) {
+    const active = router.asPath === href;
+    return (
+      <Link href={href} replace>
+        <a
+          className={`d-flex align-items-center p-2 my-list-item ${
+            active ? "active" : ""
+          }`}
+        >
+          {icon}
+          <span>{title}</span>
+        </a>
+      </Link>
+    );
+  }
+  const content = (
+    <>
+      <div className="vstack gap-1">
+        {menuLink({
+          href: "/profile/shops/id#dashboard",
+          title: "Dashboard",
+          icon: (
+            <DocumentChartBarIcon
+              className="me-2"
+              strokeWidth={2}
+              width={iconSize}
+            />
+          ),
+        })}
+        {menuLink({
+          href: "/profile/shops/id#products",
+          title: "Products",
+          icon: (
+            <GiftTopIcon className="me-2" strokeWidth={2} width={iconSize} />
+          ),
+        })}
+        {menuLink({
+          href: "/profile/shops/id#discount",
+          title: "Discount",
+          icon: (
+            <ReceiptPercentIcon
+              className="me-2"
+              strokeWidth={2}
+              width={iconSize}
+            />
+          ),
+        })}
+      </div>
+    </>
+  );
+
   const activeContent = () => {
     switch (activeTab) {
       case "dashboard":
-        return "";
+        setActiveTab("dashboard");
+        return <Dashboard />;
       case "products":
-        return "";
+        setActiveTab("products");
+        return <ProductListing />;
       case "discounts":
-        return "";
+        setActiveTab("discounts");
+        return <DiscountListing />;
     }
-
-    return null;
   };
 
   return (
-    <div className="vstack">
+    <div>
       <div className="bg-primary">
         <div className="container py-4">
           <div className="hstack">
@@ -74,7 +141,7 @@ function ShopDetail() {
               <div
                 style={{
                   width: "100%",
-                  height: 200
+                  height: 200,
                 }}
                 className="position-relative"
               >
@@ -146,31 +213,43 @@ function ShopDetail() {
             </div>
           </div>
         </div>
-        <div className="card mt-3 mb-3">
-          <div className="card-header bg-white fs-4 fw-semibold p-3">
-            <div className="hstack">
-              Products
-              <div className="ms-auto">
-                <Link href="/profile/shops/1/create-product">
-                  <a className="btn btn-primary h-100 hstack">Create new</a>
-                </Link>
+        <div className="row py-4 g-4">
+          <div className="col-lg-3">
+            <>
+              <div
+                className="card d-none d-lg-block sticky-lg-top"
+                style={{
+                  top: 86,
+                }}
+              >
+                <div className="card-body">{content}</div>
               </div>
-            </div>
-          </div>
-          <div className="card-body">
-            <div className="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
-              {list.map((i) => {
-                return (
-                  <div className="col" key={i}>
-                    <ProductManageGridItem />
+              <div className="accordion border rounded d-block d-lg-none">
+                <div className="accordion-item">
+                  <div className="accordion-header">
+                    <button
+                      className="accordion-button fw-bold collapsed"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapseMenu"
+                      aria-expanded="false"
+                      aria-controls="collapseMenu"
+                    >
+                      Menu
+                    </button>
                   </div>
-                );
-              })}
-            </div>
 
-            <div className="d-flex justify-content-end pt-3 px-3">
-              <Pagination hasPrev={true} hasNext={true} />
-            </div>
+                  <div
+                    id="collapseMenu"
+                    className="accordion-collapse collapse border-top"
+                  >
+                    <div className="accordion-body p-3">{content}</div>
+                  </div>
+                </div>
+              </div>
+            </>
+          </div>
+          <div className="col-lg-9">
+            <ProductListing />
           </div>
         </div>
       </div>
