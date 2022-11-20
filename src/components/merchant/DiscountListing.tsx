@@ -1,5 +1,5 @@
 function DiscountListing() {
-  return <div className="card">DiscountListing</div>;
+  return <div></div>;
 }
 
 export default DiscountListing;

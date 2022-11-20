@@ -1,11 +1,4 @@
-import {
-  ChartBarIcon,
-  CubeIcon,
-  DocumentChartBarIcon,
-  GiftTopIcon,
-  ReceiptPercentIcon,
-  TagIcon
-} from "@heroicons/react/24/outline";
+import { ChartBarIcon, CubeIcon, TagIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -39,7 +32,7 @@ function ShopDetail() {
   function menuLink({
     href,
     title,
-    icon
+    icon,
   }: {
     href: string;
     title: string;
@@ -67,17 +60,17 @@ function ShopDetail() {
           title: "Dashboard",
           icon: (
             <ChartBarIcon className="me-2" strokeWidth={2} width={iconSize} />
-          )
+          ),
         })}
         {menuLink({
           href: "/profile/shops/id#products",
           title: "Products",
-          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />
+          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />,
         })}
         {menuLink({
-          href: "/profile/shops/id#discount",
-          title: "Discount",
-          icon: <TagIcon className="me-2" strokeWidth={2} width={iconSize} />
+          href: "/profile/shops/id#discounts",
+          title: "Discounts",
+          icon: <TagIcon className="me-2" strokeWidth={2} width={iconSize} />,
         })}
       </div>
     </>
@@ -130,7 +123,7 @@ function ShopDetail() {
               <div
                 style={{
                   width: "100%",
-                  height: 200
+                  height: 200,
                 }}
                 className="position-relative"
               >
@@ -144,7 +137,7 @@ function ShopDetail() {
               </div>
               <div className="row p-3 py-sm-4 position-relative">
                 <div className="col">
-                  <div className="hstack">
+                  <div className="hstack flex-wrap gap-2">
                     <div className="flex-shrink-0 mt-n9">
                       <Image
                         src={image}
