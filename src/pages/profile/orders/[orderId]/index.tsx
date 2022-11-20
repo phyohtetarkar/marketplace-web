@@ -42,7 +42,7 @@ function OrderRow() {
         </div>
         <div className="flex-grow-1 ms-3 h-100">
           <div className="vstack">
-            <a className="text-dark text-decoration-none" href="/product/1">
+            <a className="text-dark text-decoration-none" href="#">
               Product name here
             </a>
             <small className="text-muted mb-2" style={{ fontSize: 12 }}>
@@ -66,7 +66,7 @@ function OrderDetail() {
           <div className="hstack">
             <div>
               <div className="px-2">
-                <h3 className="text-light text-lg-start">Order Details</h3>
+                <h3 className="text-light text-lg-start">Order Detail</h3>
               </div>
               <div className="row px-2">
                 <nav aria-label="breadcrumb col-12">
@@ -79,7 +79,7 @@ function OrderDetail() {
                       </Link>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Order Details
+                      Order Detail
                     </li>
                   </ol>
                 </nav>
@@ -113,22 +113,65 @@ function OrderDetail() {
                 <div className="row gx-2 gy-3">
                   <div className="col-md-5">
                     <h6 className="fw-bold">Deliver to</h6>
-                    <div className="vstack text-dark small">
-                      <span>Name: Mobile Com</span>
-                      <span>Phone: +95911223344</span>
-                      <span>Address: No. 26, Pyay Street, Hlaing Township</span>
-                      <span>Yangon, Myanmar</span>
+                    <div className="hstack align-items-start gap-2">
+                    <text className="fw-medium">Name:</text>
+                    <div className="vstack">Mobile Com</div>
                     </div>
+                    <div className="hstack align-items-start gap-2">
+                    <text className="fw-medium">Phone:</text>
+                    <div className="vstack">+95911223344</div>
+                    </div>
+                    <div className="hstack align-items-start gap-2">
+                    <text className="fw-medium">Address:</text>
+                    <div className="vstack">No. 26, Pyay Street, Hlaing Township, Yangon, Myanmar</div>
+                    </div>
+                    <div className="hstack align-items-start gap-2">
+                    <text className="fw-medium">Notes:</text>
+                    <div className="vstack">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</div>
+                    </div>
+                    {/* <div className="vstack">
+                      <span><text className="me-2 fw-medium">Name:</text> Mobile Com</span>
+                      <span><text className="me-2 fw-medium">Phone:</text> +95911223344</span>
+                      <span><text className="me-2 fw-medium">Address:</text> No. 26, Pyay Street, Hlaing Township, Yangon, Myanmar</span>
+                      <span><text className="me-2 fw-medium">Notes:</text> Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                    </div> */}
                   </div>
                   <div className="col-md-4">
-                    <h6 className="fw-bold">Payment Method</h6>
-                    <div>Total Products: 5</div>
-                    <div>Subtotal: 30,000ks</div>
-                    <div className="text-danger">Discounts: -0ks</div>
-                    <div>Delivery fee: 3,000ks</div>
-                    <div className="text-success fw-semibold">
-                      Total Price: 33,000ks
+                    <h6 className="fw-bold">Payment info</h6>
+                    <div className="hstack align-items-start gap-2">
+                    <text className="fw-medium">Total Products:</text>
+                    <div className="vstack">5</div>
                     </div>
+                    <div className="hstack align-items-start gap-2">
+                    <text className="fw-medium">Subtotal:</text>
+                    <div className="vstack">30,000ks</div>
+                    </div>
+                    <div className="hstack align-items-start gap-2">
+                    <text className="fw-medium text-danger">Discounts:</text>
+                    <div className="vstack text-danger">-0ks</div>
+                    </div>
+                    <div className="hstack align-items-start gap-2">
+                    <text className="fw-medium text-success">Total Price:</text>
+                    <div className="vstack text-success">33,000ks</div>
+                    </div>
+                    {/* <div>
+                      <text className="text-muted me-2">Total Products:</text>5
+                    </div>
+                    <div>
+                      <text className="text-muted me-2">Subtotal:</text>{" "}
+                      30,000ks
+                    </div>
+                    <div className="text-muted">
+                      Discounts: <text className="text-danger ms-2">-0ks</text>
+                    </div>
+                    <div>
+                      <text className="text-muted me-2">Delivery fee:</text>{" "}
+                      3,000ks
+                    </div>
+                    <div className="text-muted">
+                      Total Price:{" "}
+                      <text className="text-success ms-2">33,000ks</text>
+                    </div> */}
                   </div>
                   <div className="col-md-3">
                     <h6 className="fw-bold">Status</h6>

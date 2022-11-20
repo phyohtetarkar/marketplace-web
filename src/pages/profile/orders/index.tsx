@@ -23,21 +23,45 @@ function OrderCard() {
         <div className="row gx-2 gy-3">
           <div className="col-md-5">
             <h6 className="fw-bold">Deliver to</h6>
-            <div className="vstack text-dark small">
-              <span>Name: Mobile Com</span>
-              <span>Phone: +95911223344</span>
-              <span>Address: No. 26, Pyay Street, Hlaing Township</span>
-              <span>Yangon, Myanmar</span>
+            <div className="hstack align-items-start gap-2">
+              <text className="fw-medium">Name:</text>
+              <div className="vstack">Mobile Com</div>
+            </div>
+            <div className="hstack align-items-start gap-2">
+              <text className="fw-medium">Phone:</text>
+              <div className="vstack">+95911223344</div>
+            </div>
+            <div className="hstack align-items-start gap-2">
+              <text className="fw-medium">Address:</text>
+              <div className="vstack">
+                No. 26, Pyay Street, Hlaing Township, Yangon, Myanmar
+              </div>
+            </div>
+            <div className="hstack align-items-start gap-2">
+              <text className="fw-medium">Notes:</text>
+              <div className="vstack">
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry.
+              </div>
             </div>
           </div>
           <div className="col-md-4">
-            <h6 className="fw-bold">Payment Method</h6>
-            <div>Total Products: 5</div>
-            <div>Subtotal: 30,000ks</div>
-            <div className="text-danger">Discounts: -0ks</div>
-            <div>Delivery fee: 3,000ks</div>
-            <div className="text-success fw-semibold">
-              Total Price: 33,000ks
+            <h6 className="fw-bold">Payment info</h6>
+            <div className="hstack align-items-start gap-2">
+              <text className="fw-medium">Total Products:</text>
+              <div className="vstack">5</div>
+            </div>
+            <div className="hstack align-items-start gap-2">
+              <text className="fw-medium">Subtotal:</text>
+              <div className="vstack">30,000ks</div>
+            </div>
+            <div className="hstack align-items-start gap-2">
+              <text className="fw-medium text-danger">Discounts:</text>
+              <div className="vstack text-danger">-0ks</div>
+            </div>
+            <div className="hstack align-items-start gap-2">
+              <text className="fw-medium text-success">Total Price:</text>
+              <div className="vstack text-success">33,000ks</div>
             </div>
           </div>
           <div className="col-md-3">
@@ -51,7 +75,7 @@ function OrderCard() {
       <div className="card-footer small border-0 py-3 text-muted">
         {formatTimestamp(Date.now(), true)}
       </div>
-      </div>
+    </div>
   );
 }
 
@@ -62,9 +86,7 @@ function MyOrders() {
       <div className="bg-primary">
         <div className="container">
           <div className="py-4 py-lg-5">
-            <h1 className="text-light text-center text-lg-start">
-              My Orders
-            </h1>
+            <h1 className="text-light text-center text-lg-start">My Orders</h1>
           </div>
         </div>
       </div>
@@ -75,7 +97,12 @@ function MyOrders() {
             <AccountMenu />
           </div>
           <div className="col-lg-8 col-xl-9">
-            <div className="card mb-3 p-3">
+            <div
+              className="card mb-3 p-3 sticky-top"
+              style={{
+                top: 125,
+              }}
+            >
               <div className="row">
                 <div className="col">
                   <Input
@@ -108,7 +135,6 @@ function MyOrders() {
             <div className="d-flex justify-content-end pt-3">
               <Pagination hasPrev={true} hasNext={true} />
             </div>
-            
           </div>
         </div>
       </div>
