@@ -9,7 +9,7 @@ function ProductListing() {
   return (
     <div className="p-0">
       <div className="row">
-        <div className="col">
+        <div className="col-auto me-auto">
           <Input
             id="searchinput"
             name="search"
@@ -20,7 +20,7 @@ function ProductListing() {
 
         <div className="col-auto">
           <Link href="/profile/shops/id/create-product">
-            <a className="ms-auto btn btn-primary h-100 hstack">Create new</a>
+            <a className="btn btn-primary h-100 hstack">Create new</a>
           </Link>
         </div>
       </div>

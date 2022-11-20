@@ -150,7 +150,7 @@ function ShopDetail() {
                     </div>
                     <div className="ms-2 d-flex flex-column mt-n2 mt-sm-n3">
                       <h4 className="mb-0">{"Shoes World"}</h4>
-                      <div className="text-muted small mb-1 text-truncate">
+                      <div className="text-muted small mb-1">
                         {"Shop HeadLine"}
                       </div>
                     </div>
