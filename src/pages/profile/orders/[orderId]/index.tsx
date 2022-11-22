@@ -111,72 +111,49 @@ function OrderDetail() {
               </div>
               <div className="card-body">
                 <div className="row gx-2 gy-3">
-                  <div className="col-md-5">
+                  <div className="col-md-5 small">
                     <h6 className="fw-bold">Deliver to</h6>
-                    <div className="hstack align-items-start gap-2">
-                    <text className="fw-medium">Name:</text>
-                    <div className="vstack">Mobile Com</div>
+                    <div>
+                      Name:<text className="text-muted ms-2">Mobile Com
+                      </text>
                     </div>
-                    <div className="hstack align-items-start gap-2">
-                    <text className="fw-medium">Phone:</text>
-                    <div className="vstack">+95911223344</div>
+                    <div>
+                      Phone:<text className="text-muted ms-2">
+                      +95911223344
+                      </text>
                     </div>
-                    <div className="hstack align-items-start gap-2">
-                    <text className="fw-medium">Address:</text>
-                    <div className="vstack">No. 26, Pyay Street, Hlaing Township, Yangon, Myanmar</div>
+                    <div>
+                      Address:<text className="text-muted ms-2">
+                      No. 26, Pyay Street, Hlaing Township, Yangon, Myanmar
+                      </text>
                     </div>
-                    <div className="hstack align-items-start gap-2">
-                    <text className="fw-medium">Notes:</text>
-                    <div className="vstack">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</div>
+                    <div>
+                      Notes:<text className="text-muted ms-2">
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry.</text>
                     </div>
-                    {/* <div className="vstack">
-                      <span><text className="me-2 fw-medium">Name:</text> Mobile Com</span>
-                      <span><text className="me-2 fw-medium">Phone:</text> +95911223344</span>
-                      <span><text className="me-2 fw-medium">Address:</text> No. 26, Pyay Street, Hlaing Township, Yangon, Myanmar</span>
-                      <span><text className="me-2 fw-medium">Notes:</text> Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                    </div> */}
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-4 small">
                     <h6 className="fw-bold">Payment info</h6>
-                    <div className="hstack align-items-start gap-2">
-                    <text className="fw-medium">Total Products:</text>
-                    <div className="vstack">5</div>
-                    </div>
-                    <div className="hstack align-items-start gap-2">
-                    <text className="fw-medium">Subtotal:</text>
-                    <div className="vstack">30,000ks</div>
-                    </div>
-                    <div className="hstack align-items-start gap-2">
-                    <text className="fw-medium text-danger">Discounts:</text>
-                    <div className="vstack text-danger">-0ks</div>
-                    </div>
-                    <div className="hstack align-items-start gap-2">
-                    <text className="fw-medium text-success">Total Price:</text>
-                    <div className="vstack text-success">33,000ks</div>
-                    </div>
-                    {/* <div>
-                      <text className="text-muted me-2">Total Products:</text>5
+                    <div>
+                      Total Products:<text className="text-muted ms-2">5</text>
                     </div>
                     <div>
-                      <text className="text-muted me-2">Subtotal:</text>{" "}
-                      30,000ks
-                    </div>
-                    <div className="text-muted">
-                      Discounts: <text className="text-danger ms-2">-0ks</text>
+                      Subtotal:<text className="text-muted ms-2">30,000ks</text>
                     </div>
                     <div>
-                      <text className="text-muted me-2">Delivery fee:</text>{" "}
-                      3,000ks
+                      Discounts:
+                      <text className="text-danger ms-2">-0ks</text>
                     </div>
-                    <div className="text-muted">
-                      Total Price:{" "}
+                    <div>
+                      Total Price:
                       <text className="text-success ms-2">33,000ks</text>
-                    </div> */}
+                    </div>
                   </div>
                   <div className="col-md-3">
                     <h6 className="fw-bold">Status</h6>
                     <div className="text-success">
-                      <span className="fw-semibold">DELIVERED</span>
+                      <small className="fw-semibold">DELIVERED</small>
                     </div>
                   </div>
                 </div>

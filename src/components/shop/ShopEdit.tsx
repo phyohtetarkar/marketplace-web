@@ -45,31 +45,6 @@ function SocialChip() {
   );
 }
 
-function BranchCard() {
-  return (
-    <div className="bg-light border-0 rounded p-3">
-      <div className="vstack">
-        <div className="hstack align-items-start">
-          <div className="vstack">
-            <h6 className="flex-grow-1 pe-2 mb-1">Global Stationary Shop</h6>
-            <div className="hstack mb-3">
-              <PhoneIcon className="me-2" width={14} />
-              <small className="text-muted">09121219987</small>
-            </div>
-          </div>
-
-          <a className="btn btn-outline-danger px-2">
-            <TrashIcon className="p-0" width={16} strokeWidth={1.5} />
-          </a>
-        </div>
-        <div className="text-muted small">
-          Yangon city, Pyay Road, Building 123, House 321
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function ShopEdit({ create = {} }) {
   const list = [1, 2, 3];
 
@@ -300,29 +275,6 @@ function ShopEdit({ create = {} }) {
                 <div className="d-flex flex-wrap gap-3">
                   {list.map((i) => (
                     <SocialChip key={i} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-12 col-lg-12">
-            <div className="card">
-              <div className="card-header bg-white py-3 px-md-4">
-                <div className="hstack">
-                  <h5 className="mb-0">Branches</h5>
-                  <div className="ms-auto">
-                    <Link href="/profile/shops/create">
-                      <a className="btn btn-primary">Add new</a>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div className="card-body px-md-4">
-                <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
-                  {list.map((i) => (
-                    <div className="col" key={i}>
-                      <BranchCard />
-                    </div>
                   ))}
                 </div>
               </div>
