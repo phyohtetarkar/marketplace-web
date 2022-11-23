@@ -27,7 +27,7 @@ function BranchListing() {
     <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-2 g-3 py-3">
       {list.map((i) => (
         <div className="col" key={i}>
-          <div className="bg-white border-0 rounded p-3">
+          <div className="bg-white border rounded p-3">
             <div className="vstack">
               <div className="hstack align-items-start">
                 <div className="vstack">
