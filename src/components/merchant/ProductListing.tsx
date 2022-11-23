@@ -11,7 +11,7 @@ function ProductListing() {
       <div className="row">
         <div className="col-auto me-auto">
           <Input
-            id="searchinput"
+            id="searchInput"
             name="search"
             type="text"
             placeholder="Search your products"

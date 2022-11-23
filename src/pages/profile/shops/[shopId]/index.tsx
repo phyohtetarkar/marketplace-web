@@ -1,14 +1,20 @@
-import { ChartBarIcon, CubeIcon, TagIcon } from "@heroicons/react/24/outline";
+import {
+  ChartBarIcon,
+  CubeIcon,
+  MapPinIcon,
+  TagIcon,
+} from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useState } from "react";
 import Dropdown from "../../../../components/Dropdown";
+import BranchListing from "../../../../components/merchant/BranchListing";
 import Dashboard from "../../../../components/merchant/Dashboard";
 import DiscountListing from "../../../../components/merchant/DiscountListing";
 import ProductListing from "../../../../components/merchant/ProductListing";
 
-type PageTab = "dashboard" | "products" | "discounts";
+type PageTab = "dashboard" | "products" | "discounts" | "branches";
 
 function ShopDetail() {
   const router = useRouter();
@@ -52,6 +58,7 @@ function ShopDetail() {
       </Link>
     );
   }
+
   const menus = (
     <>
       <div className="vstack gap-1">
@@ -72,6 +79,13 @@ function ShopDetail() {
           title: "Discounts",
           icon: <TagIcon className="me-2" strokeWidth={2} width={iconSize} />,
         })}
+        {menuLink({
+          href: "/profile/shops/id#branches",
+          title: "Branches",
+          icon: (
+            <MapPinIcon className="me-2" strokeWidth={2} width={iconSize} />
+          ),
+        })}
       </div>
     </>
   );
@@ -84,6 +98,8 @@ function ShopDetail() {
         return <ProductListing />;
       case "discounts":
         return <DiscountListing />;
+      case "branches":
+        return <BranchListing />;
     }
   };
 
