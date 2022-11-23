@@ -56,7 +56,7 @@ function DiscountListing() {
         </div>
       </div>
 
-      <div className="table-responsive py-3">
+      <div className="table-responsive py-3 table-bordered">
         <table className="table bg-white align-middle">
           <thead className="table-light text-nowrap align-middle">
             <tr style={{ height: 50 }}>
