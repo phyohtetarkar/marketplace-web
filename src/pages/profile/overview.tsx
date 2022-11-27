@@ -89,7 +89,7 @@ function ProfileOverview() {
                     <div className="card bg-light">
                       <div className="card-body">
                         <div className="hstack gap-2">
-                          <MapPinIcon className="text-muted" width={20} />
+                          <MapPinIcon className="text-muted flex-shrink-0" width={20} />
                           <div className="flex-grow-1">
                             Yangon city, Pyay Road, Building 123, House 321
                           </div>

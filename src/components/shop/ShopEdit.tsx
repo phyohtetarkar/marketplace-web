@@ -11,13 +11,13 @@ const groupList = ["Electronic", "Stationary", "Health & Beauty"];
 const DynamicEditor = dynamic<RichTextEditorInputProps>(
   () => import("../forms").then((f) => f.RichTextEditor),
   {
-    ssr: false
+    ssr: false,
   }
 );
 
 function ContactChip() {
   return (
-    <div className="hstack border p-2">
+    <div className="hstack border rounded p-2">
       <PhoneIcon width={15} className="flex-shrink-0" />
       <span className="text-dark ms-1 small">09-24442122</span>
       <div role="button" className="link-danger ms-2">
@@ -114,7 +114,7 @@ function ShopEdit({ create = {} }) {
               </div>
               <div className="card-body px-md-4">
                 <div className="vstack">
-                  <div className="row g-4">
+                  <div className="row g-4 mb-3">
                     <div className="col-lg-6">
                       <Input
                         label="Name *"
@@ -133,20 +133,31 @@ function ShopEdit({ create = {} }) {
                         placeholder="https://shoppingcenter.com/page/slug"
                       />
                     </div>
-                    <div className="order-4 order-lg-3 order-md-4 col-lg-6">
-                      <label className="form-label">Description</label>
-                      <DynamicEditor
+                  </div>
+                  <div className="row g-4">
+                    <div className="order-5 order-lg-3 order-md-5 col-lg-6">
+                      <label className="form-label">About</label>
+                      <Textarea
                         id="descriptionInput"
-                        placeholder="Enter shop description..."
-                        minHeight={300}
+                        placeholder="Enter about shop..."
+                        height={250}
                       />
                     </div>
-                    <div className="order-3 order-lg-4 order-md-3 col-lg-6 ">
-                      <label className="form-label">Category *</label>
-                      <AutocompleteSelect<string, string>
-                        options={groupList}
-                        getOptionLabel={(v) => v}
-                        getOptionValue={(v) => v}
+                    <div className="order-3 order-lg-4 order-md-3 order-1 col-lg-6">
+                      <Input
+                        label="Headline"
+                        id="headlineInput"
+                        name="headline"
+                        type="text"
+                        className="mb-3"
+                        placeholder="Enter shop headline"
+                      />
+                      <Input
+                        label="Address *"
+                        id="addressInput"
+                        name="address"
+                        type="text"
+                        placeholder="Enter shop address"
                       />
                     </div>
                   </div>
@@ -160,8 +171,7 @@ function ShopEdit({ create = {} }) {
                 <div className="hstack">
                   <h5 className="mb-0">Contacts</h5>
                   <div className="ms-auto">
-                    <Link
-                      href="#">
+                    <Link href="#">
                       <a className="btn btn-primary">Add new</a>
                     </Link>
                   </div>
@@ -186,7 +196,7 @@ function ShopEdit({ create = {} }) {
               <div className="card-body px-md-4">
                 <div className="vstack">
                   <div className="row g-3">
-                  <div className="col-lg-6">
+                    <div className="col-lg-6">
                       <Input
                         label="Latitude"
                         id="latitudeInput"

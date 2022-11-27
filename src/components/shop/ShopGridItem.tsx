@@ -1,3 +1,4 @@
+import { MapPinIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -31,21 +32,21 @@ function ShopGridItem() {
           <h5 className="mb-0">
             <Link href={`/shops/1`}>
               <a className="link-dark text-decoration-none text-truncate d-block">
-                Shop Name
+                Citicom
               </a>
             </Link>
           </h5>
-          <small className="text-muted">Groceries Bakery</small>
-          <div className="py-3">
-            <ul className="list-unstyled mb-0 small">
-              <li>Something</li>
-              <li>Something</li>
-            </ul>
+          <small className="text-muted">Computer Sales & Services</small>
+          <div className="hstack py-3  small align-items-start">
+            <MapPinIcon className="text-muted flex-shrink-0" width={20} />
+            <div className="flex-grow-1">
+              Yangon city, Pyay Road, Building 123, House 321
+            </div>
           </div>
         </div>
       </div>
       <div className="card-footer">
-        <small className="text-muted">Since 2000</small>
+        <small className="text-muted"><text className="fw-medium">Since</text> 2000</small>
       </div>
     </div>
   );
