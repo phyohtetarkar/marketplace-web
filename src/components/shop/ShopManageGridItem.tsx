@@ -1,6 +1,6 @@
+import { PencilIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import { Edit } from "react-feather";
 
 interface InputProps {
   shop?: any;
@@ -50,13 +50,13 @@ function ShopManageGridItem({
             </a>
           </Link>
 
-          <div className="hstack align-items-stretch gap-2">
+          <div className="hstack gap-2">
             <Link href={`/profile/shops/${shop.id}`}>
               <a className="btn btn-primary flex-grow-1">Detail</a>
             </Link>
             <Link href={`/profile/shops/${shop.id}/edit`}>
-              <a className="btn btn-outline-light text-primary border h-100 hstack">
-                <Edit width={20} />
+              <a className="btn btn-outline-light text-primary border hstack">
+                <PencilSquareIcon width={20} />
               </a>
             </Link>
           </div>

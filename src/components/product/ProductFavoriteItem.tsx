@@ -45,14 +45,14 @@ function ProductFavoriteItem() {
             <div className="hstack align-items-stretch">
               <button
                 disabled={false}
-                className="btn btn-outline-primary text-truncate me-2"
+                className="btn btn-primary text-truncate me-2"
                 onClick={() => {}}
               >
                 Add to cart
               </button>
               <button
                 disabled={false}
-                className="btn btn-danger"
+                className="btn btn-outline-danger"
                 onClick={() => {}}
               >
                 <TrashIcon width={20} />

@@ -1,5 +1,6 @@
 import { ListBulletIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import Head from "next/head";
+import Link from "next/link";
 import { ProductGridItem } from "../../components/product";
 
 function Filter() {
@@ -171,10 +172,26 @@ function Explore() {
         <title>All Proudcts</title>
       </Head>
       <div className="header-bar">
-        <div className="container py-4">
-          <h1 className="text-center text-lg-start fw-bold">
-            Explore Products
-          </h1>
+        <div className="container">
+          <div className="row py-4 px-2">
+            <nav aria-label="breadcrumb col-12">
+              <ol className="breadcrumb mb-1">
+                <li className="breadcrumb-item">
+                  <Link href="/">
+                    <a className="text-light">Home</a>
+                  </Link>
+                </li>
+                <li className="breadcrumb-item">
+                  <Link href="/">
+                    <a className="text-light">Sub Category</a>
+                  </Link>
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+                  Child Category
+                </li>
+              </ol>
+            </nav>
+          </div>
         </div>
       </div>
       <div className="container py-4">

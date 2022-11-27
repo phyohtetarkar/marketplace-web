@@ -1,7 +1,8 @@
 import type { NextPage } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Autoplay, Pagination } from "swiper";
-import { Swiper } from "swiper/react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import useSWR from "swr";
 import { getBanners } from "../services/BannerService";
 import { getCategories } from "../services/CategoryService";
@@ -295,14 +296,14 @@ const Home: NextPage = () => {
           }}
           modules={[Autoplay, Pagination]}
         >
-          {/* {data.shops.map((s, i) => {
+          {_shops.map((s, i) => {
             return (
-              <SwiperSlide key={s.id}>
-                <Link href={`/shops/${s.slug}`}>
+              <SwiperSlide key={i}>
+                <Link href={`/shops/${s}`}>
                   <a className="vstack gap-3 position-relative align-items-center text-decoration-none">
                     <div className="" onContextMenu={(e) => e.preventDefault()}>
                       <Image
-                        src={s.avatar!}
+                        src={"/images/profile.png"}
                         alt="Logo image"
                         className="rounded-circle"
                         width={100}
@@ -310,12 +311,12 @@ const Home: NextPage = () => {
                         objectFit="cover"
                       />
                     </div>
-                    <h6 className="text-truncate text-dark">{s.name}</h6>
+                    <h6 className="text-truncate text-dark">{s}</h6>
                   </a>
                 </Link>
               </SwiperSlide>
             );
-          })} */}
+          })}
         </Swiper>
       </div>
 

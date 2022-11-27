@@ -1,11 +1,10 @@
-import { TrashIcon } from "@heroicons/react/24/solid";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "../../common/utils";
-import { Product } from "../../models";
 
 interface InputProps {
-  data?: Product;
+  data?: any;
 }
 
 function ProductManageGridItem({ data }: InputProps) {
