@@ -5,46 +5,52 @@ import {
 } from "@heroicons/react/24/solid";
 
 function Dashboard() {
-  const iconSize = 30;
+  const iconSize = 56;
   return (
     <div>
-      <div className="row mb-3">
-        <div className="col">
-          <div className="card-group">
-            <div className="card p-3">
-              <div className="vstack gap-2">
-                <div className="hstack gap-2 align-items-start">
-                  <CurrencyDollarIcon
-                    width={iconSize}
-                    className="flex-shrink-0 text-accent"
-                  />
-                  <h5 className="text-nowrap fw-normal">Total Sales</h5>
-                </div>
-                <span className="fs-5 fw-medium">MMK 120,200,000</span>
+      <div className="row g-3 mb-3">
+        <div className="col-lg-4">
+          <div className="card p-3">
+            <div className="hstack gap-3">
+              <div className="bg-accent text-light rounded">
+                <CurrencyDollarIcon
+                  width={iconSize}
+                  className="flex-shrink-0 p-2"
+                />
+              </div>
+
+              <div className="vstack gap-1 text-nowrap">
+                <h6 className="fw-normal">Total Sales</h6>
+                <span className="fw-bold">120,200,000 Ks</span>
               </div>
             </div>
-            <div className="card p-3">
-              <div className="vstack gap-2">
-                <div className="hstack gap-2 align-items-start">
-                  <ShoppingBagIcon
-                    width={iconSize}
-                    className="flex-shrink-0 text-success"
-                  />
-                  <h5 className="text-nowrap fw-normal">Total Orders</h5>
-                </div>
-                <span className="fs-5 fw-medium">90</span>
+          </div>
+        </div>
+        <div className="col-lg-4">
+          <div className="card p-3">
+            <div className="hstack gap-3">
+              <div className="bg-success text-light rounded">
+                <ShoppingBagIcon
+                  width={iconSize}
+                  className="flex-shrink-0 p-2"
+                />
+              </div>
+              <div className="vstack gap-1 text-nowrap">
+                <h6 className="fw-normal">Total Orders</h6>
+                <span className="fw-bold">90</span>
               </div>
             </div>
-            <div className="card p-3">
-              <div className="vstack gap-2">
-                <div className="hstack gap-2 align-items-start">
-                  <CubeIcon
-                    width={iconSize}
-                    className="flex-shrink-0 text-primary"
-                  />
-                  <h5 className="text-nowrap fw-normal">Total Products</h5>
-                </div>
-                <span className="fs-5 fw-medium">50</span>
+          </div>
+        </div>
+        <div className="col-lg-4">
+          <div className="card p-3">
+            <div className="hstack gap-3">
+              <div className="bg-primary text-light rounded">
+                <CubeIcon width={iconSize} className="flex-shrink-0 p-2" />
+              </div>
+              <div className="vstack gap-1 text-nowrap">
+                <h6 className="fw-normal">Total Products</h6>
+                <span className="fw-bold">50</span>
               </div>
             </div>
           </div>
