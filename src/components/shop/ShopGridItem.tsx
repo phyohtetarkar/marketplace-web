@@ -46,7 +46,7 @@ function ShopGridItem() {
         </div>
       </div>
       <div className="card-footer">
-        <small className="text-muted"><text className="fw-medium">Since</text> 2000</small>
+        <small className="text-muted">Since 2000</small>
       </div>
     </div>
   );

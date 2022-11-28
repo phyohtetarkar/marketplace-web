@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import { Input, Select } from "../../components/forms";
 import Pagination from "../../components/Pagination";
 import ShopGridItem from "../../components/shop/ShopGridItem";
@@ -9,11 +10,24 @@ function Shops() {
   return (
     <div className="mb-5">
       <Head>
-        <title>All Proudcts</title>
+        <title>All Shops</title>
       </Head>
       <div className="header-bar">
-        <div className="container py-4">
-          <h1 className="text-center text-lg-start fw-bold">Shops</h1>
+        <div className="container">
+          <div className="row py-4 px-2">
+            <nav aria-label="breadcrumb col-12">
+              <ol className="breadcrumb mb-1">
+                <li className="breadcrumb-item">
+                  <Link href="/">
+                    <a className="text-light">Home</a>
+                  </Link>
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+                  Shops
+                </li>
+              </ol>
+            </nav>
+          </div>
         </div>
       </div>
       <div className="container py-4">
