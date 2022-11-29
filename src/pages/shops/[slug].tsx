@@ -1,20 +1,13 @@
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { Facebook, Instagram, Twitter } from "react-feather";
-import useSWR from "swr";
-import { Input } from "../../components/forms";
-import Loading from "../../components/Loading";
-import { ProductGridItem } from "../../components/product";
-import { getProducts } from "../../services/ProductService";
-import { getShop } from "../../services/ShopService";
 
 function ShopHome({ shop }: { shop: any }) {
-  const { data, error } = useSWR(
-    [shop.id],
-    (shopId) => getProducts({ shopId: shopId, orderBy: "none" }),
-    { revalidateOnFocus: false }
-  );
+  // const { data, error } = useSWR(
+  //   [shop.id],
+  //   (shopId) => getProducts({ shopId: shopId, orderBy: "none" }),
+  //   { revalidateOnFocus: false }
+  // );
 
   return (
     <div className="vstack">
@@ -59,11 +52,6 @@ function ShopHome({ shop }: { shop: any }) {
                   objectFit="cover"
                   priority
                 />
-                <Link href={`/`}>
-                  <a className="btn btn-dark position-absolute end-0 m-3">
-                    <PencilSquareIcon width={20} />
-                  </a>
-                </Link>
               </div>
               <div className="row p-3 py-sm-4">
                 <div className="col">
@@ -74,7 +62,7 @@ function ShopHome({ shop }: { shop: any }) {
                         width={85}
                         height={85}
                         alt=""
-                        className="rounded-circle border border-white border-4"
+                        className="rounded border border-white border-4"
                         objectFit="cover"
                       />
                     </div>
@@ -119,37 +107,7 @@ function ShopHome({ shop }: { shop: any }) {
             </div>
           </div>
         </div>
-        <div className="row mb-4">
-          <div className="col-lg-3 mb-3">
-            <div className="card">
-              <div className="card-header bg-white py-3">
-                <h5 className="mb-0">About us</h5>
-              </div>
-              <div className="card-body">
-                <p className="mb-0">{shop.description}</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-9">
-            <div className="hstack mb-3">
-              <div className="ms-md-auto">
-                <Input type="search" placeholder="Search in shop" height={44} />
-              </div>
-            </div>
-            {!data && !error && <Loading />}
-            <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 mb-5">
-              {data &&
-                !error &&
-                data.map((p: any, i: number) => {
-                  return (
-                    <div key={i} className="col">
-                      <ProductGridItem data={p} heading="category" />
-                    </div>
-                  );
-                })}
-            </div>
-          </div>
-        </div>
+        <div className="row mb-4"></div>
       </div>
     </div>
   );
@@ -158,9 +116,17 @@ function ShopHome({ shop }: { shop: any }) {
 export async function getServerSideProps(context: any) {
   try {
     const { slug } = context.query;
-    const shop = await getShop(slug);
     return {
-      props: { shop: shop } // will be passed to the page component as props
+      props: {
+        shop: {
+          name: "Mobile Rain",
+          logo: "/images/placeholder.jpeg",
+          cover: "/images/banner.jpeg",
+          headline: "Mobile phones sales & services",
+          description:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ac turpis egestas integer eget aliquet."
+        }
+      } // will be passed to the page component as props
     };
   } catch (e) {
     console.log(e);
