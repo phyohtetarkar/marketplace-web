@@ -1,4 +1,4 @@
-import { MapPinIcon } from "@heroicons/react/24/outline";
+import { MapPinIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -37,7 +37,7 @@ function ShopGridItem() {
             </Link>
           </h5>
           <small className="text-muted">Computer Sales & Services</small>
-          <div className="hstack py-3  small align-items-start">
+          <div className="hstack gap-1 pt-2 align-items-start">
             <MapPinIcon className="text-muted flex-shrink-0" width={20} />
             <div className="flex-grow-1">
               Yangon city, Pyay Road, Building 123, House 321
