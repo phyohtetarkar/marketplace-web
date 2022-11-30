@@ -1,6 +1,17 @@
+import {
+  CubeIcon,
+  InformationCircleIcon,
+  StarIcon,
+} from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { ReactNode, useEffect, useState } from "react";
 import { Facebook, Instagram, Twitter } from "react-feather";
+import AboutUs from "../../components/shop/AboutUs";
+import ShopReviewListing from "../../components/shop/ShopReviewListing";
+
+type PageTab = "products" | "reviews" | "about-us";
 
 function ShopHome({ shop }: { shop: any }) {
   // const { data, error } = useSWR(
@@ -8,6 +19,82 @@ function ShopHome({ shop }: { shop: any }) {
   //   (shopId) => getProducts({ shopId: shopId, orderBy: "none" }),
   //   { revalidateOnFocus: false }
   // );
+
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<PageTab>("products");
+
+  const iconSize = 20;
+
+  useEffect(() => {
+    if (router.isReady) {
+      const array = router.asPath.split("#");
+      const tab = array[array.length - 1];
+      setActiveTab(tab as PageTab);
+    }
+  }, [router]);
+
+  function menuLink({
+    href,
+    title,
+    icon,
+  }: {
+    href: string;
+    title: string;
+    icon: ReactNode;
+  }) {
+    const active = router.asPath === href;
+    return (
+      <Link href={href} replace>
+        <a
+          className={`d-flex align-items-center p-2 my-list-item ${
+            active ? "active" : ""
+          }`}
+        >
+          {icon}
+          <span>{title}</span>
+        </a>
+      </Link>
+    );
+  }
+
+  const menus = (
+    <>
+      <div className="vstack gap-1">
+        {menuLink({
+          href: "/shops/id#products",
+          title: "Products",
+          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />,
+        })}
+        {menuLink({
+          href: "/shops/id#reviews",
+          title: "Reviews",
+          icon: <StarIcon className="me-2" strokeWidth={2} width={iconSize} />,
+        })}
+        {menuLink({
+          href: "/shops/id#about-us",
+          title: "About us",
+          icon: (
+            <InformationCircleIcon
+              className="me-2"
+              strokeWidth={2}
+              width={iconSize}
+            />
+          ),
+        })}
+      </div>
+    </>
+  );
+
+  const activeContent = () => {
+    switch (activeTab) {
+      case "products":
+        return <></>;
+      case "reviews":
+        return <ShopReviewListing />;
+      case "about-us":
+        return <AboutUs />;
+    }
+  };
 
   return (
     <div className="vstack">
@@ -35,13 +122,13 @@ function ShopHome({ shop }: { shop: any }) {
         </div>
       </div>
       <div className="container py-4">
-        <div className="row mb-4">
+        <div className="row">
           <div className="col-12">
             <div className="border rounded bg-white vstack overflow-hidden">
               <div
                 style={{
                   width: "100%",
-                  height: 200
+                  height: 200,
                 }}
                 className="position-relative"
               >
@@ -107,7 +194,36 @@ function ShopHome({ shop }: { shop: any }) {
             </div>
           </div>
         </div>
-        <div className="row mb-4"></div>
+        <div className="row py-4 g-4">
+          <div className="col-lg-3">
+            <div className="card d-none d-lg-block">
+              <div className="card-body">{menus}</div>
+            </div>
+            <div className="accordion border rounded d-block d-lg-none">
+              <div className="accordion-item">
+                <div className="accordion-header">
+                  <button
+                    className="accordion-button fw-bold collapsed"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseMenu"
+                    aria-expanded="false"
+                    aria-controls="collapseMenu"
+                  >
+                    Menu
+                  </button>
+                </div>
+
+                <div
+                  id="collapseMenu"
+                  className="accordion-collapse collapse border-top"
+                >
+                  <div className="accordion-body p-3">{menus}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-9">{activeContent()}</div>
+        </div>
       </div>
     </div>
   );
@@ -124,16 +240,16 @@ export async function getServerSideProps(context: any) {
           cover: "/images/banner.jpeg",
           headline: "Mobile phones sales & services",
           description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ac turpis egestas integer eget aliquet."
-        }
-      } // will be passed to the page component as props
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ac turpis egestas integer eget aliquet.",
+        },
+      }, // will be passed to the page component as props
     };
   } catch (e) {
     console.log(e);
   }
 
   return {
-    notFound: true
+    notFound: true,
   };
 }
 
