@@ -1,141 +1,133 @@
 import { ListBulletIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import Head from "next/head";
 import Link from "next/link";
+import Accordion from "../../components/Accordion";
+import Pagination from "../../components/Pagination";
 import { ProductGridItem } from "../../components/product";
 
 function Filter() {
   return (
-    <div className="accordion rounded border">
-      <div className="accordion-item">
-        <h2 className="accordion-header">
-          <button
-            className="accordion-button fw-bold"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapseTwo"
-            aria-expanded="true"
-            style={{ backgroundColor: "transparent" }}
-          >
-            Filter
-          </button>
-        </h2>
-        <div
-          id="collapseTwo"
-          className="accordion-collapse collapse show border-top"
-        >
-          <div className="accordion-body p-0">
+    <div className="rounded border bg-white">
+      <Accordion
+        open={true}
+        header={(open) => {
+          return <span className="fw-bold">Filter</span>;
+        }}
+        headerClassName="px-3 py-2h"
+        bodyClassName="border-top"
+        iconType="plus-minus"
+      >
+        <div className="vstack gap-2">
+          <div className="p-3 border-bottom">
+            <div className="small text-muted mb-3">CATEGORIES</div>
             <div className="vstack gap-2">
-              <div className="p-3 border-bottom">
-                <div className="small text-muted mb-3">CATEGORIES</div>
-                <div className="vstack gap-2">
-                  <label>Electronics</label>
-                  <label>Watches</label>
-                  <label>Clothes</label>
-                  <label>Home items</label>
-                </div>
+              <label>Electronics</label>
+              <label>Watches</label>
+              <label>Clothes</label>
+              <label>Home items</label>
+            </div>
+          </div>
+          <div className="p-3 border-bottom">
+            <div className="small text-muted mb-3">BRAND TYPE</div>
+            <div className="vstack gap-2">
+              <div className="form-check">
+                <input
+                  id="beginner"
+                  type="checkbox"
+                  name="level"
+                  className="form-check-input"
+                />
+                <label htmlFor="beginner" className="form-check-label">
+                  Samsung
+                </label>
               </div>
-              <div className="p-3 border-bottom">
-                <div className="small text-muted mb-3">BRAND TYPE</div>
-                <div className="vstack gap-2">
-                  <div className="form-check">
-                    <input
-                      id="beginner"
-                      type="checkbox"
-                      name="level"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="beginner" className="form-check-label">
-                      Samsung
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      id="intermediate"
-                      type="checkbox"
-                      name="level"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="intermediate" className="form-check-label">
-                      Panasonic
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      id="advance"
-                      type="checkbox"
-                      name="level"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="advance" className="form-check-label">
-                      Huawei
-                    </label>
-                  </div>
-                </div>
+              <div className="form-check">
+                <input
+                  id="intermediate"
+                  type="checkbox"
+                  name="level"
+                  className="form-check-input"
+                />
+                <label htmlFor="intermediate" className="form-check-label">
+                  Panasonic
+                </label>
               </div>
+              <div className="form-check">
+                <input
+                  id="advance"
+                  type="checkbox"
+                  name="level"
+                  className="form-check-input"
+                />
+                <label htmlFor="advance" className="form-check-label">
+                  Huawei
+                </label>
+              </div>
+            </div>
+          </div>
 
-              <div className="p-3">
-                <div className="small text-muted mb-3">SIZE</div>
-                <div className="vstack gap-2">
-                  <div className="form-check">
-                    <input
-                      id="beginner"
-                      type="checkbox"
-                      name="level"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="beginner" className="form-check-label">
-                      XS
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      id="intermediate"
-                      type="checkbox"
-                      name="level"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="intermediate" className="form-check-label">
-                      S
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      id="advance"
-                      type="checkbox"
-                      name="level"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="advance" className="form-check-label">
-                      M
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      id="advance"
-                      type="checkbox"
-                      name="level"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="advance" className="form-check-label">
-                      L
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      id="advance"
-                      type="checkbox"
-                      name="level"
-                      className="form-check-input"
-                    />
-                    <label htmlFor="advance" className="form-check-label">
-                      XL
-                    </label>
-                  </div>
-                </div>
+          <div className="p-3">
+            <div className="small text-muted mb-3">SIZE</div>
+            <div className="vstack gap-2">
+              <div className="form-check">
+                <input
+                  id="beginner"
+                  type="checkbox"
+                  name="level"
+                  className="form-check-input"
+                />
+                <label htmlFor="beginner" className="form-check-label">
+                  XS
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  id="intermediate"
+                  type="checkbox"
+                  name="level"
+                  className="form-check-input"
+                />
+                <label htmlFor="intermediate" className="form-check-label">
+                  S
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  id="advance"
+                  type="checkbox"
+                  name="level"
+                  className="form-check-input"
+                />
+                <label htmlFor="advance" className="form-check-label">
+                  M
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  id="advance"
+                  type="checkbox"
+                  name="level"
+                  className="form-check-input"
+                />
+                <label htmlFor="advance" className="form-check-label">
+                  L
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  id="advance"
+                  type="checkbox"
+                  name="level"
+                  className="form-check-input"
+                />
+                <label htmlFor="advance" className="form-check-label">
+                  XL
+                </label>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </Accordion>
     </div>
   );
 }
@@ -211,10 +203,12 @@ function Explore() {
               </div>
             </div>
             {contents()}
-            <div className="mt-5 d-flex justify-content-center">
-              <button className="btn btn-outline-primary rounded-pill">
+            <div className="mt-4 d-flex justify-content-end">
+              {/* <button className="btn btn-outline-primary rounded-pill">
                 Load more products
-              </button>
+              </button> */}
+
+              <Pagination />
             </div>
           </div>
         </div>

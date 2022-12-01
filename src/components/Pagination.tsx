@@ -1,9 +1,16 @@
 interface PaginationProps {
   hasPrev?: boolean;
   hasNext?: boolean;
+  totalPage?: number;
+  currentPage?: number;
 }
 
-function Pagination({ hasPrev, hasNext }: PaginationProps) {
+function Pagination({
+  hasPrev,
+  hasNext,
+  totalPage,
+  currentPage
+}: PaginationProps) {
   return (
     <nav aria-label="Pagination">
       <ul className="pagination">
