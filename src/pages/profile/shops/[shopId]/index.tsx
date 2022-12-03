@@ -211,7 +211,7 @@ function ShopDetail() {
             </div>
           </div>
         </div>
-        <div className="row py-4 g-3">
+        <div className="row py-4 g-4">
           <div className="col-lg-3">
             <>
               <div className="card d-none d-lg-block">

@@ -81,7 +81,7 @@ function DiscountListing() {
       </div>
 
       <div className="d-flex justify-content-end pt-3">
-        <Pagination hasPrev={true} hasNext={true} />
+        <Pagination />
       </div>
     </div>
   );

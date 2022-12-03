@@ -1,30 +1,11 @@
-import { PhoneIcon, TrashIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
-import { Input } from "../forms";
+import { PhoneIcon } from "@heroicons/react/24/outline";
 import Pagination from "../Pagination";
 
-function BranchListing() {
+function ShopBranchListing() {
   const list = [1, 2, 3, 4, 5];
   return (
-    <div className="p-0">
-      <div className="row">
-        <div className="col-auto me-auto">
-          <Input
-            id="searchinput"
-            name="search"
-            type="text"
-            placeholder="Search your branches"
-          />
-        </div>
-
-        <div className="col-auto">
-          <Link href="#">
-            <a className="btn btn-primary h-100 hstack">Create new</a>
-          </Link>
-        </div>
-      </div>
-
-      <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-2 g-3 py-3">
+    <div>
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-2 g-4">
         {list.map((i) => (
           <div className="col" key={i}>
             <div className="bg-white border rounded p-3">
@@ -39,10 +20,6 @@ function BranchListing() {
                       <small className="text-muted">09121219987</small>
                     </div>
                   </div>
-
-                  <a className="btn btn-outline-danger px-2">
-                    <TrashIcon className="p-0" width={16} strokeWidth={1.5} />
-                  </a>
                 </div>
                 <div className="text-muted small">
                   Yangon city, Pyay Road, Building 123, House 321
@@ -59,4 +36,4 @@ function BranchListing() {
   );
 }
 
-export default BranchListing;
+export default ShopBranchListing;

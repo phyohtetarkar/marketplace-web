@@ -20,7 +20,9 @@ function MyFavorites() {
       <div className="bg-primary">
         <div className="container">
           <div className="py-4 py-lg-5">
-            <h1 className="text-light text-center text-lg-start">My Favorites</h1>
+            <h1 className="text-light text-center text-lg-start">
+              My Favorites
+            </h1>
           </div>
         </div>
       </div>
@@ -59,7 +61,7 @@ function MyFavorites() {
               </div>
             </div>
             <div className="float-end mt-3">
-              <Pagination hasPrev={true} hasNext={true} />
+              <Pagination />
             </div>
           </div>
         </div>

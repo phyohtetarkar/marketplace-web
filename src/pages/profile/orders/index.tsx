@@ -124,7 +124,7 @@ function MyOrders() {
               <OrderCard key={i} />
             ))}
             <div className="d-flex justify-content-end pt-3">
-              <Pagination hasPrev={true} hasNext={true} />
+              <Pagination />
             </div>
           </div>
         </div>

@@ -59,7 +59,7 @@ function Shops() {
               ))}
             </div>
             <div className="d-flex justify-content-end pt-3 px-3">
-              <Pagination hasPrev={true} hasNext={true} />
+              <Pagination />
             </div>
           </div>
         </div>

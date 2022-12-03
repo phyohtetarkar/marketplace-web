@@ -1,17 +1,20 @@
 import {
   CubeIcon,
   InformationCircleIcon,
-  StarIcon,
+  MapPinIcon,
+  StarIcon
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useState } from "react";
 import { Facebook, Instagram, Twitter } from "react-feather";
-import AboutUs from "../../components/shop/AboutUs";
-import ShopReviewListing from "../../components/shop/ShopReviewListing";
+import AboutUs from "../../components/shopdetail/AboutUs";
+import ShopBranchListing from "../../components/shopdetail/ShopBranchListing";
+import ShopProductListing from "../../components/shopdetail/ShopProductListing";
+import ShopReviewListing from "../../components/shopdetail/ShopReviewListing";
 
-type PageTab = "products" | "reviews" | "about-us";
+type PageTab = "products" | "branches" | "reviews" | "about-us";
 
 function ShopHome({ shop }: { shop: any }) {
   // const { data, error } = useSWR(
@@ -66,6 +69,13 @@ function ShopHome({ shop }: { shop: any }) {
           icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />,
         })}
         {menuLink({
+          href: "/shops/id#branches",
+          title: "Branches",
+          icon: (
+            <MapPinIcon className="me-2" strokeWidth={2} width={iconSize} />
+          ),
+        })}
+        {menuLink({
           href: "/shops/id#reviews",
           title: "Reviews",
           icon: <StarIcon className="me-2" strokeWidth={2} width={iconSize} />,
@@ -88,7 +98,9 @@ function ShopHome({ shop }: { shop: any }) {
   const activeContent = () => {
     switch (activeTab) {
       case "products":
-        return <></>;
+        return <ShopProductListing />;
+      case "branches":
+        return <ShopBranchListing />;
       case "reviews":
         return <ShopReviewListing />;
       case "about-us":
