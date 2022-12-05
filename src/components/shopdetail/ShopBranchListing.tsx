@@ -5,7 +5,7 @@ function ShopBranchListing() {
   const list = [1, 2, 3, 4, 5];
   return (
     <div>
-      <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-2 g-4">
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-2 g-3">
         {list.map((i) => (
           <div className="col" key={i}>
             <div className="bg-white border rounded p-3">

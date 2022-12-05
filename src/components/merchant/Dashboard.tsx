@@ -8,7 +8,7 @@ function Dashboard() {
   const iconSize = 56;
   return (
     <div>
-      <div className="row g-3 mb-4">
+      <div className="row g-3 mb-3">
         <div className="col-lg-4">
           <div className="card p-3">
             <div className="hstack gap-3">
