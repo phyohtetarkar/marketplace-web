@@ -24,40 +24,40 @@ function OrderCard() {
           <div className="col-md-5 small">
             <h6 className="fw-bold">Deliver to</h6>
             <div>
-              Name:<text className="text-muted ms-2">Mobile Com</text>
+              Name:<span className="text-muted ms-2">Mobile Com</span>
             </div>
             <div>
-              Phone:<text className="text-muted ms-2">+95911223344</text>
+              Phone:<span className="text-muted ms-2">+95911223344</span>
             </div>
             <div>
               Address:
-              <text className="text-muted ms-2">
+              <span className="text-muted ms-2">
                 No. 26, Pyay Street, Hlaing Township, Yangon, Myanmar
-              </text>
+              </span>
             </div>
             <div>
               Notes:
-              <text className="text-muted ms-2">
+              <span className="text-muted ms-2">
                 Lorem Ipsum is simply dummy text of the printing and typesetting
                 industry.
-              </text>
+              </span>
             </div>
           </div>
           <div className="col-md-4 small">
             <h6 className="fw-bold">Payment info</h6>
             <div>
-              Total Products:<text className="text-muted ms-2">5</text>
+              Total Products:<span className="text-muted ms-2">5</span>
             </div>
             <div>
-              Subtotal:<text className="text-muted ms-2">30,000ks</text>
+              Subtotal:<span className="text-muted ms-2">30,000ks</span>
             </div>
             <div>
               Discounts:
-              <text className="text-danger ms-2">-0ks</text>
+              <span className="text-danger ms-2">-0ks</span>
             </div>
             <div>
               Total Price:
-              <text className="text-success ms-2">33,000ks</text>
+              <span className="text-success ms-2">33,000ks</span>
             </div>
           </div>
           <div className="col-md-3">
@@ -103,7 +103,7 @@ function MyOrders() {
                     placeholder="Search your orders"
                   />
                 </div>
-                <div className="col-auto">
+                <div className="col-auto d-none d-sm-block">
                   <Select>
                     <option value="">All Status</option>
                     <option value="">Pending</option>
@@ -111,7 +111,7 @@ function MyOrders() {
                     <option value="">Deleted</option>
                   </Select>
                 </div>
-                <div className="col-auto">
+                <div className="col-auto d-none d-sm-block">
                   <Link href="#">
                     <a className="ms-auto btn btn-primary h-100 hstack">
                       Search

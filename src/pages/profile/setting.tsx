@@ -84,11 +84,10 @@ function ProfileSetting() {
                         <Image
                           src="/images/profile.png"
                           layout="fill"
-                          width={128}
-                          height={128}
                           alt="User Photo"
                           className="rounded-circle"
                           objectFit="cover"
+                          priority
                         />
                         <div className="ms-auto position-absolute bottom-0 py-1 btn btn-dark opacity-75 w-100 text-light text-center">
                           Edit
