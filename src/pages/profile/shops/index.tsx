@@ -45,7 +45,7 @@ function MyShops() {
                         placeholder="Search your shops"
                       />
                     </div>
-                    <div className="col-auto">
+                    <div className="col-auto d-none d-sm-block">
                       <Select>
                         <option value="">All Status</option>
                         <option value="">Pending</option>
@@ -53,7 +53,7 @@ function MyShops() {
                         <option value="">Deleted</option>
                       </Select>
                     </div>
-                    <div className="col-auto">
+                    <div className="col-auto d-none d-sm-block">
                       <Link href="/profile/shops/create">
                         <a className="ms-auto btn btn-primary h-100 hstack">
                           Create new
