@@ -94,7 +94,7 @@ function MyOrders() {
           </div>
           <div className="col-lg-8 col-xl-9">
             <div className="card mb-3 p-3">
-              <div className="row">
+              <div className="row g-3">
                 <div className="col">
                   <Input
                     id="searchinput"
@@ -123,7 +123,7 @@ function MyOrders() {
             {list.map((i) => (
               <OrderCard key={i} />
             ))}
-            <div className="d-flex justify-content-end pt-3">
+            <div className="d-flex justify-content-end">
               <Pagination />
             </div>
           </div>
