@@ -1,11 +1,13 @@
 import { ListBulletIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import Head from "next/head";
 import Link from "next/link";
+import { useState } from "react";
 import Accordion from "../../components/Accordion";
 import Pagination from "../../components/Pagination";
 import { ProductGridItem } from "../../components/product";
 
 function Filter() {
+  const [maxPrice, setMaxPrice] = useState(300000);
   return (
     <div className="rounded border bg-white">
       <Accordion
@@ -28,7 +30,7 @@ function Filter() {
             </div>
           </div>
           <div className="p-3 border-bottom">
-            <div className="small text-muted mb-3">BRAND TYPE</div>
+            <div className="small text-muted mb-3">BRANDS</div>
             <div className="vstack gap-2">
               <div className="form-check">
                 <input
@@ -66,65 +68,28 @@ function Filter() {
             </div>
           </div>
 
-          <div className="p-3">
-            <div className="small text-muted mb-3">SIZE</div>
-            <div className="vstack gap-2">
-              <div className="form-check">
-                <input
-                  id="beginner"
-                  type="checkbox"
-                  name="level"
-                  className="form-check-input"
-                />
-                <label htmlFor="beginner" className="form-check-label">
-                  XS
-                </label>
-              </div>
-              <div className="form-check">
-                <input
-                  id="intermediate"
-                  type="checkbox"
-                  name="level"
-                  className="form-check-input"
-                />
-                <label htmlFor="intermediate" className="form-check-label">
-                  S
-                </label>
-              </div>
-              <div className="form-check">
-                <input
-                  id="advance"
-                  type="checkbox"
-                  name="level"
-                  className="form-check-input"
-                />
-                <label htmlFor="advance" className="form-check-label">
-                  M
-                </label>
-              </div>
-              <div className="form-check">
-                <input
-                  id="advance"
-                  type="checkbox"
-                  name="level"
-                  className="form-check-input"
-                />
-                <label htmlFor="advance" className="form-check-label">
-                  L
-                </label>
-              </div>
-              <div className="form-check">
-                <input
-                  id="advance"
-                  type="checkbox"
-                  name="level"
-                  className="form-check-input"
-                />
-                <label htmlFor="advance" className="form-check-label">
-                  XL
-                </label>
+          <div className="p-3 border-bottom">
+            <div className="small text-muted mb-3">PRICE RANGE</div>
+            <div className="vstack">
+              <input
+                type="range"
+                className="form-range"
+                id="priceRange"
+                step={1000}
+                min={10000}
+                max={300000}
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(parseInt(e.target.value))}
+              ></input>
+              <div className="hstack">
+                <div>10000Ks</div>
+                <div className="flex-grow-1"></div>
+                <div>{maxPrice}Ks</div>
               </div>
             </div>
+          </div>
+          <div className="p-3">
+            <button className="btn btn-primary w-100 py-2">Apply filter</button>
           </div>
         </div>
       </Accordion>

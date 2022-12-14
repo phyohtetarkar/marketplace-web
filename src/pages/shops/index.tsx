@@ -37,16 +37,8 @@ function Shops() {
               id="searchinput"
               name="search"
               type="text"
-              placeholder="Search your shops"
+              placeholder="Search shops"
             />
-          </div>
-          <div className="col-auto">
-            <Select>
-              <option value="">All Status</option>
-              <option value="">Pending</option>
-              <option value="">Suspended</option>
-              <option value="">Deleted</option>
-            </Select>
           </div>
         </div>
         <div className="row">

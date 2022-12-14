@@ -72,7 +72,7 @@ function Footer() {
         <div className="container">
           <div className="row align-items-center gap-2">
             <div className="col-12 col-lg-auto order-3 order-lg-1">
-              <div className="text-nowrap text-muted text-opacity-50 my-auto small text-center">
+              <div className="text-muted text-opacity-50 my-auto small text-center">
                 {copyRight}
               </div>
             </div>

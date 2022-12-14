@@ -1,10 +1,11 @@
-import { StarIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Dropdown from "../Dropdown";
 import { Textarea } from "../forms";
+import Rating from "../Rating";
+
+const _ratings = [5, 4, 3, 2, 1];
 
 function Review() {
-  const list = [1, 2, 3, 4, 5];
   return (
     <div className="p-2">
       <div className="hstack gap-3 align-items-start">
@@ -21,10 +22,8 @@ function Review() {
         <div>
           <h6 className="mb-0">Robert Thomas</h6>
           <span className="text-muted small">30 November 2022</span>
-          <div className="hstack mt-3">
-            {list.map((i) => (
-              <StarIcon key={i} width={18} fill={"#facc15"} strokeWidth={0} />
-            ))}
+          <div className="mt-3">
+            <Rating rating={4.5} />
           </div>
           <h6 className="text-muted fw-normal mt-2">
             It is awesome.Quality is more than good that I was expected for
@@ -38,12 +37,7 @@ function Review() {
 }
 
 function ShopReviewListing() {
-  const rating5 = [1, 2, 3, 4, 5];
-  const rating4 = [1, 2, 3, 4];
-  const rating3 = [1, 2, 3];
-  const rating2 = [1, 2];
-  const outlineIconSize = 19;
-  const solidIconSize = 22;
+  const reviews = [1, 2, 3];
   return (
     <div>
       <div className="card mb-3">
@@ -52,94 +46,21 @@ function ShopReviewListing() {
             <div className="col-lg-12">
               <Dropdown
                 toggle={
-                  <button className="btn btn-outline-secondary dropdown-toggle text-muted text-end w-100" />
+                  <span className="flex-grow-1 text-muted">Select rating</span>
                 }
+                toggleClassName="border rounded py-2h px-3 dropdown-toggle bg-light hstack"
                 menuClassName="w-100"
               >
-                <li role="button" className="dropdown-item">
-                  <div className="hstack py-1 gap-1">
-                    {rating5.map((i) => (
-                      <StarIcon
-                        key={i}
-                        width={solidIconSize}
-                        fill={"#facc15"}
-                        strokeWidth={0}
-                      />
-                    ))}
-                    <span>(5/5)</span>
-                  </div>
-                </li>
-                <li role="button" className="dropdown-item">
-                  <div className="hstack py-1 gap-1">
-                    {rating4.map((i) => (
-                      <StarIcon
-                        key={i}
-                        width={solidIconSize}
-                        fill={"#facc15"}
-                        strokeWidth={0}
-                      />
-                    ))}
-                    <StarIcon width={outlineIconSize} strokeWidth={1} />
-                    <span>(4/5)</span>
-                  </div>
-                </li>
-                <li role="button" className="dropdown-item">
-                  <div className="hstack py-1 gap-1">
-                    {rating3.map((i) => (
-                      <StarIcon
-                        key={i}
-                        width={solidIconSize}
-                        fill={"#facc15"}
-                        strokeWidth={0}
-                      />
-                    ))}
-                    {rating2.map((i) => (
-                      <StarIcon
-                        key={i}
-                        width={outlineIconSize}
-                        strokeWidth={1}
-                      />
-                    ))}
-                    <span>(3/5)</span>
-                  </div>
-                </li>
-                <li role="button" className="dropdown-item">
-                  <div className="hstack py-1 gap-1">
-                    {rating2.map((i) => (
-                      <StarIcon
-                        key={i}
-                        width={solidIconSize}
-                        fill={"#facc15"}
-                        strokeWidth={0}
-                      />
-                    ))}
-                    {rating3.map((i) => (
-                      <StarIcon
-                        key={i}
-                        width={outlineIconSize}
-                        strokeWidth={1}
-                      />
-                    ))}
-                    <span>(2/5)</span>
-                  </div>
-                </li>
-                <li role="button" className="dropdown-item">
-                  <div className="hstack py-1 gap-1">
-                    <StarIcon
-                      width={solidIconSize}
-                      fill={"#facc15"}
-                      strokeWidth={0}
-                    />
-                    {rating4.map((i) => (
-                      <StarIcon
-                        key={i}
-                        width={outlineIconSize}
-                        strokeWidth={1}
-                      />
-                    ))}
-                    <span>(1/5)</span>
-                  </div>
-                </li>
+                {_ratings.map((e, i) => {
+                  return (
+                    <li key={i} role="button" className="dropdown-item">
+                      <div className="hstack py-1 gap-1">
+                        <Rating rating={e} />
+                        <span>({e}/5)</span>
+                      </div>
+                    </li>
+                  );
+                })}
               </Dropdown>
             </div>
             <div className="col-lg-12">
@@ -155,7 +76,7 @@ function ShopReviewListing() {
       </div>
       <div className="card">
         <div className="card-body">
-          {rating3.map((i) => (
+          {reviews.map((i) => (
             <Review key={i} />
           ))}
           <div className="d-flex mb-2">

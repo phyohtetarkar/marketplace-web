@@ -9,14 +9,16 @@ function ProfileSetting() {
     <div>
       <div className="bg-primary">
         <div className="container">
-          <div className="py-4 py-lg-5">
-            <h1 className="text-light text-center text-lg-start">Profile Setting</h1>
+          <div className="py-4">
+            <h1 className="text-light text-center text-lg-start">
+              Profile Setting
+            </h1>
           </div>
         </div>
       </div>
 
       <div className="container py-4">
-        <div className="row g-4">
+        <div className="row g-3">
           <div className="col-lg-4 col-xl-3">
             <AccountMenu />
           </div>

@@ -2,7 +2,7 @@ import {
   ChartBarIcon,
   CubeIcon,
   MapPinIcon,
-  TagIcon,
+  TagIcon
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,7 +18,7 @@ type PageTab = "dashboard" | "products" | "discounts" | "branches";
 
 function ShopDetail() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<PageTab>("dashboard");
+  const [activeTab, setActiveTab] = useState<PageTab | null>(null);
 
   const iconSize = 20;
 
@@ -30,27 +30,34 @@ function ShopDetail() {
     if (router.isReady) {
       const array = router.asPath.split("#");
       const tab = array[array.length - 1];
-      console.log(tab);
-      setActiveTab(tab as PageTab);
+      if (array.length > 1) {
+        setActiveTab(tab as PageTab);
+      } else {
+        setActiveTab("dashboard");
+      }
     }
   }, [router]);
 
   function menuLink({
     href,
     title,
-    icon,
+    active,
+    icon
   }: {
     href: string;
     title: string;
+    active: boolean;
     icon: ReactNode;
   }) {
-    const active = router.asPath === href;
     return (
       <Link href={href} replace>
         <a
           className={`d-flex align-items-center p-2 my-list-item ${
             active ? "active" : ""
           }`}
+          onClick={(e) => {
+            active && e.preventDefault();
+          }}
         >
           {icon}
           <span>{title}</span>
@@ -65,26 +72,28 @@ function ShopDetail() {
         {menuLink({
           href: "/profile/shops/id#dashboard",
           title: "Dashboard",
+          active: activeTab === "dashboard",
           icon: (
             <ChartBarIcon className="me-2" strokeWidth={2} width={iconSize} />
-          ),
+          )
         })}
         {menuLink({
           href: "/profile/shops/id#products",
           title: "Products",
-          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />,
+          active: activeTab === "products",
+          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
           href: "/profile/shops/id#discounts",
           title: "Discounts",
-          icon: <TagIcon className="me-2" strokeWidth={2} width={iconSize} />,
+          active: activeTab === "discounts",
+          icon: <TagIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
           href: "/profile/shops/id#branches",
           title: "Branches",
-          icon: (
-            <MapPinIcon className="me-2" strokeWidth={2} width={iconSize} />
-          ),
+          active: activeTab === "branches",
+          icon: <MapPinIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
       </div>
     </>
@@ -101,34 +110,30 @@ function ShopDetail() {
       case "branches":
         return <BranchListing />;
     }
+
+    return null;
   };
 
   return (
     <div>
       <div className="bg-primary">
         <div className="container py-4">
-          <div className="hstack">
-            <div>
-              <div className="px-2">
-                <h3 className="text-light text-lg-start">Shop Overview</h3>
-              </div>
-              <div className="row px-2">
-                <nav aria-label="breadcrumb col-12">
-                  <ol className="breadcrumb mb-1">
-                    <li className="breadcrumb-item">
-                      <Link href="/profile/shops">
-                        <a href="#" className="text-light">
-                          Shops
-                        </a>
-                      </Link>
-                    </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                      Shoes World
-                    </li>
-                  </ol>
-                </nav>
-              </div>
-            </div>
+          <div>
+            <h3 className="text-light text-lg-start">Shop Overview</h3>
+            <nav aria-label="breadcrumb col-12">
+              <ol className="breadcrumb mb-1">
+                <li className="breadcrumb-item">
+                  <Link href="/profile/shops">
+                    <a href="#" className="text-light">
+                      Shops
+                    </a>
+                  </Link>
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+                  Shoes World
+                </li>
+              </ol>
+            </nav>
           </div>
         </div>
       </div>
@@ -139,7 +144,7 @@ function ShopDetail() {
               <div
                 style={{
                   width: "100%",
-                  height: 200,
+                  height: 200
                 }}
                 className="position-relative"
               >
@@ -148,6 +153,7 @@ function ShopDetail() {
                   alt=""
                   layout="fill"
                   objectFit="cover"
+                  className="rounded-top"
                   priority
                 />
               </div>
@@ -180,7 +186,7 @@ function ShopDetail() {
                     <div className="flex-grow-1 d-none d-md-block"></div>
                     <Dropdown
                       toggle={
-                        <button className="btn btn-outline-light text-muted dropdown-toggle">
+                        <button className="btn btn-outline-light text-muted dropdown-toggle border">
                           Shop Action
                         </button>
                       }

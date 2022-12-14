@@ -1,5 +1,3 @@
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
 import Link from "next/link";
 import AccountMenu from "../../../components/account/AccountMenu";
 import { Input, Select } from "../../../components/forms";
@@ -14,21 +12,21 @@ function MyShops() {
     createdAt: "7 July, 2021 1:42pm",
     cover: `https://source.unsplash.com/random/200x240?random=${Math.floor(
       Math.random() * 100
-    )}`,
+    )}`
   };
 
   return (
     <div>
       <div className="bg-primary">
         <div className="container">
-          <div className="py-4 py-lg-5">
+          <div className="py-4">
             <h1 className="text-light text-center text-lg-start">My Shops</h1>
           </div>
         </div>
       </div>
 
       <div className="container py-4">
-        <div className="row g-4">
+        <div className="row g-3">
           <div className="col-lg-4 col-xl-3">
             <AccountMenu />
           </div>

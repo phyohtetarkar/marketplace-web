@@ -1,11 +1,6 @@
-import { useContext, useState } from "react";
-import useSWR from "swr";
-import { AuthenticationContext } from "../../common/contexts";
 import AccountMenu from "../../components/account/AccountMenu";
-import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
 import { ProductFavoriteItem } from "../../components/product";
-import { getFavoriteProductsByUser } from "../../services/FavoriteProductService";
 
 function MyFavorites() {
   // const authContext = useContext(AuthenticationContext);
@@ -19,7 +14,7 @@ function MyFavorites() {
     <div>
       <div className="bg-primary">
         <div className="container">
-          <div className="py-4 py-lg-5">
+          <div className="py-4">
             <h1 className="text-light text-center text-lg-start">
               My Favorites
             </h1>
@@ -28,7 +23,7 @@ function MyFavorites() {
       </div>
 
       <div className="container py-4">
-        <div className="row g-4">
+        <div className="row g-3">
           <div className="col-lg-4 col-xl-3">
             <AccountMenu />
           </div>

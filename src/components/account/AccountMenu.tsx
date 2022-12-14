@@ -8,6 +8,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
+import Accordion from "../Accordion";
 
 const iconSize = 20;
 
@@ -84,38 +85,54 @@ function AccountMenu({}) {
   );
 
   return (
-    <>
-      <div
-        className="card d-none d-lg-block sticky-lg-top"
-        style={{
-          top: 86
+    <div className="rounded border bg-white">
+      <Accordion
+        open={false}
+        header={(open) => {
+          return <span className="fw-bold">Menu</span>;
         }}
+        className="d-block d-lg-none"
+        headerClassName="px-3 py-2h"
+        bodyClassName="border-top"
+        iconType="plus-minus"
       >
-        <div className="card-body">{content}</div>
-      </div>
-      <div className="accordion border rounded d-block d-lg-none">
-        <div className="accordion-item">
-          <div className="accordion-header">
-            <button
-              className="accordion-button fw-bold collapsed"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseMenu"
-              aria-expanded="false"
-              aria-controls="collapseMenu"
-            >
-              Menu
-            </button>
-          </div>
+        <div className="p-3">{content}</div>
+      </Accordion>
 
-          <div
-            id="collapseMenu"
-            className="accordion-collapse collapse border-top"
-          >
-            <div className="accordion-body p-3">{content}</div>
-          </div>
-        </div>
-      </div>
-    </>
+      <div className="p-3 d-none d-lg-block">{content}</div>
+    </div>
+    // <>
+    //   <div
+    //     className="card d-none d-lg-block sticky-lg-top"
+    //     style={{
+    //       top: 86
+    //     }}
+    //   >
+    //     <div className="card-body">{content}</div>
+    //   </div>
+    //   <div className="accordion border rounded d-block d-lg-none">
+    //     <div className="accordion-item">
+    //       <div className="accordion-header">
+    //         <button
+    //           className="accordion-button fw-bold collapsed"
+    //           data-bs-toggle="collapse"
+    //           data-bs-target="#collapseMenu"
+    //           aria-expanded="false"
+    //           aria-controls="collapseMenu"
+    //         >
+    //           Menu
+    //         </button>
+    //       </div>
+
+    //       <div
+    //         id="collapseMenu"
+    //         className="accordion-collapse collapse border-top"
+    //       >
+    //         <div className="accordion-body p-3">{content}</div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </>
   );
 }
 

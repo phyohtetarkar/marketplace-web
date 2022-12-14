@@ -22,20 +22,29 @@ function Tabs({ defaultTabKey, children }: TabsProps) {
 
   return (
     <>
-      <ul className="nav nav-pills border-bottom">
+      <ul className="nav nav-pills flex-nowrap border-bottom overflow-auto">
         {children.map((c) => {
           const { tabKey, title, disabled, tabClassName } = c.props;
+          const active = activeTabKey === tabKey;
           return (
             <li key={tabKey} className="nav-item">
-              <button
-                disabled={disabled}
-                className={`nav-link custom-tab py-3 ${
-                  activeTabKey === tabKey ? "active" : ""
-                } ${tabClassName ?? ""} ${disabled ? "disabled" : ""}`}
-                onClick={() => setActiveTabKey(tabKey)}
-              >
-                {title}
-              </button>
+              <div className="position-relative">
+                <button
+                  disabled={disabled}
+                  className={`nav-link py-3 ${active ? "active" : ""} ${
+                    tabClassName ?? ""
+                  } ${disabled ? "disabled" : ""}`}
+                  onClick={() => setActiveTabKey(tabKey)}
+                >
+                  {title}
+                </button>
+                {active && (
+                  <div
+                    className="position-absolute w-100 bg-primary bottom-0"
+                    style={{ height: 2 }}
+                  ></div>
+                )}
+              </div>
             </li>
           );
         })}

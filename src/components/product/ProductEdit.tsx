@@ -252,18 +252,22 @@ function ProductEdit({ create = {} }) {
 
                 <div className="col-lg-6 order-1 order-lg-2">
                   <div className="vstack">
-                    <label className="form-label">Brand *</label>
+                    <label className="form-label">Category *</label>
                     <AutocompleteSelect<string, string>
-                      options={groupList}
                       getOptionLabel={(v) => v}
                       getOptionValue={(v) => v}
+                      options={groupList}
                     />
 
-                    <label className="form-label mt-3">Category *</label>
-                    <AutocompleteSelect<string, string>
-                      getOptionLabel={(v) => v}
-                      getOptionValue={(v) => v}
-                    />
+                    <div className="mt-3">
+                      <Input
+                        label="Brand name"
+                        id="brandInput"
+                        name="brand"
+                        type="text"
+                        placeholder="Enter brand name"
+                      />
+                    </div>
 
                     {/* <div className="row g-3 mb-3">
                       <div className="col-lg-6">

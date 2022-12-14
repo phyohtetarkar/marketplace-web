@@ -24,7 +24,7 @@ function ShopHome({ shop }: { shop: any }) {
   // );
 
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<PageTab>("products");
+  const [activeTab, setActiveTab] = useState<PageTab | null>(null);
 
   const iconSize = 20;
 
@@ -32,26 +32,34 @@ function ShopHome({ shop }: { shop: any }) {
     if (router.isReady) {
       const array = router.asPath.split("#");
       const tab = array[array.length - 1];
-      setActiveTab(tab as PageTab);
+      if (array.length > 1) {
+        setActiveTab(tab as PageTab);
+      } else {
+        setActiveTab("products");
+      }
     }
   }, [router]);
 
   function menuLink({
     href,
     title,
-    icon,
+    active,
+    icon
   }: {
     href: string;
     title: string;
+    active: boolean;
     icon: ReactNode;
   }) {
-    const active = router.asPath === href;
     return (
       <Link href={href} replace>
         <a
           className={`d-flex align-items-center p-2 my-list-item ${
             active ? "active" : ""
           }`}
+          onClick={(e) => {
+            active && e.preventDefault();
+          }}
         >
           {icon}
           <span>{title}</span>
@@ -66,30 +74,32 @@ function ShopHome({ shop }: { shop: any }) {
         {menuLink({
           href: "/shops/id#products",
           title: "Products",
-          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />,
+          active: activeTab === "products",
+          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
           href: "/shops/id#branches",
           title: "Branches",
-          icon: (
-            <MapPinIcon className="me-2" strokeWidth={2} width={iconSize} />
-          ),
+          active: activeTab === "branches",
+          icon: <MapPinIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
           href: "/shops/id#reviews",
           title: "Reviews",
-          icon: <StarIcon className="me-2" strokeWidth={2} width={iconSize} />,
+          active: activeTab === "reviews",
+          icon: <StarIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
           href: "/shops/id#about-us",
           title: "About us",
+          active: activeTab === "about-us",
           icon: (
             <InformationCircleIcon
               className="me-2"
               strokeWidth={2}
               width={iconSize}
             />
-          ),
+          )
         })}
       </div>
     </>
@@ -106,6 +116,8 @@ function ShopHome({ shop }: { shop: any }) {
       case "about-us":
         return <AboutUs />;
     }
+
+    return null;
   };
 
   return (
@@ -140,7 +152,7 @@ function ShopHome({ shop }: { shop: any }) {
               <div
                 style={{
                   width: "100%",
-                  height: 200,
+                  height: 200
                 }}
                 className="position-relative"
               >
@@ -252,16 +264,16 @@ export async function getServerSideProps(context: any) {
           cover: "/images/banner.jpeg",
           headline: "Mobile phones sales & services",
           description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ac turpis egestas integer eget aliquet.",
-        },
-      }, // will be passed to the page component as props
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ac turpis egestas integer eget aliquet."
+        }
+      } // will be passed to the page component as props
     };
   } catch (e) {
     console.log(e);
   }
 
   return {
-    notFound: true,
+    notFound: true
   };
 }
 

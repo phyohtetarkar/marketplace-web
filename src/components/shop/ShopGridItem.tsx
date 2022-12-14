@@ -1,6 +1,7 @@
 import { MapPinIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
+import Rating from "../Rating";
 
 function ShopGridItem() {
   return (
@@ -36,12 +37,16 @@ function ShopGridItem() {
               </a>
             </Link>
           </h5>
-          <small className="text-muted">Computer Sales & Services</small>
+          <small className="text-muted mb-1">
+            Computer Sales &amp; Services
+          </small>
+
+          <Rating rating={4.5} />
           <div className="hstack gap-1 pt-2 align-items-start">
-            <MapPinIcon className="text-muted flex-shrink-0" width={20} />
-            <div className="flex-grow-1">
+            <MapPinIcon className="text-muted flex-shrink-0" width={18} />
+            <small className="flex-grow-1">
               Yangon city, Pyay Road, Building 123, House 321
-            </div>
+            </small>
           </div>
         </div>
       </div>

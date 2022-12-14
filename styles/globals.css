@@ -1,3 +1,41 @@
+:root {
+  --border-radius: 0.35rem;
+}
+
+@font-face {
+  font-family: Inter;
+  font-weight: 300;
+  src: url("/fonts/Inter-Light.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: Inter;
+  font-weight: 400;
+  src: url("/fonts/Inter-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Inter;
+  font-weight: 500;
+  src: url("/fonts/Inter-Medium.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Inter;
+  font-weight: 600;
+  src: url("/fonts/Inter-SemiBold.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Inter;
+  font-weight: 700;
+  src: url("/fonts/Inter-Bold.ttf") format("truetype");
+  font-display: swap;
+}
+
 @font-face {
   font-family: Noto Sans Myanmar UI;
   font-weight: 300;
@@ -38,7 +76,7 @@ body {
   margin: 0;
   height: 100%;
   background-color: #f9f9f9;
-  font-family: Noto Sans Myanmar UI, -apple-system, BlinkMacSystemFont, Roboto,
+  font-family: Inter, Noto Sans Myanmar UI, -apple-system, BlinkMacSystemFont, Roboto,
     Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
     sans-serif !important;
 }
@@ -148,7 +186,7 @@ svg {
 .my-list-item {
   color: #555;
   text-decoration: none;
-  border-radius: 0.25rem;
+  border-radius: var(--border-radius);
 }
 
 .my-list-item svg {
@@ -160,7 +198,7 @@ svg {
 }
 
 .my-list-item:hover {
-  border-radius: 0.25rem;
+  border-radius: var(--border-radius);
   color: black;
   background-color: #f2f2f2;
 }
@@ -169,7 +207,7 @@ svg {
   color: var(--bs-primary);
   background-color: var(--bs-secondary);
   text-decoration: none;
-  border-radius: 0.25rem;
+  border-radius: var(--border-radius);
 }
 
 .my-list-item.active svg {

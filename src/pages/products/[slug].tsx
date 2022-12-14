@@ -179,9 +179,7 @@ function ProductDetail() {
           <div className="col-lg-4">
             <div className="card">
               <div className="card-header bg-white py-3">
-                <h5 className="mb-0">
-                  <a>About Seller</a>
-                </h5>
+                <h5 className="mb-0">About Seller</h5>
               </div>
               <div className="card-body">
                 <div className="vstack">

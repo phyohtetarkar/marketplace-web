@@ -42,7 +42,7 @@ function RichTextEditor({
           .getElementsByClassName("tox-edit-area__iframe")
           .item(0)
           ?.setAttribute("style", "background-color: #f9fafb");
-        editor.getContainer().style.borderRadius = "0.25rem 0.25rem";
+        editor.getContainer().style.borderRadius = "0.35rem 0.35rem";
         editor.getContainer().style.border = `${
           noBorder ? 0 : 1
         }px solid rgba(0, 0, 0, 0.125)`;

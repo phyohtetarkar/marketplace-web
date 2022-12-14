@@ -298,7 +298,7 @@ function Header({ hideAuth }: HeaderProps) {
 
             <div>
               <Link href="/shopping-cart">
-                <a className="btn btn-light border position-relative ms-2 fw-normal hstack text-nowrap">
+                <a className="btn btn-light border position-relative ms-2 hstack text-nowrap">
                   <ShoppingCartIcon width={20} />
                   &nbsp;Cart
                   <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger my-auto">
