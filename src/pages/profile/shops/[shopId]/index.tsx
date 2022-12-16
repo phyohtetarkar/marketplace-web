@@ -2,7 +2,9 @@ import {
   ChartBarIcon,
   CubeIcon,
   MapPinIcon,
-  TagIcon
+  PhoneIcon,
+  RectangleGroupIcon,
+  TagIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,11 +12,19 @@ import { useRouter } from "next/router";
 import { ReactNode, useEffect, useState } from "react";
 import Dropdown from "../../../../components/Dropdown";
 import BranchListing from "../../../../components/merchant/BranchListing";
+import ContactListing from "../../../../components/merchant/ContactListing";
 import Dashboard from "../../../../components/merchant/Dashboard";
 import DiscountListing from "../../../../components/merchant/DiscountListing";
 import ProductListing from "../../../../components/merchant/ProductListing";
+import SocialListing from "../../../../components/merchant/SocialListing";
 
-type PageTab = "dashboard" | "products" | "discounts" | "branches";
+type PageTab =
+  | "dashboard"
+  | "products"
+  | "discounts"
+  | "branches"
+  | "contact-numbers"
+  | "social-pages";
 
 function ShopDetail() {
   const router = useRouter();
@@ -42,7 +52,7 @@ function ShopDetail() {
     href,
     title,
     active,
-    icon
+    icon,
   }: {
     href: string;
     title: string;
@@ -75,25 +85,45 @@ function ShopDetail() {
           active: activeTab === "dashboard",
           icon: (
             <ChartBarIcon className="me-2" strokeWidth={2} width={iconSize} />
-          )
+          ),
         })}
         {menuLink({
           href: "/profile/shops/id#products",
           title: "Products",
           active: activeTab === "products",
-          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />
+          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />,
         })}
         {menuLink({
           href: "/profile/shops/id#discounts",
           title: "Discounts",
           active: activeTab === "discounts",
-          icon: <TagIcon className="me-2" strokeWidth={2} width={iconSize} />
+          icon: <TagIcon className="me-2" strokeWidth={2} width={iconSize} />,
         })}
         {menuLink({
           href: "/profile/shops/id#branches",
           title: "Branches",
           active: activeTab === "branches",
-          icon: <MapPinIcon className="me-2" strokeWidth={2} width={iconSize} />
+          icon: (
+            <MapPinIcon className="me-2" strokeWidth={2} width={iconSize} />
+          ),
+        })}
+        {menuLink({
+          href: "/profile/shops/id#contact-numbers",
+          title: "Contact numbers",
+          active: activeTab === "contact-numbers",
+          icon: <PhoneIcon className="me-2" strokeWidth={2} width={18} />,
+        })}
+        {menuLink({
+          href: "/profile/shops/id#social-pages",
+          title: "Social pages",
+          active: activeTab === "social-pages",
+          icon: (
+            <RectangleGroupIcon
+              className="me-2"
+              strokeWidth={2}
+              width={22}
+            />
+          ),
         })}
       </div>
     </>
@@ -109,6 +139,10 @@ function ShopDetail() {
         return <DiscountListing />;
       case "branches":
         return <BranchListing />;
+      case "contact-numbers":
+        return <ContactListing />;
+      case "social-pages":
+        return <SocialListing />;
     }
 
     return null;
@@ -144,7 +178,7 @@ function ShopDetail() {
               <div
                 style={{
                   width: "100%",
-                  height: 200
+                  height: 200,
                 }}
                 className="position-relative"
               >
