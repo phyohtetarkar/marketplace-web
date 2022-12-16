@@ -6,7 +6,7 @@ import Pagination from "../../../components/Pagination";
 
 function OrderCard() {
   return (
-    <div className="card mb-3">
+    <div className="card shadow-sm mb-3">
       <div className="card-header py-3 bg-white">
         <div className="row">
           <div className="col d-flex">
@@ -93,7 +93,7 @@ function MyOrders() {
             <AccountMenu />
           </div>
           <div className="col-lg-8 col-xl-9">
-            <div className="card mb-3 p-3">
+            <div className="card shadow-sm mb-3 p-3">
               <div className="row g-3">
                 <div className="col">
                   <Input
