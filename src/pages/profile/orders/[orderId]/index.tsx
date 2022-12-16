@@ -150,7 +150,7 @@ function OrderDetail() {
                       >
                         Total Products :
                       </td>
-                      <td className="fw-medium text-end border-bottom-0 pt-3 pe-lg-4 pe-sm-3">
+                      <td className="fw-medium text-end border-bottom-0 pt-3 pe-3 pe-lg-4">
                         5
                       </td>
                     </tr>
@@ -159,7 +159,7 @@ function OrderDetail() {
                       <td colSpan={1} className="border-bottom-0 text-muted">
                         Sub Total :
                       </td>
-                      <td className="fw-medium text-end border-bottom-0 pe-lg-4 pe-sm-3">
+                      <td className="fw-medium text-end border-bottom-0 pe-3 pe-lg-4">
                         600,000ks
                       </td>
                     </tr>
@@ -168,7 +168,7 @@ function OrderDetail() {
                       <td colSpan={1} className="text-muted">
                         Discount :
                       </td>
-                      <td className="fw-medium text-end text-danger pe-lg-4 pe-sm-3">
+                      <td className="fw-medium text-end text-danger pe-3 pe-lg-4">
                         -0ks
                       </td>
                     </tr>
@@ -180,7 +180,7 @@ function OrderDetail() {
                       >
                         Total Price
                       </td>
-                      <td className="fw-medium text-end border-bottom-0 pe-lg-4 pe-sm-3">
+                      <td className="fw-medium text-end border-bottom-0 pe-3 pe-lg-4">
                         3000,000ks
                       </td>
                     </tr>
