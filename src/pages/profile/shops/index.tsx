@@ -31,9 +31,9 @@ function MyShops() {
             <AccountMenu />
           </div>
           <div className="col-lg-8 col-xl-9">
-            <div className="card">
-              <div className="card-header bg-white">
-                <div className="p-3 p-lg-2">
+            <div className="card shadow-sm">
+              <div className="card-header bg-white border-bottom">
+                <div className="py-2">
                   <div className="row g-3">
                     <div className="col">
                       <Input
@@ -62,7 +62,7 @@ function MyShops() {
                 </div>
               </div>
               <div className="card-body">
-                <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                <div className="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
                   <div className="col">
                     <ShopManageGridItem />
                   </div>

@@ -48,14 +48,16 @@ function RichTextEditor({
         }px solid rgba(0, 0, 0, 0.125)`;
       }}
       init={{
+        paste_data_images: false,
         placeholder: placeholder,
         height: minHeight,
         menubar: false,
         inline: inline ?? false,
         skin: "tinymce-5",
+        link_default_target: "_blank",
         images_upload_handler: (info, progress) => {
           return new Promise<string>((resolve, reject) => {
-            console.log(info.blob().size);
+            //console.log(info.blob().size);
 
             reject("Not implemented yet.");
           });
@@ -74,7 +76,8 @@ function RichTextEditor({
           "preview",
           "quickbars",
           "table",
-          "code"
+          "code",
+          "autolink"
         ],
         menu: {
           file: { title: "File", items: "preview" },

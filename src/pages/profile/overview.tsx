@@ -26,7 +26,7 @@ function ProfileOverview() {
             <AccountMenu />
           </div>
           <div className="col-lg-8 col-xl-9">
-            <div className="card mb-3">
+            <div className="card shadow-sm mb-3">
               <div className="card-body p-md-4">
                 <div className="hstack">
                   <div className="position-relative flex-shrink-0">

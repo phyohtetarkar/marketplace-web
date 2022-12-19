@@ -1,16 +1,17 @@
 interface PaginationProps {
-  hasPrev?: boolean;
-  hasNext?: boolean;
   totalPage?: number;
   currentPage?: number;
 }
 
-function Pagination({
-  hasPrev,
-  hasNext,
-  totalPage,
-  currentPage
-}: PaginationProps) {
+function Pagination(props: PaginationProps) {
+  const { totalPage = 0, currentPage = 0 } = props;
+  const hasPrev = currentPage > 1;
+  const hasNext = currentPage < totalPage;
+
+  // const pages = useMemo(() => {
+  //   return Array(totalPage > 3 ? 3 : totalPage).fill(null);
+  // }, [totalPage]);
+
   return (
     <nav aria-label="Pagination">
       <ul className="pagination">
@@ -25,6 +26,18 @@ function Pagination({
             </div>
           </li>
         )}
+        {/* {pages.map((e, i) => {
+          return (
+            <li
+              className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+              key={i}
+            >
+              <div role="button" className="page-link" onClick={() => {}}>
+                {i + 1}
+              </div>
+            </li>
+          );
+        })} */}
         {!hasNext ? (
           <li className="page-item disabled">
             <span className={"page-link user-select-none"}>Next</span>

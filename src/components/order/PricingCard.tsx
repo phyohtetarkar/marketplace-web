@@ -1,6 +1,6 @@
 function PricingCard() {
   return (
-    <div className="card">
+    <div className="card shadow-sm">
       <div className="card-body">
         <div className="vstack gap-2">
           <div className="d-flex justify-content-between">

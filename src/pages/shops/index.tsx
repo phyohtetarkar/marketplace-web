@@ -36,14 +36,15 @@ function Shops() {
             <Input
               id="searchinput"
               name="search"
-              type="text"
+              type="search"
               placeholder="Search shops"
+              className="bg-white"
             />
           </div>
         </div>
         <div className="row">
           <div className="col-lg-12">
-            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxxl-4 g-4">
               {list.map((i) => (
                 <div className="col" key={i}>
                   <ShopGridItem />

@@ -1,11 +1,138 @@
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import ShopEdit from "../../../components/shop/ShopEdit";
+import { CSSProperties, useState } from "react";
+import { Input } from "../../../components/forms";
+import { RichTextEditorInputProps } from "../../../components/forms/RichTextEditor";
+
+const _steps = [
+  { step: 1, title: "Basic information" },
+  { step: 2, title: "Shop media" },
+  { step: 3, title: "Select package", end: true }
+];
+
+const DynamicEditor = dynamic<RichTextEditorInputProps>(
+  () => import("../../../components/forms").then((f) => f.RichTextEditor),
+  {
+    ssr: false
+  }
+);
+
+const BasicInformation = () => {
+  return (
+    <div className="card shadow-sm">
+      <div className="card-header bg-white py-3 px-md-4 border-bottom">
+        <h5 className="mb-0">Basic information</h5>
+      </div>
+      <div className="card-body px-md-4">
+        <div className="vstack">
+          <div className="row g-4 mb-3">
+            <div className="col-lg-6">
+              <Input
+                label="Name *"
+                id="shopNameInput"
+                name="name"
+                type="text"
+                placeholder="Enter shop name"
+              />
+            </div>
+            <div className="col-lg-6">
+              <Input
+                label="Slug *"
+                id="slugInput"
+                name="slug"
+                type="text"
+                placeholder="your-shop-name"
+              />
+            </div>
+          </div>
+          <div className="row g-4">
+            <div className="order-5 order-lg-3 order-md-5 col-lg-6">
+              <label className="form-label">About Us</label>
+              <div className="flex-grow-1">
+                <DynamicEditor
+                  id="aboutInput"
+                  placeholder="Enter about us..."
+                  minHeight={300}
+                />
+              </div>
+            </div>
+            <div className="order-3 order-lg-4 order-md-3 order-1 col-lg-6">
+              <Input
+                label="Headline"
+                id="headlineInput"
+                name="headline"
+                type="text"
+                className="mb-3"
+                placeholder="Enter shop headline"
+              />
+              <Input
+                label="Address"
+                id="addressInput"
+                name="address"
+                type="text"
+                placeholder="Enter shop address"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ShopMedia = () => {
+  return (
+    <div className="card shadow-sm">
+      <div className="card-header bg-white py-3 px-md-4 border-bottom">
+        <h5 className="mb-0">Shop media</h5>
+      </div>
+      <div className="card-body px-md-4">
+        <div className="vstack">
+          <div className="row g-4">
+            <div className="col-lg-3 col-12">
+              <label htmlFor="logoInput" className="form-label">
+                Logo image
+              </label>
+              <div
+                role="button"
+                className="ratio ratio-1x1 border rounded"
+                style={{ width: 80 }}
+              >
+                <Image
+                  src={"/images/placeholder.jpeg"}
+                  layout="fill"
+                  objectFit="cover"
+                  alt=""
+                />
+                <input className="form-control d-none" type="file" />
+              </div>
+            </div>
+            <div className="col-lg-12">
+              <label className="form-label">Cover image</label>
+              <div
+                role="button"
+                className="ratio rounded border position-relative bg-light"
+                style={{ "--bs-aspect-ratio": "20%" } as CSSProperties}
+              >
+                <div className="position-absolute text-muted top-50 start-50 translate-middle h-auto w-auto fw-medium">
+                  Click here to upload
+                </div>
+                {/* <Image src={"/"} layout="fill" objectFit="cover" alt="" /> */}
+                <input className="d-none" type="file" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 function CreateShop() {
   const [currentStep, setCurrentStep] = useState(1);
 
-  const step = (step: number, title: String, end: boolean = false) => {
+  const getStepView = (step: number, title: String, end: boolean = false) => {
     const active = step === currentStep;
     return (
       <div
@@ -39,6 +166,17 @@ function CreateShop() {
         )}
       </div>
     );
+  };
+
+  const getBodyView = () => {
+    switch (currentStep) {
+      case 1:
+        return <BasicInformation />;
+      case 2:
+        return <ShopMedia />;
+    }
+
+    return null;
   };
 
   return (
@@ -75,24 +213,78 @@ function CreateShop() {
       </div>
 
       <div className="container">
-        <div className="card">
-          <div className="card-body">
-            <div className="row gx-3">
-              <div className="col-md">{step(1, "Basic information")}</div>
-              <div className="col-md">{step(2, "Shop media")}</div>
-              <div className="col-md-auto">
-                {step(3, "Select package", true)}
+        <div className="row mt-3">
+          <div className="col-12">
+            <div className="card shadow-sm">
+              <div className="card-body px-md-4">
+                <div className="row gx-3">
+                  {_steps.map((s, i) => {
+                    return (
+                      <div className={s.end ? "col-auto" : "col-md"} key={i}>
+                        {getStepView(s.step, s.title, s.end)}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <div className="row mt-3">
+          <div className="col-12">{getBodyView()}</div>
+        </div>
+
+        {currentStep === _steps.length && (
+          <div className="row">
+            <div className="col-12">
+              <div className="form-check">
+                <input
+                  id="termsAndConditions"
+                  type="checkbox"
+                  name="level"
+                  className="form-check-input"
+                />
+                <label className="form-check-label text-muted">
+                  By checking, you have read and agree to the&nbsp;
+                  <Link href={"/"}>
+                    <a
+                      target="_blank"
+                      className="text-decoration-none fw-medium"
+                    >
+                      terms of service
+                    </a>
+                  </Link>
+                  .
+                </label>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="row mt-3">
           <div className="col">
-            <button className="btn btn-default">Previous</button>
+            {currentStep > 1 && (
+              <button
+                className="btn btn-default px-3 py-2"
+                onClick={() => setCurrentStep((s) => s - 1)}
+              >
+                Previous
+              </button>
+            )}
           </div>
           <div className="col-auto">
-            <button className="btn btn-primary">Next</button>
+            {currentStep < _steps.length && (
+              <button
+                className="btn btn-primary px-3 py-2"
+                onClick={() => setCurrentStep((s) => s + 1)}
+              >
+                Next
+              </button>
+            )}
+            {currentStep === _steps.length && (
+              <button className="btn btn-danger px-3 py-2">Create shop</button>
+            )}
           </div>
         </div>
       </div>

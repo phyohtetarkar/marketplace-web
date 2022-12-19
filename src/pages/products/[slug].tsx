@@ -11,7 +11,7 @@ function ProductDetail() {
   let popular;
   let available;
   let image = `https://source.unsplash.com/random/200x240?random=${Math.floor(
-    Math.random() * 100
+    Math.random() * 50
   )}`;
   let images = [2, 4, 6];
   let price = <>{formatPrice(1000)}</>;
@@ -41,7 +41,7 @@ function ProductDetail() {
           </div>
         </div>
       </div>
-      <div className="bg-white mb-4">
+      <div className="bg-white mb-4 border-bottom">
         <div className="container py-4">
           <div className="row gy-3 gx-4">
             <div className="col-lg-5">
@@ -77,7 +77,7 @@ function ProductDetail() {
                 <hr />
 
                 <dl className="row mb-3">
-                  <dt className="col-sm-3 fw-semibold">{"Product Code"}</dt>
+                  <dt className="col-sm-3 fw-semibold">{"SKU"}</dt>
                   <dd className="col-sm-9">{"YFC45"}</dd>
                   <dt className="col-sm-3 fw-semibold">{"Brand"}</dt>
                   <dd className="col-sm-9">{"Adidas"}</dd>
@@ -96,7 +96,7 @@ function ProductDetail() {
                 <div className="flex-grow-1"></div>
 
                 <div className="row g-3">
-                  <div className="col-12 col-lg-auto mb-3 mb-lg-0">
+                  <div className="col-12 col-lg-auto mb-2 mb-lg-0">
                     <div className="input-group h-100">
                       <button className="btn btn-outline text-muted border border-end-0">
                         <MinusIcon width={20} />
@@ -117,11 +117,11 @@ function ProductDetail() {
                       Add to cart
                     </button>
                   </div>
-                  <div className="col col-lg-auto">
+                  {/* <div className="col col-lg-auto">
                     <button className="btn btn-outline-primary w-100">
                       Buy now
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -151,7 +151,7 @@ function ProductDetail() {
       <div className="container">
         <div className="row mb-12 g-3">
           <div className="col-lg-8">
-            <div className="bg-white border rounded h-100">
+            <div className="bg-white shadow-sm rounded h-100">
               <Tabs defaultTabKey="description">
                 <Tabs.Tab tabKey="description" title="Description">
                   <div
@@ -177,8 +177,8 @@ function ProductDetail() {
             </div>
           </div>
           <div className="col-lg-4">
-            <div className="card">
-              <div className="card-header bg-white py-3">
+            <div className="card shadow-sm">
+              <div className="card-header bg-white py-3 border-bottom">
                 <h5 className="mb-0">About Seller</h5>
               </div>
               <div className="card-body">
@@ -196,14 +196,14 @@ function ProductDetail() {
                     </div>
 
                     <div className="vstack ms-2 overflow-hidden">
-                      <h5 className="mb-0 text-truncate me-2">Store</h5>
+                      <h5 className="mb-0 text-truncate">Store Name</h5>
                       <div className="text-muted small text-truncate">
                         lorem ipsum dolor sit amet
                       </div>
                     </div>
                   </div>
 
-                  <hr className="bg-light-gray my-2" />
+                  <hr className="bg-dark-gray my-2" />
 
                   <p className="text-muted fw-light">
                     Established in 1980, lorem ipsum dolor sit amet, consectetur

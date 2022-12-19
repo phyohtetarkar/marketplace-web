@@ -1,57 +1,77 @@
-import { MapPinIcon } from "@heroicons/react/24/solid";
+import { StarIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
-import Rating from "../Rating";
+
+const _imageSize = 90;
 
 function ShopGridItem() {
   return (
-    <div className="card bg-white">
-      <div className="card-body d-flex p-4">
-        <div>
-          <Link href={`/shops/1`}>
-            <a className="text-decoration-none">
-              <div
-                className="position-relative bg-light rounded-circle"
-                onContextMenu={(e) => e.preventDefault()}
-                style={{ height: 70, width: 70 }}
-              >
-                <Image
-                  className="rounded-circle"
-                  src={`https://source.unsplash.com/random/200x240?random=${Math.floor(
-                    Math.random() * 100
-                  )}`}
-                  alt="Product image."
-                  layout="fill"
-                  priority
-                />
-              </div>
-            </a>
-          </Link>
-        </div>
+    <div className="card shadow-sm">
+      <div className="card-body p-4 overflow-hidden">
+        <div className="vstack text-center">
+          <div
+            className="bg-light rounded-circle mb-3 align-self-center"
+            onContextMenu={(e) => e.preventDefault()}
+          >
+            <div className="ratio ratio-1x1" style={{ width: _imageSize }}>
+              <Image
+                className="rounded-circle"
+                src={`https://source.unsplash.com/random/200x240?random=${Math.floor(
+                  Math.random() * 50
+                )}`}
+                alt="Shop image."
+                layout="fill"
+                objectFit="cover"
+                priority
+              />
+            </div>
+          </div>
 
-        <div className="vstack overflow-hidden ms-4">
-          <h5 className="mb-0">
-            <Link href={`/shops/1`}>
-              <a className="link-dark text-decoration-none text-truncate d-block">
-                Citicom
+          <div className="text-truncate">
+            <Link href={`/shops/slug`}>
+              <a
+                className="h6 mb-1 text-decoration-none link-dark"
+                style={{ fontSize: 18 }}
+              >
+                Store Name
               </a>
             </Link>
-          </h5>
-          <small className="text-muted mb-1">
-            Computer Sales &amp; Services
-          </small>
+          </div>
+          <div className="small text-muted mb-5 text-truncate">
+            Mobile phone sales &amp; services
+          </div>
+          {/* <div className="mb-4">
+            <Rating rating={3.5} />
+          </div> */}
 
-          <Rating rating={4.5} />
-          <div className="hstack gap-1 pt-2 align-items-start">
-            <MapPinIcon className="text-muted flex-shrink-0" width={18} />
-            <small className="flex-grow-1">
-              Yangon city, Pyay Road, Building 123, House 321
-            </small>
+          {/* <div className="hstack gap-2 align-items-stretch">
+            <Link href={`/shops/slug`}>
+              <a className="btn btn-primary flex-grow-1">View detail</a>
+            </Link>
+            <button className="btn btn-outline-light text-primary border">
+              <ShareIcon width={20} />
+            </button>
+          </div> */}
+          <div className="vstack text-start">
+            <div className="hstack">
+              <span className="flex-grow-1 text-muted">Products</span>
+              <span>500</span>
+            </div>
+            <hr className="bg-dark-gray my-2h" />
+            <div className="hstack">
+              <span className="flex-grow-1 text-muted">Rating</span>
+              <div className="hstack text-warning gap-1">
+                <span>4.5</span>
+                <StarIcon width={16} />
+              </div>
+            </div>
+            <hr className="bg-dark-gray my-2h" />
+            <div className="hstack">
+              <span className="flex-grow-1 text-muted">Since</span>
+              <span>2013</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="card-footer">
-        <small className="text-muted">Since 2000</small>
       </div>
     </div>
   );

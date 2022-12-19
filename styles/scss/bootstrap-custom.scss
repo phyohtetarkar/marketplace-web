@@ -17,6 +17,7 @@ $border-radius: 0.35rem;
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/mixins";
+//@import "../../node_modules/bootstrap/scss/maps";
 
 $custom-colors: (
   "default": #c9c9c9,
@@ -96,6 +97,7 @@ $utilities-border-colors: map-loop(
 );
 
 // $enable-rounded: false;
+// $enable-shadows: true;
 
 $input-bg: #f9fafb;
 $input-focus-bg: #f9fafb;
@@ -128,5 +130,8 @@ $accordion-button-active-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3
 
 $breadcrumb-divider-color: rgba(255, 255, 255, 0.6);
 $breadcrumb-active-color: rgba(255, 255, 255, 0.6);
+
+$card-border-width: 0;
+$card-box-shadow: $box-shadow-sm;
 
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";

@@ -9,7 +9,7 @@ import { ProductGridItem } from "../../components/product";
 function Filter() {
   const [maxPrice, setMaxPrice] = useState(300000);
   return (
-    <div className="rounded border bg-white">
+    <div className="rounded shadow-sm bg-white">
       <Accordion
         open={true}
         header={(open) => {
@@ -100,7 +100,7 @@ function Filter() {
 function Explore() {
   function contents() {
     return (
-      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div className="row row-cols-1 row-cols-md-2 row-cols-xxl-3 g-3">
         <div className="col">
           <ProductGridItem />
         </div>
@@ -128,7 +128,7 @@ function Explore() {
       <Head>
         <title>All Proudcts</title>
       </Head>
-      <div className="header-bar">
+      <div className="header-bar mb-3">
         <div className="container">
           <div className="row py-4 px-2">
             <nav aria-label="breadcrumb col-12">
@@ -152,11 +152,11 @@ function Explore() {
         </div>
       </div>
       <div className="container py-4">
-        <div className="row">
-          <div className="col-lg-3">
+        <div className="row g-3">
+          <div className="col-lg-4 col-xl-3">
             <Filter />
           </div>
-          <div className="col-lg-9 mt-3 mt-lg-0">
+          <div className="col-lg-8 col-xl-9 mt-3 mt-lg-0">
             <div className="d-flex mb-3">
               <div className="btn-group ms-auto d-none d-md-block">
                 <button className="btn py-2 btn-outline-primary">

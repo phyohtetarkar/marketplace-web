@@ -63,7 +63,7 @@ function ProductManageGridItem({ data }: InputProps) {
   //   }
 
   return (
-    <div className="card h-100">
+    <div className="card h-100 shadow-sm">
       <Link href={`/products/${product.slug}`}>
         <a className="text-decoration-none">
           <div

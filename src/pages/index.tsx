@@ -61,7 +61,7 @@ const Home: NextPage = () => {
     <div className="container py-4">
       <div className="row mb-4 mb-lg-5">
         <div className="col-12">
-          <div className="card">
+          <div className="card shadow-sm">
             <div className="card-body p-0 p-lg-3">
               <div className="row g-3">
                 <div className="col-lg-3 d-none d-lg-inline">
@@ -309,6 +309,7 @@ const Home: NextPage = () => {
                         width={100}
                         height={100}
                         objectFit="cover"
+                        priority
                       />
                     </div>
                     <h6 className="text-truncate text-dark">{s}</h6>

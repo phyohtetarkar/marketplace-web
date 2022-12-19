@@ -57,7 +57,7 @@ function Tabs({ defaultTabKey, children }: TabsProps) {
           }
           return (
             <div key={`${tabKey}-body`} className="tab-pane active">
-              {c.props.children}
+              {children}
             </div>
           );
         })}

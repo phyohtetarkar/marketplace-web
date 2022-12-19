@@ -3,13 +3,23 @@ import { Offcanvas } from "bootstrap";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
+import {
+  CSSProperties,
+  FormEvent,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState
+} from "react";
 import { AuthenticationContext } from "../../common/contexts";
 import Dropdown from "../Dropdown";
 import {
+  BuildingStorefrontIcon,
+  ListBulletIcon,
+  QuestionMarkCircleIcon,
   MagnifyingGlassIcon,
   ShoppingCartIcon
-} from "@heroicons/react/24/solid";
+} from "@heroicons/react/24/outline";
 
 interface HeaderProps {
   hideAuth?: boolean;
@@ -214,16 +224,24 @@ function Header({ hideAuth }: HeaderProps) {
                 icon={["fas", "shopping-basket"]}
                 className="d-inline-block"
               /> */}
-              <div className="d-flex align-items-center">
-                {/* <Image
-                src="/images/logo_round.png"
-                width={40}
-                height={40}
-                alt=""
-              /> */}
-                <h4 className="mb-0 fw-bold text-primary">
+              <div className="d-flex align-items-center me-2">
+                <div
+                  className="ratio"
+                  style={
+                    { width: 160, "--bs-aspect-ratio": "30%" } as CSSProperties
+                  }
+                >
+                  <Image
+                    src="/images/logo2.png"
+                    layout="fill"
+                    alt=""
+                    priority
+                    objectFit="contain"
+                  />
+                </div>
+                {/* <h4 className="mb-0 fw-bold text-primary">
                   {process.env.NEXT_PUBLIC_APP_NAME}
-                </h4>
+                </h4> */}
               </div>
             </a>
           </Link>
@@ -231,8 +249,8 @@ function Header({ hideAuth }: HeaderProps) {
           <div className="hstack w-100">
             <ul className="navbar-nav align-items-lg-center gap-2">
               <li className="nav-item">
-                <form className="d-flex ms-lg-3" onSubmit={handleSubmit}>
-                  <div className="input-group">
+                <form className="d-flex" onSubmit={handleSubmit}>
+                  <div className="input-group flex-nowrap">
                     <div className="d-flex">
                       <select
                         className="form-select bg-light rounded-0 rounded-start"
@@ -296,14 +314,21 @@ function Header({ hideAuth }: HeaderProps) {
               }}
             </AuthenticationContext.Consumer>
 
-            <div>
+            <div className="nav-item">
               <Link href="/shopping-cart">
-                <a className="btn btn-light border position-relative ms-2 hstack text-nowrap">
-                  <ShoppingCartIcon width={20} />
-                  &nbsp;Cart
-                  <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger my-auto">
-                    3
-                  </span>
+                <a className="nav-link">
+                  <div className="position-relative ms-2 hstack">
+                    <ShoppingCartIcon width={24} strokeWidth={1.5} />
+                    <div
+                      className="position-absolute top-0 start-100 translate-middle rounded-pill bg-danger text-light px-1 fw-light hstack"
+                      style={{
+                        fontSize: 12,
+                        height: 17
+                      }}
+                    >
+                      3
+                    </div>
+                  </div>
                 </a>
               </Link>
             </div>
@@ -341,11 +366,38 @@ function Header({ hideAuth }: HeaderProps) {
             </div>
             <div className="offcanvas-body">
               <ul className="navbar-nav align-items-lg-center gap-2">
-                <li className="nav-item">
-                  <NavLink href="/products">Products</NavLink>
+                <li className="nav-item d-none d-lg-block">
+                  <NavLink href="/products">
+                    <div className="hstack">
+                      <ListBulletIcon
+                        width={20}
+                        className="me-1 d-none d-lg-block"
+                      />
+                      <span>Categories</span>
+                    </div>
+                  </NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink href="/shops">Shops</NavLink>
+                  <NavLink href="/shops">
+                    <div className="hstack">
+                      <BuildingStorefrontIcon
+                        width={20}
+                        className="me-1 d-none d-lg-block"
+                      />
+                      <span>Shops</span>
+                    </div>
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink href="/shops">
+                    <div className="hstack">
+                      <QuestionMarkCircleIcon
+                        width={20}
+                        className="me-1 d-none d-lg-block"
+                      />
+                      <span>FAQs</span>
+                    </div>
+                  </NavLink>
                 </li>
               </ul>
 

@@ -16,7 +16,7 @@ function Rating(props: RatingProps) {
           return <SolidStarIcon key={i} width={18} className="text-warning" />;
         }
 
-        if (rating === e - 0.5) {
+        if (rating >= e - 0.5 && rating < e) {
           return (
             <div
               key={i}

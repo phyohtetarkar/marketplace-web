@@ -72,14 +72,14 @@ function ProductGridItem({ data, heading = "seller", owner }: InputProps) {
   //   }
 
   return (
-    <div className="card h-100">
+    <div className="card h-100 border-0 shadow-sm">
       <Link href={`/products/${product.slug}`}>
         <a className="text-decoration-none">
           <div
             className="position-relative"
             onContextMenu={(e) => e.preventDefault()}
           >
-            <div className="ratio ratio-1x1">
+            <div className="ratio ratio-4x3">
               <Image
                 className="card-img-top"
                 src={image}
@@ -111,10 +111,7 @@ function ProductGridItem({ data, heading = "seller", owner }: InputProps) {
           )}
 
           <Link href={`/products/${product.slug}`}>
-            <a
-              className="text-muted text-decoration-none text-truncate"
-              style={{ fontSize: 18 }}
-            >
+            <a className="text-muted text-decoration-none text-truncate">
               {product.name}
             </a>
           </Link>

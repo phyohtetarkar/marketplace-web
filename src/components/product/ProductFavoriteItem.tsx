@@ -8,7 +8,7 @@ function ProductFavoriteItem() {
   )}`;
 
   return (
-    <div className="card">
+    <div className="card shadow-sm">
       <div className="card-body">
         <div className="hstack gap-3">
           <div

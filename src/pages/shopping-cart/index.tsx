@@ -22,8 +22,8 @@ function ShoppingCart() {
       <div className="vstack gap-3">
         {list.map((pl, i) => {
           return (
-            <div key={i} className="card">
-              <div className="card-header bg-white py-2h">
+            <div key={i} className="card shadow-sm">
+              <div className="card-header bg-white py-2h border-bottom">
                 <div className="form-check">
                   <input className="form-check-input" type="checkbox"></input>
                   <label className="form-check-label">Shop name</label>
@@ -66,7 +66,7 @@ function ShoppingCart() {
       <div className="container py-3">
         <div className="row g-3">
           <div className="col-lg-8">
-            <div className="card mb-3">
+            <div className="card mb-3 shadow-sm">
               <div className="card-body py-2h">
                 <div className="hstack gap-2 flex-grow-1">
                   <div className="form-check">
