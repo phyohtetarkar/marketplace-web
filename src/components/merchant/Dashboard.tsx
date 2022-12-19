@@ -10,7 +10,7 @@ function Dashboard() {
     <div>
       <div className="row g-3 mb-3">
         <div className="col-lg-4">
-          <div className="card p-3">
+          <div className="card p-3 shadow-sm">
             <div className="hstack gap-3">
               <div className="bg-accent text-light rounded">
                 <CurrencyDollarIcon
@@ -27,7 +27,7 @@ function Dashboard() {
           </div>
         </div>
         <div className="col-lg-4">
-          <div className="card p-3">
+          <div className="card p-3 shadow-sm">
             <div className="hstack gap-3">
               <div className="bg-success text-light rounded">
                 <ShoppingBagIcon
@@ -43,7 +43,7 @@ function Dashboard() {
           </div>
         </div>
         <div className="col-lg-4">
-          <div className="card p-3">
+          <div className="card p-3 shadow-sm">
             <div className="hstack gap-3">
               <div className="bg-primary text-light rounded">
                 <CubeIcon width={iconSize} className="flex-shrink-0 p-2" />
@@ -58,7 +58,7 @@ function Dashboard() {
       </div>
       <div className="row g-3">
         <div className="col-lg-9">
-          <div className="card h-100">
+          <div className="card h-100 shadow-sm">
             <div className="card-body">
               <div>
                 <h5 className="fw-normal ">Earnings</h5>
@@ -67,7 +67,7 @@ function Dashboard() {
           </div>
         </div>
         <div className="col-lg-3">
-          <div className="card h-100">
+          <div className="card h-100 shadow-sm">
             <div className="card-body">
               <div>
                 <h5 className="fw-normal">Sales by category</h5>

@@ -1,9 +1,7 @@
 import {
   ChartBarIcon,
+  Cog6ToothIcon,
   CubeIcon,
-  MapPinIcon,
-  PhoneIcon,
-  RectangleGroupIcon,
   TagIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
@@ -11,20 +9,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useState } from "react";
 import Dropdown from "../../../../components/Dropdown";
-import BranchListing from "../../../../components/merchant/BranchListing";
-import ContactListing from "../../../../components/merchant/ContactListing";
 import Dashboard from "../../../../components/merchant/Dashboard";
 import DiscountListing from "../../../../components/merchant/DiscountListing";
 import ProductListing from "../../../../components/merchant/ProductListing";
-import SocialListing from "../../../../components/merchant/SocialListing";
+import SettingListing from "../../../../components/merchant/SettingListing";
 
-type PageTab =
-  | "dashboard"
-  | "products"
-  | "discounts"
-  | "branches"
-  | "contact-numbers"
-  | "social-pages";
+type PageTab = "dashboard" | "products" | "discounts" | "setting";
 
 function ShopDetail() {
   const router = useRouter();
@@ -100,29 +90,11 @@ function ShopDetail() {
           icon: <TagIcon className="me-2" strokeWidth={2} width={iconSize} />,
         })}
         {menuLink({
-          href: "/profile/shops/id#branches",
-          title: "Branches",
-          active: activeTab === "branches",
+          href: "/profile/shops/id#setting",
+          title: "Setting",
+          active: activeTab === "setting",
           icon: (
-            <MapPinIcon className="me-2" strokeWidth={2} width={iconSize} />
-          ),
-        })}
-        {menuLink({
-          href: "/profile/shops/id#contact-numbers",
-          title: "Contact numbers",
-          active: activeTab === "contact-numbers",
-          icon: <PhoneIcon className="me-2" strokeWidth={2} width={18} />,
-        })}
-        {menuLink({
-          href: "/profile/shops/id#social-pages",
-          title: "Social pages",
-          active: activeTab === "social-pages",
-          icon: (
-            <RectangleGroupIcon
-              className="me-2"
-              strokeWidth={2}
-              width={22}
-            />
+            <Cog6ToothIcon className="me-2" strokeWidth={2} width={iconSize} />
           ),
         })}
       </div>
@@ -137,12 +109,8 @@ function ShopDetail() {
         return <ProductListing />;
       case "discounts":
         return <DiscountListing />;
-      case "branches":
-        return <BranchListing />;
-      case "contact-numbers":
-        return <ContactListing />;
-      case "social-pages":
-        return <SocialListing />;
+      case "setting":
+        return <SettingListing />;
     }
 
     return null;
@@ -174,7 +142,7 @@ function ShopDetail() {
       <div className="container py-4">
         <div className="row">
           <div className="col-12">
-            <div className="border rounded bg-white vstack">
+            <div className="bg-white vstack shadow-sm">
               <div
                 style={{
                   width: "100%",
@@ -254,7 +222,7 @@ function ShopDetail() {
         <div className="row py-4 g-4">
           <div className="col-lg-3">
             <>
-              <div className="card d-none d-lg-block">
+              <div className="card d-none d-lg-block shadow-sm">
                 <div className="card-body">{menus}</div>
               </div>
               <div className="accordion border rounded d-block d-lg-none">
