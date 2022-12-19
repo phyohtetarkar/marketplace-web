@@ -2,7 +2,7 @@ import {
   ChartBarIcon,
   Cog6ToothIcon,
   CubeIcon,
-  TagIcon,
+  TagIcon
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,7 +12,7 @@ import Dropdown from "../../../../components/Dropdown";
 import Dashboard from "../../../../components/merchant/Dashboard";
 import DiscountListing from "../../../../components/merchant/DiscountListing";
 import ProductListing from "../../../../components/merchant/ProductListing";
-import SettingListing from "../../../../components/merchant/SettingListing";
+import Setting from "../../../../components/merchant/Setting";
 
 type PageTab = "dashboard" | "products" | "discounts" | "setting";
 
@@ -110,7 +110,7 @@ function ShopDetail() {
       case "discounts":
         return <DiscountListing />;
       case "setting":
-        return <SettingListing />;
+        return <Setting />;
     }
 
     return null;
@@ -142,7 +142,7 @@ function ShopDetail() {
       <div className="container py-4">
         <div className="row">
           <div className="col-12">
-            <div className="bg-white vstack shadow-sm">
+            <div className="bg-white vstack shadow-sm rounded">
               <div
                 style={{
                   width: "100%",
