@@ -7,7 +7,7 @@ import Pagination from "../../../components/Pagination";
 function OrderCard() {
   return (
     <div className="card shadow-sm mb-3">
-      <div className="card-header py-3 bg-white">
+      <div className="card-header border-bottom py-3 bg-white">
         <div className="row">
           <div className="col d-flex">
             <span className="fw-semibold h5 my-auto">Order ID: 20001</span>

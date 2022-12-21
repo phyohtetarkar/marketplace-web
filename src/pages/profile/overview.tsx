@@ -59,25 +59,25 @@ function ProfileOverview() {
                 <hr className="bg-dark-gray" />
                 <div className="text-muted mb-3">Overview</div>
                 <div className="card-group mt-2">
-                  <div className="card bg-light">
+                  <div className="card border bg-light">
                     <div className="p-3">
                       <h4 className="title">38</h4>
                       <span>Orders</span>
                     </div>
                   </div>
-                  <div className="card bg-light">
+                  <div className="card border bg-light">
                     <div className="p-3">
                       <h4 className="title">5</h4>
                       <span>Wishlist</span>
                     </div>
                   </div>
-                  <div className="card bg-light">
+                  <div className="card border bg-light">
                     <div className="p-3">
                       <h4 className="title">12</h4>
                       <span>Awaiting delivery</span>
                     </div>
                   </div>
-                  <div className="card bg-light">
+                  <div className="card border bg-light">
                     <div className="p-3">
                       <h4 className="title">50</h4>
                       <span>Delivered items</span>
@@ -88,7 +88,7 @@ function ProfileOverview() {
                 <div className="text-muted mb-3">Addresses</div>
                 <div className="row row-cols-1 row-cols-lg-2 g-2 mb-3">
                   <div className="col">
-                    <div className="card bg-light">
+                    <div className="card border bg-light">
                       <div className="card-body">
                         <div className="hstack gap-2">
                           <MapPinIcon
