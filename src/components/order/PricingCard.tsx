@@ -47,8 +47,8 @@ function PricingCard() {
           )}
           {children} */}
           <div className="d-grid gap-2 mt-3">
-            <button className="btn btn-primary">Checkout</button>
-            <button className="btn btn-outline-primary">
+            <button className="btn btn-primary py-2">Checkout</button>
+            <button className="btn btn-outline-primary py-2">
               Contine Shopping
             </button>
           </div>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Dropdown from "../Dropdown";
 import { Textarea } from "../forms";
+import Pagination from "../Pagination";
 import Rating from "../Rating";
 
 const _ratings = [5, 4, 3, 2, 1];
@@ -40,15 +41,17 @@ function ShopReviewListing() {
   const reviews = [1, 2, 3];
   return (
     <div>
-      <div className="card mb-3">
+      <div className="card mb-3 shadow-sm">
         <div className="card-body">
           <div className="row gap-3">
             <div className="col-lg-12">
               <Dropdown
                 toggle={
-                  <span className="flex-grow-1 text-muted">Select rating</span>
+                  <span className="flex-grow-1 text-muted text-start">
+                    Choose rating
+                  </span>
                 }
-                toggleClassName="border rounded py-2h px-3 dropdown-toggle bg-light hstack"
+                toggleClassName="btn btn-outline-light rounded text-muted py-2h px-3 border dropdown-toggle hstack"
                 menuClassName="w-100"
               >
                 {_ratings.map((e, i) => {
@@ -74,15 +77,15 @@ function ShopReviewListing() {
           </div>
         </div>
       </div>
-      <div className="card">
+      <div className="card shadow-sm">
         <div className="card-body">
           {reviews.map((i) => (
             <Review key={i} />
           ))}
-          <div className="d-flex mb-2">
-            <button className="btn btn-outline-primary rounded-2 ms-auto">
-              View all reviews
-            </button>
+          <div className="hstack justify-content-end">
+            <div className="">
+              <Pagination />
+            </div>
           </div>
         </div>
       </div>

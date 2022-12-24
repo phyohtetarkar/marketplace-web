@@ -6,67 +6,66 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import { Input, Textarea } from "../forms";
+import { Input, TagInput, Textarea } from "../forms";
 import Tabs from "../Tabs";
 
 const list = [1, 2, 3, 4];
 
 const General = () => {
   return (
-    <div className="py-1">
-      <div className="row g-4 mb-3">
-        <div className="col-lg-6">
-          <Input
-            label="Name *"
-            id="shopNameInput"
-            name="name"
-            type="text"
-            placeholder="Enter shop name"
-          />
+    <div className="card">
+      <div className="card-body">
+        <div className="row g-3 mb-3">
+          <div className="col-lg-6">
+            <Input
+              label="Name *"
+              id="shopNameInput"
+              name="name"
+              type="text"
+              placeholder="Enter shop name"
+            />
+          </div>
+          <div className="col-lg-6">
+            <Input
+              label="Slug *"
+              id="slugInput"
+              name="slug"
+              type="text"
+              placeholder="https://shoppingcenter.com/page/slug"
+            />
+          </div>
         </div>
-        <div className="col-lg-6">
-          <Input
-            label="Slug *"
-            id="slugInput"
-            name="slug"
-            type="text"
-            placeholder="https://shoppingcenter.com/page/slug"
-          />
+        <div className="row g-3 mb-3">
+          <div className="order-5 order-lg-3 order-md-5 col-lg-6">
+            <label className="form-label">About us</label>
+            <Textarea
+              id="aboutUsInput"
+              placeholder="Enter about shop"
+              height={200}
+            />
+          </div>
+          <div className="order-3 order-lg-4 order-md-3 order-1 col-lg-6">
+            <Input
+              label="Headline"
+              id="headlineInput"
+              name="headline"
+              type="text"
+              className="mb-3"
+              placeholder="Enter shop headline"
+            />
+            <Input
+              label="Address *"
+              id="addressInput"
+              name="address"
+              type="text"
+              placeholder="Enter shop address"
+            />
+          </div>
         </div>
       </div>
-      <div className="row g-4 mb-3">
-        <div className="order-5 order-lg-3 order-md-5 col-lg-6">
-          <label className="form-label">About us</label>
-          <Textarea
-            id="aboutUsInput"
-            placeholder="Enter about shop"
-            height={250}
-          />
-        </div>
-        <div className="order-3 order-lg-4 order-md-3 order-1 col-lg-6">
-          <Input
-            label="Headline"
-            id="headlineInput"
-            name="headline"
-            type="text"
-            className="mb-3"
-            placeholder="Enter shop headline"
-          />
-          <Input
-            label="Address *"
-            id="addressInput"
-            name="address"
-            type="text"
-            placeholder="Enter shop address"
-          />
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="d-flex justify-content-end">
-          <Link href="#">
-            <a className="btn btn-primary h-100 hstack">Save</a>
-          </Link>
+      <div className="card-footer py-2h">
+        <div className="clearfix">
+          <button className="float-end btn btn-primary">Save</button>
         </div>
       </div>
     </div>
@@ -75,8 +74,38 @@ const General = () => {
 
 const Contact = () => {
   return (
-    <div className="py-1">
-      <div className="d-flex justify-content-start">
+    <div className="card">
+      <div className="card-body">
+        <div className="mb-3">
+          <label className="form-label">Phones</label>
+          <TagInput data={[]} placeholder="Add phone" />
+        </div>
+
+        <div className="mb-3">
+          <Input
+            label="Address"
+            name="address"
+            placeholder="Enter shop address"
+          />
+        </div>
+        <div>
+          <label className="form-label">Location</label>
+          <div className="row g-3">
+            <div className="col-md-6">
+              <Input name="latitude" placeholder="Enter latitude" />
+            </div>
+            <div className="col-md-6">
+              <Input name="longitude" placeholder="Enter longitude" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="card-footer py-2h">
+        <div className="clearfix">
+          <button className="btn btn-primary float-end">Save</button>
+        </div>
+      </div>
+      {/* <div className="d-flex justify-content-start">
         <Link href="#">
           <a className="btn btn-primary">
             <div className="hstack">
@@ -96,15 +125,15 @@ const Contact = () => {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
 
 const Branches = () => {
   return (
-    <div className="py-1">
-      <div className="d-flex justify-content-start">
+    <div className="p-3">
+      <div className="mb-3">
         <Link href="#">
           <a className="btn btn-primary">
             <div className="hstack">
@@ -115,7 +144,7 @@ const Branches = () => {
         </Link>
       </div>
 
-      <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-2 g-3 py-3">
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-2 g-3">
         {list.map((i) => (
           <div className="col" key={i}>
             <div className="bg-light rounded p-3">
@@ -181,7 +210,7 @@ const Social = () => {
   );
 };
 
-function Setting() {
+function ShopSetting() {
   return (
     <div>
       <div className="bg-white rounded h-100 shadow-sm">
@@ -195,13 +224,10 @@ function Setting() {
           <Tabs.Tab tabKey="branches" title="Branches">
             <Branches />
           </Tabs.Tab>
-          <Tabs.Tab tabKey="social" title="Social">
-            <Social />
-          </Tabs.Tab>
         </Tabs>
       </div>
     </div>
   );
 }
 
-export default Setting;
+export default ShopSetting;

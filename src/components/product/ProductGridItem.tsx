@@ -1,4 +1,4 @@
-import { HeartIcon } from "@heroicons/react/24/outline";
+import { HeartIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useState } from "react";
@@ -121,7 +121,7 @@ function ProductGridItem({ data, heading = "seller", owner }: InputProps) {
           <div className="hstack align-items-stretch gap-2">
             <button
               disabled={false}
-              className="btn btn-primary flex-grow-1"
+              className="btn btn-primary flex-grow-1 hstack justify-content-center gap-2"
               onClick={() => {
                 // addToCard(data, settingContext.setting.minimumOrderLimit)
                 //   .then((result) => {
@@ -136,7 +136,8 @@ function ProductGridItem({ data, heading = "seller", owner }: InputProps) {
                 //   });
               }}
             >
-              Add to cart
+              <ShoppingCartIcon width={20} />
+              <span>Add to cart</span>
             </button>
             <Tooltip title="Add to favorite">
               {!addingToFavorite ? (

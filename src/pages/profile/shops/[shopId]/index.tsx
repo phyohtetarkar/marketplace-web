@@ -2,19 +2,21 @@ import {
   ChartBarIcon,
   Cog6ToothIcon,
   CubeIcon,
+  InboxArrowDownIcon,
   TagIcon
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
+import Accordion from "../../../../components/Accordion";
 import Dropdown from "../../../../components/Dropdown";
-import Dashboard from "../../../../components/merchant/Dashboard";
-import DiscountListing from "../../../../components/merchant/DiscountListing";
-import ProductListing from "../../../../components/merchant/ProductListing";
-import Setting from "../../../../components/merchant/Setting";
+import ManageDiscounts from "../../../../components/merchant/ManageDiscounts";
+import ManageProducts from "../../../../components/merchant/ManageProducts";
+import ShopDashboard from "../../../../components/merchant/ShopDashboard";
+import ShopSetting from "../../../../components/merchant/ShopSetting";
 
-type PageTab = "dashboard" | "products" | "discounts" | "setting";
+type PageTab = "dashboard" | "products" | "discounts" | "orders" | "setting";
 
 function ShopDetail() {
   const router = useRouter();
@@ -22,9 +24,11 @@ function ShopDetail() {
 
   const iconSize = 20;
 
-  let image = `https://source.unsplash.com/random/200x240?random=${Math.floor(
-    Math.random() * 100
-  )}`;
+  const image = useMemo(() => {
+    return `https://source.unsplash.com/random/200x240?random=${Math.floor(
+      Math.random() * 50
+    )}`;
+  }, []);
 
   useEffect(() => {
     if (router.isReady) {
@@ -42,7 +46,7 @@ function ShopDetail() {
     href,
     title,
     active,
-    icon,
+    icon
   }: {
     href: string;
     title: string;
@@ -75,19 +79,31 @@ function ShopDetail() {
           active: activeTab === "dashboard",
           icon: (
             <ChartBarIcon className="me-2" strokeWidth={2} width={iconSize} />
-          ),
+          )
         })}
         {menuLink({
           href: "/profile/shops/id#products",
           title: "Products",
           active: activeTab === "products",
-          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />,
+          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
           href: "/profile/shops/id#discounts",
           title: "Discounts",
           active: activeTab === "discounts",
-          icon: <TagIcon className="me-2" strokeWidth={2} width={iconSize} />,
+          icon: <TagIcon className="me-2" strokeWidth={2} width={iconSize} />
+        })}
+        {menuLink({
+          href: "/profile/shops/id#orders",
+          title: "Orders",
+          active: activeTab === "orders",
+          icon: (
+            <InboxArrowDownIcon
+              className="me-2"
+              strokeWidth={2}
+              width={iconSize}
+            />
+          )
         })}
         {menuLink({
           href: "/profile/shops/id#setting",
@@ -95,7 +111,7 @@ function ShopDetail() {
           active: activeTab === "setting",
           icon: (
             <Cog6ToothIcon className="me-2" strokeWidth={2} width={iconSize} />
-          ),
+          )
         })}
       </div>
     </>
@@ -104,17 +120,23 @@ function ShopDetail() {
   const activeContent = () => {
     switch (activeTab) {
       case "dashboard":
-        return <Dashboard />;
+        return <ShopDashboard />;
       case "products":
-        return <ProductListing />;
+        return <ManageProducts />;
       case "discounts":
-        return <DiscountListing />;
+        return <ManageDiscounts />;
       case "setting":
-        return <Setting />;
+        return <ShopSetting />;
     }
 
     return null;
   };
+  const heading = (
+    <>
+      <h5 className="mb-0">Shop Name</h5>
+      <div className="text-muted small mb-1 text-truncate">Headline</div>
+    </>
+  );
 
   return (
     <div>
@@ -146,7 +168,7 @@ function ShopDetail() {
               <div
                 style={{
                   width: "100%",
-                  height: 200,
+                  height: 200
                 }}
                 className="position-relative"
               >
@@ -172,19 +194,16 @@ function ShopDetail() {
                         objectFit="cover"
                       />
                     </div>
-                    <div className="ms-2 d-flex flex-column mt-n2 mt-sm-n3">
-                      <h4 className="mb-0">{"Shoes World"}</h4>
-                      <div className="text-muted small mb-1">
-                        {"Shop HeadLine"}
-                      </div>
+                    <div className="ms-2 d-flex flex-column mt-n2 mt-sm-n3 d-none d-md-flex">
+                      {heading}
                     </div>
                   </div>
                 </div>
+                <div className="col-12 d-block d-md-none mb-2h">
+                  <div className="vstack">{heading}</div>
+                </div>
                 <div className="col-sm-auto">
-                  <div
-                    className="mt-2 mt-sm-0 gap-1 hstack"
-                    style={{ zIndex: 999 }}
-                  >
+                  <div className="mt-sm-0 gap-1 hstack" style={{ zIndex: 999 }}>
                     <div className="flex-grow-1 d-none d-md-block"></div>
                     <Dropdown
                       toggle={
@@ -192,16 +211,16 @@ function ShopDetail() {
                           Shop Action
                         </button>
                       }
-                      menuClassName="dropdown-menu-end"
+                      menuClassName="dropdown-menu-start dropdown-menu-md-end"
                     >
                       <li
                         role="button"
                         className="dropdown-item"
                         onClick={() => {
-                          router.replace("/profile/shops/1#dashboard");
+                          router.push("/shops/id");
                         }}
                       >
-                        Edit
+                        View public
                       </li>
                       <li
                         role="button"
@@ -225,27 +244,17 @@ function ShopDetail() {
               <div className="card d-none d-lg-block shadow-sm">
                 <div className="card-body">{menus}</div>
               </div>
-              <div className="accordion border rounded d-block d-lg-none">
-                <div className="accordion-item">
-                  <div className="accordion-header">
-                    <button
-                      className="accordion-button fw-bold collapsed"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#collapseMenu"
-                      aria-expanded="false"
-                      aria-controls="collapseMenu"
-                    >
-                      Menu
-                    </button>
-                  </div>
-
-                  <div
-                    id="collapseMenu"
-                    className="accordion-collapse collapse border-top"
-                  >
-                    <div className="accordion-body p-3">{menus}</div>
-                  </div>
-                </div>
+              <div className="rounded shadow-sm bg-white d-block d-lg-none">
+                <Accordion
+                  header={(open) => {
+                    return <span className="fw-bold">Menu</span>;
+                  }}
+                  headerClassName="px-3 py-2h"
+                  bodyClassName="border-top"
+                  iconType="plus-minus"
+                >
+                  <div className="p-2h">{menus}</div>
+                </Accordion>
               </div>
             </>
           </div>

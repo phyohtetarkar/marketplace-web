@@ -1,8 +1,11 @@
 function AboutUs() {
   return (
-    <div className="card">
+    <div className="card shadow-sm">
+      <div className="card-header border-bottom bg-white py-2h">
+        <h4 className="mb-0">About us</h4>
+      </div>
       <div className="card-body">
-        <span className="text-muted">
+        <span className="">
           There are many variations of passages of Lorem Ipsum available, but
           the majority have suffered alteration in some form, by injected
           humour, or randomised words which don&apos;t look even slightly

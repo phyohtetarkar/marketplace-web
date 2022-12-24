@@ -225,7 +225,7 @@ function Header({ hideAuth }: HeaderProps) {
                 className="d-inline-block"
               /> */}
               <div className="d-flex align-items-center me-2">
-                <div
+                {/* <div
                   className="ratio"
                   style={
                     { width: 160, "--bs-aspect-ratio": "30%" } as CSSProperties
@@ -238,10 +238,10 @@ function Header({ hideAuth }: HeaderProps) {
                     priority
                     objectFit="contain"
                   />
-                </div>
-                {/* <h4 className="mb-0 fw-bold text-primary">
+                </div> */}
+                <h4 className="mb-0 fw-bold text-primary">
                   {process.env.NEXT_PUBLIC_APP_NAME}
-                </h4> */}
+                </h4>
               </div>
             </a>
           </Link>

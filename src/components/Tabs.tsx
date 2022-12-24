@@ -49,7 +49,7 @@ function Tabs({ defaultTabKey, children }: TabsProps) {
           );
         })}
       </ul>
-      <div className="tab-content p-3">
+      <div className="tab-content">
         {children.map((c, i) => {
           const { tabKey, children } = c.props;
           if (tabKey !== activeTabKey) {

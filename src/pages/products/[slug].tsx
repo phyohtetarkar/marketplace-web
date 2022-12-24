@@ -155,6 +155,7 @@ function ProductDetail() {
               <Tabs defaultTabKey="description">
                 <Tabs.Tab tabKey="description" title="Description">
                   <div
+                    className="p-3"
                     dangerouslySetInnerHTML={{
                       __html: `<div>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ac turpis egestas integer eget aliquet. Ultricies tristique nulla aliquet enim. Ut lectus arcu bibendum at varius vel. Tempus egestas sed sed risus pretium quam vulputate dignissim.</p>
@@ -170,8 +171,8 @@ function ProductDetail() {
                     }}
                   ></div>
                 </Tabs.Tab>
-                <Tabs.Tab tabKey="specification" title="Specification">
-                  <div>Specification</div>
+                <Tabs.Tab tabKey="specification" title="Video">
+                  <div className="p-3">Video</div>
                 </Tabs.Tab>
               </Tabs>
             </div>

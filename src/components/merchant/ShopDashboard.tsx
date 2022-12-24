@@ -1,10 +1,10 @@
 import {
   CubeIcon,
   CurrencyDollarIcon,
-  ShoppingBagIcon,
+  ShoppingBagIcon
 } from "@heroicons/react/24/solid";
 
-function Dashboard() {
+function ShopDashboard() {
   const iconSize = 56;
   return (
     <div>
@@ -12,7 +12,7 @@ function Dashboard() {
         <div className="col-lg-4">
           <div className="card p-3 shadow-sm">
             <div className="hstack gap-3">
-              <div className="bg-accent text-light rounded">
+              <div className="bg-warning text-light rounded">
                 <CurrencyDollarIcon
                   width={iconSize}
                   className="flex-shrink-0 p-2"
@@ -20,8 +20,8 @@ function Dashboard() {
               </div>
 
               <div className="vstack gap-1 text-nowrap">
-                <h6 className="fw-normal">Total Sales</h6>
-                <span className="fw-bold">120,200,000 Ks</span>
+                <h6 className="text-muted mb-auto">Total Sales</h6>
+                <span className="fw-semibold">120,200,000 Ks</span>
               </div>
             </div>
           </div>
@@ -36,8 +36,8 @@ function Dashboard() {
                 />
               </div>
               <div className="vstack gap-1 text-nowrap">
-                <h6 className="fw-normal">Total Orders</h6>
-                <span className="fw-bold">90</span>
+                <h6 className="text-muted mb-auto">Total Orders</h6>
+                <span className="fw-semibold">90</span>
               </div>
             </div>
           </div>
@@ -49,29 +49,25 @@ function Dashboard() {
                 <CubeIcon width={iconSize} className="flex-shrink-0 p-2" />
               </div>
               <div className="vstack gap-1 text-nowrap">
-                <h6 className="fw-normal">Total Products</h6>
-                <span className="fw-bold">50</span>
+                <h6 className="text-muted mb-auto">Total Products</h6>
+                <span className="fw-semibold">50</span>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className="row g-3">
-        <div className="col-lg-9">
+        <div className="col-lg-8">
           <div className="card h-100 shadow-sm">
             <div className="card-body">
-              <div>
-                <h5 className="fw-normal ">Earnings</h5>
-              </div>
+              <h5 className="mb -0">Earnings</h5>
             </div>
           </div>
         </div>
-        <div className="col-lg-3">
+        <div className="col-lg-4">
           <div className="card h-100 shadow-sm">
             <div className="card-body">
-              <div>
-                <h5 className="fw-normal">Sales by category</h5>
-              </div>
+              <h5 className="mb-0">Sales by category</h5>
             </div>
           </div>
         </div>
@@ -80,4 +76,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default ShopDashboard;

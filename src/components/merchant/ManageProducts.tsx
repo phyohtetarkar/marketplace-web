@@ -3,7 +3,7 @@ import { Input } from "../forms";
 import Pagination from "../Pagination";
 import ProductManageGridItem from "../product/ProductManageGridItem";
 
-function ProductListing() {
+function ManageProducts() {
   const list = [1, 2, 3, 4, 5];
 
   return (
@@ -42,4 +42,4 @@ function ProductListing() {
   );
 }
 
-export default ProductListing;
+export default ManageProducts;

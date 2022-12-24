@@ -1,4 +1,6 @@
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import { formControlHeight } from "../../common/app.config";
 
 interface TagInputProps {
   data: string[];
@@ -15,7 +17,7 @@ interface TagValues {
 function Tag({ index, name, onRemove }: TagValues) {
   return (
     <div
-      className="d-flex align-items-center bg-primary rounded px-2"
+      className="hstack align-self-center bg-primary rounded px-2 m-1"
       style={{ height: 26 }}
     >
       <div className="small text-light">{name}</div>
@@ -27,7 +29,7 @@ function Tag({ index, name, onRemove }: TagValues) {
           onRemove && onRemove(index);
         }}
       >
-        &times;
+        <XMarkIcon width={14} strokeWidth={3.5} />
       </a>
     </div>
   );
@@ -82,7 +84,7 @@ function TagInput({ data = [], placeholder, onTagsChange }: TagInputProps) {
 
   return (
     <div
-      className={`px-3 py-2h border rounded d-flex flex-wrap align-items-center gap-2 ${
+      className={`px-3 border rounded form-control d-flex flex-wrap align-items-center ${
         focus ? "border-primary" : ""
       }`}
       onFocus={() => {
@@ -91,6 +93,9 @@ function TagInput({ data = [], placeholder, onTagsChange }: TagInputProps) {
       }}
       tabIndex={0}
       onBlur={() => setFocus(false)}
+      style={{
+        minHeight: formControlHeight
+      }}
     >
       {tags.map((e, i) => {
         return <Tag key={i} index={i} name={e} onRemove={handleRemove} />;
@@ -98,7 +103,7 @@ function TagInput({ data = [], placeholder, onTagsChange }: TagInputProps) {
       <input
         ref={inputRef}
         type="text"
-        className="border-0"
+        className="border-0 bg-transparent"
         size={10}
         placeholder={placeholder ?? "Add tag"}
         style={{ outline: "none" }}

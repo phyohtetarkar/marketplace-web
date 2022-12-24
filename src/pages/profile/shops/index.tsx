@@ -73,9 +73,10 @@ function MyShops() {
                     <ShopManageGridItem />
                   </div>
                 </div>
-              </div>
-              <div className="d-flex justify-content-end pt-3 px-3">
-                <Pagination />
+
+                <div className="d-flex justify-content-end pt-3">
+                  <Pagination />
+                </div>
               </div>
             </div>
           </div>

@@ -9,6 +9,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useState } from "react";
 import { Facebook, Instagram, Twitter } from "react-feather";
+import Accordion from "../../components/Accordion";
+import Rating from "../../components/Rating";
 import AboutUs from "../../components/shopdetail/AboutUs";
 import ShopBranchListing from "../../components/shopdetail/ShopBranchListing";
 import ShopProductListing from "../../components/shopdetail/ShopProductListing";
@@ -120,6 +122,13 @@ function ShopHome({ shop }: { shop: any }) {
     return null;
   };
 
+  const heading = (
+    <>
+      <h5 className="mb-0">{shop.name}</h5>
+      <div className="text-muted small mb-1 text-truncate">Headline</div>
+    </>
+  );
+
   return (
     <div className="vstack">
       <div className="bg-primary">
@@ -148,7 +157,7 @@ function ShopHome({ shop }: { shop: any }) {
       <div className="container py-4">
         <div className="row">
           <div className="col-12">
-            <div className="border rounded bg-white vstack overflow-hidden">
+            <div className="shadow-sm rounded bg-white vstack overflow-hidden">
               <div
                 style={{
                   width: "100%",
@@ -170,28 +179,29 @@ function ShopHome({ shop }: { shop: any }) {
                     <div className="flex-shrink-0 mt-n6">
                       <Image
                         src={shop.logo!}
-                        width={85}
-                        height={85}
+                        width={100}
+                        height={100}
                         alt=""
-                        className="rounded border border-white border-4"
+                        className="rounded border border-4 border-white"
                         objectFit="cover"
                       />
                     </div>
-                    <div className="ms-2 d-flex flex-column mt-n2 mt-sm-n3">
-                      <h4 className="mb-0">{shop.name}</h4>
-                      <div className="text-muted small mb-1 text-truncate">
-                        Headline
-                      </div>
+                    <div className="ms-2 flex-column mt-n2 mt-sm-n3 d-none d-md-flex">
+                      {heading}
                     </div>
                   </div>
                 </div>
+                <div className="col-12 d-block d-md-none">
+                  <div className="vstack">{heading}</div>
+                </div>
                 <div className="col-sm-auto">
-                  <div
-                    className="mt-2 mt-sm-0 gap-1 hstack"
-                    style={{ zIndex: 999 }}
-                  >
+                  <div className="mt-sm-0 gap-1 hstack" style={{ zIndex: 999 }}>
                     <div className="flex-grow-1 d-none d-md-block"></div>
-                    <a
+                    <div className="hstack gap-1">
+                      <Rating rating={4.5} />
+                      <span className="text-dark-gray">(4.5)</span>
+                    </div>
+                    {/* <a
                       href="#"
                       target="_blank"
                       className="btn btn-outline-light text-muted border"
@@ -211,7 +221,7 @@ function ShopHome({ shop }: { shop: any }) {
                       className="btn btn-outline-light text-muted border"
                     >
                       <Instagram size={18} />
-                    </a>
+                    </a> */}
                   </div>
                 </div>
               </div>
@@ -220,30 +230,20 @@ function ShopHome({ shop }: { shop: any }) {
         </div>
         <div className="row py-4 g-4">
           <div className="col-lg-3">
-            <div className="card d-none d-lg-block">
+            <div className="card shadow-sm d-none d-lg-block">
               <div className="card-body">{menus}</div>
             </div>
-            <div className="accordion border rounded d-block d-lg-none">
-              <div className="accordion-item">
-                <div className="accordion-header">
-                  <button
-                    className="accordion-button fw-bold collapsed"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapseMenu"
-                    aria-expanded="false"
-                    aria-controls="collapseMenu"
-                  >
-                    Menu
-                  </button>
-                </div>
-
-                <div
-                  id="collapseMenu"
-                  className="accordion-collapse collapse border-top"
-                >
-                  <div className="accordion-body p-3">{menus}</div>
-                </div>
-              </div>
+            <div className="rounded shadow-sm bg-white d-block d-lg-none">
+              <Accordion
+                header={(open) => {
+                  return <span className="fw-bold">Menu</span>;
+                }}
+                headerClassName="px-3 py-2h"
+                bodyClassName="border-top"
+                iconType="plus-minus"
+              >
+                <div className="p-2h">{menus}</div>
+              </Accordion>
             </div>
           </div>
           <div className="col-lg-9">{activeContent()}</div>
