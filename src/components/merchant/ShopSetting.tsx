@@ -53,13 +53,6 @@ const General = () => {
               className="mb-3"
               placeholder="Enter shop headline"
             />
-            <Input
-              label="Address *"
-              id="addressInput"
-              name="address"
-              type="text"
-              placeholder="Enter shop address"
-            />
           </div>
         </div>
       </div>
