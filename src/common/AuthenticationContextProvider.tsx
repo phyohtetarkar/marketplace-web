@@ -2,13 +2,7 @@ import { HubCapsule } from "@aws-amplify/core";
 import { Auth, Hub } from "aws-amplify";
 import { ReactNode, useEffect, useState } from "react";
 import { AuthenticationContext, StateContext } from "./contexts";
-
-export interface AuthUser {
-  id: string;
-  name: string;
-  phone: string;
-  verified: boolean;
-}
+import { AuthUser } from "./models";
 
 export const AuthenticationContextProvider = ({
   children

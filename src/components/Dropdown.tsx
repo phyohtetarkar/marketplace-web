@@ -19,16 +19,16 @@ function Dropdown({
   children,
   disabled
 }: DropdownProps) {
-  const dropdownToggle = useRef<HTMLDivElement | null>(null);
+  const dropdownToggleRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     let dropdown: any;
 
     const initDropdowns = async () => {
       const Dropdown = (await import("bootstrap")).Dropdown;
-      if (!dropdownToggle.current) {
+      if (!dropdownToggleRef.current) {
         return;
       }
-      dropdown = Dropdown.getOrCreateInstance(dropdownToggle.current, {
+      dropdown = Dropdown.getOrCreateInstance(dropdownToggleRef.current, {
         popperConfig: popperConfig ?? null
       });
     };
@@ -40,7 +40,7 @@ function Dropdown({
 
     initDropdowns();
 
-    const element = dropdownToggle.current;
+    const element = dropdownToggleRef.current;
 
     element?.addEventListener("click", handleClick);
 
@@ -53,7 +53,7 @@ function Dropdown({
   return (
     <div className={`dropdown ${className ?? ""}`}>
       <div
-        ref={dropdownToggle}
+        ref={dropdownToggleRef}
         className={`${toggleClassName ?? ""}`}
         role="button"
         data-bs-toggle="dropdown"

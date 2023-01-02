@@ -4,7 +4,8 @@ import {
   FocusEvent,
   forwardRef,
   HTMLInputTypeAttribute,
-  MouseEvent
+  MouseEvent,
+  ReactNode
 } from "react";
 import { formControlHeight } from "../../common/app.config";
 
@@ -13,7 +14,7 @@ type OnBlur<E> = (e: FocusEvent<E, Element>) => void;
 type OnClick<E> = (e: MouseEvent<E>) => void;
 
 export interface InputProps<ElementType> {
-  label?: string;
+  label?: ReactNode;
   id?: string;
   name?: string;
   type?: HTMLInputTypeAttribute;

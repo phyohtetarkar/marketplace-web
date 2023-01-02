@@ -8,6 +8,10 @@ interface PopoverProps {
   renderPopperElement: (close: () => void) => ReactNode;
 }
 
+function Reference() {}
+
+function Popper() {}
+
 function Popover(props: PopoverProps) {
   const { placement, renderReferenceElement, renderPopperElement } = props;
 
@@ -60,7 +64,7 @@ function Popover(props: PopoverProps) {
 
   return (
     <div className="position-relative">
-      <div role="button" ref={referenceElement}>
+      <div ref={referenceElement}>
         {renderReferenceElement(() => setOpen(!open))}
       </div>
 

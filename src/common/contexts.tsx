@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { AuthUser } from "./AuthenticationContextProvider";
+import { AuthUser } from "./models";
 
 type Status = "loading" | "success" | "failure";
 

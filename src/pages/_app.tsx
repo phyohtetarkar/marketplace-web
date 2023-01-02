@@ -12,7 +12,20 @@ import NextNProgress from "nextjs-progressbar";
 import awsconfig from "../aws-exports";
 import { Amplify } from "aws-amplify";
 import { AuthenticationContextProvider } from "../common/AuthenticationContextProvider";
-Amplify.configure(awsconfig);
+
+Amplify.configure({
+  ...awsconfig,
+  Auth: {
+    ...awsconfig,
+    cookieStorage: {
+      domain: "localhost",
+      path: "/",
+      expires: 365,
+      sameSite: "strict",
+      secure: process.env.NEXT_PUBLIC_DOMAIN !== "localhost"
+    }
+  }
+});
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
