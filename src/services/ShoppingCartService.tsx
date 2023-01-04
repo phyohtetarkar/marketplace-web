@@ -1,6 +1,10 @@
+import { CartItem } from "../common/models";
+
+const basePath = "profile/cart-items";
+
 export async function addToCart({
   userId,
-  productId
+  productId,
 }: {
   userId: string;
   productId: string;
@@ -20,12 +24,14 @@ export async function removeFromCart(id: string) {
 
 export async function getCartItemsByUser({
   userId,
-  nextToken
+  nextToken,
 }: {
   userId: string;
   nextToken?: string;
 }) {
   try {
+    const url = process.env.REACT_APP_API_URL + basePath;
+    return fetch(url).then((res) => res.json() as Promise<[CartItem]>);
   } catch (e) {
     console.log(e);
   }

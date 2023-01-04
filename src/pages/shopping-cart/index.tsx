@@ -1,13 +1,26 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { url } from "inspector";
 import Link from "next/link";
+import useSWR from "swr";
+import { CartItem } from "../../common/models";
 import PricingCard from "../../components/order/PricingCard";
 import ShoppingCartItem from "../../components/order/ShoppingCartItem";
 import Tooltip from "../../components/Tooltip";
+import { getCartItemsByUser } from "../../services/ShoppingCartService";
 
 function ShoppingCart() {
+
+ /*  const { data, error, isLoading } = useSWR<List<CartItem>, Error>(
+    ["/profile/cart-items"],
+    ([url]) => getCartItemsByUser(),
+    {
+      revalidateOnFocus: false,
+    }
+  ); */
+
   const list = [
     [1, 2],
-    [3, 4]
+    [3, 4],
   ];
 
   let content = <div></div>;
