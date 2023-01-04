@@ -1,19 +1,46 @@
 import { Placement } from "@popperjs/core";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import { usePopper } from "react-popper";
 
 interface PopoverProps {
   placement?: Placement;
-  renderReferenceElement: (handleClick: () => void) => ReactNode;
-  renderPopperElement: (close: () => void) => ReactNode;
+  offset?: [number, number];
+  showOnHover?: boolean;
+  hideOnPopper?: boolean;
+  hideOnPopperClick?: boolean;
+  hideOnLeave?: boolean;
+  children: (
+    show: () => void,
+    hide: () => void
+  ) => [ReactElement<ReferenceProps>, ReactElement<PopoverProps>];
 }
 
-function Reference() {}
+interface ReferenceProps {
+  children: ReactNode;
+}
 
-function Popper() {}
+interface PopperProps {
+  children: ReactNode;
+}
+
+function Reference(props: ReferenceProps) {
+  return <>{props.children}</>;
+}
+
+function Popper(props: PopperProps) {
+  return <>{props.children}</>;
+}
 
 function Popover(props: PopoverProps) {
-  const { placement, renderReferenceElement, renderPopperElement } = props;
+  const {
+    placement,
+    offset,
+    showOnHover,
+    hideOnPopper = true,
+    hideOnLeave,
+    hideOnPopperClick = true,
+    children
+  } = props;
 
   const referenceElement = useRef<HTMLDivElement>(null);
   const popperElement = useRef<HTMLDivElement>(null);
@@ -27,20 +54,21 @@ function Popover(props: PopoverProps) {
         {
           name: "offset",
           options: {
-            offset: [0, 4]
+            offset: offset ?? [0, 4]
           }
         }
       ],
-      placement: placement ?? "bottom-start"
+      placement: placement ?? "bottom-start",
+      strategy: "absolute"
     }
   );
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleDocumentClick);
+    document.addEventListener("click", handleDocumentClick);
 
     return () => {
-      document.removeEventListener("mousedown", handleDocumentClick);
+      document.removeEventListener("click", handleDocumentClick);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -55,29 +83,56 @@ function Popover(props: PopoverProps) {
 
     if (
       e.target instanceof Node &&
+      !hideOnPopperClick &&
       (popperElement?.current?.contains(e.target) ?? false)
     ) {
       return;
     }
+
+    setOpen(false);
+  };
+
+  const showPopper = () => {
+    !open && setOpen(true);
+  };
+
+  const hidePopper = () => {
     setOpen(false);
   };
 
   return (
-    <div className="position-relative">
-      <div ref={referenceElement}>
-        {renderReferenceElement(() => setOpen(!open))}
+    <>
+      <div
+        ref={referenceElement}
+        onMouseEnter={(evt) => {
+          showOnHover && showPopper();
+        }}
+        onMouseLeave={(evt) => {
+          hideOnLeave && open && hidePopper();
+        }}
+      >
+        {/* {renderReferenceElement(() => setOpen(!open))} */}
+        {children(showPopper, hidePopper).find((e) => e.type === Reference)}
       </div>
 
       <div
         ref={popperElement}
         style={{ ...styles.popper, zIndex: 999 }}
         {...attributes.popper}
+        onMouseLeave={(evt) => {
+          hideOnPopper && open && hidePopper();
+        }}
       >
-        {open && renderPopperElement(() => setOpen(false))}
+        {/* {open && renderPopperElement(() => setOpen(false))} */}
+        {open &&
+          children(showPopper, hidePopper).find((e) => e.type === Popper)}
         <div ref={setArrowElement} style={styles.arrow} />
       </div>
-    </div>
+    </>
   );
 }
+
+Popover.Reference = Reference;
+Popover.Popper = Popper;
 
 export default Popover;

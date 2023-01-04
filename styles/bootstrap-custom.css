@@ -4251,8 +4251,8 @@ textarea.form-control-lg {
   border: 0;
 }
 .dropdown-item:hover, .dropdown-item:focus {
-  color: white;
-  background-color: #4f46e5;
+  color: #4f46e5;
+  background-color: #E6E5FB;
 }
 .dropdown-item.active, .dropdown-item:active {
   color: #fff;

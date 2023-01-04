@@ -121,8 +121,8 @@ $btn-active-box-shadow: none;
 $btn-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
   border-color 0.15s ease-in-out;
 
-$dropdown-link-hover-color: white;
-$dropdown-link-hover-bg: $primary;
+$dropdown-link-hover-color: $primary;
+$dropdown-link-hover-bg: $secondary;
 
 $accordion-icon-color: #444;
 $accordion-button-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$accordion-icon-color}'><path fill-rule='evenodd' d='M3.333 8.667h4v4c0 0.368 0.299 0.667 0.667 0.667s0.667-0.299 0.667-0.667v-4h4c0.368 0 0.667-0.299 0.667-0.667s-0.299-0.667-0.667-0.667h-4v-4c0-0.368-0.299-0.667-0.667-0.667s-0.667 0.299-0.667 0.667v4h-4c-0.368 0-0.667 0.299-0.667 0.667s0.299 0.667 0.667 0.667z'/></svg>");

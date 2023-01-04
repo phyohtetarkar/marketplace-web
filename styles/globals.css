@@ -171,7 +171,7 @@ svg {
   background-color: var(--bs-primary);
 }
 
-.dropdown-item-danger {
+/* .dropdown-item-danger {
   color: var(--bs-red);
 }
 .dropdown-item-danger:hover,
@@ -181,6 +181,17 @@ svg {
 }
 .dropdown-item-danger.active {
   background-color: var(--bs-red);
+} */
+
+.my-dropdown-item {
+  color: black;
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+}
+
+.my-dropdown-item:hover {
+  color: var(--bs-primary);
+  background-color: var(--bs-secondary);
 }
 
 .my-list-item {

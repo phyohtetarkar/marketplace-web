@@ -1,5 +1,6 @@
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/solid";
+import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "../../common/utils";
@@ -245,5 +246,20 @@ function ProductDetail() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  try {
+    const { slug } = context.query;
+    return {
+      props: {} // will be passed to the page component as props
+    };
+  } catch (e) {
+    console.log(e);
+  }
+
+  return {
+    notFound: true
+  };
+};
 
 export default ProductDetail;

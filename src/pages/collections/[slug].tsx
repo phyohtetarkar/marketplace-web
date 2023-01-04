@@ -1,12 +1,13 @@
 import { ListBulletIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import Accordion from "../../components/Accordion";
 import Pagination from "../../components/Pagination";
 import { ProductGridItem } from "../../components/product";
 
-function Filter() {
+const Filter = () => {
   const [maxPrice, setMaxPrice] = useState(300000);
   return (
     <div className="rounded shadow-sm bg-white">
@@ -95,10 +96,13 @@ function Filter() {
       </Accordion>
     </div>
   );
-}
+};
 
-function Explore() {
-  function contents() {
+function Collection() {
+  const router = useRouter();
+  const { slug } = router.query;
+
+  const contents = () => {
     return (
       <div className="row row-cols-1 row-cols-md-2 row-cols-xxl-3 g-3">
         <div className="col">
@@ -121,7 +125,7 @@ function Explore() {
         </div>
       </div>
     );
-  }
+  };
 
   return (
     <div className="mb-5">
@@ -170,8 +174,8 @@ function Explore() {
             {contents()}
             <div className="mt-4 d-flex justify-content-end">
               {/* <button className="btn btn-outline-primary rounded-pill">
-                Load more products
-              </button> */}
+                    Load more products
+                  </button> */}
 
               <Pagination />
             </div>
@@ -182,4 +186,4 @@ function Explore() {
   );
 }
 
-export default Explore;
+export default Collection;

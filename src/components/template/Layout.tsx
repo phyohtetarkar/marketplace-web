@@ -28,7 +28,7 @@ function Layout({ hideAuth, hideFooter, background, children }: LayoutProps) {
       >
         <Header hideAuth={hideAuth} />
         <main
-          className="flex-shrink-0"
+          className="flex-grow-1"
           style={{
             background: background ? background : "transparent"
           }}

@@ -53,11 +53,10 @@ function ShopGridItem() {
             </button>
           </div> */}
           <div className="vstack text-start">
-            <div className="hstack">
+            {/* <div className="hstack">
               <span className="flex-grow-1 text-muted">Products</span>
               <span>500</span>
-            </div>
-            <hr className="bg-dark-gray my-2h" />
+            </div> */}
             <div className="hstack">
               <span className="flex-grow-1 text-muted">Rating</span>
               <div className="hstack text-warning gap-1">

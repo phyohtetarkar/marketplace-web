@@ -1,25 +1,22 @@
+import {
+  BuildingStorefrontIcon,
+  ListBulletIcon,
+  MagnifyingGlassIcon,
+  QuestionMarkCircleIcon,
+  ShoppingCartIcon
+} from "@heroicons/react/24/outline";
 import { Auth } from "aws-amplify";
 import { Offcanvas } from "bootstrap";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import {
-  CSSProperties,
-  FormEvent,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState
-} from "react";
+import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { AuthenticationContext } from "../../common/contexts";
 import Dropdown from "../Dropdown";
-import {
-  BuildingStorefrontIcon,
-  ListBulletIcon,
-  QuestionMarkCircleIcon,
-  MagnifyingGlassIcon,
-  ShoppingCartIcon
-} from "@heroicons/react/24/outline";
+import MultiLevelDropdown, {
+  MultiMenuItem,
+  sampleList
+} from "../MultiLevelDropdown";
 
 interface HeaderProps {
   hideAuth?: boolean;
@@ -205,6 +202,7 @@ function Header({ hideAuth }: HeaderProps) {
       <li role="button" className="dropdown-item" onClick={() => setLang("mm")}>
         Myanmar
       </li>
+      <div className="dropdown-divider"></div>
       <li role="button" className="dropdown-item" onClick={() => setLang("en")}>
         English
       </li>
@@ -367,7 +365,7 @@ function Header({ hideAuth }: HeaderProps) {
             <div className="offcanvas-body">
               <ul className="navbar-nav align-items-lg-center gap-2">
                 <li className="nav-item d-none d-lg-block">
-                  <NavLink href="/products">
+                  {/* <NavLink href="/products">
                     <div className="hstack">
                       <ListBulletIcon
                         width={20}
@@ -375,7 +373,25 @@ function Header({ hideAuth }: HeaderProps) {
                       />
                       <span>Categories</span>
                     </div>
-                  </NavLink>
+                  </NavLink> */}
+                  <MultiLevelDropdown<MultiMenuItem>
+                    toggle={
+                      <div role="button" className="nav-link hstack">
+                        <ListBulletIcon
+                          width={20}
+                          className="me-1 d-none d-lg-block"
+                        />
+                        <span>Categories</span>
+                      </div>
+                    }
+                    items={sampleList}
+                    getMenuLabel={(v) => v.title}
+                    getSubItems={(v) => v.children}
+                    onMenuClick={(v) => {
+                      console.log(v.title);
+                      router.push(`/collections/${v.title}`);
+                    }}
+                  />
                 </li>
                 <li className="nav-item">
                   <NavLink href="/shops">

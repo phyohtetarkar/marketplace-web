@@ -41,7 +41,7 @@ function AccountMenu({}) {
 
   const content = (
     <>
-      <div className="text-dark-gray mb-2 small px-1 uppercased">
+      <div className="text-dark-gray mb-2 small px-1 uppercased d-none d-lg-block">
         ACCOUNT SETTINGS
       </div>
       <div className="vstack gap-1">
@@ -86,18 +86,19 @@ function AccountMenu({}) {
 
   return (
     <div className="rounded shadow-sm bg-white">
-      <Accordion
-        open={false}
-        header={(open) => {
-          return <span className="fw-bold">Menu</span>;
-        }}
-        className="d-block d-lg-none"
-        headerClassName="px-3 py-2h"
-        bodyClassName="border-top"
-        iconType="plus-minus"
-      >
-        <div className="p-3">{content}</div>
-      </Accordion>
+      <div className="d-block d-lg-none">
+        <Accordion
+          open={true}
+          header={(open) => {
+            return <span className="fw-bold">Menu</span>;
+          }}
+          headerClassName="px-3 py-2h"
+          bodyClassName="border-top"
+          iconType="plus-minus"
+        >
+          <div className="p-3">{content}</div>
+        </Accordion>
+      </div>
 
       <div className="p-3 d-none d-lg-block">{content}</div>
     </div>

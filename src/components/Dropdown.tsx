@@ -8,6 +8,7 @@ interface DropdownProps {
   popperConfig?: any;
   disabled?: boolean;
   children: ReactNode;
+  showOnHover?: boolean;
 }
 
 function Dropdown({
@@ -17,25 +18,29 @@ function Dropdown({
   menuClassName,
   popperConfig,
   children,
-  disabled
+  disabled,
+  showOnHover
 }: DropdownProps) {
-  const dropdownToggleRef = useRef<HTMLDivElement | null>(null);
+  const dropdownToggleRef = useRef<HTMLDivElement>(null);
+  const dropdownMenuRef = useRef<HTMLUListElement>(null);
+  const dropdownToggle = useRef<any>(null);
   useEffect(() => {
-    let dropdown: any;
-
     const initDropdowns = async () => {
       const Dropdown = (await import("bootstrap")).Dropdown;
       if (!dropdownToggleRef.current) {
         return;
       }
-      dropdown = Dropdown.getOrCreateInstance(dropdownToggleRef.current, {
-        popperConfig: popperConfig ?? null
-      });
+      dropdownToggle.current = Dropdown.getOrCreateInstance(
+        dropdownToggleRef.current,
+        {
+          popperConfig: popperConfig ?? null
+        }
+      );
     };
 
     const handleClick = (e: MouseEvent) => {
       e.preventDefault();
-      dropdown?.show();
+      dropdownToggle.current?.show();
     };
 
     initDropdowns();
@@ -46,9 +51,36 @@ function Dropdown({
 
     return () => {
       element?.removeEventListener("click", handleClick);
-      dropdown?.dispose();
+      dropdownToggle.current?.dispose();
     };
   }, [popperConfig]);
+
+  useEffect(() => {
+    document.addEventListener("click", handleDocumentClick);
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleDocumentClick = (e: MouseEvent) => {
+    if (
+      e.target instanceof Node &&
+      (dropdownToggleRef?.current?.contains(e.target) ?? false)
+    ) {
+      return;
+    }
+
+    // if (
+    //   e.target instanceof Node &&
+    //   (dropdownMenuRef?.current?.contains(e.target) ?? false)
+    // ) {
+    //   return;
+    // }
+
+    dropdownToggle.current?.hide();
+  };
 
   return (
     <div className={`dropdown ${className ?? ""}`}>
@@ -56,14 +88,21 @@ function Dropdown({
         ref={dropdownToggleRef}
         className={`${toggleClassName ?? ""}`}
         role="button"
-        data-bs-toggle="dropdown"
         style={{
           outlineStyle: "none"
+        }}
+        onMouseEnter={(evt) => {
+          showOnHover && dropdownToggle.current?.show();
         }}
       >
         {toggle}
       </div>
-      <ul className={`dropdown-menu ${menuClassName ?? ""}`}>{children}</ul>
+      <ul
+        ref={dropdownMenuRef}
+        className={`dropdown-menu ${menuClassName ?? ""}`}
+      >
+        {children}
+      </ul>
     </div>
   );
 }

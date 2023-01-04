@@ -4,6 +4,7 @@ import {
   MapPinIcon,
   StarIcon
 } from "@heroicons/react/24/outline";
+import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -253,7 +254,7 @@ function ShopHome({ shop }: { shop: any }) {
   );
 }
 
-export async function getServerSideProps(context: any) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const { slug } = context.query;
     return {
@@ -275,6 +276,6 @@ export async function getServerSideProps(context: any) {
   return {
     notFound: true
   };
-}
+};
 
 export default ShopHome;

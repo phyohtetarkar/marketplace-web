@@ -7,7 +7,6 @@ import { ReactNode, useState } from "react";
 
 interface AccordionProps {
   header: (open: boolean) => ReactNode;
-  className?: string;
   open?: boolean;
   headerClassName?: string;
   bodyClassName?: string;
@@ -18,7 +17,6 @@ interface AccordionProps {
 function Accordion(props: AccordionProps) {
   const {
     header,
-    className,
     open,
     headerClassName,
     bodyClassName,
@@ -30,7 +28,7 @@ function Accordion(props: AccordionProps) {
   const [isOpen, setIsOpen] = useState(open ?? false);
 
   return (
-    <div className={`${className ?? ""}`}>
+    <>
       <div
         role="button"
         className={`hstack ${headerClassName ?? ""}`}
@@ -78,22 +76,24 @@ function Accordion(props: AccordionProps) {
           </div>
         )}
       </div>
-      <div
-        style={{
-          overflowY: "clip",
-          height: `${
-            isOpen
-              ? `${bodyElement ? bodyElement.clientHeight + "px" : "auto"}`
-              : "0px"
-          }`,
-          transition: "height 0.25s ease-in"
-        }}
-      >
-        <div ref={setBodyElement} className={bodyClassName ?? ""}>
-          {children}
+      <div>
+        <div
+          style={{
+            overflowY: "clip",
+            height: `${
+              isOpen
+                ? `${bodyElement ? bodyElement.clientHeight + "px" : "auto"}`
+                : "0px"
+            }`,
+            transition: "height 0.25s ease-in"
+          }}
+        >
+          <div ref={setBodyElement} className={bodyClassName ?? ""}>
+            {children}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
