@@ -21,8 +21,7 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 ## Compile SCSS
 
 ```bash
-cd styles
-sass scss/bootstrap-custom.scss:bootstrap-custom.css
+npm run sass
 ```
 
 ## Learn More

@@ -14,9 +14,9 @@ export interface AuthUser {
 }
 
 export interface User {
-  id: string;
-  name: string;
-  phone: string;
+  id?: string;
+  name?: string;
+  phone?: string;
   email?: string | null;
 }
 
@@ -59,11 +59,18 @@ export interface ShopContact {
 }
 
 export interface ShopGeneral {
-  id: number;
+  shopId: number;
   name: string;
   slug: string;
   headline?: string | null;
   about?: string | null;
+}
+
+export interface ShopReview {
+  shopId?: number;
+  rating?: number;
+  description?: string;
+  reviewer?: User | null;
 }
 
 export interface Product {
