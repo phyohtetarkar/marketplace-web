@@ -1,6 +1,9 @@
+import useSWR from "swr";
+import { PageData, Product } from "../../common/models";
 import AccountMenu from "../../components/account/AccountMenu";
 import Pagination from "../../components/Pagination";
 import { ProductFavoriteItem } from "../../components/product";
+import { getFavoriteProducts } from "../../services/FavoriteProductService";
 
 function MyFavorites() {
   // const authContext = useContext(AuthenticationContext);
@@ -9,6 +12,37 @@ function MyFavorites() {
   // const { data, error } = useSWR([userId], (id) =>
   //   id ? getFavoriteProductsByUser({ userId: id }) : []
   // );
+
+  const { data, error } = useSWR<PageData<Product>, Error>(
+    ["/favorite-products"],
+    ([url]) => getFavoriteProducts(),
+    {
+      revalidateOnFocus: false,
+    }
+  );
+
+  const content = () => {
+    if (error) {
+    }
+
+    return (
+      <>
+        <div className="row row-cols-1 row-cols-md-2 g-3">
+          {data?.contents &&
+            data.contents.map((f, i) => {
+              return (
+                <div className="col" key={f.id}>
+                  <ProductFavoriteItem value={f} />
+                </div>
+              );
+            })}
+        </div>
+        <div className="float-end mt-3">
+          <Pagination />
+        </div>
+      </>
+    );
+  };
 
   return (
     <div>
@@ -28,36 +62,7 @@ function MyFavorites() {
             <AccountMenu />
           </div>
           <div className="col-lg-8 col-xl-9">
-            {/* {!data && !error && <Loading />} */}
-            <div className="row row-cols-1 row-cols-md-2 g-3">
-              {/* {data &&
-                !error &&
-                data.map((p) => {
-                  return (
-                    <div key={p.id} className="col">
-                      <ProductFavoriteItem />
-                    </div>
-                  );
-                })} */}
-              <div className="col">
-                <ProductFavoriteItem />
-              </div>
-              <div className="col">
-                <ProductFavoriteItem />
-              </div>
-              <div className="col">
-                <ProductFavoriteItem />
-              </div>
-              <div className="col">
-                <ProductFavoriteItem />
-              </div>
-              <div className="col">
-                <ProductFavoriteItem />
-              </div>
-            </div>
-            <div className="float-end mt-3">
-              <Pagination />
-            </div>
+            {content()}
           </div>
         </div>
       </div>

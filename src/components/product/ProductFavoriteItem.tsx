@@ -1,11 +1,26 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
+import { Product } from "../../common/models";
+import {
+  deleteFavoriteProduct,
+  saveFavoriteProduct,
+} from "../../services/FavoriteProductService";
 
-function ProductFavoriteItem() {
-  let image = `https://source.unsplash.com/random/200x240?random=${Math.floor(
-    Math.random() * 100
-  )}`;
+interface ProductFavoriteProps {
+  value: Product;
+}
+
+function ProductFavoriteItem({ value }: ProductFavoriteProps) {
+  const baseImagePath = process.env.REACT_APP_BASE_IMAGE_URL;
+
+  function getProductImageUrl(p: Product) {
+    if (p.images && p.images.length > 0) {
+      return `${baseImagePath}/${p.images[0]}`;
+    }
+
+    return "/placeholder.jpeg";
+  }
 
   return (
     <div className="card shadow-sm">
@@ -16,12 +31,12 @@ function ProductFavoriteItem() {
             onContextMenu={(e) => e.preventDefault()}
             style={{
               minWidth: 120,
-              height: 120
+              height: 120,
             }}
           >
             <Image
               className="p-2"
-              src={image}
+              src={getProductImageUrl(value)}
               alt="Product image."
               layout="fill"
               objectFit="cover"
@@ -30,13 +45,13 @@ function ProductFavoriteItem() {
           <div className="vstack overflow-hidden">
             <Link href={`/products/${1}`}>
               <a className="text-muted text-decoration-none text-truncate">
-                Product name
+                {value.name}
               </a>
             </Link>
 
             <Link href={`/`}>
               <a className="text-decoration-none fw-medium text-truncate mb-2">
-                Category
+                {value.category?.name}
               </a>
             </Link>
 
@@ -46,16 +61,20 @@ function ProductFavoriteItem() {
               <button
                 disabled={false}
                 className="btn btn-primary text-truncate me-2"
-                onClick={() => {}}
+                onClick={() => {
+                  saveFavoriteProduct(value.id);
+                }}
               >
                 Add to cart
               </button>
               <button
                 disabled={false}
                 className="btn btn-outline-danger"
-                onClick={() => {}}
+                onClick={() => {
+                  deleteFavoriteProduct(value.id);
+                }}
               >
-                <TrashIcon width={20} />
+                <TrashIcon width={20} onClick={() => {}} />
               </button>
             </div>
           </div>
