@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../../common/contexts";
 import { formatPrice } from "../../common/utils";
-import { addToFavorite } from "../../services/FavoriteProductService";
 import Tooltip from "../Tooltip";
 
 interface InputProps {
@@ -144,25 +143,7 @@ function ProductGridItem({ data, heading = "seller", owner }: InputProps) {
                 <button
                   disabled={addingToFavorite}
                   className="btn btn-outline-light text-primary border h-100 hstack"
-                  onClick={async () => {
-                    try {
-                      setAddingToFavorite(true);
-                      if (
-                        authContext.payload &&
-                        authContext.status === "success"
-                      ) {
-                        await addToFavorite({
-                          userId: authContext.payload.id,
-                          productId: product.id
-                        });
-                      } else {
-                      }
-                    } catch (e) {
-                      console.log(e);
-                    } finally {
-                      setAddingToFavorite(false);
-                    }
-                  }}
+                  onClick={async () => {}}
                 >
                   <HeartIcon width={20} strokeWidth={2} />
                 </button>

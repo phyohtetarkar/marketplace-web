@@ -37,13 +37,13 @@ export interface Category {
 }
 
 export interface Shop {
-  id: number;
-  name: string;
-  slug: string;
-  headline: string;
-  rating: number;
-  recommended: boolean;
-  createdAt: number;
+  id?: number;
+  name?: string;
+  slug?: string;
+  headline?: string;
+  rating?: number;
+  recommended?: boolean;
+  createdAt?: number;
   logo?: string | null;
   cover?: string | null;
   about?: string | null;
@@ -51,7 +51,7 @@ export interface Shop {
 }
 
 export interface ShopContact {
-  id: number;
+  id?: number;
   address?: string | null;
   phones?: [string] | null;
   latitude?: number | null;
@@ -59,9 +59,9 @@ export interface ShopContact {
 }
 
 export interface ShopGeneral {
-  shopId: number;
-  name: string;
-  slug: string;
+  shopId?: number;
+  name?: string;
+  slug?: string;
   headline?: string | null;
   about?: string | null;
 }
@@ -74,10 +74,10 @@ export interface ShopReview {
 }
 
 export interface Product {
-  id: number;
-  name: string;
-  slug: string;
-  price: number;
+  id?: number;
+  name?: string;
+  slug?: string;
+  price?: number;
   brand?: string | null;
   thumbnail?: string | null;
   outOfStock?: boolean | null;
