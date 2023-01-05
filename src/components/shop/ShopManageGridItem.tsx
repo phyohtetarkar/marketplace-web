@@ -1,24 +1,16 @@
 import { ChartBarIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
+import { Shop } from "../../common/models";
 import Rating from "../Rating";
 
-interface InputProps {
-  shop?: any;
+interface ShopManageGridItemProps {
+  value: Shop;
 }
 
 const _imageSize = 80;
 
-function ShopManageGridItem({
-  shop = {
-    id: "id",
-    name: "Shop Name",
-    slug: "slug",
-    cover: `https://source.unsplash.com/random/200x240?random=${Math.floor(
-      Math.random() * 50
-    )}`
-  }
-}: InputProps) {
+function ShopManageGridItem({value}: ShopManageGridItemProps) {
   return (
     <div className="card h-100 border">
       <div className="card-body overflow-hidden">
@@ -28,10 +20,10 @@ function ShopManageGridItem({
             onContextMenu={(e) => e.preventDefault()}
           >
             <div className="ratio ratio-1x1" style={{ width: _imageSize }}>
-              {shop.cover && (
+              {value.logo && (
                 <Image
                   className="rounded-circle"
-                  src={shop.cover}
+                  src={value.logo ?? ""}
                   alt="Shop image."
                   layout="fill"
                   objectFit="cover"
@@ -42,17 +34,17 @@ function ShopManageGridItem({
           </div>
 
           <h6 className="text-truncate mb-0" style={{ fontSize: 18 }}>
-            {shop.name}
+            {value.name}
           </h6>
           <div className="small text-muted mb-2 text-truncate">
-            Mobile phone sales &amp; services
+            {value.headline}
           </div>
           <div className="mb-4 align-self-center">
-            <Rating rating={3.5} />
+            <Rating rating={value.rating} />
           </div>
 
           <div className="hstack gap-2">
-            <Link href={`/profile/shops/${shop.id}`}>
+            <Link href={`/profile/shops/${value.id}`}>
               <a className="btn btn-primary flex-grow-1 hstack justify-content-center gap-2">
                 <ChartBarIcon width={20} />
                 <span>Dashboard</span>

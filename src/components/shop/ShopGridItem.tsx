@@ -1,10 +1,15 @@
 import { StarIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
+import { Shop } from "../../common/models";
 
 const _imageSize = 90;
 
-function ShopGridItem() {
+interface ShopGridItemProps {
+  value: Shop;
+}
+
+function ShopGridItem({value} : ShopGridItemProps ) {
   return (
     <div className="card shadow-sm">
       <div className="card-body p-4 overflow-hidden">
@@ -16,9 +21,7 @@ function ShopGridItem() {
             <div className="ratio ratio-1x1" style={{ width: _imageSize }}>
               <Image
                 className="rounded-circle"
-                src={`https://source.unsplash.com/random/200x240?random=${Math.floor(
-                  Math.random() * 50
-                )}`}
+                src={value.logo ?? ""}
                 alt="Shop image."
                 layout="fill"
                 objectFit="cover"
@@ -33,12 +36,12 @@ function ShopGridItem() {
                 className="h6 mb-1 text-decoration-none link-dark"
                 style={{ fontSize: 18 }}
               >
-                Store Name
+                {value.name}
               </a>
             </Link>
           </div>
           <div className="small text-muted mb-5 text-truncate">
-            Mobile phone sales &amp; services
+            {value.headline}
           </div>
           {/* <div className="mb-4">
             <Rating rating={3.5} />
@@ -60,14 +63,14 @@ function ShopGridItem() {
             <div className="hstack">
               <span className="flex-grow-1 text-muted">Rating</span>
               <div className="hstack text-warning gap-1">
-                <span>4.5</span>
+                <span>{value.rating}</span>
                 <StarIcon width={16} />
               </div>
             </div>
             <hr className="bg-dark-gray my-2h" />
             <div className="hstack">
               <span className="flex-grow-1 text-muted">Since</span>
-              <span>2013</span>
+              <span>{value.createdAt}</span>
             </div>
           </div>
         </div>

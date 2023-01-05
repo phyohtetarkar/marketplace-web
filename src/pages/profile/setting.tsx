@@ -7,8 +7,7 @@ import { Input } from "../../components/forms";
 import { updateProfile } from "../../services/UserService";
 
 function ProfileSetting() {
-  const { values, errors, handleChange, handleSubmit, isSubmitting } =
-    useFormik<User>({
+  const formik = useFormik<User>({
       initialValues: {
         id: "",
         name: "",
@@ -16,24 +15,35 @@ function ProfileSetting() {
         email: "",
       },
       validate: async (values) => {
-        const errors: User = {
-          id: "",
-          name: "",
-          phone: "",
-          email: "",
-        };
+        const errors: User = {};
+
+        const phoneRegex = "^(09)\\d{7,12}$";
+        const emailRegex = "!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i";
 
         if (!values.name || values.name.trim().length === 0) {
           errors.name = "Please enter user name.";
         }
+
+        if (!values.phone || !values.phone.match(phoneRegex)) {
+          errors.phone = "Please enter valid phone number.";
+        }
+
+       if (!values.email || values.email.match(emailRegex)) {
+          errors.email = "Please enter valid email address."
+        }
+
         return errors;
       },
       validateOnBlur: false,
       validateOnChange: false,
       onSubmit: (values) => {
-        updateProfile(values);
+        save(values);
       },
     });
+
+    const save = (values : User) => {
+      updateProfile(values);
+    }
 
   return (
     <div>
@@ -55,7 +65,7 @@ function ProfileSetting() {
           <div className="col-lg-8 col-xl-9">
               <div className="card shadow-sm">
                 <div className="card-body p-md-4">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={formik.handleSubmit}>
                   <div className="row">
                     <div className="order-2 order-md-2 col-lg-8">
                       <div className="vstack">
@@ -67,9 +77,9 @@ function ProfileSetting() {
                               name="name"
                               type="text"
                               placeholder="Your full name"
-                              value={values.name}
-                              onChange={handleChange}
-                              error={errors.name}
+                              value={formik.values.name}
+                              onChange={formik.handleChange}
+                              error={formik.errors.name}
                             />
                           </div>
                           <div className="col-lg-6">
@@ -95,6 +105,7 @@ function ProfileSetting() {
                               type="text"
                               disabled
                               placeholder="+9512345678"
+                              error={formik.errors.phone}
                             />
                           </div>
                           <div className="col-lg-12">
@@ -105,8 +116,9 @@ function ProfileSetting() {
                                 name="email"
                                 type="email"
                                 placeholder="name@domain.com"
-                                value={values.email || ""}
-                                onChange={handleChange}
+                                value={formik.values.email ?? ""}
+                                onChange={formik.handleChange}
+                                error={formik.errors.email}
                               />
                             </div>
                           </div>
@@ -137,7 +149,7 @@ function ProfileSetting() {
                     <div className="col order-3 mt-3">
                       <button
                         className="btn btn-primary p-2 flex-grow-1 flex-md-grow-0"
-                        disabled={isSubmitting}
+                        disabled={formik.isSubmitting}
                       >
                         Update profile
                       </button>
