@@ -1,5 +1,4 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { url } from "inspector";
 import Link from "next/link";
 import useSWR from "swr";
 import { CartItem } from "../../common/models";
@@ -9,14 +8,13 @@ import Tooltip from "../../components/Tooltip";
 import { getCartItemsByUser } from "../../services/ShoppingCartService";
 
 function ShoppingCart() {
-
- /*  const { data, error, isLoading } = useSWR<List<CartItem>, Error>(
-    ["/profile/cart-items"],
-    ([url]) => getCartItemsByUser(),
+  const { data, error, isLoading } = useSWR<[CartItem], Error>(
+    "/profile/cart-items",
+    getCartItemsByUser,
     {
       revalidateOnFocus: false,
     }
-  ); */
+  );
 
   const list = [
     [1, 2],

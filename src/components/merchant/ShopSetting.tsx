@@ -14,19 +14,19 @@ import Tabs from "../Tabs";
 
 const list = [1, 2, 3, 4];
 
-interface ShopGeneralUpdateProps {
-  value: ShopGeneral;
-}
-
-interface ShopContactUpdateProps {
-  value: ShopContact;
-}
-
-const General = ({ value }: ShopGeneralUpdateProps) => {
+const General = () => {
   const formik = useFormik<ShopGeneral>({
-    initialValues: value,
+    initialValues: {
+      shopId: 0,
+      name: "",
+      slug: "",
+    },
     validate: async (values) => {
-      /* const errors: ShopGeneral = {};
+      const errors: ShopGeneral = {
+        shopId: 0,
+        name: "",
+        slug: "",
+      };
 
       if (!values.name || values.name.trim().length === 0) {
         errors.name = "Please enter shop name";
@@ -37,7 +37,7 @@ const General = ({ value }: ShopGeneralUpdateProps) => {
       } else {
         try {
           const shop = await getShopBySlug(values.slug);
-          if (shop.id !== values.id && shop.slug === values.slug) {
+          if (shop.id !== values.shopId && shop.slug === values.slug) {
             errors.slug = "Shop slug already in use";
           }
         } catch (error: any) {
@@ -47,7 +47,7 @@ const General = ({ value }: ShopGeneralUpdateProps) => {
         }
       }
 
-      return errors; */
+      return errors;
     },
     validateOnBlur: false,
     validateOnChange: false,
@@ -56,7 +56,7 @@ const General = ({ value }: ShopGeneralUpdateProps) => {
     },
   });
 
-  const save = (values: ShopContact) => {
+  const save = (values: ShopGeneral) => {
     console.log(values);
   };
 
@@ -80,7 +80,7 @@ const General = ({ value }: ShopGeneralUpdateProps) => {
                   formik.setFieldValue("slug", slug);
                   formik.handleChange(evt);
                 }}
-                /* error={formik.errors.name} */
+                error={formik.errors.name}
               />
             </div>
             <div className="col-lg-6">
@@ -92,7 +92,7 @@ const General = ({ value }: ShopGeneralUpdateProps) => {
                 placeholder="https://shoppingcenter.com/page/slug"
                 value={formik.values.slug}
                 onChange={formik.handleChange}
-                /* error={formik.errors.slug} */
+                error={formik.errors.slug}
               />
             </div>
           </div>
@@ -103,7 +103,7 @@ const General = ({ value }: ShopGeneralUpdateProps) => {
                 id="aboutUsInput"
                 placeholder="Enter about shop"
                 height={200}
-                value={formik.values.about!}
+                value={formik.values.about ?? ""}
                 onChange={formik.handleChange}
               />
             </div>
@@ -115,7 +115,7 @@ const General = ({ value }: ShopGeneralUpdateProps) => {
                 type="text"
                 className="mb-3"
                 placeholder="Enter shop headline"
-                value={formik.values.headline!}
+                value={formik.values.headline ?? ""}
                 onChange={formik.handleChange}
               />
             </div>
@@ -133,9 +133,11 @@ const General = ({ value }: ShopGeneralUpdateProps) => {
   );
 };
 
-const Contact = ({ value }: ShopContactUpdateProps) => {
+const Contact = () => {
   const formik = useFormik<ShopContact>({
-    initialValues: value,
+    initialValues: {
+      id: 0,
+    },
     validateOnChange: false,
     validateOnBlur: false,
     onSubmit: (values) => {
@@ -153,7 +155,10 @@ const Contact = ({ value }: ShopContactUpdateProps) => {
         <div className="card-body">
           <div className="mb-3">
             <label className="form-label">Phones</label>
-            <TagInput data={[]} placeholder="Add phone" />
+            <TagInput
+              data={formik.values.phones ?? []}
+              placeholder="Add phone"
+            />
           </div>
 
           <div className="mb-3">
@@ -161,7 +166,7 @@ const Contact = ({ value }: ShopContactUpdateProps) => {
               label="Address"
               name="address"
               placeholder="Enter shop address"
-              value={formik.values.address!}
+              value={formik.values.address ?? ""}
               onChange={formik.handleChange}
             />
           </div>
@@ -172,7 +177,7 @@ const Contact = ({ value }: ShopContactUpdateProps) => {
                 <Input
                   name="latitude"
                   placeholder="Enter latitude"
-                  value={formik.values.latitude!}
+                  value={formik.values.latitude ?? ""}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -180,7 +185,7 @@ const Contact = ({ value }: ShopContactUpdateProps) => {
                 <Input
                   name="longitude"
                   placeholder="Enter longitude"
-                  value={formik.values.longitude!}
+                  value={formik.values.longitude ?? ""}
                   onChange={formik.handleChange}
                 />
               </div>
@@ -301,21 +306,15 @@ const Social = () => {
 };
 
 function ShopSetting() {
-  const general: ShopGeneral = {
-    id: 0
-  };
-  const contact: ShopContact = {
-    id: 0
-  };
   return (
     <div>
       <div className="bg-white rounded h-100 shadow-sm">
         <Tabs defaultTabKey="general">
           <Tabs.Tab tabKey="general" title="General">
-            <General value={general}/>
+            <General />
           </Tabs.Tab>
           <Tabs.Tab tabKey="contact" title="Contact">
-            <Contact value={contact} />
+            <Contact />
           </Tabs.Tab>
           <Tabs.Tab tabKey="branches" title="Branches">
             <Branches />
