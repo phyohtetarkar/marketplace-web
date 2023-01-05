@@ -6,43 +6,43 @@ export async function getShops(page?: number) {
   const url = process.env.NEXT_PUBLIC_API_URL + basePath;
   return fetch(url, {
     headers: {
-      Authorization: "Bearer <token>",
-    },
+      Authorization: "Bearer <token>"
+    }
   }).then((rest) => rest.json() as Promise<PageData<Shop>>);
 }
 
-export async function updateShopGeneral(shopGeneral: ShopGeneral) {
-  const url =
-    process.env.NEXT_PUBLIC_API_URL +
-    `${basePath}/${shopGeneral.shopId}` +
-    "/general";
+export async function updateShopGeneral(value: ShopGeneral) {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${value.shopId}/general`;
 
   await fetch(url, {
     method: "PUT",
-    body: JSON.stringify({ shopGeneral }),
+    body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer <token>",
-    },
+      Authorization: "Bearer <token>"
+    }
   });
 }
 
-export async function updateShopContact(shopContact: ShopContact) {
-  const url =
-    process.env.NEXT_PUBLIC_API_URL +
-    `${basePath}/${shopContact.id}` +
-    "/contact";
+export async function updateShopContact(value: ShopContact) {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${value.id}/contact`;
+
   await fetch(url, {
     method: "PUT",
-    body: JSON.stringify({ shopContact }),
+    body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer <token>",
-    },
+      Authorization: "Bearer <token>"
+    }
   });
 }
 
 export async function getShopBySlug(slug: String) {
-  const url = process.env.NEXT_PUBLIC_API_URL + `${basePath}/${slug}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${slug}`;
   return fetch(url).then((res) => res.json() as Promise<Shop>);
+}
+
+export async function existsBySlug(slug: String) {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${slug}/exists`;
+  return fetch(url).then((res) => res.json() as Promise<boolean>);
 }
