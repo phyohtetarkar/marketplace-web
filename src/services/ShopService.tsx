@@ -1,5 +1,5 @@
 import { pageSizeLimit } from "../common/app.config";
-import { Shop, ShopContact, ShopGeneral } from "../common/models";
+import { PageData, Shop, ShopContact, ShopGeneral } from "../common/models";
 
 const basePath = "shops";
 
@@ -16,24 +16,13 @@ export async function getShop(slug: string) {
   }
 }
 
-export async function getShops({
-  name,
-  recommended,
-  limit = pageSizeLimit,
-  nextToken,
-}: {
-  name?: string;
-  recommended?: boolean;
-  limit?: number;
-  nextToken?: string;
-}) {
-  try {
-  } catch (e) {
-    console.log(e);
-    return [];
-  }
-
-  return [];
+export async function getShops(page?: number) {
+  const url = process.env.NEXT_PUBLIC_API_URL + basePath;
+  return fetch(url, {
+    headers: {
+      Authorization: "Bearer <token>",
+    },
+  }).then((rest) => rest.json() as Promise<PageData<Shop>>);
 }
 
 export async function updateShopGeneral(id: number, shopGeneral: ShopGeneral) {

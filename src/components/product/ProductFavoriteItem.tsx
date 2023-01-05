@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Product } from "../../common/models";
 import {
   deleteFavoriteProduct,
-  saveFavoriteProduct,
+  addToFavoriteProduct,
 } from "../../services/FavoriteProductService";
 
 interface ProductFavoriteProps {
@@ -12,11 +12,10 @@ interface ProductFavoriteProps {
 }
 
 function ProductFavoriteItem({ value }: ProductFavoriteProps) {
-  const baseImagePath = process.env.REACT_APP_BASE_IMAGE_URL;
 
   function getProductImageUrl(p: Product) {
-    if (p.images && p.images.length > 0) {
-      return `${baseImagePath}/${p.images[0]}`;
+    if (p.thumbnail != null) {
+      return p.thumbnail;
     }
 
     return "/placeholder.jpeg";
@@ -51,7 +50,7 @@ function ProductFavoriteItem({ value }: ProductFavoriteProps) {
 
             <Link href={`/`}>
               <a className="text-decoration-none fw-medium text-truncate mb-2">
-                {value.category?.name}
+                {value.category.name}
               </a>
             </Link>
 
@@ -62,7 +61,7 @@ function ProductFavoriteItem({ value }: ProductFavoriteProps) {
                 disabled={false}
                 className="btn btn-primary text-truncate me-2"
                 onClick={() => {
-                  saveFavoriteProduct(value.id);
+                  addToFavoriteProduct(value.id);
                 }}
               >
                 Add to cart

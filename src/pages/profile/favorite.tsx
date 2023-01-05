@@ -13,7 +13,7 @@ function MyFavorites() {
   //   id ? getFavoriteProductsByUser({ userId: id }) : []
   // );
 
-  const { data, error } = useSWR<PageData<Product>, Error>(
+  const { data, error, isLoading } = useSWR<PageData<Product>, Error>(
     ["/favorite-products"],
     ([url]) => getFavoriteProducts(),
     {
@@ -22,6 +22,10 @@ function MyFavorites() {
   );
 
   const content = () => {
+
+    if (isLoading) {
+    }
+
     if (error) {
     }
 
@@ -38,7 +42,10 @@ function MyFavorites() {
             })}
         </div>
         <div className="float-end mt-3">
-          <Pagination />
+          <Pagination
+            currentPage={data?.currentPage}
+            totalPage={data?.totalPage}
+          />
         </div>
       </>
     );
@@ -61,9 +68,7 @@ function MyFavorites() {
           <div className="col-lg-4 col-xl-3">
             <AccountMenu />
           </div>
-          <div className="col-lg-8 col-xl-9">
-            {content()}
-          </div>
+          <div className="col-lg-8 col-xl-9">{content()}</div>
         </div>
       </div>
     </div>

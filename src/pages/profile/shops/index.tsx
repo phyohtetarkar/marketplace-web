@@ -1,18 +1,49 @@
+import useSWR from "swr";
 import Link from "next/link";
+import { PageData, Shop } from "../../../common/models";
 import AccountMenu from "../../../components/account/AccountMenu";
 import { Input, Select } from "../../../components/forms";
 import Pagination from "../../../components/Pagination";
 import ShopManageGridItem from "../../../components/shop/ShopManageGridItem";
+import { getShops } from "../../../services/UserService";
 
 function MyShops() {
-  const shop = {
-    id: "id",
-    name: "Shop Name",
-    slug: "slug",
-    createdAt: "7 July, 2021 1:42pm",
-    cover: `https://source.unsplash.com/random/200x240?random=${Math.floor(
-      Math.random() * 100
-    )}`
+  const { data, error, isLoading } = useSWR<PageData<Shop>, Error>(
+    ["/shops"],
+    ([url]) => getShops(),
+    {
+      revalidateOnFocus: false,
+    }
+  );
+
+  const content = () => {
+    if (isLoading) {
+    }
+
+    if (error) {
+    }
+
+    return (
+      <>
+        <div className="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+          {data?.contents &&
+            data.contents.map((s, i) => {
+              return (
+                <div className="col" key={s.id}>
+                  <ShopManageGridItem value={s} />
+                </div>
+              );
+            })}
+        </div>
+
+        <div className="d-flex justify-content-end pt-3">
+          <Pagination
+            currentPage={data?.currentPage}
+            totalPage={data?.totalPage}
+          />
+        </div>
+      </>
+    );
   };
 
   return (
@@ -61,23 +92,7 @@ function MyShops() {
                   </div>
                 </div>
               </div>
-              <div className="card-body">
-                <div className="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
-                  <div className="col">
-                    <ShopManageGridItem />
-                  </div>
-                  <div className="col">
-                    <ShopManageGridItem />
-                  </div>
-                  <div className="col">
-                    <ShopManageGridItem />
-                  </div>
-                </div>
-
-                <div className="d-flex justify-content-end pt-3">
-                  <Pagination />
-                </div>
-              </div>
+              <div className="card-body">{content()}</div>
             </div>
           </div>
         </div>

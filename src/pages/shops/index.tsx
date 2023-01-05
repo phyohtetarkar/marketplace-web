@@ -1,11 +1,50 @@
+import useSWR from "swr";
 import Head from "next/head";
 import Link from "next/link";
-import { Input, Select } from "../../components/forms";
+import { PageData, Shop } from "../../common/models";
+import { Input } from "../../components/forms";
 import Pagination from "../../components/Pagination";
 import ShopGridItem from "../../components/shop/ShopGridItem";
+import { getShops } from "../../services/ShopService";
 
 function Shops() {
-  const list = [1, 2, 3, 4, 5];
+  const { data, error, isLoading } = useSWR<PageData<Shop>, Error>(
+    ["/shops"],
+    ([url]) => getShops(),
+    {
+      revalidateOnFocus: false,
+    }
+  );
+
+  const content = () => {
+    if (isLoading) {
+    }
+
+    if (error) {
+    }
+
+    return (
+      <>
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxxl-4 g-4">
+          {data?.contents &&
+            data.contents.map((s, i) => {
+              return (
+                <div className="col" key={i}>
+                  <ShopGridItem value={s} />
+                </div>
+              );
+            })}
+        </div>
+
+        <div className="d-flex justify-content-end pt-3 px-3">
+          <Pagination
+            currentPage={data?.currentPage}
+            totalPage={data?.totalPage}
+          />
+        </div>
+      </>
+    );
+  };
 
   return (
     <div className="mb-5">
@@ -43,18 +82,7 @@ function Shops() {
           </div>
         </div>
         <div className="row">
-          <div className="col-lg-12">
-            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxxl-4 g-4">
-              {list.map((i) => (
-                <div className="col" key={i}>
-                  <ShopGridItem />
-                </div>
-              ))}
-            </div>
-            <div className="d-flex justify-content-end pt-3 px-3">
-              <Pagination />
-            </div>
-          </div>
+          <div className="col-lg-12">{content()}</div>
         </div>
       </div>
     </div>
