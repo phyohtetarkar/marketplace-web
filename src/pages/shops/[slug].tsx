@@ -2,7 +2,7 @@ import {
   CubeIcon,
   InformationCircleIcon,
   MapPinIcon,
-  StarIcon
+  StarIcon,
 } from "@heroicons/react/24/outline";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
@@ -16,15 +16,20 @@ import AboutUs from "../../components/shopdetail/AboutUs";
 import ShopBranchListing from "../../components/shopdetail/ShopBranchListing";
 import ShopProductListing from "../../components/shopdetail/ShopProductListing";
 import ShopReviewListing from "../../components/shopdetail/ShopReviewListing";
+import useSWR from "swr";
+import { Shop } from "../../common/models";
+import { getShopBySlug } from "../../services/ShopService";
 
 type PageTab = "products" | "branches" | "reviews" | "about-us";
 
 function ShopHome({ shop }: { shop: any }) {
-  // const { data, error } = useSWR(
-  //   [shop.id],
-  //   (shopId) => getProducts({ shopId: shopId, orderBy: "none" }),
-  //   { revalidateOnFocus: false }
-  // );
+  const { data, error, isLoading } = useSWR<Shop, Error>(
+    ["/shops", shop.slug],
+    ([url, slug]) => getShopBySlug(slug),
+    {
+      revalidateOnFocus: false,
+    }
+  );
 
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<PageTab | null>(null);
@@ -47,7 +52,7 @@ function ShopHome({ shop }: { shop: any }) {
     href,
     title,
     active,
-    icon
+    icon,
   }: {
     href: string;
     title: string;
@@ -78,19 +83,21 @@ function ShopHome({ shop }: { shop: any }) {
           href: "/shops/id#products",
           title: "Products",
           active: activeTab === "products",
-          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />
+          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />,
         })}
         {menuLink({
           href: "/shops/id#branches",
           title: "Branches",
           active: activeTab === "branches",
-          icon: <MapPinIcon className="me-2" strokeWidth={2} width={iconSize} />
+          icon: (
+            <MapPinIcon className="me-2" strokeWidth={2} width={iconSize} />
+          ),
         })}
         {menuLink({
           href: "/shops/id#reviews",
           title: "Reviews",
           active: activeTab === "reviews",
-          icon: <StarIcon className="me-2" strokeWidth={2} width={iconSize} />
+          icon: <StarIcon className="me-2" strokeWidth={2} width={iconSize} />,
         })}
         {menuLink({
           href: "/shops/id#about-us",
@@ -102,7 +109,7 @@ function ShopHome({ shop }: { shop: any }) {
               strokeWidth={2}
               width={iconSize}
             />
-          )
+          ),
         })}
       </div>
     </>
@@ -117,7 +124,7 @@ function ShopHome({ shop }: { shop: any }) {
       case "reviews":
         return <ShopReviewListing />;
       case "about-us":
-        return <AboutUs />;
+        /* return <AboutUs value={data?.about} />; */
     }
 
     return null;
@@ -125,8 +132,10 @@ function ShopHome({ shop }: { shop: any }) {
 
   const heading = (
     <>
-      <h5 className="mb-0">{shop.name}</h5>
-      <div className="text-muted small mb-1 text-truncate">Headline</div>
+      <h5 className="mb-0">{data?.name}</h5>
+      <div className="text-muted small mb-1 text-truncate">
+        {data?.headline}
+      </div>
     </>
   );
 
@@ -148,7 +157,7 @@ function ShopHome({ shop }: { shop: any }) {
                   </Link>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
-                  {shop.name}
+                  {data?.name}
                 </li>
               </ol>
             </nav>
@@ -162,12 +171,12 @@ function ShopHome({ shop }: { shop: any }) {
               <div
                 style={{
                   width: "100%",
-                  height: 200
+                  height: 200,
                 }}
                 className="position-relative"
               >
                 <Image
-                  src={shop.cover!}
+                  src={data?.cover!}
                   alt=""
                   layout="fill"
                   objectFit="cover"
@@ -179,7 +188,7 @@ function ShopHome({ shop }: { shop: any }) {
                   <div className="hstack">
                     <div className="flex-shrink-0 mt-n6">
                       <Image
-                        src={shop.logo!}
+                        src={data?.logo!}
                         width={100}
                         height={100}
                         alt=""
@@ -199,8 +208,8 @@ function ShopHome({ shop }: { shop: any }) {
                   <div className="mt-sm-0 gap-1 hstack" style={{ zIndex: 999 }}>
                     <div className="flex-grow-1 d-none d-md-block"></div>
                     <div className="hstack gap-1">
-                      <Rating rating={4.5} />
-                      <span className="text-dark-gray">(4.5)</span>
+                      <Rating rating={data?.rating ?? 0} />
+                      <span className="text-dark-gray">{data?.rating}</span>
                     </div>
                     {/* <a
                       href="#"
@@ -265,16 +274,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           cover: "/images/banner.jpeg",
           headline: "Mobile phones sales & services",
           description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ac turpis egestas integer eget aliquet."
-        }
-      } // will be passed to the page component as props
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ac turpis egestas integer eget aliquet.",
+        },
+      }, // will be passed to the page component as props
     };
   } catch (e) {
     console.log(e);
   }
 
   return {
-    notFound: true
+    notFound: true,
   };
 };
 
