@@ -40,7 +40,7 @@ function ShopManageGridItem({value}: ShopManageGridItemProps) {
             {value.headline}
           </div>
           <div className="mb-4 align-self-center">
-            <Rating rating={value.rating} />
+            <Rating rating={value.rating!} />
           </div>
 
           <div className="hstack gap-2">

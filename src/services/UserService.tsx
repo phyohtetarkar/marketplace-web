@@ -14,7 +14,7 @@ export async function updateProfile(value: User) {
   });
 }
 
-export async function getShops(page?: number) {
+export async function getMyShops(page?: number) {
   const url = process.env.NEXT_PUBLIC_API_URL + `${basePath}/shops`;
   return fetch(url, {
     headers: {

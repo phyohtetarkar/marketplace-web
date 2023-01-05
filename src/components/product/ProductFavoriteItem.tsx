@@ -14,11 +14,7 @@ interface ProductFavoriteProps {
 function ProductFavoriteItem({ value }: ProductFavoriteProps) {
 
   function getProductImageUrl(p: Product) {
-    if (p.thumbnail != null) {
-      return p.thumbnail;
-    }
-
-    return "/placeholder.jpeg";
+    return p.thumbnail ?? "/placeholder.jpeg";
   }
 
   return (
@@ -61,7 +57,7 @@ function ProductFavoriteItem({ value }: ProductFavoriteProps) {
                 disabled={false}
                 className="btn btn-primary text-truncate me-2"
                 onClick={() => {
-                  addToFavoriteProduct(value.id);
+                  addToFavoriteProduct(value.id!);
                 }}
               >
                 Add to cart
@@ -70,7 +66,7 @@ function ProductFavoriteItem({ value }: ProductFavoriteProps) {
                 disabled={false}
                 className="btn btn-outline-danger"
                 onClick={() => {
-                  deleteFavoriteProduct(value.id);
+                  deleteFavoriteProduct(value.id!);
                 }}
               >
                 <TrashIcon width={20} onClick={() => {}} />

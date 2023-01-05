@@ -5,12 +5,12 @@ import AccountMenu from "../../../components/account/AccountMenu";
 import { Input, Select } from "../../../components/forms";
 import Pagination from "../../../components/Pagination";
 import ShopManageGridItem from "../../../components/shop/ShopManageGridItem";
-import { getShops } from "../../../services/UserService";
+import { getMyShops } from "../../../services/UserService";
 
 function MyShops() {
   const { data, error, isLoading } = useSWR<PageData<Shop>, Error>(
     ["/shops"],
-    ([url]) => getShops(),
+    ([url]) => getMyShops(),
     {
       revalidateOnFocus: false,
     }
