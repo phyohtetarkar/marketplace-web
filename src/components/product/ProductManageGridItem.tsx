@@ -1,30 +1,21 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
+import { Product } from "../../common/models";
 import { formatPrice } from "../../common/utils";
 
-interface InputProps {
-  data?: any;
+interface ProductManageGridItemProps {
+  value?: Product;
 }
 
-function ProductManageGridItem({ data }: InputProps) {
-  const product = data ?? {
-    id: "1",
-    slug: "slug",
-    name: "Product Name",
-    price: 10000,
-    images: [
-      `https://source.unsplash.com/random/200x240?random=${Math.floor(
-        Math.random() * 100
-      )}`
-    ],
-    shop: { id: "1", name: "Seller", slug: "seller" },
-    category: { id: "1", name: "Category", slug: "Category" }
-  };
+function ProductManageGridItem({ value }: ProductManageGridItemProps) {
+  
+  function getProductImageUrl(p: Product) {
+    return p.thumbnail ?? "/placeholder.jpeg";
+  }
+
   let popular;
   let available;
-  let image = product.images![0]!;
-  let price = <>{formatPrice(product.price ?? 0)} Ks</>;
 
   //   if (data.images && data.images.length > 0) {
   //     image = `${baseImagbaePath}/books%2F${data.images[0]}?alt=media`;
@@ -64,7 +55,7 @@ function ProductManageGridItem({ data }: InputProps) {
 
   return (
     <div className="card h-100 shadow-sm">
-      <Link href={`/products/${product.slug}`}>
+      <Link href={`/products/${value!.slug}`}>
         <a className="text-decoration-none">
           <div
             className="position-relative"
@@ -73,7 +64,7 @@ function ProductManageGridItem({ data }: InputProps) {
             <div className="ratio ratio-4x3">
               <Image
                 className="card-img-top"
-                src={image}
+                src={getProductImageUrl(value!)}
                 alt="Product image."
                 layout="fill"
                 objectFit="cover"
@@ -88,19 +79,19 @@ function ProductManageGridItem({ data }: InputProps) {
       <div className="card-body">
         <div className="vstack">
           <div className="small text-truncate text-warning fw-medium">
-            {product.category?.name}
+            {value!.category?.name}
           </div>
 
-          <Link href={`/products/${product.id}`}>
+          <Link href={`/products/${value!.id}`}>
             <a
               className="text-muted text-decoration-none text-truncate"
               style={{ fontSize: 18 }}
             >
-              {product.name}
+              {value!.name}
             </a>
           </Link>
 
-          <h6 className="fw-semibold mt-2 mb-3">{price}</h6>
+          <h6 className="fw-semibold mt-2 mb-3">{formatPrice(value!.price ?? 0)} Ks</h6>
 
           <div className="hstack align-items-stretch gap-2">
             <Link href={`/profile/shops/id/id`}>

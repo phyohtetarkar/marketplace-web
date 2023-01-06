@@ -3,36 +3,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../../common/contexts";
+import { Product } from "../../common/models";
 import { formatPrice } from "../../common/utils";
+import { addToFavoriteProduct } from "../../services/FavoriteProductService";
 import Tooltip from "../Tooltip";
 
-interface InputProps {
-  data?: any;
-  heading?: "seller" | "category";
-  owner?: Boolean;
+interface ProductGridItemProps {
+  value?: Product,
+  heading?: string
 }
 
-function ProductGridItem({ data, heading = "seller", owner }: InputProps) {
+function ProductGridItem({value, heading = "seller"}: ProductGridItemProps) {
   const authContext = useContext(AuthenticationContext);
   const [addingToFavorite, setAddingToFavorite] = useState(false);
 
-  const product = data ?? {
-    id: "1",
-    slug: "slug",
-    name: "Product Name",
-    price: 10000,
-    images: [
-      `https://source.unsplash.com/random/200x240?random=${Math.floor(
-        Math.random() * 100
-      )}`
-    ],
-    shop: { id: "1", name: "Seller", slug: "seller" },
-    category: { id: "1", name: "Category", slug: "Category" }
-  };
+
+  function getProductImageUrl(p: Product) {
+    return p.thumbnail ?? "/placeholder.jpeg";
+  }
+
   let popular;
   let available;
-  let image = product.images![0]!;
-  let price = <>{formatPrice(product.price ?? 0)} Ks</>;
+  // let image = product.images![0]!;
+  // let price = <>{formatPrice(product.price ?? 0)} Ks</>;
 
   //   if (data.images && data.images.length > 0) {
   //     image = `${baseImagbaePath}/books%2F${data.images[0]}?alt=media`;
@@ -72,7 +65,7 @@ function ProductGridItem({ data, heading = "seller", owner }: InputProps) {
 
   return (
     <div className="card h-100 border-0 shadow-sm">
-      <Link href={`/products/${product.slug}`}>
+      <Link href={`/products/${value!.slug}`}>
         <a className="text-decoration-none">
           <div
             className="position-relative"
@@ -81,7 +74,7 @@ function ProductGridItem({ data, heading = "seller", owner }: InputProps) {
             <div className="ratio ratio-4x3">
               <Image
                 className="card-img-top"
-                src={image}
+                src={getProductImageUrl(value!)}
                 alt="Product image."
                 layout="fill"
                 objectFit="cover"
@@ -96,26 +89,26 @@ function ProductGridItem({ data, heading = "seller", owner }: InputProps) {
       <div className="card-body">
         <div className="vstack">
           {heading === "seller" ? (
-            <Link href={`/shops/${product.shop?.slug}`}>
+            <Link href={`/shops/${value!.shop?.slug}`}>
               <a className="text-decoration-none small text-truncate link-warning fw-medium">
-                {product.shop?.name}
+                {value!.shop?.name}
               </a>
             </Link>
           ) : (
-            <Link href={`/categories/${product.category?.slug}`}>
+            <Link href={`/categories/${value!.category?.slug}`}>
               <a className="text-decoration-none small text-truncate link-warning fw-medium">
-                {product.category?.name}
+                {value!.category?.name}
               </a>
             </Link>
           )}
 
-          <Link href={`/products/${product.slug}`}>
+          <Link href={`/products/${value!.slug}`}>
             <a className="text-muted text-decoration-none text-truncate">
-              {product.name}
+              {value!.name}
             </a>
           </Link>
 
-          <h6 className="fw-semibold mt-2 mb-3">{price}</h6>
+          <h6 className="fw-semibold mt-2 mb-3">{formatPrice(value!.price ?? 0)} Ks</h6>
 
           <div className="hstack align-items-stretch gap-2">
             <button
@@ -143,7 +136,9 @@ function ProductGridItem({ data, heading = "seller", owner }: InputProps) {
                 <button
                   disabled={addingToFavorite}
                   className="btn btn-outline-light text-primary border h-100 hstack"
-                  onClick={async () => {}}
+                  onClick={() => {
+                    addToFavoriteProduct(value!.id!);
+                  }}
                 >
                   <HeartIcon width={20} strokeWidth={2} />
                 </button>
