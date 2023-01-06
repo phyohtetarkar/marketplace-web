@@ -1,9 +1,6 @@
-export async function getBanners() {
-  try {
-  } catch (e) {
-    console.log(e);
-    return [];
-  }
+import { Banner } from "../common/models";
 
-  return [];
+export async function getAllBanners() {
+  const url = process.env.REACT_APP_API_URL + "banners";
+  return fetch(url).then((res) => res.json() as Promise<[Banner]>);
 }
