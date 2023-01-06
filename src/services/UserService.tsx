@@ -15,7 +15,8 @@ export async function updateProfile(value: User) {
 }
 
 export async function getMyShops(page?: number) {
-  const url = process.env.NEXT_PUBLIC_API_URL + `${basePath}/shops`;
+  let url = process.env.NEXT_PUBLIC_API_URL + `${basePath}/shops`;
+  url +=  page ? `?page=${page}` : "";
   return fetch(url, {
     headers: {
       Authorization: "Bearer <token>"

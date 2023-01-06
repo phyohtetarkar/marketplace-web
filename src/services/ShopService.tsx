@@ -3,7 +3,8 @@ import { PageData, Shop, ShopContact, ShopGeneral } from "../common/models";
 const basePath = "shops";
 
 export async function getShops(page?: number) {
-  const url = process.env.NEXT_PUBLIC_API_URL + basePath;
+  let url = process.env.NEXT_PUBLIC_API_URL + basePath;
+  url +=  page ? `?page=${page}` : "";
   return fetch(url, {
     headers: {
       Authorization: "Bearer <token>"

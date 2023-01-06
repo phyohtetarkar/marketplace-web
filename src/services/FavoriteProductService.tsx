@@ -1,9 +1,10 @@
 import { PageData, Product } from "../common/models";
 
-const basePath = "profile/favorite-products";
+const basePath = "profile";
 
 export async function getFavoriteProducts(page?: number) {
-  const url = process.env.NEXT_PUBLIC_API_URL + basePath;
+  let url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/favorite-products`;
+  url += page ? `?page=${page}` : "";
   return fetch(url, {
     headers: {
       Authorization: "Bearer <token>"
@@ -12,7 +13,7 @@ export async function getFavoriteProducts(page?: number) {
 }
 
 export async function addToFavoriteProduct(productId: number) {
-  const url = process.env.NEXT_PUBLIC_API_URL + `${basePath}?product-id=${productId}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/favorite-products?product-id=${productId}`;
   await fetch(url, {
     method: "POST",
     headers: {
@@ -22,7 +23,7 @@ export async function addToFavoriteProduct(productId: number) {
 }
 
 export async function deleteFavoriteProduct(id: number) {
-  const url = process.env.NEXT_PUBLIC_API_URL + `${basePath}?product-id=${id}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/favorite-products?product-id=${id}`;
   await fetch(url, {
     method: "DELETE",
     headers: {
