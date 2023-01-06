@@ -109,7 +109,7 @@ function ShopHome({ shop }: { shop: Shop }) {
       case "branches":
         return <ShopBranchListing />;
       case "reviews":
-        return <ShopReviewListing />;
+        return <ShopReviewListing shopId={shop.id!} />;
       case "about-us":
         return <AboutUs value={shop.about ?? ""} />;
     }

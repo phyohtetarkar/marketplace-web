@@ -1,9 +1,16 @@
 import Image from "next/image";
 import Pagination from "../Pagination";
 import Rating from "../Rating";
+import useSWR from "swr";
 import ShopReviewForm from "./ShopReviewForm";
+import { PageData, ShopReview } from "../../common/models";
+import { getReviews } from "../../services/ShopReviewService";
 
-function Review() {
+interface ShopReviewProps {
+  value: ShopReview;
+}
+
+function Review({ value }: ShopReviewProps) {
   return (
     <div className="p-2">
       <div className="hstack gap-3 align-items-start">
@@ -18,15 +25,12 @@ function Review() {
           />
         </div>
         <div>
-          <h6 className="mb-0">Robert Thomas</h6>
+          <h6 className="mb-0">{value.reviewer?.name}</h6>
           <span className="text-muted small">30 November 2022</span>
           <div className="mt-3">
-            <Rating rating={4.5} />
+            <Rating rating={value.rating ?? 0} />
           </div>
-          <h6 className="text-muted fw-normal mt-2">
-            It is awesome.Quality is more than good that I was expected for
-            buying. I first time purchase Geeks shoes & this brand is good.
-          </h6>
+          <h6 className="text-muted fw-normal mt-2">{value.description}</h6>
         </div>
       </div>
       <hr className="bg-dark-gray" />
@@ -34,19 +38,28 @@ function Review() {
   );
 }
 
-function ShopReviewListing() {
-  const reviews = [1, 2, 3];
+function ShopReviewListing({ shopId }: { shopId: number }) {
+  const { data, error, isLoading } = useSWR<PageData<ShopReview>, Error>(
+    ["/shops", shopId],
+    ([url, id]) => getReviews(id),
+    {
+      revalidateOnFocus: false
+    }
+  );
+
   return (
     <div>
       <ShopReviewForm />
       <div className="card shadow-sm">
         <div className="card-body">
-          {reviews.map((i) => (
-            <Review key={i} />
-          ))}
+          {data?.contents &&
+            data?.contents.map((r, i) => <Review key={i} value={r} />)}
           <div className="hstack justify-content-end">
-            <div className="">
-              <Pagination />
+            <div>
+              <Pagination
+                currentPage={data?.currentPage}
+                totalPage={data?.totalPage}
+              />
             </div>
           </div>
         </div>
