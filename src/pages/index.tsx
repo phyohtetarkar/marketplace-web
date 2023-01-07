@@ -1,13 +1,9 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Autoplay, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import useSWR from "swr";
-import { getBanners } from "../services/BannerService";
-import { getCategories } from "../services/CategoryService";
-import { getProducts } from "../services/ProductService";
-import { getShops } from "../services/ShopService";
 
 const _categories = [
   "Electronics",
@@ -32,15 +28,11 @@ const _shops = [
 ];
 
 const getData = async () => {
-  const banners = await getBanners();
-  const categories = await getCategories({});
-  const recommendedShops = await getShops({ limit: 10 });
-  const newArrivals = await getProducts({ orderBy: "none" });
   return {
-    banners: banners,
-    categories: categories,
-    shops: recommendedShops,
-    newArrivals: newArrivals
+    banners: [],
+    categories: [],
+    shops: [],
+    newArrivals: []
   };
 };
 
@@ -358,6 +350,27 @@ const Home: NextPage = () => {
       </div> */}
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  try {
+    return {
+      props: {
+        data: {
+          banners: [],
+          categories: [],
+          shops: [],
+          newArrivals: []
+        }
+      } // will be passed to the page component as props
+    };
+  } catch (e) {
+    console.log(e);
+  }
+
+  return {
+    notFound: true
+  };
 };
 
 export default Home;

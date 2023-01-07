@@ -53,3 +53,21 @@ export function debounce(callback: (...args: any[]) => void, timeout = 2000) {
 export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function buildQueryParams(params: any) {
+  if (typeof params !== "object" || params instanceof Array) {
+    return "";
+  }
+
+  let query = "";
+
+  for (const p in params) {
+    if (!params[0]) {
+      continue;
+    }
+    const delimiter = query.length > 0 ? "&" : "?";
+    query.concat(delimiter + `${p}=${params[p]}`);
+  }
+
+  return query;
+}

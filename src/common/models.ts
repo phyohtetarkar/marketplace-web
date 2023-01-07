@@ -5,6 +5,11 @@ export interface PageData<T> {
   pageSize: number;
 }
 
+export interface ErrorBody {
+  code: string;
+  error?: string | null;
+}
+
 export interface AuthUser {
   id: string;
   name: string;
@@ -18,6 +23,7 @@ export interface User {
   name?: string;
   phone?: string;
   email?: string | null;
+  image?: string | null;
 }
 
 export interface Banner {
@@ -71,6 +77,7 @@ export interface ShopReview {
   rating?: number;
   description?: string;
   reviewer?: User | null;
+  createdAt?: number;
 }
 
 export interface Product {
@@ -98,7 +105,13 @@ export interface ProductVariant {}
 
 export interface ProductVariantOption {}
 
-export interface Discount {}
+export interface Discount {
+  id?: number;
+  title?: string;
+  value?: string;
+  type?: string;
+  shopId?: number;
+}
 
 export interface CartItem {
   id: CartItemId;
