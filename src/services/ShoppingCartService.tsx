@@ -1,7 +1,7 @@
 import exp from "constants";
 import { CartItem, CartItemId } from "../common/models";
 
-const basePath = "profile/cart-items";
+const basePath = "cart-items";
 
 export async function getCartItemsByUser() {
   const url = process.env.NEXT_PUBLIC_API_URL + basePath;
