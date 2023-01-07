@@ -1,4 +1,5 @@
 import { PageData, ShopReview } from "../common/models";
+import { buildQueryParams } from "../common/utils";
 
 const basePath = "shop-reviews";
 
@@ -24,8 +25,16 @@ export async function deleteReview(shopId: number) {
   });
 }
 
-export async function getReviews(shopId: number, page?: number) {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${shopId}`;
+export async function getReviews(
+  shopId: number,
+  direction: "ASC" | "DESC",
+  page?: number
+) {
+  const query = buildQueryParams({
+    direction: direction,
+    page: page
+  });
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${shopId}${query}`;
   return fetch(url, {
     headers: {
       Authorization: "Bearer <token>"

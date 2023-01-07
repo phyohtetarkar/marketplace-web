@@ -16,7 +16,7 @@ function Review({ value }: ShopReviewProps) {
       <div className="hstack gap-3 align-items-start">
         <div className="position-relative flex-shrink-0 ">
           <Image
-            src="/images/profile.png"
+            src={value.reviewer?.image ?? "{/images/profile.png}"}
             width={60}
             height={60}
             alt=""
@@ -26,7 +26,7 @@ function Review({ value }: ShopReviewProps) {
         </div>
         <div>
           <h6 className="mb-0">{value.reviewer?.name}</h6>
-          <span className="text-muted small">30 November 2022</span>
+          <span className="text-muted small">{value.createdAt}</span>
           <div className="mt-3">
             <Rating rating={value.rating ?? 0} />
           </div>
