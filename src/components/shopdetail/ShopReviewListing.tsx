@@ -41,7 +41,7 @@ function Review({ value }: ShopReviewProps) {
 function ShopReviewListing({ shopId }: { shopId: number }) {
   const { data, error, isLoading } = useSWR<PageData<ShopReview>, Error>(
     ["/shops", shopId],
-    ([url, id]) => getReviews(id),
+    ([url, id]) => getReviews(id, "ASC"),
     {
       revalidateOnFocus: false
     }

@@ -1,18 +1,26 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { url } from "inspector";
 import Link from "next/link";
+import useSWR from "swr";
+import { Discount, PageData } from "../../common/models";
+import { getAllDiscounts } from "../../services/DiscountService";
 import Pagination from "../Pagination";
 
-function DiscountRow() {
+interface DiscountProps {
+  value: Discount;
+}
+
+function DiscountRow({ value }: DiscountProps) {
   return (
     <tr>
       <td className="ps-3 ps-lg-4 w-100">
-        <span>Name</span>
+        <span>{value.title}</span>
       </td>
       <td>
-        <span className="text-nowrap">%</span>
+        <span className="text-nowrap">{value.type}</span>
       </td>
       <td>
-        <span className="text-nowrap">10</span>
+        <span className="text-nowrap">{value.value}</span>
       </td>
       <td>
         <div className="hstack align-items-center gap-2">
@@ -34,8 +42,15 @@ function DiscountRow() {
   );
 }
 
-function ManageDiscounts() {
-  const list = [1, 2, 3];
+function ManageDiscounts({ shopId }: { shopId: number }) {
+  const { data, error, isLoading } = useSWR<PageData<Discount>, Error>(
+    ["/discounts", shopId],
+    ([url, id]) => getAllDiscounts(id),
+    {
+      revalidateOnFocus: false
+    }
+  );
+
   return (
     <div className="p-0">
       <div className="card shadow-sm">
@@ -67,15 +82,19 @@ function ManageDiscounts() {
                 </tr>
               </thead>
               <tbody className="border-top-0">
-                {list.map((i) => (
-                  <DiscountRow key={i} />
-                ))}
+                {data?.contents &&
+                  data?.contents.map((d, i) => (
+                    <DiscountRow key={i} value={d} />
+                  ))}
               </tbody>
             </table>
           </div>
 
           <div className="d-flex justify-content-end p-3 pt-0">
-            <Pagination currentPage={1} totalPage={10} />
+            <Pagination
+              currentPage={data?.currentPage}
+              totalPage={data?.totalPage}
+            />
           </div>
         </div>
       </div>
