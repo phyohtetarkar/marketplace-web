@@ -28,7 +28,7 @@ function ProfileSetting() {
           errors.phone = "Please enter valid phone number.";
         }
 
-       if (!values.email || values.email.match(emailRegex)) {
+       if (!values.email || !values.email.match(emailRegex)) {
           errors.email = "Please enter valid email address."
         }
 

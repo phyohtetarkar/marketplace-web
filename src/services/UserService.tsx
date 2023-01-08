@@ -1,9 +1,10 @@
 import { PageData, User, Shop } from "../common/models";
+import { buildQueryParams } from "../common/utils";
 
 const basePath = "profile";
 
 export async function updateProfile(value: User) {
-  const url = process.env.NEXT_PUBLIC_API_URL + basePath;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}`;
   await fetch(url, {
     method: "PUT",
     body: JSON.stringify(value),
@@ -14,9 +15,20 @@ export async function updateProfile(value: User) {
   });
 }
 
+export async function getLoginUser() {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}`;
+  return fetch(url, {
+    headers: {
+      Authorization: "Bearer <token>"
+    }
+  }).then((rest) => rest.json() as Promise<User>);
+}
+
 export async function getMyShops(page?: number) {
-  let url = process.env.NEXT_PUBLIC_API_URL + `${basePath}/shops`;
-  url +=  page ? `?page=${page}` : "";
+  const query = buildQueryParams({
+    page: page
+  });
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/shops${query}`;
   return fetch(url, {
     headers: {
       Authorization: "Bearer <token>"

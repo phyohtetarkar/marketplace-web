@@ -1,10 +1,13 @@
 import { PageData, Product } from "../common/models";
+import { buildQueryParams } from "../common/utils";
 
 const basePath = "profile";
 
 export async function getFavoriteProducts(page?: number) {
-  let url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/favorite-products`;
-  url += page ? `?page=${page}` : "";
+  const query = buildQueryParams({
+    page: page
+  });
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/favorite-products${query}`;
   return fetch(url, {
     headers: {
       Authorization: "Bearer <token>"
@@ -13,7 +16,10 @@ export async function getFavoriteProducts(page?: number) {
 }
 
 export async function addToFavoriteProduct(productId: number) {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/favorite-products?product-id=${productId}`;
+  const query = buildQueryParams({
+    "product-id": productId
+  });
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/favorite-products?${query}`;
   await fetch(url, {
     method: "POST",
     headers: {
@@ -23,7 +29,10 @@ export async function addToFavoriteProduct(productId: number) {
 }
 
 export async function deleteFavoriteProduct(id: number) {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/favorite-products?product-id=${id}`;
+  const query = buildQueryParams({
+    "product-id": id
+  });
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/favorite-products?${query}`;
   await fetch(url, {
     method: "DELETE",
     headers: {

@@ -1,10 +1,13 @@
 import { PageData, Shop, ShopContact, ShopGeneral } from "../common/models";
+import { buildQueryParams } from "../common/utils";
 
 const basePath = "shops";
 
 export async function getShops(page?: number) {
-  let url = process.env.NEXT_PUBLIC_API_URL + basePath;
-  url +=  page ? `?page=${page}` : "";
+  const query = buildQueryParams({
+    page: page
+  });
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}${query}`;
   return fetch(url, {
     headers: {
       Authorization: "Bearer <token>"

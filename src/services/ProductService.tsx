@@ -1,36 +1,25 @@
-import { pageSizeLimit } from "../common/app.config";
+import { METHODS } from "http";
+import { Product } from "../common/models";
+import { buildQueryParams } from "../common/utils";
 
-export async function getProduct(slug: string) {
-  try {
-  } catch (e) {
-    throw e;
-  }
+const basePath = "products"
+
+export async function getProductBySlug(slug: String) {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${slug}`;
+  return fetch(url).then((rest) => rest.json() as Promise<Product>);
 }
 
-export async function getProducts({
-  name,
-  categoryId,
-  shopId,
-  newArrival,
-  orderBy = "none",
-  sortDirection,
-  limit = pageSizeLimit,
-  nextToken
-}: {
-  name?: string;
-  categoryId?: string;
-  shopId?: string;
-  newArrival?: boolean;
-  orderBy: "price" | "none";
-  sortDirection?: "ASC" | "DESC";
-  limit?: number;
-  nextToken?: string;
-}) {
-  try {
-  } catch (e) {
-    console.log(e);
-    return [];
-  }
+export async function existsBySlug(slug: String) {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${slug}/exists`
+  return fetch(url).then((rest) => rest.json() as Promise<boolean>);
+}
 
-  return [];
+export async function deleteProduct(id: number) {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${id}`
+  await fetch(url, {
+    method: "DELETE",
+    headers: {
+      Authorization: "Bearer <token>"
+    }
+  })
 }
