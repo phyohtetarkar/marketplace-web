@@ -46,7 +46,7 @@ export async function getShopBySlug(slug: String) {
   return fetch(url).then((res) => res.json() as Promise<Shop>);
 }
 
-export async function existsBySlug(slug: String) {
+export async function existsShopBySlug(slug: String) {
   const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${slug}/exists`;
   return fetch(url).then((res) => res.json() as Promise<boolean>);
 }

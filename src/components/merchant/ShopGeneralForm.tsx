@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import { ShopGeneral } from "../../common/models";
-import { existsBySlug } from "../../services/ShopService";
+import { existsShopBySlug } from "../../services/ShopService";
 import { Input, Textarea } from "../forms";
 
 function ShopGeneralForm() {
@@ -25,7 +25,7 @@ function ShopGeneralForm() {
         errors.slug = "Please enter shop slug";
       } else {
         try {
-          const isExist = await existsBySlug(values.slug);
+          const isExist = await existsShopBySlug(values.slug);
           if (isExist) {
             errors.slug = "Shop slug already in use";
           }

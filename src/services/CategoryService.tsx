@@ -3,7 +3,7 @@ import { buildQueryParams } from "../common/utils";
 
 const basePath = "categories";
 
-export async function getAllCategories(flat: "true" | "false") {
+export async function getAllCategories(flat: boolean) {
   const query = buildQueryParams({
     flat: flat
   });
