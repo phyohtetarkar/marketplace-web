@@ -9,14 +9,13 @@ import { addToFavoriteProduct } from "../../services/FavoriteProductService";
 import Tooltip from "../Tooltip";
 
 interface ProductGridItemProps {
-  value?: Product,
-  heading?: string
+  value: Product;
+  heading?: string;
 }
 
-function ProductGridItem({value, heading = "seller"}: ProductGridItemProps) {
+function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
   const authContext = useContext(AuthenticationContext);
   const [addingToFavorite, setAddingToFavorite] = useState(false);
-
 
   function getProductImageUrl(p: Product) {
     return p.thumbnail ?? "/placeholder.jpeg";
@@ -65,7 +64,7 @@ function ProductGridItem({value, heading = "seller"}: ProductGridItemProps) {
 
   return (
     <div className="card h-100 border-0 shadow-sm">
-      <Link href={`/products/${value!.slug}`}>
+      <Link href={`/products/${value.slug}`}>
         <a className="text-decoration-none">
           <div
             className="position-relative"
@@ -74,7 +73,7 @@ function ProductGridItem({value, heading = "seller"}: ProductGridItemProps) {
             <div className="ratio ratio-4x3">
               <Image
                 className="card-img-top"
-                src={getProductImageUrl(value!)}
+                src={getProductImageUrl(value)}
                 alt="Product image."
                 layout="fill"
                 objectFit="cover"
@@ -89,26 +88,28 @@ function ProductGridItem({value, heading = "seller"}: ProductGridItemProps) {
       <div className="card-body">
         <div className="vstack">
           {heading === "seller" ? (
-            <Link href={`/shops/${value!.shop?.slug}`}>
+            <Link href={`/shops/${value.shop?.slug}`}>
               <a className="text-decoration-none small text-truncate link-warning fw-medium">
-                {value!.shop?.name}
+                {value.shop?.name}
               </a>
             </Link>
           ) : (
-            <Link href={`/categories/${value!.category?.slug}`}>
+            <Link href={`/categories/${value.category?.slug}`}>
               <a className="text-decoration-none small text-truncate link-warning fw-medium">
-                {value!.category?.name}
+                {value.category?.name}
               </a>
             </Link>
           )}
 
-          <Link href={`/products/${value!.slug}`}>
+          <Link href={`/products/${value.slug}`}>
             <a className="text-muted text-decoration-none text-truncate">
-              {value!.name}
+              {value.name}
             </a>
           </Link>
 
-          <h6 className="fw-semibold mt-2 mb-3">{formatPrice(value!.price ?? 0)} Ks</h6>
+          <h6 className="fw-semibold mt-2 mb-3">
+            {formatPrice(value.price ?? 0)} Ks
+          </h6>
 
           <div className="hstack align-items-stretch gap-2">
             <button
@@ -137,7 +138,7 @@ function ProductGridItem({value, heading = "seller"}: ProductGridItemProps) {
                   disabled={addingToFavorite}
                   className="btn btn-outline-light text-primary border h-100 hstack"
                   onClick={() => {
-                    addToFavoriteProduct(value!.id!);
+                    addToFavoriteProduct(value.id!);
                   }}
                 >
                   <HeartIcon width={20} strokeWidth={2} />

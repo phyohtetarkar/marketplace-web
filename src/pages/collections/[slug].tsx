@@ -1,3 +1,4 @@
+import useSWR from "swr";
 import { ListBulletIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import Head from "next/head";
 import Link from "next/link";
@@ -6,6 +7,8 @@ import { useState } from "react";
 import Accordion from "../../components/Accordion";
 import Pagination from "../../components/Pagination";
 import { ProductGridItem } from "../../components/product";
+import { PageData, Product } from "../../common/models";
+import { findAllProducts } from "../../services/ProductService";
 
 const Filter = () => {
   const [maxPrice, setMaxPrice] = useState(300000);
@@ -102,28 +105,34 @@ function Collection() {
   const router = useRouter();
   const { slug } = router.query;
 
-  const contents = () => {
+  const { data, error, isLoading } = useSWR<PageData<Product>, Error>(
+    ["/products"],
+    ([url]) => findAllProducts({}),
+    {
+      revalidateOnFocus: false
+    }
+  );
+
+  const content = () => {
+    if (isLoading) {
+    }
+
+    if (error) {
+    }
+
     return (
-      <div className="row row-cols-1 row-cols-md-2 row-cols-xxl-3 g-3">
-        <div className="col">
-          <ProductGridItem />
+      <>
+        <div className="row row-cols-1 row-cols-md-2 row-cols-xxl-3 g-3">
+          {data?.contents &&
+            data.contents.map((s, i) => {
+              return (
+                <div className="col" key={s.id}>
+                  <ProductGridItem value={s} />
+                </div>
+              );
+            })}
         </div>
-        <div className="col">
-          <ProductGridItem />
-        </div>
-        <div className="col">
-          <ProductGridItem />
-        </div>
-        <div className="col">
-          <ProductGridItem />
-        </div>
-        <div className="col">
-          <ProductGridItem />
-        </div>
-        <div className="col">
-          <ProductGridItem />
-        </div>
-      </div>
+      </>
     );
   };
 
@@ -171,7 +180,7 @@ function Collection() {
                 </button>
               </div>
             </div>
-            {contents()}
+            {content()}
             <div className="mt-4 d-flex justify-content-end">
               {/* <button className="btn btn-outline-primary rounded-pill">
                     Load more products
