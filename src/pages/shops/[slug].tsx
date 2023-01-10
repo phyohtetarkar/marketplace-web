@@ -105,7 +105,7 @@ function ShopHome({ shop }: { shop: Shop }) {
   const activeContent = () => {
     switch (activeTab) {
       case "products":
-        return <ShopProductListing />;
+        return <ShopProductListing shopId={shop.id!} />;
       case "branches":
         return <ShopBranchListing />;
       case "reviews":

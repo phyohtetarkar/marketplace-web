@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useMemo, useState } from "react";
+import { Shop } from "../../../../common/models";
 import Accordion from "../../../../components/Accordion";
 import Dropdown from "../../../../components/Dropdown";
 import ManageDiscounts from "../../../../components/merchant/ManageDiscounts";
@@ -18,7 +19,7 @@ import ShopSetting from "../../../../components/merchant/ShopSetting";
 
 type PageTab = "dashboard" | "products" | "discounts" | "orders" | "setting";
 
-function ShopDetail() {
+function ShopDetail({ shop }: { shop: Shop }) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<PageTab | null>(null);
 
@@ -122,9 +123,9 @@ function ShopDetail() {
       case "dashboard":
         return <ShopDashboard />;
       case "products":
-        return <ManageProducts />;
+        return <ManageProducts shopId={shop.id!} />;
       case "discounts":
-        return <ManageDiscounts />;
+        return <ManageDiscounts shopId={shop.id!} />;
       case "setting":
         return <ShopSetting />;
     }
