@@ -1,5 +1,4 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { url } from "inspector";
 import Link from "next/link";
 import useSWR from "swr";
 import { Discount, PageData } from "../../common/models";

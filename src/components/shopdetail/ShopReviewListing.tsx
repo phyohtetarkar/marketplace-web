@@ -16,7 +16,7 @@ function Review({ value }: ShopReviewProps) {
       <div className="hstack gap-3 align-items-start">
         <div className="position-relative flex-shrink-0 ">
           <Image
-            src={value.reviewer?.image ?? "{/images/profile.png}"}
+            src={value.reviewer?.image ?? "/images/profile.png"}
             width={60}
             height={60}
             alt=""

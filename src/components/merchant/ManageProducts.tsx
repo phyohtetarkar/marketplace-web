@@ -1,11 +1,11 @@
 import Link from "next/link";
+import { useState } from "react";
+import useSWR from "swr";
 import { PageData, Product } from "../../common/models";
+import { findAllProducts, ProductQuery } from "../../services/ProductService";
 import { Input } from "../forms";
 import Pagination from "../Pagination";
-import useSWR from "swr";
 import ProductManageGridItem from "../product/ProductManageGridItem";
-import { findAllProducts, ProductQuery } from "../../services/ProductService";
-import { useState } from "react";
 
 function ManageProducts({ shopId }: { shopId: number }) {
   const [query, setQuery] = useState<ProductQuery>({ shopId: shopId });
@@ -17,8 +17,6 @@ function ManageProducts({ shopId }: { shopId: number }) {
       revalidateOnFocus: false
     }
   );
-
-  const list = [1, 2, 3, 4, 5];
 
   return (
     <div className="p-0">
@@ -51,7 +49,10 @@ function ManageProducts({ shopId }: { shopId: number }) {
       </div>
 
       <div className="d-flex justify-content-end pt-3">
-        <Pagination />
+        <Pagination
+          currentPage={data?.currentPage}
+          totalPage={data?.totalPage}
+        />
       </div>
     </div>
   );

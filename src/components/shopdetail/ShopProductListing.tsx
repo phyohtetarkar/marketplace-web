@@ -3,12 +3,15 @@ import Pagination from "../Pagination";
 import { ProductGridItem } from "../product";
 import useSWR from "swr";
 import { PageData, Product } from "../../common/models";
-import { findAllProducts } from "../../services/ProductService";
+import { findAllProducts, ProductQuery } from "../../services/ProductService";
+import { useState } from "react";
 
 function ShopProductListing({ shopId }: { shopId: number }) {
+  const [query, setQuery] = useState<ProductQuery>({ shopId: shopId });
+
   const { data, error, isLoading } = useSWR<PageData<Product>, Error>(
-    ["/products", shopId],
-    ([url, id]) => findAllProducts(id),
+    ["/products", query],
+    ([url, query]) => findAllProducts(query),
     {
       revalidateOnFocus: false
     }

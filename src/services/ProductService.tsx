@@ -4,7 +4,7 @@ import { buildQueryParams } from "../common/utils";
 const basePath = "products";
 
 export interface ProductQuery {
-  query?: String;
+  q?: String;
   categoryId?: number;
   shopId?: number;
   maxPrice?: number;

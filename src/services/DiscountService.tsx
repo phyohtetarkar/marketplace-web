@@ -14,10 +14,23 @@ export async function saveDiscount(value: Discount) {
     }
   });
 }
+export async function deleteDiscount(shopId: number, issuedAt: String) {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${shopId}/${issuedAt}`;
+  await fetch(url, {
+    method: "DELETE",
+    headers: {
+      Authorization: "Bearer <token>"
+    }
+  });
+}
 
-export async function getDiscountById(id: number) {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${id}`;
-  return fetch(url).then((res) => res.json() as Promise<Discount>);
+export async function getDiscountById(shopId: number, issuedAt: String) {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${shopId}/${issuedAt}`;
+  return fetch(url, {
+    headers: {
+      Authorization: "Bearer <token>"
+    }
+  }).then((res) => res.json() as Promise<Discount>);
 }
 
 export async function getAllDiscounts(shopId: number, page?: number) {
@@ -27,5 +40,9 @@ export async function getAllDiscounts(shopId: number, page?: number) {
   });
 
   const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}${query}`;
-  return fetch(url).then((res) => res.json() as Promise<PageData<Discount>>);
+  return fetch(url, {
+    headers: {
+      Authorization: "Bearer <token>"
+    }
+  }).then((res) => res.json() as Promise<PageData<Discount>>);
 }
