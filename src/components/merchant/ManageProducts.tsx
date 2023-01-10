@@ -1,9 +1,20 @@
 import Link from "next/link";
+import { PageData, Product } from "../../common/models";
 import { Input } from "../forms";
 import Pagination from "../Pagination";
+import useSWR from "swr";
 import ProductManageGridItem from "../product/ProductManageGridItem";
+import { findAllProducts } from "../../services/ProductService";
 
-function ManageProducts() {
+function ManageProducts({ shopId }: { shopId: number }) {
+  const { data, error, isLoading } = useSWR<PageData<Product>, Error>(
+    ["/products", shopId],
+    ([url, id]) => findAllProducts(id),
+    {
+      revalidateOnFocus: false
+    }
+  );
+
   const list = [1, 2, 3, 4, 5];
 
   return (
@@ -26,13 +37,14 @@ function ManageProducts() {
       </div>
 
       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 py-3">
-        {list.map((i) => {
-          return (
-            <div className="col" key={i}>
-              <ProductManageGridItem />
-            </div>
-          );
-        })}
+        {data?.contents &&
+          data?.contents.map((p, i) => {
+            return (
+              <div className="col" key={i}>
+                <ProductManageGridItem value={p} />
+              </div>
+            );
+          })}
       </div>
 
       <div className="d-flex justify-content-end pt-3">
