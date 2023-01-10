@@ -4,12 +4,15 @@ import { Input } from "../forms";
 import Pagination from "../Pagination";
 import useSWR from "swr";
 import ProductManageGridItem from "../product/ProductManageGridItem";
-import { findAllProducts } from "../../services/ProductService";
+import { findAllProducts, ProductQuery } from "../../services/ProductService";
+import { useState } from "react";
 
 function ManageProducts({ shopId }: { shopId: number }) {
+  const [query, setQuery] = useState<ProductQuery>({ shopId: shopId });
+
   const { data, error, isLoading } = useSWR<PageData<Product>, Error>(
-    ["/products", shopId],
-    ([url, id]) => findAllProducts(id),
+    ["/products", query],
+    ([url, query]) => findAllProducts(query),
     {
       revalidateOnFocus: false
     }

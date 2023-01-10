@@ -6,7 +6,7 @@ const basePath = "discounts";
 export async function saveDiscount(value: Discount) {
   const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}`;
   await fetch(url, {
-    method: value.id! > 0 ? "PUT" : "POST",
+    method: (value.shopId ?? 0) > 0 && !value.issuedAt ? "PUT" : "POST",
     body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",

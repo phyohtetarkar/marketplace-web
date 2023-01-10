@@ -1,4 +1,3 @@
-import exp from "constants";
 import { CartItem, CartItemId } from "../common/models";
 
 const basePath = "cart-items";

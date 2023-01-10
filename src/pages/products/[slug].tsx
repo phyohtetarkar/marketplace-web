@@ -227,7 +227,7 @@ function ProductDetail() {
           <div className="col-12 mt-12">
             <h4 className="mb-3">Related Products</h4>
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
-              <div className="col">
+              {/* <div className="col">
                 <ProductGridItem />
               </div>
               <div className="col">
@@ -238,7 +238,7 @@ function ProductDetail() {
               </div>
               <div className="col">
                 <ProductGridItem />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

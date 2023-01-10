@@ -9,10 +9,6 @@ interface ProductManageGridItemProps {
 }
 
 function ProductManageGridItem({ value }: ProductManageGridItemProps) {
-  function getProductImageUrl(p: Product) {
-    return p.thumbnail ?? "/placeholder.jpeg";
-  }
-
   let popular;
   let available;
 
@@ -63,7 +59,7 @@ function ProductManageGridItem({ value }: ProductManageGridItemProps) {
             <div className="ratio ratio-4x3">
               <Image
                 className="card-img-top"
-                src={getProductImageUrl(value)}
+                src={value.thumbnail ?? "/placeholder.jpeg"}
                 alt="Product image."
                 layout="fill"
                 objectFit="cover"

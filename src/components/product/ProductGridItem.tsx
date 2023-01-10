@@ -10,16 +10,12 @@ import Tooltip from "../Tooltip";
 
 interface ProductGridItemProps {
   value: Product;
-  heading?: string;
+  heading?: "seller" | "category";
 }
 
 function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
   const authContext = useContext(AuthenticationContext);
   const [addingToFavorite, setAddingToFavorite] = useState(false);
-
-  function getProductImageUrl(p: Product) {
-    return p.thumbnail ?? "/placeholder.jpeg";
-  }
 
   let popular;
   let available;
@@ -73,7 +69,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
             <div className="ratio ratio-4x3">
               <Image
                 className="card-img-top"
-                src={getProductImageUrl(value)}
+                src={value.thumbnail ?? "/placeholder.jpeg"}
                 alt="Product image."
                 layout="fill"
                 objectFit="cover"

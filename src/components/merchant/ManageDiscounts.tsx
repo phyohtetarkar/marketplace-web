@@ -44,8 +44,8 @@ function DiscountRow({ value }: DiscountProps) {
 
 function ManageDiscounts({ shopId }: { shopId: number }) {
   const { data, error, isLoading } = useSWR<PageData<Discount>, Error>(
-    ["/discounts", shopId],
-    ([url, id]) => getAllDiscounts(id),
+    ["/discounts"],
+    ([url]) => getAllDiscounts(shopId),
     {
       revalidateOnFocus: false
     }

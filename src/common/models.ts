@@ -106,11 +106,11 @@ export interface ProductVariant {}
 export interface ProductVariantOption {}
 
 export interface Discount {
-  id?: number;
+  shopId?: number;
+  issuedAt?: string;
   title?: string;
   value?: string;
   type?: string;
-  shopId?: number;
 }
 
 export interface CartItem {
@@ -121,6 +121,7 @@ export interface CartItem {
 }
 
 export interface CartItemId {
+  userId?: string;
   productId: number;
-  variantId?: string | null;
+  optionPath?: string | null;
 }

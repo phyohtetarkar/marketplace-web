@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-export function formatTimestamp(timestamp: number, withTime = false) {
+export function formatTimestamp(timestamp: number | string, withTime = false) {
   let date = dayjs(timestamp);
   if (withTime) {
     return date.format("MMM DD, YYYY hh:mm A");
