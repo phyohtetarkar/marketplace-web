@@ -6,7 +6,7 @@ import "../../styles/bootstrap-custom.css";
 import "../../styles/globals.css";
 import { NextPage } from "next";
 import type { AppProps } from "next/app";
-import { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode, useEffect } from "react";
 import { Layout } from "../components/template";
 import NextNProgress from "nextjs-progressbar";
 import awsconfig from "../aws-exports";

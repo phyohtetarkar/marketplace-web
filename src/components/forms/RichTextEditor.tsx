@@ -4,6 +4,7 @@ type OnEditorChange = (newValue: string) => void;
 
 export interface RichTextEditorInputProps {
   id?: string;
+  value?: string;
   placeholder?: string;
   inline?: boolean;
   imageUploadPath?: string;
@@ -14,6 +15,7 @@ export interface RichTextEditorInputProps {
 
 function RichTextEditor({
   id,
+  value,
   placeholder = "Type here...",
   inline,
   imageUploadPath,
@@ -29,7 +31,7 @@ function RichTextEditor({
     <Editor
       id={id}
       tinymceScriptSrc={`${location.origin}/tinymce/tinymce.min.js`}
-      value=""
+      value={value}
       onEditorChange={(newValue, editor) => {
         //formik.setFieldValue("body", newValue)
         onEditorChange && onEditorChange(newValue);

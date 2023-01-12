@@ -1,28 +1,54 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useMemo } from "react";
 import useSWR from "swr";
-import { CartItem } from "../../common/models";
+import { CartItem, Shop } from "../../common/models";
 import PricingCard from "../../components/order/PricingCard";
 import ShoppingCartItem from "../../components/order/ShoppingCartItem";
 import Tooltip from "../../components/Tooltip";
 import { getCartItemsByUser } from "../../services/ShoppingCartService";
 
+interface CartGroupItem {
+  shop: Shop;
+  items: CartItem[];
+}
+
 function ShoppingCart() {
-  const { data, error, isLoading } = useSWR<[CartItem], Error>(
+  const { data, error, isLoading } = useSWR<CartItem[], Error>(
     "/profile/cart-items",
     getCartItemsByUser,
     {
-      revalidateOnFocus: false,
+      revalidateOnFocus: false
     }
   );
 
+  const group = useMemo<CartGroupItem[]>(() => {
+    const items = [] as CartGroupItem[];
+
+    if (!data || data.length === 0) {
+      return items;
+    }
+
+    const shops = new Set(data.map((item) => item.product.shop.id!));
+
+    shops.forEach((id, i) => {
+      const shopItems = data.filter((item) => item.product.shop.id === id);
+      items.push({
+        shop: shopItems[0].product.shop,
+        items: shopItems
+      });
+    });
+
+    return items;
+  }, [data]);
+
   const list = [
     [1, 2],
-    [3, 4],
+    [3, 4]
   ];
 
   let content = <div></div>;
-  if (list && list.length === 0) {
+  if (group.length === 0) {
     content = (
       <div>
         <h6 className="text-center text-muted p-3">No Product in cart.</h6>
@@ -31,19 +57,19 @@ function ShoppingCart() {
   } else {
     content = (
       <div className="vstack gap-3">
-        {list.map((pl, i) => {
+        {group.map((g, i) => {
           return (
             <div key={i} className="card shadow-sm">
               <div className="card-header bg-white py-2h border-bottom">
                 <div className="form-check">
                   <input className="form-check-input" type="checkbox"></input>
-                  <label className="form-check-label">Shop name</label>
+                  <label className="form-check-label">{g.shop.name}</label>
                 </div>
               </div>
               <div className="card-body">
                 <div className="vstack gap-3">
-                  {pl.map((p) => {
-                    return <ShoppingCartItem key={p} />;
+                  {g.items.map((item, i) => {
+                    return <ShoppingCartItem key={i} />;
                   })}
                 </div>
               </div>

@@ -1,7 +1,10 @@
+import { FormikErrors, useFormik } from "formik";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { CSSProperties, useState } from "react";
+import { useRef } from "react";
+import { ChangeEvent, CSSProperties, useState } from "react";
+import { Shop } from "../../../common/models";
 import { Input } from "../../../components/forms";
 import { RichTextEditorInputProps } from "../../../components/forms/RichTextEditor";
 
@@ -18,7 +21,14 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
   }
 );
 
-const BasicInformation = () => {
+interface FormProps {
+  values: Shop;
+  errors: FormikErrors<Shop>;
+  handleChange?: (e: ChangeEvent<any>) => void;
+  setFieldValue?: (field: string, value: any, shouldValidate?: boolean) => void;
+}
+
+const BasicInformation = (props: FormProps) => {
   return (
     <div className="card shadow-sm">
       <div className="card-header bg-white py-3 px-md-4 border-bottom">
@@ -34,6 +44,9 @@ const BasicInformation = () => {
                 name="name"
                 type="text"
                 placeholder="Enter shop name"
+                value={props.values.name ?? ""}
+                onChange={props.handleChange}
+                error={props.errors.name}
               />
             </div>
             <div className="col-lg-6">
@@ -43,6 +56,9 @@ const BasicInformation = () => {
                 name="slug"
                 type="text"
                 placeholder="your-shop-name"
+                value={props.values.slug ?? ""}
+                onChange={props.handleChange}
+                error={props.errors.slug}
               />
             </div>
           </div>
@@ -54,6 +70,10 @@ const BasicInformation = () => {
                   id="aboutInput"
                   placeholder="Enter about us..."
                   minHeight={300}
+                  value={props.values.about ?? ""}
+                  onEditorChange={(value) => {
+                    props.setFieldValue?.("about", value);
+                  }}
                 />
               </div>
             </div>
@@ -65,13 +85,17 @@ const BasicInformation = () => {
                 type="text"
                 className="mb-3"
                 placeholder="Enter shop headline"
+                value={props.values.headline ?? ""}
+                onChange={props.handleChange}
               />
               <Input
                 label="Address"
                 id="addressInput"
-                name="address"
+                name="contact.address"
                 type="text"
                 placeholder="Enter shop address"
+                value={props.values.contact?.address ?? ""}
+                onChange={props.handleChange}
               />
             </div>
           </div>
@@ -81,7 +105,31 @@ const BasicInformation = () => {
   );
 };
 
-const ShopMedia = () => {
+const ShopMedia = (props: FormProps) => {
+  const logoRef = useRef<HTMLInputElement>(null);
+  const coverRef = useRef<HTMLInputElement>(null);
+
+  function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
+    let files = event.target.files;
+    const name = event.target.name;
+    if (files && files.length > 0) {
+      let file = files[0];
+      props.setFieldValue?.(`${name}Image`, file);
+
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        props.setFieldValue?.(name, e.target?.result);
+      };
+      reader.readAsDataURL(file);
+
+      if (name === "logo" && logoRef.current) {
+        logoRef.current.value = "";
+      } else if (name === "cover" && coverRef.current) {
+        coverRef.current.value = "";
+      }
+    }
+  }
+
   return (
     <div className="card shadow-sm">
       <div className="card-header bg-white py-3 px-md-4 border-bottom">
@@ -98,14 +146,25 @@ const ShopMedia = () => {
                 role="button"
                 className="ratio ratio-1x1 border rounded"
                 style={{ width: 80 }}
+                onClick={() => {
+                  logoRef.current?.click();
+                }}
               >
                 <Image
-                  src={"/images/placeholder.jpeg"}
+                  src={props.values.logo ?? "/images/placeholder.jpeg"}
                   layout="fill"
                   objectFit="cover"
+                  className="rounded-1"
                   alt=""
                 />
-                <input className="form-control d-none" type="file" />
+                <input
+                  ref={logoRef}
+                  onChange={handleImageChange}
+                  name="logo"
+                  className="form-control d-none"
+                  type="file"
+                  accept="image/x-png,image/jpeg"
+                />
               </div>
             </div>
             <div className="col-lg-12">
@@ -114,12 +173,30 @@ const ShopMedia = () => {
                 role="button"
                 className="ratio rounded border position-relative bg-light"
                 style={{ "--bs-aspect-ratio": "20%" } as CSSProperties}
+                onClick={() => {
+                  coverRef.current?.click();
+                }}
               >
                 <div className="position-absolute text-muted top-50 start-50 translate-middle h-auto w-auto fw-medium">
                   Click here to upload
                 </div>
-                {/* <Image src={"/"} layout="fill" objectFit="cover" alt="" /> */}
-                <input className="d-none" type="file" />
+                {props.values.cover && (
+                  <Image
+                    src={props.values.cover}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-1"
+                    alt=""
+                  />
+                )}
+                <input
+                  ref={coverRef}
+                  onChange={handleImageChange}
+                  name="cover"
+                  className="d-none"
+                  type="file"
+                  accept="image/x-png,image/jpeg"
+                />
               </div>
             </div>
           </div>
@@ -131,6 +208,20 @@ const ShopMedia = () => {
 
 function CreateShop() {
   const [currentStep, setCurrentStep] = useState(1);
+
+  const formik = useFormik<Shop>({
+    initialValues: {
+      contact: {}
+    },
+    validate: async (values) => {
+      const errors: FormikErrors<Shop> = {};
+
+      return errors;
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+    onSubmit: (values) => {}
+  });
 
   const getStepView = (step: number, title: String, end: boolean = false) => {
     const active = step === currentStep;
@@ -171,9 +262,23 @@ function CreateShop() {
   const getBodyView = () => {
     switch (currentStep) {
       case 1:
-        return <BasicInformation />;
+        return (
+          <BasicInformation
+            values={formik.values}
+            errors={formik.errors}
+            handleChange={formik.handleChange}
+            setFieldValue={formik.setFieldValue}
+          />
+        );
       case 2:
-        return <ShopMedia />;
+        return (
+          <ShopMedia
+            values={formik.values}
+            errors={formik.errors}
+            handleChange={formik.handleChange}
+            setFieldValue={formik.setFieldValue}
+          />
+        );
     }
 
     return null;

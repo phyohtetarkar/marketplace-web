@@ -54,6 +54,8 @@ export interface Shop {
   cover?: string | null;
   about?: string | null;
   contact?: ShopContact | null;
+  logoImage?: File | null;
+  coverImage?: File | null;
 }
 
 export interface ShopContact {

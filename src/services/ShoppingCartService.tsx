@@ -8,7 +8,7 @@ export async function getCartItemsByUser() {
     headers: {
       Authorization: "Bearer <token>"
     }
-  }).then((res) => res.json() as Promise<[CartItem]>);
+  }).then((res) => res.json() as Promise<CartItem[]>);
 }
 
 export async function addToCart(value: CartItem) {
