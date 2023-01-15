@@ -18,6 +18,10 @@ export const AuthenticationContextProvider = ({
     Auth.currentAuthenticatedUser()
       .then((user) => {
         const attributes = user.attributes;
+        sessionStorage.setItem(
+          "accessToken",
+          user.signInUserSession.accessToken.jwtToken
+        );
         setAuthUser({
           status: "success",
           payload: {

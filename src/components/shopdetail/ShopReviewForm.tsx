@@ -9,9 +9,7 @@ const _ratings = [5, 4, 3, 2, 1];
 function ShopReviewForm() {
   const formik = useFormik<ShopReview>({
     initialValues: {
-      shopId: 0,
-      rating: 0,
-      description: ""
+      shopId: 0
     },
     validateOnBlur: false,
     validateOnChange: false,
@@ -53,9 +51,10 @@ function ShopReviewForm() {
             </div>
             <div className="col-lg-12">
               <Textarea
-                name="reviewInput"
-                placeholder="Enter your review"
-                value={formik.values.description}
+                name="description"
+                placeholder="Write your review"
+                value={formik.values.description ?? ""}
+                onChange={formik.handleChange}
               />
             </div>
           </div>

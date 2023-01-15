@@ -153,7 +153,7 @@ function ProductDetail() {
         <div className="row mb-12 g-3">
           <div className="col-lg-8">
             <div className="bg-white shadow-sm rounded h-100">
-              <Tabs defaultTabKey="description">
+              <Tabs defaultTabKey="description" className="border-bottom">
                 <Tabs.Tab tabKey="description" title="Description">
                   <div
                     className="p-3"

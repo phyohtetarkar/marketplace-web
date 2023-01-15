@@ -10,12 +10,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useState } from "react";
 import { Shop } from "../../common/models";
-import Accordion from "../../components/Accordion";
 import Rating from "../../components/Rating";
 import AboutUs from "../../components/shopdetail/AboutUs";
 import ShopBranchListing from "../../components/shopdetail/ShopBranchListing";
 import ShopProductListing from "../../components/shopdetail/ShopProductListing";
 import ShopReviewListing from "../../components/shopdetail/ShopReviewListing";
+import Tabs from "../../components/Tabs";
 
 type PageTab = "products" | "branches" | "reviews" | "about-us";
 
@@ -163,23 +163,25 @@ function ShopHome({ shop }: { shop: Shop }) {
                 <Image
                   src={shop.cover!}
                   alt=""
-                  layout="fill"
                   objectFit="cover"
+                  layout="fill"
                   priority
                 />
               </div>
-              <div className="row p-3 py-sm-4">
+              <div className="row p-3 py-sm-4" style={{ zIndex: 999 }}>
                 <div className="col">
                   <div className="hstack">
                     <div className="flex-shrink-0 mt-n6">
-                      <Image
-                        src={shop.logo!}
-                        width={100}
-                        height={100}
-                        alt=""
-                        className="rounded border border-4 border-white"
-                        objectFit="cover"
-                      />
+                      <div className="bg-white p-1 pb-0 rounded">
+                        <Image
+                          src={shop.logo!}
+                          width={100}
+                          height={100}
+                          alt=""
+                          className="rounded-1"
+                          objectFit="cover"
+                        />
+                      </div>
                     </div>
                     <div className="ms-2 flex-column mt-n2 mt-sm-n3 d-none d-md-flex">
                       {heading}
@@ -220,11 +222,36 @@ function ShopHome({ shop }: { shop: Shop }) {
                   </div>
                 </div>
               </div>
+              <div className="border-top">
+                <Tabs
+                  defaultTabKey="products"
+                  onTabChange={(key) => {
+                    setActiveTab(key as PageTab);
+                  }}
+                >
+                  <Tabs.Tab tabKey="products" title="Products">
+                    <div></div>
+                  </Tabs.Tab>
+                  <Tabs.Tab tabKey="reviews" title="Reviews">
+                    <div></div>
+                  </Tabs.Tab>
+                  <Tabs.Tab tabKey="branches" title="Branches">
+                    <div></div>
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                    tabKey="about-us"
+                    title="About us"
+                    tabClassName="text-nowrap"
+                  >
+                    <div></div>
+                  </Tabs.Tab>
+                </Tabs>
+              </div>
             </div>
           </div>
         </div>
         <div className="row py-4 g-4">
-          <div className="col-lg-3">
+          {/* <div className="col-lg-3">
             <div className="card shadow-sm d-none d-lg-block">
               <div className="card-body">{menus}</div>
             </div>
@@ -240,8 +267,8 @@ function ShopHome({ shop }: { shop: Shop }) {
                 <div className="p-2h">{menus}</div>
               </Accordion>
             </div>
-          </div>
-          <div className="col-lg-9">{activeContent()}</div>
+          </div> */}
+          <div className="col-12">{activeContent()}</div>
         </div>
       </div>
     </div>

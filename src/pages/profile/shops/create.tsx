@@ -2,11 +2,11 @@ import { FormikErrors, useFormik } from "formik";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
-import { ChangeEvent, CSSProperties, useState } from "react";
+import { ChangeEvent, CSSProperties, useRef, useState } from "react";
 import { Shop } from "../../../common/models";
 import { Input } from "../../../components/forms";
 import { RichTextEditorInputProps } from "../../../components/forms/RichTextEditor";
+import { existsShopBySlug } from "../../../services/ShopService";
 
 const _steps = [
   { step: 1, title: "Basic information" },
@@ -45,7 +45,13 @@ const BasicInformation = (props: FormProps) => {
                 type="text"
                 placeholder="Enter shop name"
                 value={props.values.name ?? ""}
-                onChange={props.handleChange}
+                onChange={(evt) => {
+                  const slug = evt.target.value
+                    .replace(/\s+/g, "-")
+                    .toLowerCase();
+                  props.setFieldValue?.("slug", slug);
+                  props.handleChange?.(evt);
+                }}
                 error={props.errors.name}
               />
             </div>
@@ -208,6 +214,7 @@ const ShopMedia = (props: FormProps) => {
 
 function CreateShop() {
   const [currentStep, setCurrentStep] = useState(1);
+  const [validating, setValidating] = useState(false);
 
   const formik = useFormik<Shop>({
     initialValues: {
@@ -215,6 +222,23 @@ function CreateShop() {
     },
     validate: async (values) => {
       const errors: FormikErrors<Shop> = {};
+
+      if (!values.name || values.name.length === 0) {
+        errors.name = "Please enter shop name";
+      }
+
+      if (!values.slug || values.slug.length === 0) {
+        errors.slug = "Please enter shop slug";
+      } else {
+        try {
+          const isExist = await existsShopBySlug(values.slug);
+          if (isExist) {
+            errors.slug = "Shop slug already in use";
+          }
+        } catch (error: any) {
+          errors.slug = "Error checking, please try again";
+        }
+      }
 
       return errors;
     },
@@ -226,11 +250,7 @@ function CreateShop() {
   const getStepView = (step: number, title: String, end: boolean = false) => {
     const active = step === currentStep;
     return (
-      <div
-        className="row gx-2 align-items-center"
-        role="button"
-        onClick={() => setCurrentStep(step)}
-      >
+      <div className="row gx-2 align-items-center" onClick={() => {}}>
         <div
           className={`col-auto rounded-circle d-flex align-items-center justify-content-center ${
             active ? "bg-primary text-light" : "bg-light-gray"
@@ -284,6 +304,8 @@ function CreateShop() {
     return null;
   };
 
+  const createShop = (shop: Shop) => {};
+
   return (
     <div className="pb-5">
       <div className="bg-primary mb-3">
@@ -308,9 +330,11 @@ function CreateShop() {
             </div>
             <div className="col-lg-6">
               <div className="hstack h-100">
-                <button className="btn btn-light py-2 px-3 ms-lg-auto">
-                  Back to shops
-                </button>
+                <Link href="/profile/shops">
+                  <a className="btn btn-light py-2 px-3 ms-lg-auto">
+                    Back to shops
+                  </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -382,13 +406,43 @@ function CreateShop() {
             {currentStep < _steps.length && (
               <button
                 className="btn btn-primary px-3 py-2"
-                onClick={() => setCurrentStep((s) => s + 1)}
+                disabled={validating}
+                onClick={async () => {
+                  setValidating(true);
+                  const errors = await formik.validateForm();
+                  if (Object.keys(errors).length === 0) {
+                    setCurrentStep((s) => s + 1);
+                  }
+                  setValidating(false);
+                }}
               >
+                {validating && (
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                )}
                 Next
               </button>
             )}
             {currentStep === _steps.length && (
-              <button className="btn btn-danger px-3 py-2">Create shop</button>
+              <button
+                className="btn btn-danger px-3 py-2"
+                disabled={formik.isSubmitting}
+                onClick={() => {
+                  formik.submitForm();
+                }}
+              >
+                {formik.isSubmitting && (
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                )}
+                Create shop
+              </button>
             )}
           </div>
         </div>

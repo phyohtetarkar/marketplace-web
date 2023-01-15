@@ -46,7 +46,7 @@ function ShopSetting() {
   return (
     <div>
       <div className="bg-white rounded h-100 shadow-sm">
-        <Tabs defaultTabKey="general">
+        <Tabs defaultTabKey="general" className="border-bottom">
           <Tabs.Tab tabKey="general" title="General">
             <ShopGeneralForm />
           </Tabs.Tab>

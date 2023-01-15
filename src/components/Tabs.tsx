@@ -10,6 +10,8 @@ interface TabProps {
 
 interface TabsProps {
   defaultTabKey: string;
+  className?: string;
+  onTabChange?: (key: string) => void;
   children: ReactElement<TabProps>[];
 }
 
@@ -17,12 +19,16 @@ function Tab(props: TabProps) {
   return <div></div>;
 }
 
-function Tabs({ defaultTabKey, children }: TabsProps) {
+function Tabs({ defaultTabKey, className, onTabChange, children }: TabsProps) {
   const [activeTabKey, setActiveTabKey] = useState(defaultTabKey);
 
   return (
     <>
-      <ul className="nav nav-pills flex-nowrap border-bottom overflow-auto">
+      <ul
+        className={`nav nav-pills flex-nowrap overflow-auto scrollbar-none ${
+          className ?? ""
+        }`}
+      >
         {children.map((c) => {
           const { tabKey, title, disabled, tabClassName } = c.props;
           const active = activeTabKey === tabKey;
@@ -34,7 +40,10 @@ function Tabs({ defaultTabKey, children }: TabsProps) {
                   className={`nav-link py-3 ${active ? "active" : ""} ${
                     tabClassName ?? ""
                   } ${disabled ? "disabled" : ""}`}
-                  onClick={() => setActiveTabKey(tabKey)}
+                  onClick={() => {
+                    onTabChange?.(tabKey);
+                    setActiveTabKey(tabKey);
+                  }}
                 >
                   {title}
                 </button>

@@ -48,6 +48,10 @@ function Pagination(props: PaginationProps) {
     return pages;
   }, [currentPage, totalPage]);
 
+  if (totalPage <= 1) {
+    return null;
+  }
+
   return (
     <nav aria-label="Pagination">
       <ul className="pagination mb-0">

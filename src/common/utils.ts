@@ -71,3 +71,7 @@ export function buildQueryParams(params: any) {
 
   return query;
 }
+
+export function getAuthHeader() {
+  return "Bearer " + sessionStorage?.getItem("accessToken") ?? "";
+}

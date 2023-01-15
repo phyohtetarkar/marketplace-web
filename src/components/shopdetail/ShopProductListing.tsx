@@ -25,12 +25,12 @@ function ShopProductListing({ shopId }: { shopId: number }) {
             id="searchInput"
             name="search"
             type="text"
-            placeholder="Search your products"
+            placeholder="Search products"
           />
         </div>
       </div>
 
-      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 py-3">
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3 py-3">
         {data?.contents &&
           data?.contents.map((p, i) => {
             return (

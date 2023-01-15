@@ -1,5 +1,5 @@
 import { PageData, ShopReview } from "../common/models";
-import { buildQueryParams } from "../common/utils";
+import { buildQueryParams, getAuthHeader } from "../common/utils";
 
 const basePath = "shop-reviews";
 
@@ -10,7 +10,7 @@ export async function postReview(value: ShopReview) {
     body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   });
 }

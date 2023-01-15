@@ -186,14 +186,16 @@ function ShopDetail({ shop }: { shop: Shop }) {
                 <div className="col">
                   <div className="hstack flex-wrap gap-2">
                     <div className="flex-shrink-0 mt-n9">
-                      <Image
-                        src={image}
-                        width={100}
-                        height={100}
-                        alt=""
-                        className="border rounded border-white border-4"
-                        objectFit="cover"
-                      />
+                      <div className="bg-white p-1 pb-0 rounded">
+                        <Image
+                          src={image}
+                          width={100}
+                          height={100}
+                          alt=""
+                          className="rounded-1"
+                          objectFit="cover"
+                        />
+                      </div>
                     </div>
                     <div className="ms-2 d-flex flex-column mt-n2 mt-sm-n3 d-none d-md-flex">
                       {heading}
