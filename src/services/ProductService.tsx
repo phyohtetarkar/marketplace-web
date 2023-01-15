@@ -1,5 +1,5 @@
 import { PageData, Product } from "../common/models";
-import { buildQueryParams } from "../common/utils";
+import { buildQueryParams, getAuthHeader } from "../common/utils";
 
 const basePath = "products";
 
@@ -26,7 +26,7 @@ export async function deleteProduct(id: number) {
   await fetch(url, {
     method: "DELETE",
     headers: {
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   });
 }
@@ -37,7 +37,7 @@ export async function findAllProducts(value: ProductQuery) {
   const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}${query}`;
   return fetch(url, {
     headers: {
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   }).then((res) => res.json() as Promise<PageData<Product>>);
 }

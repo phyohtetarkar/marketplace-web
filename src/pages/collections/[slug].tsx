@@ -131,6 +131,16 @@ function Collection() {
                 </div>
               );
             })}
+          <div className="mt-4 d-flex justify-content-end">
+            {/* <button className="btn btn-outline-primary rounded-pill">
+                    Load more products
+                  </button> */}
+
+            <Pagination
+              currentPage={data?.currentPage}
+              totalPage={data?.totalPage}
+            />
+          </div>
         </div>
       </>
     );
@@ -181,13 +191,6 @@ function Collection() {
               </div>
             </div>
             {content()}
-            <div className="mt-4 d-flex justify-content-end">
-              {/* <button className="btn btn-outline-primary rounded-pill">
-                    Load more products
-                  </button> */}
-
-              <Pagination />
-            </div>
           </div>
         </div>
       </div>

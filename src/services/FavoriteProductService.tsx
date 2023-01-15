@@ -1,5 +1,5 @@
 import { PageData, Product } from "../common/models";
-import { buildQueryParams } from "../common/utils";
+import { buildQueryParams, getAuthHeader } from "../common/utils";
 
 const basePath = "profile";
 
@@ -10,7 +10,7 @@ export async function getFavoriteProducts(page?: number) {
   const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/favorite-products${query}`;
   return fetch(url, {
     headers: {
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   }).then((rest) => rest.json() as Promise<PageData<Product>>);
 }
@@ -23,7 +23,7 @@ export async function addToFavoriteProduct(productId: number) {
   await fetch(url, {
     method: "POST",
     headers: {
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   })
 }
@@ -36,7 +36,7 @@ export async function deleteFavoriteProduct(id: number) {
   await fetch(url, {
     method: "DELETE",
     headers: {
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   })
 }
