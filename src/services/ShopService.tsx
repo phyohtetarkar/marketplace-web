@@ -1,5 +1,5 @@
 import { PageData, Shop, ShopContact, ShopGeneral } from "../common/models";
-import { buildQueryParams } from "../common/utils";
+import { buildQueryParams, getAuthHeader } from "../common/utils";
 
 const basePath = "shops";
 
@@ -10,7 +10,7 @@ export async function getShops(page?: number) {
   const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}${query}`;
   return fetch(url, {
     headers: {
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   }).then((rest) => rest.json() as Promise<PageData<Shop>>);
 }
@@ -23,7 +23,7 @@ export async function updateShopGeneral(value: ShopGeneral) {
     body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   });
 }
@@ -36,7 +36,7 @@ export async function updateShopContact(value: ShopContact) {
     body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   });
 }

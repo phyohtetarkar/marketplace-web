@@ -20,7 +20,7 @@ export async function deleteReview(shopId: number) {
   await fetch(url, {
     method: "DELETE",
     headers: {
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   });
 }
@@ -37,7 +37,7 @@ export async function getReviews(
   const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${shopId}${query}`;
   return fetch(url, {
     headers: {
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   }).then((res) => res.json() as Promise<PageData<ShopReview>>);
 }

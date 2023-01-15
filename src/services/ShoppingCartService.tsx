@@ -1,4 +1,5 @@
 import { CartItem, CartItemId } from "../common/models";
+import { getAuthHeader } from "../common/utils";
 
 const basePath = "cart-items";
 
@@ -6,7 +7,7 @@ export async function getCartItemsByUser() {
   const url = process.env.NEXT_PUBLIC_API_URL + basePath;
   return fetch(url, {
     headers: {
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   }).then((res) => res.json() as Promise<CartItem[]>);
 }
@@ -18,7 +19,7 @@ export async function addToCart(value: CartItem) {
     body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   });
 }
@@ -30,7 +31,7 @@ export async function updateQuantity(value: CartItem) {
     body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   });
 }
@@ -41,7 +42,7 @@ export async function removeFromCart(ids: [CartItemId]) {
     method: "DELETE",
     body: JSON.stringify(ids),
     headers: {
-      Authorization: "Bearer <token>"
+      Authorization: getAuthHeader()
     }
   });
 }
