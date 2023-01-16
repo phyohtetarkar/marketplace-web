@@ -18,7 +18,7 @@ Amplify.configure({
   Auth: {
     ...awsconfig,
     cookieStorage: {
-      domain: "localhost",
+      domain: process.env.NEXT_PUBLIC_DOMAIN,
       path: "/",
       expires: 365,
       sameSite: "strict",

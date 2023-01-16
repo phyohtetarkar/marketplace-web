@@ -15,6 +15,7 @@ interface AutocompleteSelectProps<T = string, Key = string> {
   getOptionValue: (op: T) => Key;
   formatOptionLabel?: (op: T, selected: boolean) => ReactNode;
   formatSelectedOption?: (op: T) => string;
+  skipOption?: (op: T) => boolean;
   onChange?: (newValue: T) => void;
 }
 
@@ -40,8 +41,8 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
   const [selectedOption, setSelectedOption] = useState(() => {
     if (props.defaultValue) {
       return {
-        key: props.getOptionValue(props.defaultValue),
-        value: props.defaultValue
+        key: props.getOptionValue(props.defaultValue!),
+        value: props.defaultValue! as T
       };
     }
     return null;
@@ -110,7 +111,7 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
                 {open && (
                   <Input
                     height={44}
-                    value={filter}
+                    value={filter ?? ""}
                     onChange={(e) => setFilter(e.target.value)}
                     autoFocus={true}
                   />
@@ -131,6 +132,10 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
                       props.onChange?.(v);
                     }
                   };
+
+                  if (props.skipOption?.(v) ?? false) {
+                    return null;
+                  }
 
                   if (props.formatOptionLabel) {
                     return (

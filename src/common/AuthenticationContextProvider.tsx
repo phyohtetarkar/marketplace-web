@@ -18,10 +18,10 @@ export const AuthenticationContextProvider = ({
     Auth.currentAuthenticatedUser()
       .then((user) => {
         const attributes = user.attributes;
-        sessionStorage.setItem(
-          "accessToken",
-          user.signInUserSession.accessToken.jwtToken
-        );
+        // sessionStorage.setItem(
+        //   "accessToken",
+        //   user.signInUserSession.accessToken.jwtToken
+        // );
         setAuthUser({
           status: "success",
           payload: {
@@ -85,10 +85,10 @@ export const AuthenticationContextProvider = ({
       }
     };
 
-    Hub.listen("auth", listener);
+    const cancelAuth = Hub.listen("auth", listener);
 
     return () => {
-      Hub.remove("auth", listener);
+      cancelAuth();
     };
   }, []);
 

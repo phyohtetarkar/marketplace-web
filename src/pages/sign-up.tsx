@@ -163,7 +163,7 @@ function Register() {
                     Sign up
                   </button>
                 </div>
-                <div className="col-md-12 mb-2">
+                {/* <div className="col-md-12 mb-2">
                   <div className="row g-2">
                     <div className="col">
                       <hr className="text-muted" />
@@ -175,9 +175,9 @@ function Register() {
                       <hr className="text-muted" />
                     </div>
                   </div>
-                </div>
+                </div> */}
 
-                <div className="col-md-12">
+                {/* <div className="col-md-12">
                   <div className="hstack gap-2 align-items-center">
                     <button
                       type="button"
@@ -207,7 +207,7 @@ function Register() {
                       <span className="text-dark ms-1">Google</span>
                     </button>
                   </div>
-                </div>
+                </div> */}
               </form>
             </div>
             <div className="text-center p-3 card-footer">

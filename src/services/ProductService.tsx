@@ -1,5 +1,9 @@
 import { PageData, Product } from "../common/models";
-import { buildQueryParams, getAuthHeader } from "../common/utils";
+import {
+  buildQueryParams,
+  getAPIBasePath,
+  getAuthHeader
+} from "../common/utils";
 
 const basePath = "products";
 
@@ -12,21 +16,21 @@ export interface ProductQuery {
 }
 
 export async function getProductBySlug(slug: String) {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${slug}`;
+  const url = `${getAPIBasePath()}${basePath}/${slug}`;
   return fetch(url).then((rest) => rest.json() as Promise<Product>);
 }
 
 export async function existsProductBySlug(slug: String) {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${slug}/exists`;
+  const url = `${getAPIBasePath()}${basePath}/${slug}/exists`;
   return fetch(url).then((rest) => rest.json() as Promise<boolean>);
 }
 
 export async function deleteProduct(id: number) {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${id}`;
+  const url = `${getAPIBasePath()}${basePath}/${id}`;
   await fetch(url, {
     method: "DELETE",
     headers: {
-      Authorization: getAuthHeader()
+      Authorization: await getAuthHeader()
     }
   });
 }
@@ -34,10 +38,6 @@ export async function deleteProduct(id: number) {
 export async function findAllProducts(value: ProductQuery) {
   const query = buildQueryParams(value);
 
-  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}${query}`;
-  return fetch(url, {
-    headers: {
-      Authorization: getAuthHeader()
-    }
-  }).then((res) => res.json() as Promise<PageData<Product>>);
+  const url = `${getAPIBasePath()}${basePath}${query}`;
+  return fetch(url).then((res) => res.json() as Promise<PageData<Product>>);
 }

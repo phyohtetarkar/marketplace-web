@@ -1,34 +1,38 @@
 import { Discount, PageData } from "../common/models";
-import { buildQueryParams, getAuthHeader } from "../common/utils";
+import {
+  buildQueryParams,
+  getAPIBasePath,
+  getAuthHeader
+} from "../common/utils";
 
 const basePath = "discounts";
 
 export async function saveDiscount(value: Discount) {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}`;
+  const url = `${getAPIBasePath()}${basePath}`;
   await fetch(url, {
     method: (value.shopId ?? 0) > 0 && !value.issuedAt ? "PUT" : "POST",
     body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",
-      Authorization: getAuthHeader()
+      Authorization: await getAuthHeader()
     }
   });
 }
 export async function deleteDiscount(shopId: number, issuedAt: String) {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${shopId}/${issuedAt}`;
+  const url = `${getAPIBasePath()}${basePath}/${shopId}/${issuedAt}`;
   await fetch(url, {
     method: "DELETE",
     headers: {
-      Authorization: getAuthHeader()
+      Authorization: await getAuthHeader()
     }
   });
 }
 
 export async function getDiscountById(shopId: number, issuedAt: String) {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}/${shopId}/${issuedAt}`;
+  const url = `${getAPIBasePath()}${basePath}/${shopId}/${issuedAt}`;
   return fetch(url, {
     headers: {
-      Authorization: getAuthHeader()
+      Authorization: await getAuthHeader()
     }
   }).then((res) => res.json() as Promise<Discount>);
 }
@@ -39,10 +43,10 @@ export async function getAllDiscounts(shopId: number, page?: number) {
     page: page
   });
 
-  const url = `${process.env.NEXT_PUBLIC_API_URL}${basePath}${query}`;
+  const url = `${getAPIBasePath()}${basePath}${query}`;
   return fetch(url, {
     headers: {
-      Authorization: getAuthHeader()
+      Authorization: await getAuthHeader()
     }
   }).then((res) => res.json() as Promise<PageData<Discount>>);
 }

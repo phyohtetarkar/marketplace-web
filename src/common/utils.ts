@@ -1,3 +1,4 @@
+import { Auth } from "aws-amplify";
 import dayjs from "dayjs";
 
 export function formatTimestamp(timestamp: number | string, withTime = false) {
@@ -62,16 +63,26 @@ export function buildQueryParams(params: any) {
   let query = "";
 
   for (const p in params) {
-    if (!params[0]) {
+    if (params[p] === undefined || params[p] === null) {
       continue;
     }
     const delimiter = query.length > 0 ? "&" : "?";
-    query.concat(delimiter + `${p}=${params[p]}`);
+    query += delimiter + `${p}=${params[p]}`;
   }
 
   return query;
 }
 
-export function getAuthHeader() {
-  return "Bearer " + sessionStorage?.getItem("accessToken") ?? "";
+export function getAPIBasePath() {
+  return process.env.NEXT_PUBLIC_API_URL ?? "";
+}
+
+export async function getAuthHeader() {
+  try {
+    const accessToken = (await Auth.currentSession())
+      .getAccessToken()
+      .getJwtToken();
+    return "Bearer " + accessToken;
+  } catch (error) {}
+  return "Bearer ";
 }
