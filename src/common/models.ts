@@ -75,6 +75,7 @@ export interface ShopGeneral {
 }
 
 export interface ShopReview {
+  id?: string;
   shopId?: number;
   rating?: number;
   description?: string;
@@ -108,22 +109,18 @@ export interface ProductVariant {}
 export interface ProductVariantOption {}
 
 export interface Discount {
+  id?: string;
   shopId?: number;
-  issuedAt?: string;
   title?: string;
   value?: string;
   type?: string;
 }
 
 export interface CartItem {
-  id: CartItemId;
+  id?: string;
+  productId: number;
+  variantId?: string;
   quantity: number;
   product: Product;
   variant?: ProductVariant | null;
-}
-
-export interface CartItemId {
-  userId?: string;
-  productId: number;
-  optionPath?: string | null;
 }
