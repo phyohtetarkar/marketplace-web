@@ -12,11 +12,17 @@ export async function getFavoriteProducts(page?: number) {
     page: page
   });
   const url = `${getAPIBasePath()}${basePath}/favorite-products${query}`;
-  return fetch(url, {
+  const resp = await fetch(url, {
     headers: {
       Authorization: await getAuthHeader()
     }
-  }).then((rest) => rest.json() as Promise<PageData<Product>>);
+  });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+
+  return resp.json() as Promise<PageData<Product>>;
 }
 
 export async function addToFavoriteProduct(productId: number) {
@@ -24,12 +30,16 @@ export async function addToFavoriteProduct(productId: number) {
     "product-id": productId
   });
   const url = `${getAPIBasePath()}${basePath}/favorite-products?${query}`;
-  await fetch(url, {
+  const resp = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: await getAuthHeader()
     }
   });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
 }
 
 export async function deleteFavoriteProduct(id: number) {
@@ -37,10 +47,13 @@ export async function deleteFavoriteProduct(id: number) {
     "product-id": id
   });
   const url = `${getAPIBasePath()}${basePath}/favorite-products?${query}`;
-  await fetch(url, {
+  const resp = await fetch(url, {
     method: "DELETE",
     headers: {
       Authorization: await getAuthHeader()
     }
   });
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
 }

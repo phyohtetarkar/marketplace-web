@@ -17,27 +17,49 @@ export interface ProductQuery {
 
 export async function getProductBySlug(slug: String) {
   const url = `${getAPIBasePath()}${basePath}/${slug}`;
-  return fetch(url).then((rest) => rest.json() as Promise<Product>);
+  const resp = await fetch(url);
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+
+  return resp.json() as Promise<Product>;
 }
 
 export async function existsProductBySlug(slug: String) {
   const url = `${getAPIBasePath()}${basePath}/${slug}/exists`;
-  return fetch(url).then((rest) => rest.json() as Promise<boolean>);
+  const resp = await fetch(url);
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+
+  return resp.json() as Promise<boolean>;
 }
 
 export async function deleteProduct(id: number) {
   const url = `${getAPIBasePath()}${basePath}/${id}`;
-  await fetch(url, {
+  const resp = await fetch(url, {
     method: "DELETE",
     headers: {
       Authorization: await getAuthHeader()
     }
   });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
 }
 
 export async function findAllProducts(value: ProductQuery) {
   const query = buildQueryParams(value);
 
   const url = `${getAPIBasePath()}${basePath}${query}`;
-  return fetch(url).then((res) => res.json() as Promise<PageData<Product>>);
+  const resp = await fetch(url);
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+
+  return resp.json() as Promise<PageData<Product>>;
 }

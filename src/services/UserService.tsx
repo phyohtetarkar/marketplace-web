@@ -9,7 +9,7 @@ const basePath = "profile";
 
 export async function updateProfile(value: User) {
   const url = `${getAPIBasePath()}${basePath}`;
-  await fetch(url, {
+  const resp = await fetch(url, {
     method: "PUT",
     body: JSON.stringify(value),
     headers: {
@@ -17,15 +17,25 @@ export async function updateProfile(value: User) {
       Authrization: await getAuthHeader()
     }
   });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
 }
 
 export async function getLoginUser() {
   const url = `${getAPIBasePath()}${basePath}`;
-  return fetch(url, {
+  const resp = await fetch(url, {
     headers: {
       Authorization: await getAuthHeader()
     }
-  }).then((rest) => rest.json() as Promise<User>);
+  });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+
+  return resp.json() as Promise<User>;
 }
 
 export async function getMyShops(page?: number) {
@@ -33,9 +43,15 @@ export async function getMyShops(page?: number) {
     page: page
   });
   const url = `${getAPIBasePath()}${basePath}/shops${query}`;
-  return fetch(url, {
+  const resp = await fetch(url, {
     headers: {
       Authorization: await getAuthHeader()
     }
-  }).then((rest) => rest.json() as Promise<PageData<Shop>>);
+  });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+
+  return resp.json() as Promise<PageData<Shop>>;
 }
