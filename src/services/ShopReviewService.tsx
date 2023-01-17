@@ -9,7 +9,7 @@ const basePath = "shop-reviews";
 
 export async function postReview(value: ShopReview) {
   const url = `${getAPIBasePath()}${basePath}`;
-  await fetch(url, {
+  const resp = await fetch(url, {
     method: "POST",
     body: JSON.stringify(value),
     headers: {
@@ -17,16 +17,24 @@ export async function postReview(value: ShopReview) {
       Authorization: await getAuthHeader()
     }
   });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
 }
 
 export async function deleteReview(shopId: number) {
   const url = `${getAPIBasePath()}${basePath}/${shopId}`;
-  await fetch(url, {
+  const resp = await fetch(url, {
     method: "DELETE",
     headers: {
       Authorization: await getAuthHeader()
     }
   });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
 }
 
 export async function getReviews(
@@ -39,5 +47,11 @@ export async function getReviews(
     page: page
   });
   const url = `${getAPIBasePath()}${basePath}/${shopId}${query}`;
-  return fetch(url).then((res) => res.json() as Promise<PageData<ShopReview>>);
+  const resp = await fetch(url);
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+
+  return resp.json() as Promise<PageData<ShopReview>>;
 }

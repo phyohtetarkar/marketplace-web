@@ -25,8 +25,7 @@ function ShopGeneralForm() {
         errors.slug = "Please enter shop slug";
       } else {
         try {
-          const isExist = await existsShopBySlug(values.slug);
-          if (isExist) {
+          if (await existsShopBySlug(values.slug, values.shopId ?? 0)) {
             errors.slug = "Shop slug already in use";
           }
         } catch (error: any) {

@@ -231,12 +231,13 @@ function CreateShop() {
         errors.slug = "Please enter shop slug";
       } else {
         try {
-          const isExist = await existsShopBySlug(values.slug);
-          if (isExist) {
+          if (await existsShopBySlug(values.slug, values.id ?? 0)) {
             errors.slug = "Shop slug already in use";
           }
         } catch (error: any) {
-          errors.slug = "Error checking, please try again";
+          if (error?.status !== 404) {
+            errors.slug = "Error checking, please try again";
+          }
         }
       }
 

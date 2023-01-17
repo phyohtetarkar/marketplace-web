@@ -3,5 +3,11 @@ import { getAPIBasePath } from "../common/utils";
 
 export async function getAllBanners() {
   const url = getAPIBasePath() + "banners";
-  return fetch(url).then((res) => res.json() as Promise<Banner[]>);
+  const resp = await fetch(url);
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+
+  return resp.json() as Promise<Banner[]>;
 }

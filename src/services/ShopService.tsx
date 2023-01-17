@@ -12,17 +12,23 @@ export async function getShops(page?: number) {
     page: page
   });
   const url = `${getAPIBasePath()}${basePath}${query}`;
-  return fetch(url, {
+  const resp = await fetch(url, {
     headers: {
       Authorization: await getAuthHeader()
     }
-  }).then((rest) => rest.json() as Promise<PageData<Shop>>);
+  });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+
+  return resp.json() as Promise<PageData<Shop>>;
 }
 
 export async function updateShopGeneral(value: ShopGeneral) {
   const url = `${getAPIBasePath()}${basePath}/${value.shopId}/general`;
 
-  await fetch(url, {
+  const resp = await fetch(url, {
     method: "PUT",
     body: JSON.stringify(value),
     headers: {
@@ -30,12 +36,16 @@ export async function updateShopGeneral(value: ShopGeneral) {
       Authorization: await getAuthHeader()
     }
   });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
 }
 
 export async function updateShopContact(value: ShopContact) {
   const url = `${getAPIBasePath()}${basePath}/${value.id}/contact`;
 
-  await fetch(url, {
+  const resp = await fetch(url, {
     method: "PUT",
     body: JSON.stringify(value),
     headers: {
@@ -43,14 +53,32 @@ export async function updateShopContact(value: ShopContact) {
       Authorization: await getAuthHeader()
     }
   });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
 }
 
 export async function getShopBySlug(slug: String) {
   const url = `${getAPIBasePath()}${basePath}/${slug}`;
-  return fetch(url).then((res) => res.json() as Promise<Shop>);
+  const resp = await fetch(url);
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+  return resp.json() as Promise<Shop>;
 }
 
-export async function existsShopBySlug(slug: String) {
-  const url = `${getAPIBasePath()}${basePath}/${slug}/exists`;
-  return fetch(url).then((res) => res.json() as Promise<boolean>);
+export async function existsShopBySlug(slug: String, excludeId: number) {
+  const query = buildQueryParams({
+    exclude: excludeId
+  });
+  const url = `${getAPIBasePath()}${basePath}/${slug}/exists${query}`;
+  const resp = await fetch(url);
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+
+  return resp.json() as Promise<boolean>;
 }

@@ -8,10 +8,25 @@ export async function getAllCategories(flat: boolean) {
     flat: flat
   });
   const url = `${getAPIBasePath()}${basePath}/structural${query}`;
-  return fetch(url).then((res) => res.json() as Promise<Category[]>);
+  const resp = await fetch(url);
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+
+  return resp.json() as Promise<Category[]>;
 }
 
-export async function existsCateogryBySlug(slug: String) {
-  const url = `${getAPIBasePath()}${basePath}/${slug}/exists`;
-  return fetch(url).then((res) => res.json() as Promise<boolean>);
+export async function existsCateogryBySlug(slug: String, excludeId: number) {
+  const query = buildQueryParams({
+    exclude: excludeId
+  });
+  const url = `${getAPIBasePath()}${basePath}/${slug}/exists${query}`;
+  const resp = await fetch(url);
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+
+  return resp.json() as Promise<boolean>;
 }

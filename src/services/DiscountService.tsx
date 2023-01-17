@@ -9,7 +9,7 @@ const basePath = "discounts";
 
 export async function saveDiscount(value: Discount) {
   const url = `${getAPIBasePath()}${basePath}`;
-  await fetch(url, {
+  const resp = await fetch(url, {
     method: (value.shopId ?? 0) > 0 && !value.issuedAt ? "PUT" : "POST",
     body: JSON.stringify(value),
     headers: {
@@ -17,24 +17,39 @@ export async function saveDiscount(value: Discount) {
       Authorization: await getAuthHeader()
     }
   });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
 }
+
 export async function deleteDiscount(shopId: number, issuedAt: String) {
   const url = `${getAPIBasePath()}${basePath}/${shopId}/${issuedAt}`;
-  await fetch(url, {
+  const resp = await fetch(url, {
     method: "DELETE",
     headers: {
       Authorization: await getAuthHeader()
     }
   });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
 }
 
 export async function getDiscountById(shopId: number, issuedAt: String) {
   const url = `${getAPIBasePath()}${basePath}/${shopId}/${issuedAt}`;
-  return fetch(url, {
+  const resp = await fetch(url, {
     headers: {
       Authorization: await getAuthHeader()
     }
-  }).then((res) => res.json() as Promise<Discount>);
+  });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+
+  return resp.json() as Promise<Discount>;
 }
 
 export async function getAllDiscounts(shopId: number, page?: number) {
@@ -44,9 +59,15 @@ export async function getAllDiscounts(shopId: number, page?: number) {
   });
 
   const url = `${getAPIBasePath()}${basePath}${query}`;
-  return fetch(url, {
+  const resp = await fetch(url, {
     headers: {
       Authorization: await getAuthHeader()
     }
-  }).then((res) => res.json() as Promise<PageData<Discount>>);
+  });
+
+  if (!resp.ok) {
+    throw Error(await resp.text());
+  }
+
+  return resp.json() as Promise<PageData<Discount>>;
 }
