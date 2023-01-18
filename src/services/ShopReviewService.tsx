@@ -23,8 +23,8 @@ export async function postReview(value: ShopReview) {
   }
 }
 
-export async function deleteReview(shopId: number) {
-  const url = `${getAPIBasePath()}${basePath}/${shopId}`;
+export async function deleteReview(id: String) {
+  const url = `${getAPIBasePath()}${basePath}/${id}`;
   const resp = await fetch(url, {
     method: "DELETE",
     headers: {

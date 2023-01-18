@@ -10,7 +10,7 @@ const basePath = "discounts";
 export async function saveDiscount(value: Discount) {
   const url = `${getAPIBasePath()}${basePath}`;
   const resp = await fetch(url, {
-    method: (value.shopId ?? 0) > 0 && !value.issuedAt ? "PUT" : "POST",
+    method: (value.shopId ?? 0) > 0 ? "PUT" : "POST",
     body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",
@@ -23,8 +23,8 @@ export async function saveDiscount(value: Discount) {
   }
 }
 
-export async function deleteDiscount(shopId: number, issuedAt: String) {
-  const url = `${getAPIBasePath()}${basePath}/${shopId}/${issuedAt}`;
+export async function deleteDiscount(id: String) {
+  const url = `${getAPIBasePath()}${basePath}/${id}`;
   const resp = await fetch(url, {
     method: "DELETE",
     headers: {
@@ -37,8 +37,8 @@ export async function deleteDiscount(shopId: number, issuedAt: String) {
   }
 }
 
-export async function getDiscountById(shopId: number, issuedAt: String) {
-  const url = `${getAPIBasePath()}${basePath}/${shopId}/${issuedAt}`;
+export async function getDiscountById(id: String) {
+  const url = `${getAPIBasePath()}${basePath}/${id}`;
   const resp = await fetch(url, {
     headers: {
       Authorization: await getAuthHeader()

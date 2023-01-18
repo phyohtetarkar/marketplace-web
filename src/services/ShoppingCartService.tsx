@@ -1,4 +1,4 @@
-import { CartItem, CartItemId } from "../common/models";
+import { CartItem } from "../common/models";
 import { getAPIBasePath, getAuthHeader } from "../common/utils";
 
 const basePath = "cart-items";
@@ -50,7 +50,7 @@ export async function updateQuantity(value: CartItem) {
   }
 }
 
-export async function removeFromCart(ids: [CartItemId]) {
+export async function removeFromCart(ids: [String]) {
   const url = getAPIBasePath() + basePath;
   const resp = await fetch(url, {
     method: "DELETE",
