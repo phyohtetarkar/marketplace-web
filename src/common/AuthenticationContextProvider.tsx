@@ -18,10 +18,8 @@ export const AuthenticationContextProvider = ({
     Auth.currentAuthenticatedUser()
       .then((user) => {
         const attributes = user.attributes;
-        // sessionStorage.setItem(
-        //   "accessToken",
-        //   user.signInUserSession.accessToken.jwtToken
-        // );
+        // TODO: fetch user
+
         setAuthUser({
           status: "success",
           payload: {
@@ -43,36 +41,32 @@ export const AuthenticationContextProvider = ({
   }, []);
 
   useEffect(() => {
+    const applyUser = async (attributes: any) => {
+      // TODO: fetch user
+      setAuthUser({
+        status: "success",
+        payload: {
+          id: attributes.sub,
+          name: attributes.name,
+          phone: attributes.phone_number,
+          verified: attributes.phone_number_verified
+        }
+      });
+    };
     const listener = (data: HubCapsule) => {
       switch (data.payload.event) {
         case "signIn": {
           //console.log("signed in");
           //console.log(data.payload.data);
           const attributes = data.payload.data.attributes;
-          setAuthUser({
-            status: "success",
-            payload: {
-              id: attributes.sub,
-              name: attributes.name,
-              phone: attributes.phone_number,
-              verified: attributes.phone_number_verified
-            }
-          });
+          applyUser(attributes);
           break;
         }
         case "autoSignIn": {
           //console.log("auto signed in");
           //console.log(data.payload.data);
           const attributes = data.payload.data.attributes;
-          setAuthUser({
-            status: "success",
-            payload: {
-              id: attributes.sub,
-              name: attributes.name,
-              phone: attributes.phone_number,
-              verified: attributes.phone_number_verified
-            }
-          });
+          applyUser(attributes);
           break;
         }
         case "signOut":

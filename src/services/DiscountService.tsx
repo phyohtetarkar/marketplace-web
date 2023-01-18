@@ -10,7 +10,7 @@ const basePath = "discounts";
 export async function saveDiscount(value: Discount) {
   const url = `${getAPIBasePath()}${basePath}`;
   const resp = await fetch(url, {
-    method: (value.shopId ?? 0) > 0 ? "PUT" : "POST",
+    method: value.id ? "PUT" : "POST",
     body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",
@@ -23,7 +23,7 @@ export async function saveDiscount(value: Discount) {
   }
 }
 
-export async function deleteDiscount(id: String) {
+export async function deleteDiscount(id: string) {
   const url = `${getAPIBasePath()}${basePath}/${id}`;
   const resp = await fetch(url, {
     method: "DELETE",
@@ -37,7 +37,7 @@ export async function deleteDiscount(id: String) {
   }
 }
 
-export async function getDiscountById(id: String) {
+export async function getDiscountById(id: string) {
   const url = `${getAPIBasePath()}${basePath}/${id}`;
   const resp = await fetch(url, {
     headers: {

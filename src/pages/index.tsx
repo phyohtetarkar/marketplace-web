@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Autoplay, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import useSWR from "swr";
+import { HomeData } from "../common/models";
+import { getAPIBasePath } from "../common/utils";
 
 const _categories = [
   "Electronics",
@@ -36,19 +38,7 @@ const getData = async () => {
   };
 };
 
-const Home: NextPage = () => {
-  const { data, error } = useSWR("/home", getData, {
-    revalidateOnFocus: false
-  });
-
-  if (!data) {
-    return null;
-  }
-
-  if (error) {
-    return <div>{error.message}</div>;
-  }
-
+const Home = ({ data }: { data: HomeData }) => {
   return (
     <div className="container py-4">
       <div className="row mb-4 mb-lg-5">
@@ -60,15 +50,16 @@ const Home: NextPage = () => {
                   <div className="h-100 overflow-auto scrollbar-custom">
                     <div className="position-relative">
                       <div className="d-flex flex-column gap-1 position-absolute top-0 bottom-0 start-0 end-0">
-                        {/* {data.categories.map((e, i) => {
-                          return (
-                            <Link key={e.id} href={`/${e.slug}`}>
-                              <a className="p-2 my-list-item user-select-none">
-                                {e.name}
-                              </a>
-                            </Link>
-                          );
-                        })} */}
+                        {data.mainCategories &&
+                          data.mainCategories.map((e, i) => {
+                            return (
+                              <Link key={e.id} href={`/collections/${e.slug}`}>
+                                <a className="p-2 my-list-item user-select-none">
+                                  {e.name}
+                                </a>
+                              </Link>
+                            );
+                          })}
 
                         <a href="#" className="invisible p-1"></a>
                       </div>
@@ -152,24 +143,25 @@ const Home: NextPage = () => {
                     }}
                     modules={[Autoplay, Pagination]}
                   >
-                    {/* {data.banners.map((b, i) => {
-                      return (
-                        <SwiperSlide
-                          key={b.id}
-                          onContextMenu={(e) => e.preventDefault()}
-                          className="ratio ratio-21x9 overflow-hidden"
-                        >
-                          <Image
-                            src={b.image!}
-                            alt="Cover image"
-                            className="rounded-1"
-                            layout="fill"
-                            objectFit="cover"
-                            priority
-                          />
-                        </SwiperSlide>
-                      );
-                    })} */}
+                    {data.banners &&
+                      data.banners.map((b, i) => {
+                        return (
+                          <SwiperSlide
+                            key={b.id}
+                            onContextMenu={(e) => e.preventDefault()}
+                            className="ratio ratio-21x9 overflow-hidden"
+                          >
+                            <Image
+                              src={b.image}
+                              alt="Cover image"
+                              className="rounded-1"
+                              layout="fill"
+                              objectFit="cover"
+                              priority
+                            />
+                          </SwiperSlide>
+                        );
+                      })}
                   </Swiper>
                 </div>
               </div>
@@ -354,16 +346,17 @@ const Home: NextPage = () => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    return {
-      props: {
-        data: {
-          banners: [],
-          categories: [],
-          shops: [],
-          newArrivals: []
+    const url = getAPIBasePath() + "home";
+    const resp = await fetch(url);
+
+    if (resp.ok) {
+      const data = await (resp.json() as Promise<HomeData>);
+      return {
+        props: {
+          data: data
         }
-      } // will be passed to the page component as props
-    };
+      };
+    }
   } catch (e) {
     console.log(e);
   }

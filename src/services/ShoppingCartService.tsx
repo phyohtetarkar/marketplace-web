@@ -50,7 +50,7 @@ export async function updateQuantity(value: CartItem) {
   }
 }
 
-export async function removeFromCart(ids: [String]) {
+export async function removeFromCart(ids: [string]) {
   const url = getAPIBasePath() + basePath;
   const resp = await fetch(url, {
     method: "DELETE",

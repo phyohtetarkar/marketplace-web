@@ -5,11 +5,6 @@ export interface PageData<T> {
   pageSize: number;
 }
 
-export interface ErrorBody {
-  code: string;
-  error?: string | null;
-}
-
 export interface AuthUser {
   id: string;
   name: string;
@@ -24,6 +19,12 @@ export interface User {
   phone?: string;
   email?: string | null;
   image?: string | null;
+}
+
+export interface HomeData {
+  banners?: Banner[];
+  mainCategories?: Category[];
+  featuredShops?: Shop[];
 }
 
 export interface Banner {

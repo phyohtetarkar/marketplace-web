@@ -1,5 +1,6 @@
 import { Auth } from "aws-amplify";
 import dayjs from "dayjs";
+import { APIError, UnauthorizeError } from "./customs";
 
 export function formatTimestamp(timestamp: number | string, withTime = false) {
   let date = dayjs(timestamp);
@@ -85,4 +86,30 @@ export async function getAuthHeader() {
     return "Bearer " + accessToken;
   } catch (error) {}
   return "Bearer ";
+}
+
+export async function validateResponse(resp: Response) {
+  if (resp.status === 401 || resp.status === 403) {
+    throw new UnauthorizeError("Unauthorized");
+  }
+  if (!resp.ok) {
+    throw new APIError(resp.status, await resp.text());
+  }
+}
+
+export function parseErrorResponse(error: any) {
+  if (error instanceof UnauthorizeError) {
+    Auth.signOut()
+      .catch(console.error)
+      .finally(() => {
+        const href = process.env.NEXT_PUBLIC_LOGIN_URL ?? "";
+        window.location.href = href;
+      });
+    return null;
+  }
+  if (error instanceof APIError) {
+    return error.message;
+  }
+  console.log(error);
+  return "Something went wrong, please try again";
 }
