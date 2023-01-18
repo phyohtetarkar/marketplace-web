@@ -4,14 +4,14 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "../../styles/bootstrap-custom.css";
 import "../../styles/globals.css";
+import { Amplify } from "aws-amplify";
 import { NextPage } from "next";
 import type { AppProps } from "next/app";
-import { ReactElement, ReactNode, useEffect } from "react";
-import { Layout } from "../components/template";
 import NextNProgress from "nextjs-progressbar";
+import { ReactElement, ReactNode } from "react";
 import awsconfig from "../aws-exports";
-import { Amplify } from "aws-amplify";
 import { AuthenticationContextProvider } from "../common/AuthenticationContextProvider";
+import { Layout } from "../components/template";
 
 Amplify.configure({
   ...awsconfig,

@@ -13,7 +13,6 @@ interface FormValues {
 }
 
 function Login() {
-  const mountedRef = useRef(true);
   const router = useRouter();
   const authContext = useContext(AuthenticationContext);
 
@@ -52,18 +51,11 @@ function Login() {
   });
 
   useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
-
-  useEffect(() => {
     if (!router.isReady) {
       return;
     }
 
-    if (authContext.payload) {
+    if (authContext.payload && authContext.status === "success") {
       router.replace("/");
     }
 
@@ -78,11 +70,10 @@ function Login() {
         username: phone,
         password: values.password!
       });
-      mountedRef.current && router.push("/");
     } catch (error: any) {
       console.log("error signing in:", error.code);
     } finally {
-      mountedRef.current && setSubmitting(false);
+      setSubmitting(false);
     }
   };
 
@@ -94,7 +85,7 @@ function Login() {
     <div className="container py-3">
       <div className="row my-4">
         <div className="col-md-6 offset-md-3 col-xxl-4 offset-xxl-4">
-          <div className="card mb-5">
+          <div className="card mb-5 shadow-sm">
             <div className="card-body p-lg-4">
               <h4 className="card-title fw-bold mt-2 mb-4">Sign In</h4>
 

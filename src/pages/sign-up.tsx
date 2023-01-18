@@ -2,7 +2,8 @@ import { useFormik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
+import { AuthenticationContext } from "../common/contexts";
 import { Input, PasswordInput } from "../components/forms";
 import { signUp } from "../services/AuthService";
 
@@ -14,8 +15,8 @@ interface FormValues {
 }
 
 function Register() {
-  const mountedRef = useRef(true);
   const router = useRouter();
+  const authContext = useContext(AuthenticationContext);
 
   const {
     values,
@@ -59,18 +60,14 @@ function Register() {
   });
 
   useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
-
-  useEffect(() => {
     if (!router.isReady) {
       return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router]);
+
+    if (authContext.payload && authContext.status === "success") {
+      router.replace("/");
+    }
+  }, [router, authContext]);
 
   const processSignUp = async (values: FormValues) => {
     try {
@@ -80,19 +77,22 @@ function Register() {
         phone: phone,
         password: values.password!
       });
-      mountedRef.current && router.push("/");
     } catch (error) {
       console.log("error signing up:", error);
     } finally {
-      mountedRef.current && setSubmitting(false);
+      setSubmitting(false);
     }
   };
+
+  if (authContext.payload || authContext.status === "loading") {
+    return <div></div>;
+  }
 
   return (
     <div className="container py-3">
       <div className="row my-4">
         <div className="col-md-6 offset-md-3 col-xxl-4 offset-xxl-4">
-          <div className="card mb-5">
+          <div className="card mb-5 shadow-sm">
             <div className="card-body p-lg-4">
               <h4 className="card-title fw-bold mt-2 mb-4">Sign Up</h4>
 
