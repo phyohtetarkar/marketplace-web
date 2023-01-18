@@ -2,7 +2,8 @@ import { PageData, Product } from "../common/models";
 import {
   buildQueryParams,
   getAPIBasePath,
-  getAuthHeader
+  getAuthHeader,
+  validateResponse
 } from "../common/utils";
 
 const basePath = "profile";
@@ -18,9 +19,7 @@ export async function getFavoriteProducts(page?: number) {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 
   return resp.json() as Promise<PageData<Product>>;
 }
@@ -37,9 +36,7 @@ export async function addToFavoriteProduct(productId: number) {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 }
 
 export async function deleteFavoriteProduct(id: number) {
@@ -53,7 +50,6 @@ export async function deleteFavoriteProduct(id: number) {
       Authorization: await getAuthHeader()
     }
   });
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+
+  await validateResponse(resp);
 }

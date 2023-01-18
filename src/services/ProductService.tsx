@@ -2,7 +2,8 @@ import { PageData, Product } from "../common/models";
 import {
   buildQueryParams,
   getAPIBasePath,
-  getAuthHeader
+  getAuthHeader,
+  validateResponse
 } from "../common/utils";
 
 const basePath = "products";
@@ -19,9 +20,7 @@ export async function getProductBySlug(slug: String) {
   const url = `${getAPIBasePath()}${basePath}/${slug}`;
   const resp = await fetch(url);
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 
   return resp.json() as Promise<Product>;
 }
@@ -30,9 +29,7 @@ export async function existsProductBySlug(slug: String) {
   const url = `${getAPIBasePath()}${basePath}/${slug}/exists`;
   const resp = await fetch(url);
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 
   return resp.json() as Promise<boolean>;
 }
@@ -46,9 +43,7 @@ export async function deleteProduct(id: number) {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 }
 
 export async function findAllProducts(value: ProductQuery) {
@@ -57,9 +52,7 @@ export async function findAllProducts(value: ProductQuery) {
   const url = `${getAPIBasePath()}${basePath}${query}`;
   const resp = await fetch(url);
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 
   return resp.json() as Promise<PageData<Product>>;
 }

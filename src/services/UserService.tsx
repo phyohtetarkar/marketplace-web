@@ -2,7 +2,8 @@ import { PageData, User, Shop } from "../common/models";
 import {
   buildQueryParams,
   getAPIBasePath,
-  getAuthHeader
+  getAuthHeader,
+  validateResponse
 } from "../common/utils";
 
 const basePath = "profile";
@@ -18,9 +19,7 @@ export async function updateProfile(value: User) {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 }
 
 export async function getLoginUser() {
@@ -31,9 +30,7 @@ export async function getLoginUser() {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 
   return resp.json() as Promise<User>;
 }
@@ -49,9 +46,7 @@ export async function getMyShops(page?: number) {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 
   return resp.json() as Promise<PageData<Shop>>;
 }
