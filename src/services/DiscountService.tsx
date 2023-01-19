@@ -2,7 +2,8 @@ import { Discount, PageData } from "../common/models";
 import {
   buildQueryParams,
   getAPIBasePath,
-  getAuthHeader
+  getAuthHeader,
+  validateResponse
 } from "../common/utils";
 
 const basePath = "discounts";
@@ -18,9 +19,7 @@ export async function saveDiscount(value: Discount) {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 }
 
 export async function deleteDiscount(id: string) {
@@ -32,9 +31,7 @@ export async function deleteDiscount(id: string) {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 }
 
 export async function getDiscountById(id: string) {
@@ -45,9 +42,7 @@ export async function getDiscountById(id: string) {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 
   return resp.json() as Promise<Discount>;
 }
@@ -65,9 +60,7 @@ export async function getAllDiscounts(shopId: number, page?: number) {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 
   return resp.json() as Promise<PageData<Discount>>;
 }

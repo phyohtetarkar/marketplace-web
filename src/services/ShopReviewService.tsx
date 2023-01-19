@@ -2,7 +2,8 @@ import { PageData, ShopReview } from "../common/models";
 import {
   buildQueryParams,
   getAPIBasePath,
-  getAuthHeader
+  getAuthHeader,
+  validateResponse
 } from "../common/utils";
 
 const basePath = "shop-reviews";
@@ -18,9 +19,7 @@ export async function postReview(value: ShopReview) {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 }
 
 export async function deleteReview(id: string) {
@@ -32,9 +31,7 @@ export async function deleteReview(id: string) {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 }
 
 export async function getReviews(
@@ -49,9 +46,7 @@ export async function getReviews(
   const url = `${getAPIBasePath()}${basePath}/${shopId}${query}`;
   const resp = await fetch(url);
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 
   return resp.json() as Promise<PageData<ShopReview>>;
 }

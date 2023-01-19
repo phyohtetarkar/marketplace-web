@@ -1,5 +1,9 @@
 import { CartItem } from "../common/models";
-import { getAPIBasePath, getAuthHeader } from "../common/utils";
+import {
+  getAPIBasePath,
+  getAuthHeader,
+  validateResponse
+} from "../common/utils";
 
 const basePath = "cart-items";
 
@@ -11,9 +15,7 @@ export async function getCartItemsByUser() {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 
   return resp.json() as Promise<CartItem[]>;
 }
@@ -29,9 +31,7 @@ export async function addToCart(value: CartItem) {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 }
 
 export async function updateQuantity(value: CartItem) {
@@ -45,9 +45,7 @@ export async function updateQuantity(value: CartItem) {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 }
 
 export async function removeFromCart(ids: [string]) {
@@ -60,7 +58,5 @@ export async function removeFromCart(ids: [string]) {
     }
   });
 
-  if (!resp.ok) {
-    throw Error(await resp.text());
-  }
+  await validateResponse(resp);
 }
