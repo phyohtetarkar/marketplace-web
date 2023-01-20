@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { PageData, Product } from "../../common/models";
+import { withAuthentication } from "../../common/WithAuthentication";
 import AccountMenu from "../../components/account/AccountMenu";
 import Pagination from "../../components/Pagination";
 import { ProductFavoriteItem } from "../../components/product";
@@ -17,12 +18,11 @@ function MyFavorites() {
     ["/favorite-products"],
     ([url]) => getFavoriteProducts(),
     {
-      revalidateOnFocus: false,
+      revalidateOnFocus: false
     }
   );
 
   const content = () => {
-
     if (isLoading) {
     }
 
@@ -75,4 +75,4 @@ function MyFavorites() {
   );
 }
 
-export default MyFavorites;
+export default withAuthentication(MyFavorites);

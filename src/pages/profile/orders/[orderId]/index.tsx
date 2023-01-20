@@ -2,6 +2,7 @@ import { PhoneIcon, UserIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { formatTimestamp } from "../../../../common/utils";
+import { withAuthentication } from "../../../../common/WithAuthentication";
 
 function OrderRow() {
   return (
@@ -26,7 +27,7 @@ function OrderRow() {
                   margin: 0,
                   padding: 0,
                   position: "absolute",
-                  inset: 0,
+                  inset: 0
                 }}
               >
                 <Image
@@ -230,4 +231,4 @@ function OrderDetail() {
   );
 }
 
-export default OrderDetail;
+export default withAuthentication(OrderDetail);

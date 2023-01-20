@@ -1,49 +1,56 @@
 import { useFormik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
+import { useContext } from "react";
+import { AuthenticationContext } from "../../common/contexts";
 import { User } from "../../common/models";
+import { withAuthentication } from "../../common/WithAuthentication";
 import AccountMenu from "../../components/account/AccountMenu";
 import { Input } from "../../components/forms";
 import { updateProfile } from "../../services/UserService";
 
 function ProfileSetting() {
+  const authContext = useContext(AuthenticationContext);
+
+  const user = authContext.payload;
+
   const formik = useFormik<User>({
-      initialValues: {
-        id: "",
-        name: "",
-        phone: "",
-        email: "",
-      },
-      validate: async (values) => {
-        const errors: User = {};
+    initialValues: user ?? {
+      id: "",
+      name: "",
+      phone: "",
+      email: ""
+    },
+    validate: async (values) => {
+      const errors: User = {};
 
-        const phoneRegex = "^(09)\\d{7,12}$";
-        const emailRegex = "!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i";
+      const phoneRegex = "^(09)\\d{7,12}$";
+      const emailRegex = "!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i";
 
-        if (!values.name || values.name.trim().length === 0) {
-          errors.name = "Please enter user name.";
-        }
+      if (!values.name || values.name.trim().length === 0) {
+        errors.name = "Please enter user name.";
+      }
 
-        if (!values.phone || !values.phone.match(phoneRegex)) {
-          errors.phone = "Please enter valid phone number.";
-        }
+      if (!values.phone || !values.phone.match(phoneRegex)) {
+        errors.phone = "Please enter valid phone number.";
+      }
 
-       if (!values.email || !values.email.match(emailRegex)) {
-          errors.email = "Please enter valid email address."
-        }
+      if (!values.email || !values.email.match(emailRegex)) {
+        errors.email = "Please enter valid email address.";
+      }
 
-        return errors;
-      },
-      validateOnBlur: false,
-      validateOnChange: false,
-      onSubmit: (values) => {
-        save(values);
-      },
-    });
-
-    const save = (values : User) => {
-      updateProfile(values);
+      return errors;
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+    onSubmit: (values) => {
+      save(values);
     }
+  });
+
+  const save = (values: User) => {
+    updateProfile(values);
+  };
 
   return (
     <div>
@@ -63,8 +70,8 @@ function ProfileSetting() {
             <AccountMenu />
           </div>
           <div className="col-lg-8 col-xl-9">
-              <div className="card shadow-sm">
-                <div className="card-body p-md-4">
+            <div className="card shadow-sm">
+              <div className="card-body p-md-4">
                 <form onSubmit={formik.handleSubmit}>
                   <div className="row">
                     <div className="order-2 order-md-2 col-lg-8">
@@ -104,7 +111,7 @@ function ProfileSetting() {
                               name="phone"
                               type="text"
                               disabled
-                              placeholder="+9512345678"
+                              defaultValue={user?.phone ?? ""}
                               error={formik.errors.phone}
                             />
                           </div>
@@ -128,11 +135,11 @@ function ProfileSetting() {
                     <div className="d-flex justify-content-center order-lg-2 col-lg-4">
                       <div className="mt-3 mb-2">
                         <div
-                          className="position-relative bg-dark overflow-hidden rounded-circle"
+                          className="position-relative border overflow-hidden rounded-circle"
                           style={{ width: 128, height: 128 }}
                         >
                           <Image
-                            src="/images/profile.png"
+                            src="/images/placeholder.jpeg"
                             layout="fill"
                             alt="User Photo"
                             className="rounded-circle"
@@ -155,26 +162,25 @@ function ProfileSetting() {
                       </button>
                     </div>
                   </div>
-                  </form>
-                  <hr className="bg-dark-gray" />
-                  <div className="row">
-                    <div className="col-md">
-                      <div className="card bg-light mb-3">
-                        <div className="card-body">
-                          <button className="btn btn-outline-primary bg-white btn-sm border border-light-gray float-end">
-                            Change
-                          </button>
-                          <p className="mb-0">Password</p>
-                          <small className="text-muted d-block w-75">
-                            You can reset or change your password by clicking
-                            here
-                          </small>
-                        </div>
+                </form>
+                <hr className="bg-dark-gray" />
+                <div className="row">
+                  <div className="col-md">
+                    <div className="card bg-light mb-3">
+                      <div className="card-body">
+                        <button className="btn btn-outline-primary bg-white btn-sm border border-light-gray float-end">
+                          Change
+                        </button>
+                        <p className="mb-0">Password</p>
+                        <small className="text-muted d-block w-75">
+                          You can reset or change your password by clicking here
+                        </small>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
           </div>
         </div>
       </div>
@@ -182,4 +188,4 @@ function ProfileSetting() {
   );
 }
 
-export default ProfileSetting;
+export default withAuthentication(ProfileSetting);

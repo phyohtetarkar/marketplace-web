@@ -255,7 +255,7 @@ function ProductEdit({ create = {} }) {
                     <label className="form-label">Category *</label>
                     <AutocompleteSelect<string, string>
                       getOptionLabel={(v) => v}
-                      getOptionValue={(v) => v}
+                      getOptionKey={(v) => v}
                       options={groupList}
                     />
 
@@ -301,7 +301,7 @@ function ProductEdit({ create = {} }) {
                     <label className="form-label mt-3">Country of origin</label>
                     <AutocompleteSelect<string, string>
                       getOptionLabel={(v) => v}
-                      getOptionValue={(v) => v}
+                      getOptionKey={(v) => v}
                     />
                   </div>
                 </div>

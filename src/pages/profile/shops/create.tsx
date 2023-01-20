@@ -2,11 +2,14 @@ import { FormikErrors, useFormik } from "formik";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { ChangeEvent, CSSProperties, useRef, useState } from "react";
 import { Shop } from "../../../common/models";
+import { debounce, parseErrorResponse } from "../../../common/utils";
+import { withAuthentication } from "../../../common/WithAuthentication";
 import { Input } from "../../../components/forms";
 import { RichTextEditorInputProps } from "../../../components/forms/RichTextEditor";
-import { existsShopBySlug } from "../../../services/ShopService";
+import { createShop, existsShopBySlug } from "../../../services/ShopService";
 
 const _steps = [
   { step: 1, title: "Basic information" },
@@ -213,6 +216,7 @@ const ShopMedia = (props: FormProps) => {
 };
 
 function CreateShop() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [validating, setValidating] = useState(false);
 
@@ -235,9 +239,7 @@ function CreateShop() {
             errors.slug = "Shop slug already in use";
           }
         } catch (error: any) {
-          if (error?.status !== 404) {
-            errors.slug = "Error checking, please try again";
-          }
+          errors.slug = "Error checking, please try again";
         }
       }
 
@@ -245,7 +247,9 @@ function CreateShop() {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    onSubmit: (values) => {}
+    onSubmit: (values) => {
+      executeCreate(values);
+    }
   });
 
   const getStepView = (step: number, title: String, end: boolean = false) => {
@@ -305,7 +309,14 @@ function CreateShop() {
     return null;
   };
 
-  const createShop = (shop: Shop) => {};
+  const executeCreate = async (shop: Shop) => {
+    try {
+      await createShop(shop);
+      router.replace("/profile/shops");
+    } catch (error) {
+      const msg = parseErrorResponse(error);
+    }
+  };
 
   return (
     <div className="pb-5">
@@ -397,6 +408,7 @@ function CreateShop() {
             {currentStep > 1 && (
               <button
                 className="btn btn-default px-3 py-2"
+                disabled={formik.isSubmitting}
                 onClick={() => setCurrentStep((s) => s - 1)}
               >
                 Previous
@@ -432,7 +444,9 @@ function CreateShop() {
                 className="btn btn-danger px-3 py-2"
                 disabled={formik.isSubmitting}
                 onClick={() => {
-                  formik.submitForm();
+                  debounce(() => {
+                    formik.submitForm();
+                  }, 500)();
                 }}
               >
                 {formik.isSubmitting && (
@@ -452,4 +466,4 @@ function CreateShop() {
   );
 }
 
-export default CreateShop;
+export default withAuthentication(CreateShop);

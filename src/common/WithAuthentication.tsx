@@ -8,7 +8,7 @@ interface WithRouterProps {
 
 interface AuthComponentProps extends WithRouterProps {}
 
-export const withAuthentication = (Component: React.ComponentType) => {
+export const withAuthentication = (Component: React.ComponentType<any>) => {
   return withRouter(
     class AuthenticatedRoute extends React.Component<AuthComponentProps> {
       static contextType = AuthenticationContext;

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { formatTimestamp } from "../../../common/utils";
+import { withAuthentication } from "../../../common/WithAuthentication";
 import AccountMenu from "../../../components/account/AccountMenu";
 import { Input, Select } from "../../../components/forms";
 import Pagination from "../../../components/Pagination";
@@ -133,4 +134,4 @@ function MyOrders() {
   );
 }
 
-export default MyOrders;
+export default withAuthentication(MyOrders);

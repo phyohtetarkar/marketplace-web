@@ -3,23 +3,96 @@ import { ReactNode, useCallback, useEffect, useState } from "react";
 import { usePopper } from "react-popper";
 import Input from "./Input";
 
-interface AutocompleteSelectProps<T = string, Key = string> {
+interface OptionProps<T, Key> {
+  getOptionLabel: (op: T) => string;
+  getOptionKey: (op: T) => Key;
+  formatOptionLabel?: (op: T, selected: boolean) => ReactNode;
+  skipOption?: (op: T) => boolean;
+  getNestedData?: (op: T) => T[] | undefined;
+}
+
+interface AutocompleteSelectProps<T = string, Key = string>
+  extends OptionProps<T, Key> {
+  defaultValue?: T;
   referenceId?: string;
   popperId?: string;
   options?: readonly T[];
-  defaultValue?: T;
   placeholder?: string;
   maxHeight?: number;
   error?: string;
-  getOptionLabel: (op: T) => string;
-  getOptionValue: (op: T) => Key;
-  formatOptionLabel?: (op: T, selected: boolean) => ReactNode;
   formatSelectedOption?: (op: T) => string;
-  skipOption?: (op: T) => boolean;
   onChange?: (newValue: T) => void;
 }
 
+function Option<T, Key>(
+  props: OptionProps<T, Key> & {
+    value: T;
+    selectedKey?: Key;
+    level: number;
+    handleClick: (key: Key, value: T) => void;
+    handleFilter: (value: T) => boolean;
+  }
+) {
+  if (props.skipOption?.(props.value) ?? false) {
+    return null;
+  }
+
+  const key = props.getOptionKey(props.value);
+  const selected = key === props.selectedKey;
+  const prefix =
+    props.level > 0
+      ? Array(props.level)
+          .fill(props.level)
+          .map((_) => " - ")
+          .join("")
+      : "";
+  const label = prefix + props.getOptionLabel(props.value);
+
+  const list = props.getNestedData?.(props.value) ?? undefined;
+
+  const { value, level, ...passThroughProps } = props;
+
+  return (
+    <>
+      {props.handleFilter(props.value) && (
+        <li
+          role="button"
+          onClick={() => !selected && props.handleClick(key, props.value)}
+        >
+          <div className={`dropdown-item py-2 ${selected ? "active" : ""}`}>
+            {label}
+          </div>
+        </li>
+      )}
+      {list &&
+        list.map((v, i) => {
+          return (
+            <Option<T, Key>
+              key={i}
+              value={v}
+              level={level + 1}
+              {...passThroughProps}
+            />
+          );
+        })}
+    </>
+  );
+}
+
 function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
+  const {
+    referenceId,
+    popperId,
+    options,
+    placeholder,
+    error,
+    onChange,
+    defaultValue,
+    maxHeight,
+    formatSelectedOption,
+    ...optionProps
+  } = props;
+
   const [referenceElement, setReferenceElement] = useState<HTMLElement | null>(
     null
   );
@@ -41,7 +114,7 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
   const [selectedOption, setSelectedOption] = useState(() => {
     if (props.defaultValue) {
       return {
-        key: props.getOptionValue(props.defaultValue!),
+        key: props.getOptionKey(props.defaultValue!),
         value: props.defaultValue! as T
       };
     }
@@ -85,10 +158,10 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
     return props
       .getOptionLabel(v)
       .toLocaleLowerCase()
-      .startsWith(filter.toLocaleLowerCase());
+      .includes(filter.toLocaleLowerCase());
   }
 
-  function formatSelectedOption() {
+  function formatSelectedOptionValue() {
     const value = selectedOption?.value;
     if (value) {
       return props.formatSelectedOption?.(value) ?? props.getOptionLabel(value);
@@ -121,39 +194,21 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
                 className="list-unstyled mb-0 pb-2 scrollbar-custom"
                 style={{ maxHeight: props.maxHeight ?? 350, overflowY: "auto" }}
               >
-                {list.filter(handleFilter).map((v, i) => {
-                  const key = props.getOptionValue(v);
-                  const label = props.getOptionLabel(v);
-                  const selected = key === selectedOption?.key;
-                  const handleClick = () => {
-                    if (!selected) {
-                      setSelectedOption({ key: key, value: v });
-                      setOpen(false);
-                      props.onChange?.(v);
-                    }
-                  };
-
-                  if (props.skipOption?.(v) ?? false) {
-                    return null;
-                  }
-
-                  if (props.formatOptionLabel) {
-                    return (
-                      <li key={i} onClick={handleClick} role="button">
-                        {props.formatOptionLabel(v, selected)}
-                      </li>
-                    );
-                  }
+                {list.map((v, i) => {
                   return (
-                    <li key={i} onClick={handleClick} role="button">
-                      <div
-                        className={`dropdown-item py-2 ${
-                          selected ? "active" : ""
-                        }`}
-                      >
-                        {label}
-                      </div>
-                    </li>
+                    <Option<T, Key>
+                      key={i}
+                      value={v}
+                      level={0}
+                      selectedKey={selectedOption?.key}
+                      handleFilter={(v) => handleFilter(v)}
+                      handleClick={(key, value) => {
+                        setSelectedOption({ key: key, value: value });
+                        setOpen(false);
+                        props.onChange?.(value);
+                      }}
+                      {...optionProps}
+                    />
                   );
                 })}
               </ul>
@@ -169,7 +224,7 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
       <div className="position-relative">
         <Input
           id={props.referenceId}
-          value={formatSelectedOption()}
+          value={formatSelectedOptionValue()}
           className={open ? "border-primary" : ""}
           placeholder={props.placeholder ?? "Select"}
           ref={setReferenceElement}

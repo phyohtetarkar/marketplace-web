@@ -2,6 +2,7 @@ import { StarIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
 import { Shop } from "../../common/models";
+import { formatTimestamp } from "../../common/utils";
 
 const _imageSize = 90;
 
@@ -9,7 +10,7 @@ interface ShopGridItemProps {
   value: Shop;
 }
 
-function ShopGridItem({value} : ShopGridItemProps ) {
+function ShopGridItem({ value }: ShopGridItemProps) {
   return (
     <div className="card shadow-sm">
       <div className="card-body p-4 overflow-hidden">
@@ -31,7 +32,7 @@ function ShopGridItem({value} : ShopGridItemProps ) {
           </div>
 
           <div className="text-truncate">
-            <Link href={`/shops/slug`}>
+            <Link href={`/shops/${value.slug}`}>
               <a
                 className="h6 mb-1 text-decoration-none link-dark"
                 style={{ fontSize: 18 }}
@@ -63,14 +64,14 @@ function ShopGridItem({value} : ShopGridItemProps ) {
             <div className="hstack">
               <span className="flex-grow-1 text-muted">Rating</span>
               <div className="hstack text-warning gap-1">
-                <span>{value.rating}</span>
+                <span>{value.rating?.toFixed(1)}</span>
                 <StarIcon width={16} />
               </div>
             </div>
             <hr className="bg-dark-gray my-2h" />
             <div className="hstack">
               <span className="flex-grow-1 text-muted">Since</span>
-              <span>{value.createdAt}</span>
+              <span>{formatTimestamp(value.createdAt!)}</span>
             </div>
           </div>
         </div>

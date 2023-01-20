@@ -1,15 +1,16 @@
 import { useFormik } from "formik";
+import { useContext } from "react";
+import { ShopDetailContext } from "../../common/contexts";
 import { ShopGeneral } from "../../common/models";
 import { existsShopBySlug } from "../../services/ShopService";
 import { Input, Textarea } from "../forms";
 
 function ShopGeneralForm() {
+  const shopContext = useContext(ShopDetailContext);
+
   const formik = useFormik<ShopGeneral>({
-    initialValues: {
-      shopId: 0,
-      name: "",
-      slug: ""
-    },
+    initialValues: shopContext!,
+    enableReinitialize: true,
     validate: async (values) => {
       const errors: ShopGeneral = {
         shopId: 0,

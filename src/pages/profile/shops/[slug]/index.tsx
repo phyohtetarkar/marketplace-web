@@ -7,29 +7,44 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
+import useSWR from "swr";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useMemo, useState } from "react";
-import { Shop } from "../../../../common/models";
+import { withAuthentication } from "../../../../common/WithAuthentication";
 import Accordion from "../../../../components/Accordion";
 import Dropdown from "../../../../components/Dropdown";
 import ManageDiscounts from "../../../../components/merchant/ManageDiscounts";
 import ManageProducts from "../../../../components/merchant/ManageProducts";
 import ShopDashboard from "../../../../components/merchant/ShopDashboard";
 import ShopSetting from "../../../../components/merchant/ShopSetting";
+import { Shop } from "../../../../common/models";
+import { getShopBySlug } from "../../../../services/ShopService";
+import Loading from "../../../../components/Loading";
+import { ShopDetailContext } from "../../../../common/contexts";
 
 type PageTab = "dashboard" | "products" | "discounts" | "orders" | "setting";
 
-function ShopDetail({ shop }: { shop: Shop }) {
+const iconSize = 20;
+
+function MyShopDetail() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<PageTab | null>(null);
 
-  const iconSize = 20;
+  const { slug } = router.query;
 
-  const image = useMemo(() => {
-    return `https://source.unsplash.com/random/200x240?random=${Math.floor(
-      Math.random() * 50
-    )}`;
-  }, []);
+  const { data, error, isLoading, isValidating } = useSWR<Shop, Error>(
+    ["/shops", slug],
+    ([url, s]) => getShopBySlug(s),
+    {
+      revalidateOnFocus: false
+    }
+  );
+
+  // const image = useMemo(() => {
+  //   return `https://source.unsplash.com/random/200x240?random=${Math.floor(
+  //     Math.random() * 50
+  //   )}`;
+  // }, []);
 
   useEffect(() => {
     if (router.isReady) {
@@ -75,7 +90,7 @@ function ShopDetail({ shop }: { shop: Shop }) {
     <>
       <div className="vstack gap-1">
         {menuLink({
-          href: "/profile/shops/id#dashboard",
+          href: `/profile/shops/${data?.slug}#dashboard`,
           title: "Dashboard",
           active: activeTab === "dashboard",
           icon: (
@@ -83,19 +98,19 @@ function ShopDetail({ shop }: { shop: Shop }) {
           )
         })}
         {menuLink({
-          href: "/profile/shops/id#products",
+          href: `/profile/shops/${data?.slug}#products`,
           title: "Products",
           active: activeTab === "products",
           icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
-          href: "/profile/shops/id#discounts",
+          href: `/profile/shops/${data?.slug}#discounts`,
           title: "Discounts",
           active: activeTab === "discounts",
           icon: <TagIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
-          href: "/profile/shops/id#orders",
+          href: `/profile/shops/${data?.slug}#orders`,
           title: "Orders",
           active: activeTab === "orders",
           icon: (
@@ -107,7 +122,7 @@ function ShopDetail({ shop }: { shop: Shop }) {
           )
         })}
         {menuLink({
-          href: "/profile/shops/id#setting",
+          href: `/profile/shops/${data?.slug}#setting`,
           title: "Setting",
           active: activeTab === "setting",
           icon: (
@@ -123,21 +138,32 @@ function ShopDetail({ shop }: { shop: Shop }) {
       case "dashboard":
         return <ShopDashboard />;
       case "products":
-        return <ManageProducts shopId={shop.id!} />;
+        return <ManageProducts shopId={data?.id!} />;
       case "discounts":
-        return <ManageDiscounts shopId={shop.id!} />;
+        return <ManageDiscounts shopId={data?.id!} />;
       case "setting":
         return <ShopSetting />;
     }
 
     return null;
   };
+
   const heading = (
     <>
-      <h5 className="mb-0">Shop Name</h5>
-      <div className="text-muted small mb-1 text-truncate">Headline</div>
+      <h5 className="mb-0">{data?.name}</h5>
+      <div className="text-muted small mb-1 text-truncate">
+        {data?.headline}
+      </div>
     </>
   );
+
+  if (isLoading || isValidating) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return null;
+  }
 
   return (
     <div>
@@ -155,7 +181,7 @@ function ShopDetail({ shop }: { shop: Shop }) {
                   </Link>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
-                  Shoes World
+                  {data?.name}
                 </li>
               </ol>
             </nav>
@@ -174,7 +200,7 @@ function ShopDetail({ shop }: { shop: Shop }) {
                 className="position-relative"
               >
                 <Image
-                  src={image}
+                  src={data?.cover ?? "/images/placeholder.jpeg"}
                   alt=""
                   layout="fill"
                   objectFit="cover"
@@ -188,7 +214,7 @@ function ShopDetail({ shop }: { shop: Shop }) {
                     <div className="flex-shrink-0 mt-n9">
                       <div className="bg-white p-1 pb-0 rounded">
                         <Image
-                          src={image}
+                          src={data?.logo ?? "/images/placeholder.jpeg"}
                           width={100}
                           height={100}
                           alt=""
@@ -220,7 +246,7 @@ function ShopDetail({ shop }: { shop: Shop }) {
                         role="button"
                         className="dropdown-item"
                         onClick={() => {
-                          router.push("/shops/id");
+                          router.push(`/shops/${data?.slug}`);
                         }}
                       >
                         View public
@@ -261,11 +287,15 @@ function ShopDetail({ shop }: { shop: Shop }) {
               </div>
             </>
           </div>
-          <div className="col-lg-9">{activeContent()}</div>
+          <div className="col-lg-9">
+            <ShopDetailContext.Provider value={data}>
+              {activeContent()}
+            </ShopDetailContext.Provider>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-export default ShopDetail;
+export default withAuthentication(MyShopDetail);

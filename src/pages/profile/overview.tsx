@@ -5,9 +5,20 @@ import {
 } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
+import { useContext } from "react";
+import { AuthenticationContext } from "../../common/contexts";
+import { withAuthentication } from "../../common/WithAuthentication";
 import AccountMenu from "../../components/account/AccountMenu";
 
 function ProfileOverview() {
+  const authContext = useContext(AuthenticationContext);
+
+  if (authContext.status !== "success") {
+    return null;
+  }
+
+  const user = authContext.payload;
+
   return (
     <div>
       <div className="bg-primary">
@@ -31,7 +42,7 @@ function ProfileOverview() {
                 <div className="hstack">
                   <div className="position-relative flex-shrink-0">
                     <Image
-                      src="/images/profile.png"
+                      src={user?.image ?? "/images/placeholder.jpeg"}
                       width={60}
                       height={60}
                       alt=""
@@ -40,9 +51,9 @@ function ProfileOverview() {
                     />
                   </div>
                   <div className="ms-3">
-                    <h6 className="mb-0">Your Avatar</h6>
+                    <h6 className="mb-0">{user?.name ?? ""}</h6>
                     <span className="text-muted small">
-                      Phone: +95244144442
+                      Phone: {user?.phone ?? ""}
                     </span>
                   </div>
                   <div className="ms-auto">
@@ -120,4 +131,4 @@ function ProfileOverview() {
     </div>
   );
 }
-export default ProfileOverview;
+export default withAuthentication(ProfileOverview);

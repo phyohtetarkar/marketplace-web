@@ -8,6 +8,27 @@ import {
 
 const basePath = "shops";
 
+export async function createShop(value: Shop) {
+  const url = getAPIBasePath() + basePath;
+  const formData = new FormData();
+  formData.append("name", value.name!);
+  formData.append("slug", value.slug!);
+  value.headline && formData.append("headline", value.headline);
+  value.about && formData.append("about", value.about);
+  value.contact?.address && formData.append("address", value.contact.address);
+  value.logoImage && formData.append("logoImage", value.logoImage);
+  value.coverImage && formData.append("coverImage", value.coverImage);
+  const resp = await fetch(url, {
+    method: "POST",
+    body: formData,
+    headers: {
+      Authorization: await getAuthHeader()
+    }
+  });
+
+  await validateResponse(resp);
+}
+
 export async function getShops(page?: number) {
   const query = buildQueryParams({
     page: page

@@ -1,11 +1,16 @@
 import { useFormik } from "formik";
+import { useContext } from "react";
+import { ShopDetailContext } from "../../common/contexts";
 import { ShopContact } from "../../common/models";
 import { Input, TagInput } from "../forms";
 
 function ShopContactForm() {
+  const shopContext = useContext(ShopDetailContext);
+
   const formik = useFormik<ShopContact>({
-    initialValues: {
-      id: 0
+    initialValues: shopContext?.contact ?? {
+      id: 0,
+      shopId: shopContext?.id
     },
     validateOnChange: false,
     validateOnBlur: false,

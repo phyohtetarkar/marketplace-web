@@ -9,14 +9,15 @@ export interface AuthUser {
   id: string;
   name: string;
   phone: string;
-  verified: boolean;
-  accessToken?: string;
+  email?: string;
+  role?: string;
 }
 
 export interface User {
   id?: string;
   name?: string;
   phone?: string;
+  role?: string;
   email?: string | null;
   image?: string | null;
 }
@@ -49,7 +50,7 @@ export interface Shop {
   slug?: string;
   headline?: string;
   rating?: number;
-  recommended?: boolean;
+  featured?: boolean;
   createdAt?: number;
   logo?: string | null;
   cover?: string | null;
@@ -61,6 +62,7 @@ export interface Shop {
 
 export interface ShopContact {
   id?: number;
+  shopId?: number;
   address?: string | null;
   phones?: [string] | null;
   latitude?: number | null;

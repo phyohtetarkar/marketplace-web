@@ -16,6 +16,7 @@ import ShopBranchListing from "../../components/shopdetail/ShopBranchListing";
 import ShopProductListing from "../../components/shopdetail/ShopProductListing";
 import ShopReviewListing from "../../components/shopdetail/ShopReviewListing";
 import Tabs from "../../components/Tabs";
+import { getShopBySlug } from "../../services/ShopService";
 
 type PageTab = "products" | "branches" | "reviews" | "about-us";
 
@@ -196,7 +197,9 @@ function ShopHome({ shop }: { shop: Shop }) {
                     <div className="flex-grow-1 d-none d-md-block"></div>
                     <div className="hstack gap-1">
                       <Rating rating={shop.rating ?? 0} />
-                      <span className="text-dark-gray">{shop.rating}</span>
+                      <span className="text-dark-gray">
+                        {shop.rating?.toFixed(1)}
+                      </span>
                     </div>
                     {/* <a
                       href="#"
@@ -278,16 +281,12 @@ function ShopHome({ shop }: { shop: Shop }) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const { slug } = context.query;
+
+    const shop = await getShopBySlug(slug as string);
+
     return {
       props: {
-        shop: {
-          name: "Mobile Rain",
-          logo: "/images/placeholder.jpeg",
-          cover: "/images/banner.jpeg",
-          headline: "Mobile phones sales & services",
-          description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ac turpis egestas integer eget aliquet."
-        }
+        shop: shop
       } // will be passed to the page component as props
     };
   } catch (e) {

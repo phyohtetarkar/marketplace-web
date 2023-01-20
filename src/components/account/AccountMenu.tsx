@@ -51,7 +51,7 @@ function AccountMenu({}) {
           icon: <UserIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
-          href: "/profile/favorite",
+          href: "/profile/favorites",
           title: "My favorites",
           icon: <HeartIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}

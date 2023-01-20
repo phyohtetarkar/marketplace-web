@@ -1,23 +1,25 @@
-import useSWR from "swr";
 import Link from "next/link";
+import useSWR from "swr";
 import { PageData, Shop } from "../../../common/models";
+import { withAuthentication } from "../../../common/WithAuthentication";
 import AccountMenu from "../../../components/account/AccountMenu";
 import { Input, Select } from "../../../components/forms";
+import Loading from "../../../components/Loading";
 import Pagination from "../../../components/Pagination";
 import ShopManageGridItem from "../../../components/shop/ShopManageGridItem";
 import { getMyShops } from "../../../services/UserService";
 
 function MyShops() {
-  const { data, error, isLoading } = useSWR<PageData<Shop>, Error>(
-    ["/shops"],
-    ([url]) => getMyShops(),
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  const { data, error, isLoading, isValidating } = useSWR<
+    PageData<Shop>,
+    Error
+  >(["/my-shops"], ([url]) => getMyShops(), {
+    revalidateOnFocus: false
+  });
 
   const content = () => {
-    if (isLoading) {
+    if (isLoading || isValidating) {
+      return <Loading />;
     }
 
     if (error) {
@@ -101,4 +103,4 @@ function MyShops() {
   );
 }
 
-export default MyShops;
+export default withAuthentication(MyShops);

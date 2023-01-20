@@ -240,70 +240,79 @@ const Home = ({ data }: { data: HomeData }) => {
         </>
       )} */}
 
-      <div className="d-flex align-items-center justify-content-between mb-4">
-        <h4
-          className="fw-semibold text-nowrap"
-          style={{ textOverflow: "ellipsis", overflowX: "clip" }}
-        >
-          Recommended shops
-        </h4>
-        <Link href="/shops">
-          <a className="text-decoration-none fw-medium text-nowrap">View all</a>
-        </Link>
-      </div>
-      <div className="mb-5">
-        <Swiper
-          spaceBetween={20}
-          slidesPerView={2}
-          preventClicks={false}
-          preventClicksPropagation={false}
-          pagination={{
-            el: ""
-          }}
-          autoplay={{
-            delay: 3000,
-            disableOnInteraction: false
-          }}
-          breakpoints={{
-            640: {
-              slidesPerView: 3,
-              spaceBetween: 20
-            },
-            768: {
-              slidesPerView: 5,
-              spaceBetween: 40
-            },
-            1024: {
-              slidesPerView: 6,
-              spaceBetween: 50
-            }
-          }}
-          modules={[Autoplay, Pagination]}
-        >
-          {_shops.map((s, i) => {
-            return (
-              <SwiperSlide key={i}>
-                <Link href={`/shops/${s}`}>
-                  <a className="vstack gap-3 position-relative align-items-center text-decoration-none">
-                    <div className="" onContextMenu={(e) => e.preventDefault()}>
-                      <Image
-                        src={"/images/profile.png"}
-                        alt="Logo image"
-                        className="rounded-circle"
-                        width={100}
-                        height={100}
-                        objectFit="cover"
-                        priority
-                      />
-                    </div>
-                    <h6 className="text-truncate text-dark">{s}</h6>
-                  </a>
-                </Link>
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
-      </div>
+      {data.featuredShops && (
+        <>
+          <div className="d-flex align-items-center justify-content-between mb-4">
+            <h4
+              className="fw-semibold text-nowrap"
+              style={{ textOverflow: "ellipsis", overflowX: "clip" }}
+            >
+              Featured shops
+            </h4>
+            <Link href="/shops">
+              <a className="text-decoration-none fw-medium text-nowrap">
+                View all
+              </a>
+            </Link>
+          </div>
+          <div className="mb-5">
+            <Swiper
+              spaceBetween={20}
+              slidesPerView={2}
+              preventClicks={false}
+              preventClicksPropagation={false}
+              pagination={{
+                el: ""
+              }}
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false
+              }}
+              breakpoints={{
+                640: {
+                  slidesPerView: 3,
+                  spaceBetween: 20
+                },
+                768: {
+                  slidesPerView: 5,
+                  spaceBetween: 40
+                },
+                1024: {
+                  slidesPerView: 6,
+                  spaceBetween: 50
+                }
+              }}
+              modules={[Autoplay, Pagination]}
+            >
+              {data.featuredShops.map((s, i) => {
+                return (
+                  <SwiperSlide key={i}>
+                    <Link href={`/shops/${s.slug}`}>
+                      <a className="vstack gap-3 position-relative align-items-center text-decoration-none">
+                        <div
+                          className=""
+                          onContextMenu={(e) => e.preventDefault()}
+                        >
+                          <Image
+                            src={s.logo ?? "/images/placeholder.jpeg"}
+                            alt="Logo image"
+                            className="rounded-circle"
+                            width={100}
+                            height={100}
+                            objectFit="cover"
+                            priority
+                          />
+                        </div>
+                        <h6 className="text-truncate text-dark">{s.name}</h6>
+                      </a>
+                    </Link>
+                  </SwiperSlide>
+                );
+              })}
+            </Swiper>
+          </div>
+        </>
+      )}
 
       <div className="d-flex align-items-center justify-content-between mb-3">
         <h4

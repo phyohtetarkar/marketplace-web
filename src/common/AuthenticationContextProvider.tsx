@@ -1,15 +1,16 @@
 import { HubCapsule } from "@aws-amplify/core";
 import { Auth, Hub } from "aws-amplify";
 import { ReactNode, useEffect, useState } from "react";
+import { getLoginUser } from "../services/UserService";
 import { AuthenticationContext, StateContext } from "./contexts";
-import { AuthUser } from "./models";
+import { User } from "./models";
 
 export const AuthenticationContextProvider = ({
   children
 }: {
   children: ReactNode;
 }) => {
-  const [authUser, setAuthUser] = useState<StateContext<AuthUser>>({
+  const [authUser, setAuthUser] = useState<StateContext<User>>({
     payload: undefined,
     status: "loading"
   });
@@ -17,19 +18,15 @@ export const AuthenticationContextProvider = ({
   useEffect(() => {
     Auth.currentAuthenticatedUser()
       .then((user) => {
-        const attributes = user.attributes;
-        // TODO: fetch user
+        console.log(user);
 
+        return getLoginUser();
+      })
+      .then((user) => {
         setAuthUser({
           status: "success",
-          payload: {
-            id: attributes.sub,
-            name: attributes.name,
-            phone: attributes.phone_number,
-            verified: attributes.phone_number_verified
-          }
+          payload: user
         });
-        console.log(user);
       })
       .catch((error) => {
         console.log(error);
@@ -42,16 +39,15 @@ export const AuthenticationContextProvider = ({
 
   useEffect(() => {
     const applyUser = async (attributes: any) => {
-      // TODO: fetch user
-      setAuthUser({
-        status: "success",
-        payload: {
-          id: attributes.sub,
-          name: attributes.name,
-          phone: attributes.phone_number,
-          verified: attributes.phone_number_verified
-        }
-      });
+      try {
+        const user = await getLoginUser();
+        setAuthUser({
+          status: "success",
+          payload: user
+        });
+      } catch (error) {
+        console.log(error);
+      }
     };
     const listener = (data: HubCapsule) => {
       switch (data.payload.event) {
