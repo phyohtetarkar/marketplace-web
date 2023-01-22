@@ -5,7 +5,7 @@ import { ShopGeneral } from "../../common/models";
 import { existsShopBySlug } from "../../services/ShopService";
 import { Input, Textarea } from "../forms";
 
-function ShopGeneralForm() {
+function ShopGeneralEdit() {
   const shopContext = useContext(ShopDetailContext);
 
   const formik = useFormik<ShopGeneral>({
@@ -50,7 +50,10 @@ function ShopGeneralForm() {
   };
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="card">
+      <div className="card shadow-sm">
+        <div className="card-header py-2h bg-white border-bottom">
+          <h4 className="mb-0">General</h4>
+        </div>
         <div className="card-body">
           <div className="row g-3 mb-3">
             <div className="col-lg-6">
@@ -111,8 +114,12 @@ function ShopGeneralForm() {
         </div>
         <div className="card-footer py-2h">
           <div className="clearfix">
-            <button type="submit" className="float-end btn btn-primary">
-              Save
+            <button
+              type="submit"
+              className="btn btn-primary float-end"
+              disabled={formik.isSubmitting}
+            >
+              Update
             </button>
           </div>
         </div>
@@ -121,4 +128,4 @@ function ShopGeneralForm() {
   );
 }
 
-export default ShopGeneralForm;
+export default ShopGeneralEdit;

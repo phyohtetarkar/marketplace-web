@@ -2,12 +2,19 @@ import { Input } from "../forms";
 import Pagination from "../Pagination";
 import { ProductGridItem } from "../product";
 import useSWR from "swr";
-import { PageData, Product } from "../../common/models";
+import { PageData, Product, Shop } from "../../common/models";
 import { findAllProducts, ProductQuery } from "../../services/ProductService";
 import { useState } from "react";
+import Link from "next/link";
 
-function ShopProductListing({ shopId }: { shopId: number }) {
-  const [query, setQuery] = useState<ProductQuery>({ shopId: shopId });
+function ShopProductListing({
+  shop,
+  isMember
+}: {
+  shop: Shop;
+  isMember: boolean;
+}) {
+  const [query, setQuery] = useState<ProductQuery>({ shopId: shop.id });
 
   const { data, error, isLoading } = useSWR<PageData<Product>, Error>(
     ["/products", query],
@@ -19,7 +26,7 @@ function ShopProductListing({ shopId }: { shopId: number }) {
 
   return (
     <div className="p-0">
-      <div className="row">
+      <div className="row g-3">
         <div className="col-auto ms-auto">
           <Input
             id="searchInput"
@@ -27,6 +34,11 @@ function ShopProductListing({ shopId }: { shopId: number }) {
             type="text"
             placeholder="Search products"
           />
+        </div>
+        <div className="col-auto">
+          <Link href={`${shop.slug}/create-product`}>
+            <a className="btn btn-primary h-100 hstack">Create new</a>
+          </Link>
         </div>
       </div>
 

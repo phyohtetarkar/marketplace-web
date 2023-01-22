@@ -44,6 +44,11 @@ export interface Category {
   children?: [Category] | null;
 }
 
+export interface ShopMember {
+  role: string;
+  member: User;
+}
+
 export interface Shop {
   id?: number;
   name?: string;
@@ -56,6 +61,7 @@ export interface Shop {
   cover?: string | null;
   about?: string | null;
   contact?: ShopContact | null;
+  members?: [ShopMember] | null;
   logoImage?: File | null;
   coverImage?: File | null;
 }
@@ -94,6 +100,7 @@ export interface Product {
   brand?: string | null;
   thumbnail?: string | null;
   outOfStock?: boolean | null;
+  featured?: boolean;
   description?: string | null;
   discount?: Discount | null;
   category: Category;
@@ -103,13 +110,35 @@ export interface Product {
   variants?: [ProductVariant] | null;
 }
 
-export interface ProductImage {}
+export interface ProductImage {
+  id?: string;
+  productId?: number;
+  name?: string;
+  thumbnail?: boolean;
+  file?: File;
+  deleted?: boolean;
+}
 
-export interface ProductOption {}
+export interface ProductOption {
+  id?: string;
+  name?: number;
+  position?: number;
+}
 
-export interface ProductVariant {}
+export interface ProductVariant {
+  id?: string;
+  title?: string;
+  sku?: string;
+  price?: number;
+  outOfStock?: boolean;
+  options: ProductVariantOption[];
+  deleted?: boolean;
+}
 
-export interface ProductVariantOption {}
+export interface ProductVariantOption {
+  option: string;
+  value: string;
+}
 
 export interface Discount {
   id?: string;

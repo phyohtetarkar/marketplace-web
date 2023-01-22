@@ -34,11 +34,7 @@ export async function getShops(page?: number) {
     page: page
   });
   const url = `${getAPIBasePath()}${basePath}${query}`;
-  const resp = await fetch(url, {
-    headers: {
-      Authorization: await getAuthHeader()
-    }
-  });
+  const resp = await fetch(url);
 
   await validateResponse(resp);
 

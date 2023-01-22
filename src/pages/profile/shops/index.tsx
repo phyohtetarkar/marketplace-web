@@ -6,7 +6,7 @@ import AccountMenu from "../../../components/account/AccountMenu";
 import { Input, Select } from "../../../components/forms";
 import Loading from "../../../components/Loading";
 import Pagination from "../../../components/Pagination";
-import ShopManageGridItem from "../../../components/shop/ShopManageGridItem";
+import { ShopManageGridItem } from "../../../components/shop";
 import { getMyShops } from "../../../services/UserService";
 
 function MyShops() {

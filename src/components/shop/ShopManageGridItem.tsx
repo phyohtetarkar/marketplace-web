@@ -1,4 +1,3 @@
-import { ChartBarIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { Shop } from "../../common/models";
@@ -44,10 +43,10 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
           </div>
 
           <div className="hstack gap-2">
-            <Link href={`/profile/shops/${value.slug}`}>
+            <Link href={`/shops/${value.slug}`}>
               <a className="btn btn-primary flex-grow-1 hstack justify-content-center gap-2">
-                <ChartBarIcon width={20} />
-                <span>Dashboard</span>
+                {/* <ChartBarIcon width={20} /> */}
+                <span>View detail</span>
               </a>
             </Link>
           </div>

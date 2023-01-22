@@ -7,20 +7,22 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import useSWR from "swr";
 import { useRouter } from "next/router";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
+import useSWR from "swr";
+import { ShopDetailContext } from "../../../../common/contexts";
+import { Shop } from "../../../../common/models";
 import { withAuthentication } from "../../../../common/WithAuthentication";
 import Accordion from "../../../../components/Accordion";
 import Dropdown from "../../../../components/Dropdown";
-import ManageDiscounts from "../../../../components/merchant/ManageDiscounts";
-import ManageProducts from "../../../../components/merchant/ManageProducts";
-import ShopDashboard from "../../../../components/merchant/ShopDashboard";
-import ShopSetting from "../../../../components/merchant/ShopSetting";
-import { Shop } from "../../../../common/models";
-import { getShopBySlug } from "../../../../services/ShopService";
 import Loading from "../../../../components/Loading";
-import { ShopDetailContext } from "../../../../common/contexts";
+import {
+  ManageDiscounts,
+  ManageProducts,
+  ShopDashboard,
+  ShopSetting
+} from "../../../../components/merchant";
+import { getShopBySlug } from "../../../../services/ShopService";
 
 type PageTab = "dashboard" | "products" | "discounts" | "orders" | "setting";
 

@@ -4,7 +4,7 @@ import { ShopDetailContext } from "../../common/contexts";
 import { ShopContact } from "../../common/models";
 import { Input, TagInput } from "../forms";
 
-function ShopContactForm() {
+function ShopContactEdit() {
   const shopContext = useContext(ShopDetailContext);
 
   const formik = useFormik<ShopContact>({
@@ -25,7 +25,10 @@ function ShopContactForm() {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <div className="card">
+      <div className="card shadow-sm">
+        <div className="card-header bg-white py-2h border-bottom">
+          <h4 className="mb-0">Contact</h4>
+        </div>
         <div className="card-body">
           <div className="mb-3">
             <label className="form-label">Phones</label>
@@ -44,7 +47,7 @@ function ShopContactForm() {
               onChange={formik.handleChange}
             />
           </div>
-          <div>
+          <div className="mb-3">
             <label className="form-label">Location</label>
             <div className="row g-3">
               <div className="col-md-6">
@@ -52,7 +55,12 @@ function ShopContactForm() {
                   name="latitude"
                   placeholder="Enter latitude"
                   value={formik.values.latitude ?? ""}
-                  onChange={formik.handleChange}
+                  onChange={(evt) => {
+                    const value = evt.target.value;
+                    if (value.length === 0 || !isNaN(parseInt(value))) {
+                      formik.handleChange(evt);
+                    }
+                  }}
                 />
               </div>
               <div className="col-md-6">
@@ -60,7 +68,12 @@ function ShopContactForm() {
                   name="longitude"
                   placeholder="Enter longitude"
                   value={formik.values.longitude ?? ""}
-                  onChange={formik.handleChange}
+                  onChange={(evt) => {
+                    const value = evt.target.value;
+                    if (value.length === 0 || !isNaN(parseInt(value))) {
+                      formik.handleChange(evt);
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -68,8 +81,12 @@ function ShopContactForm() {
         </div>
         <div className="card-footer py-2h">
           <div className="clearfix">
-            <button type="submit" className="btn btn-primary float-end">
-              Save
+            <button
+              type="submit"
+              className="btn btn-primary float-end"
+              disabled={formik.isSubmitting}
+            >
+              Update
             </button>
           </div>
         </div>
@@ -99,4 +116,4 @@ function ShopContactForm() {
   );
 }
 
-export default ShopContactForm;
+export default ShopContactEdit;

@@ -6,7 +6,7 @@ import Rating from "../Rating";
 
 const _ratings = [5, 4, 3, 2, 1];
 
-function ShopReviewForm() {
+function ShopReviewEdit() {
   const formik = useFormik<ShopReview>({
     initialValues: {
       shopId: 0
@@ -69,4 +69,4 @@ function ShopReviewForm() {
   );
 }
 
-export default ShopReviewForm;
+export default ShopReviewEdit;

@@ -2,6 +2,7 @@ import { PlusIcon, TrashIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
+import { ProductVariant, ProductVariantOption } from "../../common/models";
 import { AutocompleteSelect, Input, TagInput } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import Modal from "../Modal";
@@ -17,12 +18,8 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
 
 interface Option {
   name: string;
+  position: number;
   values: string[];
-}
-
-interface Variant {
-  name: string;
-  options?: { name: string; value: string }[];
 }
 
 function OptionsEdit({
@@ -60,7 +57,8 @@ function OptionsEdit({
                     onChange={(e) => {
                       const option = {
                         name: e.target.value,
-                        values: options[i].values
+                        values: options[i].values,
+                        position: i
                       };
                       updateOption(option, i);
                     }}
@@ -75,7 +73,8 @@ function OptionsEdit({
                         onTagsChange={(tags) => {
                           const option = {
                             name: options[i].name,
-                            values: tags
+                            values: tags,
+                            position: i
                           };
                           updateOption(option, i);
                         }}
@@ -104,7 +103,8 @@ function OptionsEdit({
                 setOptions((old) => {
                   const v = {
                     name: "",
-                    values: []
+                    values: [],
+                    position: data.length
                   };
                   return [...old, v];
                 });
@@ -138,22 +138,36 @@ function ProductEdit({ create = {} }) {
   const [editorHeight, setEditorHeight] = useState(300);
   const [showVariantModal, setShowVariantModal] = useState(false);
   const [options, setOptions] = useState<Option[]>([]);
-  const [variants, setVariants] = useState<Variant[]>([]);
+  const [variants, setVariants] = useState<ProductVariant[]>([]);
 
-  function generateVariant(list: Option[], index: number, key: string) {
-    const result: Variant[] = [];
+  function generateVariant(
+    list: Option[],
+    index: number,
+    key: string,
+    variantOptions?: ProductVariantOption[]
+  ) {
+    const result: ProductVariant[] = [];
     const option = list[index];
     for (const value of option.values) {
       if (index < list.length - 1) {
+        const options = variantOptions ? variantOptions : [];
+        options.push({
+          option: option.name,
+          value: value
+        });
         result.push(
           ...generateVariant(
             list,
             index + 1,
-            `${index > 0 ? key + " / " + value : value}`
+            `${index > 0 ? key + " / " + value : value}`,
+            options
           )
         );
       } else {
-        result.push({ name: `${index > 0 ? key + " / " + value : value}` });
+        result.push({
+          title: `${index > 0 ? key + " / " + value : value}`,
+          options: variantOptions ?? []
+        });
       }
     }
 
@@ -206,7 +220,7 @@ function ProductEdit({ create = {} }) {
 
       <div className="container py-4">
         <div className="vstack gap-3">
-          <div className="card">
+          <div className="card shadow-sm">
             <div className="card-header bg-white py-3 px-md-4">
               <h5 className="mb-0">General</h5>
             </div>
@@ -360,7 +374,7 @@ function ProductEdit({ create = {} }) {
             </div>
           </div>
 
-          <div className="card">
+          <div className="card shadow-sm">
             <div className="card-header bg-white py-3">
               <div className="hstack justify-content-between">
                 <h5 className="mb-0">Variants</h5>
@@ -395,37 +409,40 @@ function ProductEdit({ create = {} }) {
                     </tr>
                   </thead>
                   <tbody className="border-top-0">
-                    {variants.map((v, i) => {
-                      return (
-                        <tr key={i}>
-                          <td className="ps-3 py-3 w-100">
-                            <span className="text-nowrap me-3">{v.name}</span>
-                          </td>
-                          <td>
-                            <Input
-                              name="price"
-                              type="text"
-                              placeholder="Enter price"
-                              defaultValue={0}
-                              height={40}
-                            />
-                          </td>
-                          <td>
-                            <Input
-                              name="sku"
-                              type="text"
-                              placeholder="Enter sku"
-                              height={40}
-                            />
-                          </td>
-                          <td>
-                            <div role="button" className="link-danger">
-                              <TrashIcon width={20} />
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                    {variants &&
+                      variants.map((v, i) => {
+                        return (
+                          <tr key={i}>
+                            <td className="ps-3 py-3 w-100">
+                              <span className="text-nowrap me-3">
+                                {v.title}
+                              </span>
+                            </td>
+                            <td>
+                              <Input
+                                name="price"
+                                type="text"
+                                placeholder="Enter price"
+                                defaultValue={0}
+                                height={40}
+                              />
+                            </td>
+                            <td>
+                              <Input
+                                name="sku"
+                                type="text"
+                                placeholder="Enter sku"
+                                height={40}
+                              />
+                            </td>
+                            <td>
+                              <div role="button" className="link-danger">
+                                <TrashIcon width={20} />
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
                   </tbody>
                 </table>
               </div>
@@ -436,7 +453,7 @@ function ProductEdit({ create = {} }) {
               variant="large"
             >
               {(isShown) =>
-                isShown ? (
+                isShown && options ? (
                   <OptionsEdit
                     data={[...options]}
                     updateOptions={(list) => {
@@ -453,7 +470,7 @@ function ProductEdit({ create = {} }) {
             </Modal>
           </div>
 
-          <div className="card">
+          <div className="card shadow-sm">
             <div className="card-header bg-white py-3 px-md-4">
               <h5 className="mb-0">Pricing</h5>
             </div>
@@ -525,7 +542,7 @@ function ProductEdit({ create = {} }) {
             </div>
           </div> */}
 
-          <div className="card">
+          <div className="card shadow-sm">
             <div className="card-header bg-white py-3 px-md-4">
               <h5 className="mb-0">Images</h5>
             </div>
@@ -547,7 +564,7 @@ function ProductEdit({ create = {} }) {
             </div>
           </div>
 
-          <div className="card">
+          <div className="card shadow-sm">
             <div className="card-header bg-white py-3 px-md-4">
               <h5 className="mb-0">Video</h5>
             </div>

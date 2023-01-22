@@ -4,6 +4,7 @@ interface TabProps {
   tabKey: string;
   title: string;
   disabled?: boolean;
+  hidden?: boolean;
   tabClassName?: string;
   children: ReactNode;
 }
@@ -30,7 +31,10 @@ function Tabs({ defaultTabKey, className, onTabChange, children }: TabsProps) {
         }`}
       >
         {children.map((c) => {
-          const { tabKey, title, disabled, tabClassName } = c.props;
+          const { tabKey, title, disabled, tabClassName, hidden } = c.props;
+          if (hidden) {
+            return null;
+          }
           const active = activeTabKey === tabKey;
           return (
             <li key={tabKey} className="nav-item">

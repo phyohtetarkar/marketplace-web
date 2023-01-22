@@ -2,7 +2,7 @@ import Image from "next/image";
 import Pagination from "../Pagination";
 import Rating from "../Rating";
 import useSWR from "swr";
-import ShopReviewForm from "./ShopReviewForm";
+import ShopReviewEdit from "./ShopReviewEdit";
 import { PageData, ShopReview } from "../../common/models";
 import { getReviews } from "../../services/ShopReviewService";
 
@@ -49,7 +49,7 @@ function ShopReviewListing({ shopId }: { shopId: number }) {
 
   return (
     <div>
-      <ShopReviewForm />
+      <ShopReviewEdit />
       <div className="card shadow-sm">
         <div className="card-body">
           {data?.contents &&
