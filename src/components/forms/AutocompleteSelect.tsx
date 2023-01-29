@@ -8,7 +8,8 @@ interface OptionProps<T, Key> {
   getOptionKey: (op: T) => Key;
   formatOptionLabel?: (op: T, selected: boolean) => ReactNode;
   skipOption?: (op: T) => boolean;
-  getNestedData?: (op: T) => T[] | undefined;
+  getNestedData?: (op: T) => T[] | [T] | null | undefined;
+  canSelect?: (op: T) => boolean;
 }
 
 interface AutocompleteSelectProps<T = string, Key = string>
@@ -48,18 +49,28 @@ function Option<T, Key>(
       : "";
   const label = prefix + props.getOptionLabel(props.value);
 
-  const list = props.getNestedData?.(props.value) ?? undefined;
+  const list = props.getNestedData?.(props.value);
 
   const { value, level, ...passThroughProps } = props;
+
+  const canSelect = props.canSelect?.(props.value) ?? true;
 
   return (
     <>
       {props.handleFilter(props.value) && (
         <li
           role="button"
-          onClick={() => !selected && props.handleClick(key, props.value)}
+          onClick={() => {
+            if (canSelect) {
+              !selected && props.handleClick(key, props.value);
+            }
+          }}
         >
-          <div className={`dropdown-item py-2 ${selected ? "active" : ""}`}>
+          <div
+            className={`dropdown-item py-2 ${selected ? "active" : ""} ${
+              !canSelect ? "disabled" : ""
+            }`}
+          >
             {label}
           </div>
         </li>
@@ -143,10 +154,10 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
   );
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleDocumentClick);
+    document.addEventListener("click", handleDocumentClick);
 
     return () => {
-      document.removeEventListener("mousedown", handleDocumentClick);
+      document.removeEventListener("click", handleDocumentClick);
     };
   }, [handleDocumentClick]);
 
@@ -259,7 +270,7 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
         ref={setPopperElement}
         style={{
           ...styles.popper,
-          zIndex: 999,
+          zIndex: 9999,
           width: referenceElement?.offsetWidth,
           visibility: open ? "visible" : "hidden",
           pointerEvents: open ? "auto" : "none"

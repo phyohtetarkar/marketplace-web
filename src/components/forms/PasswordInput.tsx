@@ -9,6 +9,7 @@ function PasswordInput({
   label,
   id,
   name,
+  autoComplete,
   placeholder,
   disabled,
   value,
@@ -28,6 +29,7 @@ function PasswordInput({
           id={id}
           type={isPassword ? "password" : "text"}
           name={name}
+          autoComplete={autoComplete}
           className={`form-control px-3 ${error ? "is-invalid" : ""}`}
           placeholder={placeholder}
           disabled={disabled}

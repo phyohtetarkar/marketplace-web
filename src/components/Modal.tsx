@@ -28,7 +28,7 @@ function Modal({
 
     const handleHidden = (event: Event) => {
       setIsShown(false);
-      onHidden && onHidden();
+      onHidden?.();
     };
 
     const initModal = async () => {

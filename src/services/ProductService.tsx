@@ -10,9 +10,10 @@ const basePath = "products";
 
 export interface ProductQuery {
   q?: String;
-  categoryId?: number;
-  shopId?: number;
-  maxPrice?: number;
+  "category-slug"?: number;
+  "shop-id"?: number;
+  "max-price"?: number;
+  status?: "PUBLISHED";
   page?: number;
 }
 
@@ -46,7 +47,17 @@ export async function deleteProduct(id: number) {
   await validateResponse(resp);
 }
 
-export async function findAllProducts(value: ProductQuery) {
+export async function getProductHints(q: string) {
+  const query = buildQueryParams({ q: q });
+  const url = `${getAPIBasePath()}${basePath}/hints${query}`;
+  const resp = await fetch(url);
+
+  await validateResponse(resp);
+
+  return resp.json() as Promise<Product[]>;
+}
+
+export async function findProducts(value: ProductQuery) {
   const query = buildQueryParams(value);
 
   const url = `${getAPIBasePath()}${basePath}${query}`;

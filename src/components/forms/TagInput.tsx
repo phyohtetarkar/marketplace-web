@@ -6,6 +6,7 @@ interface TagInputProps {
   data: string[];
   placeholder?: string;
   onTagsChange?: (tags: string[]) => void;
+  error?: string;
 }
 
 interface TagValues {
@@ -35,7 +36,12 @@ function Tag({ index, name, onRemove }: TagValues) {
   );
 }
 
-function TagInput({ data = [], placeholder, onTagsChange }: TagInputProps) {
+function TagInput({
+  data = [],
+  placeholder,
+  onTagsChange,
+  error
+}: TagInputProps) {
   const [focus, setFocus] = useState(false);
   const [tags, setTags] = useState(data);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -83,39 +89,42 @@ function TagInput({ data = [], placeholder, onTagsChange }: TagInputProps) {
   }
 
   return (
-    <div
-      className={`px-3 border rounded form-control d-flex flex-wrap align-items-center ${
-        focus ? "border-primary" : ""
-      }`}
-      onFocus={() => {
-        setFocus(true);
-        inputRef.current?.focus();
-      }}
-      tabIndex={0}
-      onBlur={() => setFocus(false)}
-      style={{
-        minHeight: formControlHeight
-      }}
-    >
-      {tags.map((e, i) => {
-        return <Tag key={i} index={i} name={e} onRemove={handleRemove} />;
-      })}
-      <input
-        ref={inputRef}
-        type="text"
-        className="border-0 bg-transparent"
-        size={10}
-        placeholder={placeholder ?? "Add tag"}
-        style={{ outline: "none" }}
-        onFocus={(_evt) => {
+    <>
+      <div
+        className={`px-3 border rounded form-control d-flex flex-wrap align-items-center ${
+          focus && !error ? "border-primary" : ""
+        } ${error ? "border-danger" : ""}`}
+        onFocus={() => {
           setFocus(true);
+          inputRef.current?.focus();
         }}
-        onBlur={(_evt) => {
-          setFocus(false);
+        tabIndex={0}
+        onBlur={() => setFocus(false)}
+        style={{
+          minHeight: formControlHeight
         }}
-        onKeyUp={handleKey}
-      />
-    </div>
+      >
+        {tags.map((e, i) => {
+          return <Tag key={i} index={i} name={e} onRemove={handleRemove} />;
+        })}
+        <input
+          ref={inputRef}
+          type="text"
+          className={`border-0 bg-transparent`}
+          size={10}
+          placeholder={placeholder ?? "Add tag"}
+          style={{ outline: "none" }}
+          onFocus={(_evt) => {
+            setFocus(true);
+          }}
+          onBlur={(_evt) => {
+            setFocus(false);
+          }}
+          onKeyUp={handleKey}
+        />
+      </div>
+      {error && <div className="text-danger small mt-1">{error}</div>}
+    </>
   );
 }
 

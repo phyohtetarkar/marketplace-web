@@ -9,6 +9,7 @@ interface PopoverProps {
   hideOnPopper?: boolean;
   hideOnPopperClick?: boolean;
   hideOnLeave?: boolean;
+  sameWidth?: boolean;
   children: (
     show: () => void,
     hide: () => void
@@ -20,7 +21,7 @@ interface ReferenceProps {
 }
 
 interface PopperProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 function Reference(props: ReferenceProps) {
@@ -36,9 +37,10 @@ function Popover(props: PopoverProps) {
     placement,
     offset,
     showOnHover,
-    hideOnPopper = true,
+    hideOnPopper,
     hideOnLeave,
-    hideOnPopperClick = true,
+    hideOnPopperClick,
+    sameWidth,
     children
   } = props;
 
@@ -65,10 +67,10 @@ function Popover(props: PopoverProps) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    document.addEventListener("click", handleDocumentClick);
+    document.addEventListener("mousedown", handleDocumentClick);
 
     return () => {
-      document.removeEventListener("click", handleDocumentClick);
+      document.removeEventListener("mousedown", handleDocumentClick);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -117,7 +119,11 @@ function Popover(props: PopoverProps) {
 
       <div
         ref={popperElement}
-        style={{ ...styles.popper, zIndex: 999 }}
+        style={{
+          ...styles.popper,
+          zIndex: 9999,
+          width: sameWidth ? referenceElement.current?.clientWidth : undefined
+        }}
         {...attributes.popper}
         onMouseLeave={(evt) => {
           hideOnPopper && open && hidePopper();

@@ -17,6 +17,7 @@ export interface InputProps<ElementType> {
   label?: ReactNode;
   id?: string;
   name?: string;
+  autoComplete?: string;
   type?: HTMLInputTypeAttribute;
   placeholder?: string;
   value?: string | number | readonly string[];
@@ -40,6 +41,7 @@ const Input = forwardRef<HTMLInputElement, InputProps<HTMLInputElement>>(
       id,
       type,
       name,
+      autoComplete,
       placeholder,
       disabled,
       readonly,
@@ -67,6 +69,7 @@ const Input = forwardRef<HTMLInputElement, InputProps<HTMLInputElement>>(
           id={id}
           type={type}
           name={name}
+          autoComplete={autoComplete}
           className={`form-control px-3 ${error ? "is-invalid" : ""} ${
             className ?? ""
           }`}

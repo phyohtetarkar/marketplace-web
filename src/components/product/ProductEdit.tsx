@@ -1,8 +1,17 @@
 import { PlusIcon, TrashIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { FormikErrors, useFormik } from "formik";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
-import { ProductVariant, ProductVariantOption } from "../../common/models";
+import { useCategories } from "../../common/hooks";
+import {
+  Category,
+  Product,
+  ProductOption,
+  ProductVariant,
+  ProductVariantOption,
+  Shop
+} from "../../common/models";
 import { AutocompleteSelect, Input, TagInput } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import Modal from "../Modal";
@@ -31,13 +40,53 @@ function OptionsEdit({
   updateOptions: (list: Option[]) => void;
   hide: () => void;
 }) {
-  const [options, setOptions] = useState<Option[]>(data);
+  const [errors, setErrors] = useState<
+    ({ name: string; values: string } | undefined)[]
+  >([]);
 
-  function updateOption(option: Option, i: number) {
-    const list = [...options];
-    list[i] = option;
-    setOptions(list);
-  }
+  const formik = useFormik<Option[]>({
+    initialValues: data,
+    enableReinitialize: true,
+    validate: (values) => {
+      const errors: ({ name: string; values: string } | undefined)[] = [];
+      const len = values.length;
+      for (let i = 0; i < len; i++) {
+        const op = values[i];
+        const error = {} as any;
+        console.log(op.position);
+        if (op.name.length === 0) {
+          error["name"] = "Enter option name";
+        } else if (
+          values.find(
+            (e, index) =>
+              i !== index && e.name.toLowerCase() === op.name.toLowerCase()
+          )
+        ) {
+          error["name"] = "Duplicate option name";
+        }
+
+        if (op.values.length === 0) {
+          error["values"] = "Option values must not empty";
+        }
+
+        Object.keys(error).length > 0
+          ? errors.push(error)
+          : errors.push(undefined);
+      }
+      setErrors(errors);
+      return undefined;
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+    onSubmit: (values) => {
+      if (errors.filter((e) => !!e).length === 0) {
+        updateOptions([...values]);
+        setErrors([]);
+      }
+
+      formik.setSubmitting(false);
+    }
+  });
 
   return (
     <>
@@ -47,49 +96,42 @@ function OptionsEdit({
 
       <div className="modal-body">
         <>
-          {options.map((o, i) => {
+          {formik.values.map((o, i) => {
             return (
               <div key={i} className="row g-3 mb-3">
                 <div className="col-auto">
                   <Input
-                    value={o.name}
+                    name="name"
+                    value={formik.values[i].name}
                     placeholder="Name"
-                    onChange={(e) => {
-                      const option = {
-                        name: e.target.value,
-                        values: options[i].values,
-                        position: i
-                      };
-                      updateOption(option, i);
+                    onChange={(evt) => {
+                      formik.setFieldValue(`[${i}].name`, evt.target.value);
                     }}
+                    error={errors[i]?.name}
                   />
                 </div>
                 <div className="col-12 col-md">
-                  <div className="hstack gap-2">
+                  <div className="hstack gap-2 align-items-start">
                     <div className="flex-grow-1">
                       <TagInput
-                        data={o.values ?? []}
-                        placeholder="Tags"
+                        data={formik.values[i].values ?? []}
+                        placeholder="Add value"
                         onTagsChange={(tags) => {
-                          const option = {
-                            name: options[i].name,
-                            values: tags,
-                            position: i
-                          };
-                          updateOption(option, i);
+                          formik.setFieldValue(`[${i}].values`, tags);
                         }}
+                        error={errors[i]?.values as string}
                       />
                     </div>
                     <div
                       role="button"
-                      className="link-danger"
+                      className="link-danger mt-2h"
                       onClick={() => {
-                        const list = [...options];
+                        const list = [...formik.values];
                         list.splice(i, 1);
-                        setOptions(list);
+                        formik.setValues(list);
                       }}
                     >
-                      <XCircleIcon width={24} />
+                      <TrashIcon width={24} />
                     </div>
                   </div>
                 </div>
@@ -100,14 +142,21 @@ function OptionsEdit({
             <button
               className="btn btn-outline-primary hstack gap-1"
               onClick={() => {
-                setOptions((old) => {
-                  const v = {
-                    name: "",
-                    values: [],
-                    position: data.length
-                  };
-                  return [...old, v];
-                });
+                const old = formik.values;
+                const op = {
+                  name: "",
+                  values: [],
+                  position: old.length
+                };
+                formik.setValues([...old, op]);
+                // setOptions((old) => {
+                //   const v = {
+                //     name: "",
+                //     values: [],
+                //     position: data.length
+                //   };
+                //   return [...old, v];
+                // });
               }}
             >
               <PlusIcon width={20} strokeWidth={2} />
@@ -118,13 +167,19 @@ function OptionsEdit({
       </div>
 
       <div className="modal-footer">
-        <button className="btn btn-default" onClick={() => hide()}>
+        <button
+          className="btn btn-default"
+          disabled={formik.isSubmitting}
+          onClick={() => hide()}
+        >
           Cancel
         </button>
         <button
           className="btn btn-primary"
+          disabled={formik.isSubmitting}
           onClick={() => {
-            updateOptions([...options]);
+            //updateOptions([...options]);
+            formik.handleSubmit();
           }}
         >
           Save
@@ -134,11 +189,40 @@ function OptionsEdit({
   );
 }
 
-function ProductEdit({ create = {} }) {
+interface ProductEditProps {
+  shop: Shop;
+  productId?: number;
+  onPopBack?: () => void;
+}
+
+function ProductEdit({ shop, productId, onPopBack }: ProductEditProps) {
   const [editorHeight, setEditorHeight] = useState(300);
   const [showVariantModal, setShowVariantModal] = useState(false);
   const [options, setOptions] = useState<Option[]>([]);
   const [variants, setVariants] = useState<ProductVariant[]>([]);
+  const [withVariant, setWithVariant] = useState(false);
+
+  const { data } = useCategories(false);
+
+  const formik = useFormik<Product>({
+    initialValues: {
+      shopId: shop.id
+    },
+    enableReinitialize: true,
+    validate: async (values) => {
+      const errors: FormikErrors<Product> = {};
+
+      return errors;
+    },
+    validateOnChange: false,
+    validateOnBlur: false,
+    onSubmit: (values) => {
+      const data = { ...values };
+      data.options = options.map((op) => {
+        return { name: op.name, position: op.position };
+      });
+    }
+  });
 
   function generateVariant(
     list: Option[],
@@ -175,53 +259,55 @@ function ProductEdit({ create = {} }) {
   }
 
   function generateVariants(ops: Option[]) {
-    setVariants(generateVariant(ops, 0, ""));
+    //setVariants(generateVariant(ops, 0, ""));
+    formik.setFieldValue(
+      "variants",
+      ops.length > 0 ? generateVariant(ops, 0, "") : []
+    );
   }
 
   return (
-    <div className="pb-5">
+    <div>
       <div className="header-bar">
         <div className="container py-4">
           <div className="hstack">
             <div>
-              <h3 className="fw-bold">
-                {create ? "Create" : "Update"} Product
-              </h3>
+              <h3 className="fw-bold">Create Product</h3>
               <nav aria-label="breadcrumb col-12">
                 <ol className="breadcrumb mb-1">
                   <li className="breadcrumb-item">
-                    <Link href="/profile/shops">
-                      <a href="#" className="">
-                        Shops
-                      </a>
+                    <Link href="/shops">
+                      <a className="">Shops</a>
                     </Link>
                   </li>
                   <li className="breadcrumb-item">
-                    <Link href="/profile/shops/1">
-                      <a href="#" className="">
-                        Shoes World
-                      </a>
-                    </Link>
+                    <a
+                      href="#"
+                      className=""
+                      onClick={(evt) => {
+                        evt.preventDefault();
+                        onPopBack?.();
+                      }}
+                    >
+                      {shop.name}
+                    </a>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
-                    {create ? "Create" : "Update"} Product
+                    Create Product
                   </li>
                 </ol>
               </nav>
             </div>
             <div className="ms-auto">
-              <button className="btn btn-accent py-2 px-3 ms-2">
-                {create ? "Create" : "Update"}
-              </button>
+              <button className="btn btn-accent py-2 px-3 ms-2">Create</button>
             </div>
           </div>
         </div>
       </div>
-
       <div className="container py-4">
         <div className="vstack gap-3">
           <div className="card shadow-sm">
-            <div className="card-header bg-white py-3 px-md-4">
+            <div className="card-header bg-white py-3 px-md-4 border-bottom">
               <h5 className="mb-0">General</h5>
             </div>
             <div className="card-body p-md-4">
@@ -267,10 +353,13 @@ function ProductEdit({ create = {} }) {
                 <div className="col-lg-6 order-1 order-lg-2">
                   <div className="vstack">
                     <label className="form-label">Category *</label>
-                    <AutocompleteSelect<string, string>
-                      getOptionLabel={(v) => v}
-                      getOptionKey={(v) => v}
-                      options={groupList}
+                    <AutocompleteSelect<Category, number>
+                      options={data ?? []}
+                      getOptionLabel={(v) => v.name}
+                      getOptionKey={(v) => v.id}
+                      getNestedData={(v) => v.children}
+                      canSelect={(v) => !v.children || v.children?.length === 0}
+                      onChange={(v) => {}}
                     />
 
                     <div className="mt-3">
@@ -314,6 +403,14 @@ function ProductEdit({ create = {} }) {
 
                     <label className="form-label mt-3">Country of origin</label>
                     <AutocompleteSelect<string, string>
+                      options={[
+                        "Myanmar",
+                        "China",
+                        "UK",
+                        "India",
+                        "Japan",
+                        "Korea"
+                      ].sort()}
                       getOptionLabel={(v) => v}
                       getOptionKey={(v) => v}
                     />
@@ -329,6 +426,17 @@ function ProductEdit({ create = {} }) {
                       className="form-check-input"
                       type="checkbox"
                       role="switch"
+                      checked={withVariant}
+                      onChange={(evt) => {
+                        setWithVariant(evt.target.checked);
+                        if (!evt.target.checked) {
+                          formik.setFieldValue("variants", undefined);
+                          setOptions([]);
+                        } else {
+                          formik.setFieldValue("price", undefined);
+                          formik.setFieldValue("sku", undefined);
+                        }
+                      }}
                     ></input>
                     <label
                       htmlFor="variantCheck"
@@ -374,127 +482,130 @@ function ProductEdit({ create = {} }) {
             </div>
           </div>
 
-          <div className="card shadow-sm">
-            <div className="card-header bg-white py-3">
-              <div className="hstack justify-content-between">
-                <h5 className="mb-0">Variants</h5>
-                <button
-                  className="btn btn-primary ms-2"
-                  onClick={() => {
-                    setShowVariantModal(true);
-                  }}
-                >
-                  Edit Options
-                </button>
-              </div>
-            </div>
-            <div className="card-body p-0">
-              <div
-                className="table-responsive scrollbar-custom"
-                style={{ maxHeight: 360 }}
-              >
-                <table className="table align-middle">
-                  <thead className="table-light text-nowrap align-middle sticky-top">
-                    <tr style={{ height: 50 }}>
-                      <th className="ps-3 fw-medium w-100">VARIANT</th>
-                      <th className="fw-medium" style={{ minWidth: 200 }}>
-                        PRICE
-                      </th>
-                      <th className="fw-medium" style={{ minWidth: 200 }}>
-                        SKU
-                      </th>
-                      <th className="fw-medium" style={{ minWidth: 100 }}>
-                        ACTION
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="border-top-0">
-                    {variants &&
-                      variants.map((v, i) => {
-                        return (
-                          <tr key={i}>
-                            <td className="ps-3 py-3 w-100">
-                              <span className="text-nowrap me-3">
-                                {v.title}
-                              </span>
-                            </td>
-                            <td>
-                              <Input
-                                name="price"
-                                type="text"
-                                placeholder="Enter price"
-                                defaultValue={0}
-                                height={40}
-                              />
-                            </td>
-                            <td>
-                              <Input
-                                name="sku"
-                                type="text"
-                                placeholder="Enter sku"
-                                height={40}
-                              />
-                            </td>
-                            <td>
-                              <div role="button" className="link-danger">
-                                <TrashIcon width={20} />
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <Modal
-              id="varientEditModal"
-              show={showVariantModal}
-              variant="large"
-            >
-              {(isShown) =>
-                isShown && options ? (
-                  <OptionsEdit
-                    data={[...options]}
-                    updateOptions={(list) => {
-                      setOptions(list);
-                      setShowVariantModal(false);
-                      generateVariants(list);
+          {withVariant && (
+            <div className="card shadow-sm">
+              <div className="card-header bg-white py-3">
+                <div className="hstack justify-content-between">
+                  <h5 className="mb-0">Variants</h5>
+                  <button
+                    className="btn btn-primary ms-2"
+                    onClick={() => {
+                      setShowVariantModal(true);
                     }}
-                    hide={() => setShowVariantModal(false)}
-                  />
-                ) : (
-                  <></>
-                )
-              }
-            </Modal>
-          </div>
-
-          <div className="card shadow-sm">
-            <div className="card-header bg-white py-3 px-md-4">
-              <h5 className="mb-0">Pricing</h5>
+                  >
+                    Edit Options
+                  </button>
+                </div>
+              </div>
+              <div className="card-body p-0">
+                <div
+                  className="table-responsive scrollbar-custom"
+                  style={{ maxHeight: 360 }}
+                >
+                  <table className="table align-middle">
+                    <thead className="table-light text-nowrap align-middle">
+                      <tr style={{ height: 50 }}>
+                        <th className="ps-3 fw-medium w-100">VARIANT</th>
+                        <th className="fw-medium" style={{ minWidth: 200 }}>
+                          PRICE
+                        </th>
+                        <th className="fw-medium" style={{ minWidth: 200 }}>
+                          SKU
+                        </th>
+                        <th className="fw-medium" style={{ minWidth: 100 }}>
+                          ACTION
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="border-top-0">
+                      {formik.values.variants &&
+                        formik.values.variants.map((v, i) => {
+                          return (
+                            <tr key={i}>
+                              <td className="ps-3 py-3 w-100">
+                                <span className="text-nowrap me-3">
+                                  {v.title}
+                                </span>
+                              </td>
+                              <td>
+                                <Input
+                                  name="price"
+                                  type="text"
+                                  placeholder="Enter price"
+                                  defaultValue={0}
+                                  height={40}
+                                />
+                              </td>
+                              <td>
+                                <Input
+                                  name="sku"
+                                  type="text"
+                                  placeholder="Enter sku"
+                                  height={40}
+                                />
+                              </td>
+                              <td>
+                                <div role="button" className="link-danger">
+                                  <TrashIcon width={20} />
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <Modal
+                id="varientEditModal"
+                show={showVariantModal}
+                variant="large"
+              >
+                {(isShown) =>
+                  isShown && options ? (
+                    <OptionsEdit
+                      data={[...options]}
+                      updateOptions={(list) => {
+                        setOptions(list);
+                        setShowVariantModal(false);
+                        generateVariants(list);
+                      }}
+                      hide={() => setShowVariantModal(false)}
+                    />
+                  ) : (
+                    <></>
+                  )
+                }
+              </Modal>
             </div>
-            <div className="card-body p-md-4">
-              <div className="row g-4">
-                <div className="col-lg-6">
-                  <Input
-                    label="Price *"
-                    id="priceInput"
-                    name="price"
-                    type="text"
-                    placeholder="Enter price"
-                  />
-                </div>
-                <div className="col-lg-6">
-                  <Input
-                    label="SKU"
-                    id="skuInput"
-                    name="sku"
-                    type="text"
-                    placeholder="Enter product sku"
-                  />
-                </div>
-                {/* <div className="col-lg-12">
+          )}
+
+          {!withVariant && (
+            <div className="card shadow-sm">
+              <div className="card-header bg-white py-3 px-md-4 border-bottom">
+                <h5 className="mb-0">Pricing</h5>
+              </div>
+              <div className="card-body p-md-4">
+                <div className="row g-4">
+                  <div className="col-lg-6">
+                    <Input
+                      label="Price *"
+                      id="priceInput"
+                      name="price"
+                      type="text"
+                      placeholder="Enter price"
+                    />
+                  </div>
+                  <div className="col-lg-6">
+                    <Input
+                      label="SKU"
+                      id="skuInput"
+                      name="sku"
+                      type="text"
+                      placeholder="Enter product sku"
+                    />
+                  </div>
+                  {/* <div className="col-lg-12">
                   <label className="form-label">Discount</label>
                   <div className="input-group">
                     <Input
@@ -520,9 +631,10 @@ function ProductEdit({ create = {} }) {
                     </div>
                   </div>
                 </div> */}
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* <div className="card">
             <div className="card-header bg-white py-3 px-md-4">
@@ -543,7 +655,7 @@ function ProductEdit({ create = {} }) {
           </div> */}
 
           <div className="card shadow-sm">
-            <div className="card-header bg-white py-3 px-md-4">
+            <div className="card-header bg-white py-3 px-md-4 border-bottom">
               <h5 className="mb-0">Images</h5>
             </div>
             <div className="card-body p-md-4">
@@ -565,7 +677,7 @@ function ProductEdit({ create = {} }) {
           </div>
 
           <div className="card shadow-sm">
-            <div className="card-header bg-white py-3 px-md-4">
+            <div className="card-header bg-white py-3 px-md-4 border-bottom">
               <h5 className="mb-0">Video</h5>
             </div>
             <div className="card-body p-md-4">

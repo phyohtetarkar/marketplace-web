@@ -9,22 +9,23 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import {
   AuthenticationContext,
   ShopDetailContext
-} from "../../common/contexts";
-import { Shop } from "../../common/models";
-import { ShopDashboard, ShopSetting } from "../../components/merchant";
-import Rating from "../../components/Rating";
+} from "../../../common/contexts";
+import { Shop } from "../../../common/models";
+import { ShopDashboard, ShopSetting } from "../../../components/merchant";
+import { ProductEdit } from "../../../components/product";
+import Rating from "../../../components/Rating";
 import {
   AboutUs,
   ShopBranchListing,
   ShopProductListing,
   ShopReviewListing
-} from "../../components/shopdetail";
-import Tabs from "../../components/Tabs";
-import { getShopBySlug } from "../../services/ShopService";
+} from "../../../components/shopdetail";
+import Tabs from "../../../components/Tabs";
+import { getShopBySlug, isShopMember } from "../../../services/ShopService";
 
 type PageTab =
   | "products"
@@ -36,26 +37,38 @@ type PageTab =
 
 function ShopHome({ shop }: { shop: Shop }) {
   const router = useRouter();
-  const authContext = useContext(AuthenticationContext);
-  const [activeTab, setActiveTab] = useState<PageTab | null>(null);
 
-  const isMember = useMemo(() => {
-    return !!shop.members?.find((m) => m.member.id === authContext.payload?.id);
-  }, [shop, authContext]);
+  const { tab } = router.query;
+
+  const [activeTab, setActiveTab] = useState<PageTab | undefined>(
+    tab as PageTab
+  );
+
+  const [pendingProductId, setPendingProductId] = useState<string>();
+
+  const [isMember, setIsMember] = useState(false);
 
   const iconSize = 20;
 
+  // useEffect(() => {
+  //   if (router.isReady) {
+  //     const array = router.asPath.split("#");
+  //     const tab = array[array.length - 1];
+  //     if (array.length > 1) {
+  //       setActiveTab(tab as PageTab);
+  //     } else {
+  //       setActiveTab("products");
+  //     }
+  //   }
+  // }, [router]);
+
   useEffect(() => {
-    if (router.isReady) {
-      const array = router.asPath.split("#");
-      const tab = array[array.length - 1];
-      if (array.length > 1) {
-        setActiveTab(tab as PageTab);
-      } else {
-        setActiveTab("products");
-      }
-    }
-  }, [router]);
+    isShopMember(shop.id ?? 0)
+      .then(setIsMember)
+      .catch((error) => {
+        setIsMember(false);
+      });
+  }, [shop]);
 
   function menuLink({
     href,
@@ -123,14 +136,7 @@ function ShopHome({ shop }: { shop: Shop }) {
   );
 
   const activeContent = () => {
-    if (isMember) {
-      console.log("member");
-    }
     switch (activeTab) {
-      case "products":
-        return <ShopProductListing shop={shop!} isMember={isMember} />;
-      case "branches":
-        return <ShopBranchListing />;
       case "reviews":
         return <ShopReviewListing shopId={shop.id!} />;
       case "about-us":
@@ -141,7 +147,13 @@ function ShopHome({ shop }: { shop: Shop }) {
         return <ShopDashboard />;
     }
 
-    return null;
+    return (
+      <ShopProductListing
+        shop={shop!}
+        isMember={isMember}
+        onProductCreate={() => setPendingProductId("new")}
+      />
+    );
   };
 
   const heading = (
@@ -150,6 +162,15 @@ function ShopHome({ shop }: { shop: Shop }) {
       <div className="text-muted small mb-1 text-truncate">{shop.headline}</div>
     </>
   );
+
+  if (pendingProductId === "new") {
+    return (
+      <ProductEdit
+        shop={shop}
+        onPopBack={() => setPendingProductId(undefined)}
+      />
+    );
+  }
 
   return (
     <div className="vstack">
@@ -176,7 +197,7 @@ function ShopHome({ shop }: { shop: Shop }) {
           </div>
         </div>
       </div>
-      <div className="container py-4">
+      <div className="container py-3">
         <div className="row">
           <div className="col-12">
             <div className="shadow-sm rounded bg-white vstack overflow-hidden">
@@ -352,7 +373,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       } // will be passed to the page component as props
     };
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 
   return {

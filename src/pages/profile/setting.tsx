@@ -1,18 +1,18 @@
-import { useFormik } from "formik";
+import { FormikErrors, useFormik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
 import { AuthenticationContext } from "../../common/contexts";
+import { useLoginUser } from "../../common/hooks";
 import { User } from "../../common/models";
 import { withAuthentication } from "../../common/WithAuthentication";
 import AccountMenu from "../../components/account/AccountMenu";
 import { Input } from "../../components/forms";
+import Loading from "../../components/Loading";
 import { updateProfile } from "../../services/UserService";
 
 function ProfileSetting() {
-  const authContext = useContext(AuthenticationContext);
-
-  const user = authContext.payload;
+  const { user, error, isLoading } = useLoginUser();
 
   const formik = useFormik<User>({
     initialValues: user ?? {
@@ -21,8 +21,9 @@ function ProfileSetting() {
       phone: "",
       email: ""
     },
+    enableReinitialize: true,
     validate: async (values) => {
-      const errors: User = {};
+      const errors: FormikErrors<User> = {};
 
       const phoneRegex = "^(09)\\d{7,12}$";
       const emailRegex = "!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i";
@@ -51,6 +52,14 @@ function ProfileSetting() {
   const save = (values: User) => {
     updateProfile(values);
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return null;
+  }
 
   return (
     <div>
@@ -166,7 +175,7 @@ function ProfileSetting() {
                 <hr className="bg-dark-gray" />
                 <div className="row">
                   <div className="col-md">
-                    <div className="card bg-light mb-3">
+                    <div className="card bg-light">
                       <div className="card-body">
                         <button className="btn btn-outline-primary bg-white btn-sm border border-light-gray float-end">
                           Change

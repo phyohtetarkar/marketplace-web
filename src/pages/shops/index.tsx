@@ -1,18 +1,21 @@
-import useSWR from "swr";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import useSWR from "swr";
 import { PageData, Shop } from "../../common/models";
 import { Input } from "../../components/forms";
 import Pagination from "../../components/Pagination";
 import ShopGridItem from "../../components/shop/ShopGridItem";
-import { getShops } from "../../services/ShopService";
+import { findShops } from "../../services/ShopService";
 
 function Shops() {
+  const router = useRouter();
+
   const { data, error, isLoading } = useSWR<PageData<Shop>, Error>(
-    ["/shops"],
-    ([url]) => getShops(),
+    ["/shops", router.query],
+    ([url, q]) => findShops({ q: q.q, page: q.page }),
     {
-      revalidateOnFocus: false,
+      revalidateOnFocus: false
     }
   );
 
@@ -21,6 +24,10 @@ function Shops() {
     }
 
     if (error) {
+    }
+
+    if (data?.contents.length === 0) {
+      return <div className="text-center text-muted p-3">No shops found</div>;
     }
 
     return (
@@ -40,6 +47,12 @@ function Shops() {
           <Pagination
             currentPage={data?.currentPage}
             totalPage={data?.totalPage}
+            onChange={(p) => {
+              router.push({
+                pathname: "",
+                query: { ...router.query, page: p }
+              });
+            }}
           />
         </div>
       </>

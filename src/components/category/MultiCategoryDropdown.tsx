@@ -7,14 +7,6 @@ import MultiLevelDropdown from "../MultiLevelDropdown";
 function MultiCategoryDropdown() {
   const { data, error, isLoading } = useCategories(false);
 
-  if (isLoading || error) {
-    return null;
-  }
-
-  if (!data || data.length === 0) {
-    return null;
-  }
-
   return (
     <MultiLevelDropdown<Category>
       toggle={
@@ -23,7 +15,7 @@ function MultiCategoryDropdown() {
           <span>Categories</span>
         </div>
       }
-      items={data}
+      items={data ?? []}
       getMenuLabel={(v) => v.name}
       getSubItems={(v) => v.children}
       onMenuClick={(v) => {

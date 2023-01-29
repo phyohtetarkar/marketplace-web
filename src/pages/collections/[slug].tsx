@@ -8,7 +8,8 @@ import Accordion from "../../components/Accordion";
 import Pagination from "../../components/Pagination";
 import { ProductGridItem } from "../../components/product";
 import { PageData, Product } from "../../common/models";
-import { findAllProducts } from "../../services/ProductService";
+import Loading from "../../components/Loading";
+import { findProducts } from "../../services/ProductService";
 
 const Filter = () => {
   const [maxPrice, setMaxPrice] = useState(300000);
@@ -24,7 +25,7 @@ const Filter = () => {
         iconType="plus-minus"
       >
         <div className="vstack gap-2">
-          <div className="p-3 border-bottom">
+          {/* <div className="p-3 border-bottom">
             <div className="small text-muted mb-3">CATEGORIES</div>
             <div className="vstack gap-2">
               <label>Electronics</label>
@@ -32,7 +33,7 @@ const Filter = () => {
               <label>Clothes</label>
               <label>Home items</label>
             </div>
-          </div>
+          </div> */}
           <div className="p-3 border-bottom">
             <div className="small text-muted mb-3">BRANDS</div>
             <div className="vstack gap-2">
@@ -107,7 +108,7 @@ function Collection() {
 
   const { data, error, isLoading } = useSWR<PageData<Product>, Error>(
     ["/products"],
-    ([url]) => findAllProducts({}),
+    ([url]) => findProducts({}),
     {
       revalidateOnFocus: false
     }
@@ -115,9 +116,11 @@ function Collection() {
 
   const content = () => {
     if (isLoading) {
+      return <Loading />;
     }
 
     if (error) {
+      return null;
     }
 
     return (

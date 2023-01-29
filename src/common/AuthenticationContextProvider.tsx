@@ -1,16 +1,25 @@
 import { HubCapsule } from "@aws-amplify/core";
 import { Auth, Hub } from "aws-amplify";
 import { ReactNode, useEffect, useState } from "react";
-import { getLoginUser } from "../services/UserService";
 import { AuthenticationContext, StateContext } from "./contexts";
-import { User } from "./models";
+import { AuthUser } from "./models";
 
 export const AuthenticationContextProvider = ({
   children
 }: {
   children: ReactNode;
 }) => {
-  const [authUser, setAuthUser] = useState<StateContext<User>>({
+  // const { data, error, isLoading, mutate } = useSWR<User, Error>(
+  //   "/login-user",
+  //   getLoginUser,
+  //   {
+  //     revalidateOnFocus: false,
+  //     errorRetryCount: 0,
+  //     revalidateOnMount: false
+  //   }
+  // );
+
+  const [authUser, setAuthUser] = useState<StateContext<AuthUser>>({
     payload: undefined,
     status: "loading"
   });
@@ -19,13 +28,14 @@ export const AuthenticationContextProvider = ({
     Auth.currentAuthenticatedUser()
       .then((user) => {
         console.log(user);
-
-        return getLoginUser();
-      })
-      .then((user) => {
+        const attributes = user.attributes;
         setAuthUser({
           status: "success",
-          payload: user
+          payload: {
+            id: attributes.sub,
+            name: attributes.name,
+            phone: attributes.phone_number
+          }
         });
       })
       .catch((error) => {
@@ -38,28 +48,27 @@ export const AuthenticationContextProvider = ({
   }, []);
 
   useEffect(() => {
-    const applyUser = async (attributes: any) => {
-      try {
-        const user = await getLoginUser();
-        setAuthUser({
-          status: "success",
-          payload: user
-        });
-      } catch (error) {
-        console.log(error);
-      }
+    const applyUser = (attributes: any) => {
+      setAuthUser({
+        status: "success",
+        payload: {
+          id: attributes.sub,
+          name: attributes.name,
+          phone: attributes.phone_number
+        }
+      });
     };
     const listener = (data: HubCapsule) => {
       switch (data.payload.event) {
         case "signIn": {
-          //console.log("signed in");
+          console.log("signed in");
           //console.log(data.payload.data);
           const attributes = data.payload.data.attributes;
           applyUser(attributes);
           break;
         }
         case "autoSignIn": {
-          //console.log("auto signed in");
+          console.log("auto signed in");
           //console.log(data.payload.data);
           const attributes = data.payload.data.attributes;
           applyUser(attributes);

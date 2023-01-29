@@ -315,6 +315,8 @@ function CreateShop() {
       router.replace("/profile/shops");
     } catch (error) {
       const msg = parseErrorResponse(error);
+    } finally {
+      formik.setSubmitting(false);
     }
   };
 
@@ -445,6 +447,7 @@ function CreateShop() {
                 disabled={formik.isSubmitting}
                 onClick={() => {
                   debounce(() => {
+                    formik.setSubmitting(true);
                     formik.submitForm();
                   }, 500)();
                 }}

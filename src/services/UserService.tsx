@@ -1,6 +1,5 @@
-import { PageData, User, Shop } from "../common/models";
+import { User } from "../common/models";
 import {
-  buildQueryParams,
   getAPIBasePath,
   getAuthHeader,
   validateResponse
@@ -33,20 +32,4 @@ export async function getLoginUser() {
   await validateResponse(resp);
 
   return resp.json() as Promise<User>;
-}
-
-export async function getMyShops(page?: number) {
-  const query = buildQueryParams({
-    page: page
-  });
-  const url = `${getAPIBasePath()}${basePath}/shops${query}`;
-  const resp = await fetch(url, {
-    headers: {
-      Authorization: await getAuthHeader()
-    }
-  });
-
-  await validateResponse(resp);
-
-  return resp.json() as Promise<PageData<Shop>>;
 }

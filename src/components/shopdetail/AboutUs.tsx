@@ -5,7 +5,7 @@ function AboutUs({ value }: { value: string }) {
         <h4 className="mb-0">About us</h4>
       </div>
       <div className="card-body">
-        <span>{value}</span>
+        <div dangerouslySetInnerHTML={{ __html: value }}></div>
       </div>
     </div>
   );

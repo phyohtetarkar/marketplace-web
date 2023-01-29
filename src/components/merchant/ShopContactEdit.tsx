@@ -8,10 +8,15 @@ function ShopContactEdit() {
   const shopContext = useContext(ShopDetailContext);
 
   const formik = useFormik<ShopContact>({
-    initialValues: shopContext?.contact ?? {
-      id: 0,
-      shopId: shopContext?.id
+    initialValues: {
+      id: shopContext?.contact?.id ?? 0,
+      shopId: shopContext?.id,
+      phones: shopContext?.contact?.phones,
+      address: shopContext?.contact?.address,
+      latitude: shopContext?.contact?.latitude,
+      longitude: shopContext?.contact?.longitude
     },
+    enableReinitialize: true,
     validateOnChange: false,
     validateOnBlur: false,
     onSubmit: (values) => {
@@ -26,7 +31,7 @@ function ShopContactEdit() {
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="card shadow-sm">
-        <div className="card-header bg-white py-2h border-bottom">
+        <div className="card-header bg-white py-3 border-bottom">
           <h4 className="mb-0">Contact</h4>
         </div>
         <div className="card-body">
@@ -86,31 +91,17 @@ function ShopContactEdit() {
               className="btn btn-primary float-end"
               disabled={formik.isSubmitting}
             >
+              {formik.isSubmitting && (
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              )}
               Update
             </button>
           </div>
         </div>
-        {/* <div className="d-flex justify-content-start">
-            <Link href="#">
-              <a className="btn btn-primary">
-                <div className="hstack">
-                  <PlusIcon className="me-2" width={20} />
-                  Add new
-                </div>
-              </a>
-            </Link>
-          </div>
-          <div className="d-flex flex-wrap gap-3 py-3">
-            {list.map((i) => (
-              <div className="hstack bg-light rounded p-2" key={i}>
-                <PhoneIcon width={15} className="flex-shrink-0" />
-                <span className="text-dark ms-1 small">09-24442122</span>
-                <div role="button" className="link-danger ms-2">
-                  <XCircleIcon className="flex-shrink-0" width={20} />
-                </div>
-              </div>
-            ))}
-          </div> */}
       </div>
     </form>
   );

@@ -3,10 +3,11 @@ import { useMemo } from "react";
 interface PaginationProps {
   totalPage?: number;
   currentPage?: number;
+  onChange?: (page: number) => void;
 }
 
 function Pagination(props: PaginationProps) {
-  const { totalPage = 0, currentPage = 0 } = props;
+  const { totalPage = 0, currentPage = 0, onChange } = props;
   const hasPrev = currentPage > 1;
   const hasNext = currentPage < totalPage;
 
@@ -61,7 +62,13 @@ function Pagination(props: PaginationProps) {
           </li>
         ) : (
           <li className="page-item">
-            <div role="button" className="page-link" onClick={() => {}}>
+            <div
+              role="button"
+              className="page-link"
+              onClick={() => {
+                onChange?.(currentPage - 1);
+              }}
+            >
               Prev
             </div>
           </li>
@@ -71,11 +78,14 @@ function Pagination(props: PaginationProps) {
             return null;
           }
           return (
-            <li
-              className={`page-item ${currentPage === e ? "active" : ""}`}
-              key={i}
-            >
-              <div role="button" className="page-link" onClick={() => {}}>
+            <li className={`page-item ${currentPage === e ? "active" : ""}`} key={i}>
+              <div
+                role="button"
+                className="page-link"
+                onClick={() => {
+                  onChange?.(e);
+                }}
+              >
                 {e}
               </div>
             </li>
@@ -87,7 +97,13 @@ function Pagination(props: PaginationProps) {
           </li>
         ) : (
           <li className="page-item">
-            <div role="button" className="page-link" onClick={() => {}}>
+            <div
+              role="button"
+              className="page-link"
+              onClick={() => {
+                onChange?.(currentPage + 1);
+              }}
+            >
               Next
             </div>
           </li>

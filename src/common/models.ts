@@ -1,5 +1,5 @@
 export interface PageData<T> {
-  contents: [T];
+  contents: T[];
   currentPage: number;
   totalPage: number;
   pageSize: number;
@@ -10,7 +10,6 @@ export interface AuthUser {
   name: string;
   phone: string;
   email?: string;
-  role?: string;
 }
 
 export interface User {
@@ -18,8 +17,9 @@ export interface User {
   name?: string;
   phone?: string;
   role?: string;
-  email?: string | null;
-  image?: string | null;
+  email?: string;
+  image?: string;
+  disabled?: boolean;
 }
 
 export interface HomeData {
@@ -39,12 +39,13 @@ export interface Category {
   id: number;
   name: string;
   slug: string;
-  level: number;
-  category?: Category | null;
-  children?: [Category] | null;
+  image: string;
+  category?: Category;
+  children?: Category[];
 }
 
 export interface ShopMember {
+  id: number;
   role: string;
   member: User;
 }
@@ -57,38 +58,38 @@ export interface Shop {
   rating?: number;
   featured?: boolean;
   createdAt?: number;
-  logo?: string | null;
-  cover?: string | null;
-  about?: string | null;
-  contact?: ShopContact | null;
-  members?: [ShopMember] | null;
-  logoImage?: File | null;
-  coverImage?: File | null;
+  status?: string;
+  logo?: string;
+  cover?: string;
+  about?: string;
+  contact?: ShopContact;
+  logoImage?: File;
+  coverImage?: File;
 }
 
 export interface ShopContact {
   id?: number;
   shopId?: number;
-  address?: string | null;
-  phones?: [string] | null;
-  latitude?: number | null;
-  longitude?: number | null;
+  address?: string;
+  phones?: [string];
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface ShopGeneral {
   shopId?: number;
   name?: string;
   slug?: string;
-  headline?: string | null;
-  about?: string | null;
+  headline?: string;
+  about?: string;
 }
 
 export interface ShopReview {
-  id?: string;
+  id?: number;
   shopId?: number;
   rating?: number;
   description?: string;
-  reviewer?: User | null;
+  reviewer?: User;
   createdAt?: number;
 }
 
@@ -96,22 +97,27 @@ export interface Product {
   id?: number;
   name?: string;
   slug?: string;
+  sku?: string;
   price?: number;
-  brand?: string | null;
-  thumbnail?: string | null;
-  outOfStock?: boolean | null;
+  brand?: string;
+  thumbnail?: string;
+  stockLeft?: number;
   featured?: boolean;
-  description?: string | null;
-  discount?: Discount | null;
-  category: Category;
-  shop: Shop;
-  images?: [ProductImage] | null;
-  options?: [ProductOption] | null;
-  variants?: [ProductVariant] | null;
+  description?: string;
+  status?: string;
+  discount?: Discount;
+  category?: Category;
+  shop?: Shop;
+  images?: ProductImage[];
+  options?: ProductOption[];
+  variants?: ProductVariant[];
+  categoryId?: number;
+  shopId?: number;
+  discountId?: string;
 }
 
 export interface ProductImage {
-  id?: string;
+  id?: number;
   productId?: number;
   name?: string;
   thumbnail?: boolean;
@@ -120,17 +126,17 @@ export interface ProductImage {
 }
 
 export interface ProductOption {
-  id?: string;
-  name?: number;
+  id?: number;
+  name?: string;
   position?: number;
 }
 
 export interface ProductVariant {
-  id?: string;
+  id?: number;
   title?: string;
   sku?: string;
   price?: number;
-  outOfStock?: boolean;
+  stockLeft?: number;
   options: ProductVariantOption[];
   deleted?: boolean;
 }
@@ -141,7 +147,7 @@ export interface ProductVariantOption {
 }
 
 export interface Discount {
-  id?: string;
+  id?: number;
   shopId?: number;
   title?: string;
   value?: string;
@@ -149,10 +155,10 @@ export interface Discount {
 }
 
 export interface CartItem {
-  id?: string;
+  id?: number;
   productId: number;
   variantId?: string;
   quantity: number;
   product: Product;
-  variant?: ProductVariant | null;
+  variant?: ProductVariant;
 }

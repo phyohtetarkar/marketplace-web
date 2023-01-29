@@ -40,7 +40,7 @@ const getData = async () => {
 
 const Home = ({ data }: { data: HomeData }) => {
   return (
-    <div className="container py-4">
+    <div className="container py-3">
       <div className="row mb-4 mb-lg-5">
         <div className="col-12">
           <div className="card shadow-sm">
@@ -54,7 +54,7 @@ const Home = ({ data }: { data: HomeData }) => {
                           data.mainCategories.map((e, i) => {
                             return (
                               <Link key={e.id} href={`/collections/${e.slug}`}>
-                                <a className="p-2 my-list-item user-select-none">
+                                <a className="p-2 dropdown-item rounded user-select-none">
                                   {e.name}
                                 </a>
                               </Link>

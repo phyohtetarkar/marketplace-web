@@ -1,8 +1,7 @@
 import { useFormik } from "formik";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect } from "react";
 import { AuthenticationContext } from "../common/contexts";
 import { Input, PasswordInput } from "../components/forms";
 import { login } from "../services/AuthService";
@@ -102,6 +101,7 @@ function Login() {
                     id="phoneInput"
                     type="tel"
                     name="phone"
+                    autoComplete="username"
                     placeholder="09xxxxxxxx"
                     value={values.phone}
                     onChange={handleChange}
@@ -113,6 +113,7 @@ function Login() {
                     label="Password"
                     name="password"
                     placeholder=""
+                    autoComplete="current-password"
                     value={values.password}
                     onChange={handleChange}
                     error={errors.password}

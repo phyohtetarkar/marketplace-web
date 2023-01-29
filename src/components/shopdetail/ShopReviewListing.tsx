@@ -5,6 +5,8 @@ import useSWR from "swr";
 import ShopReviewEdit from "./ShopReviewEdit";
 import { PageData, ShopReview } from "../../common/models";
 import { getReviews } from "../../services/ShopReviewService";
+import Loading from "../Loading";
+import { formatTimestamp } from "../../common/utils";
 
 interface ShopReviewProps {
   value: ShopReview;
@@ -12,11 +14,11 @@ interface ShopReviewProps {
 
 function Review({ value }: ShopReviewProps) {
   return (
-    <div className="p-2">
+    <div className="list-group-item px-0">
       <div className="hstack gap-3 align-items-start">
-        <div className="position-relative flex-shrink-0 ">
+        <div className="position-relative flex-shrink-0">
           <Image
-            src={value.reviewer?.image ?? "/images/profile.png"}
+            src={value.reviewer?.image ?? "/images/placeholder.jpeg"}
             width={60}
             height={60}
             alt=""
@@ -26,43 +28,64 @@ function Review({ value }: ShopReviewProps) {
         </div>
         <div>
           <h6 className="mb-0">{value.reviewer?.name}</h6>
-          <span className="text-muted small">{value.createdAt}</span>
+          <span className="text-muted small">
+            {formatTimestamp(value.createdAt ?? 0)}
+          </span>
           <div className="mt-3">
             <Rating rating={value.rating ?? 0} />
           </div>
-          <h6 className="text-muted fw-normal mt-2">{value.description}</h6>
+          <div className="text-muted fw-normal mt-2">{value.description}</div>
         </div>
       </div>
-      <hr className="bg-dark-gray" />
     </div>
   );
 }
 
 function ShopReviewListing({ shopId }: { shopId: number }) {
   const { data, error, isLoading } = useSWR<PageData<ShopReview>, Error>(
-    ["/shops", shopId],
+    ["/shop-reviews", shopId],
     ([url, id]) => getReviews(id, "ASC"),
     {
       revalidateOnFocus: false
     }
   );
 
+  const content = () => {
+    if (isLoading) {
+      return <Loading />;
+    }
+
+    if (error) {
+      return null;
+    }
+
+    if (data?.contents.length === 0) {
+      return <div className="text-muted text-center">No reviews found</div>;
+    }
+
+    return (
+      <>
+        <ul className="list-group list-group-flush">
+          {data?.contents &&
+            data?.contents.map((r, i) => <Review key={i} value={r} />)}
+        </ul>
+        <div className="hstack justify-content-end">
+          <div>
+            <Pagination
+              currentPage={data?.currentPage}
+              totalPage={data?.totalPage}
+            />
+          </div>
+        </div>
+      </>
+    );
+  };
+
   return (
     <div>
       <ShopReviewEdit />
       <div className="card shadow-sm">
-        <div className="card-body">
-          {data?.contents &&
-            data?.contents.map((r, i) => <Review key={i} value={r} />)}
-          <div className="hstack justify-content-end">
-            <div>
-              <Pagination
-                currentPage={data?.currentPage}
-                totalPage={data?.totalPage}
-              />
-            </div>
-          </div>
-        </div>
+        <div className="card-body">{content()}</div>
       </div>
     </div>
   );

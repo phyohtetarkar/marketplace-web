@@ -1,6 +1,5 @@
 import {
   BuildingStorefrontIcon,
-  MagnifyingGlassIcon,
   QuestionMarkCircleIcon,
   ShoppingCartIcon
 } from "@heroicons/react/24/outline";
@@ -9,10 +8,15 @@ import { Offcanvas } from "bootstrap";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { AuthenticationContext } from "../../common/contexts";
 import MultiCategoryDropdown from "../category/MultiCategoryDropdown";
 import Dropdown from "../Dropdown";
+import HeaderSearchHints from "./HeaderSearchHints";
+import useSWR from "swr";
+import { User } from "../../common/models";
+import { getLoginUser } from "../../services/UserService";
+import { useLoginUser } from "../../common/hooks";
 
 interface HeaderProps {
   hideAuth?: boolean;
@@ -46,6 +50,8 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
 function AccountMenu({ onNavClick }: { onNavClick?: () => void }) {
   const profileDropdownToggle = useRef<HTMLAnchorElement | null>(null);
 
+  const { user, error, isLoading } = useLoginUser();
+
   useEffect(() => {
     let profileDropdown: any;
 
@@ -74,81 +80,93 @@ function AccountMenu({ onNavClick }: { onNavClick?: () => void }) {
     };
   }, []);
 
+  if (isLoading || error) {
+    return null;
+  }
+
   return (
-    <AuthenticationContext.Consumer>
-      {({ payload, status }) => {
-        if (status !== "success" || !payload) {
-          return null;
-        }
-        return (
-          <ul className="navbar-nav">
-            <li className="nav-item dropdown">
-              <a
-                ref={profileDropdownToggle}
-                href="#"
-                className="nav-link hstack dropdown-toggle"
-                role="button"
-                data-bs-toggle="dropdown"
-                id="profileMenuLink"
-                style={{
-                  outlineStyle: "none"
-                }}
-              >
-                {/* <div
-            className="d-none d-lg-block me-1 ratio ratio-1x1"
-            style={{ width: 35, height: 35 }}
+    <div className="navbar-nav align-items-lg-center mt-3 mt-lg-0">
+      <Dropdown
+        toggle={<span className="">Hi, {user?.name ?? ""}</span>}
+        className="nav-item"
+        toggleClassName="dropdown-toggle hstack"
+        menuClassName="dropdown-menu-end"
+      >
+        <li>
+          <Link href="/profile/overview">
+            <a
+              className="dropdown-item text-decoration-none"
+              onClick={(e) => onNavClick && onNavClick()}
+            >
+              My profile
+            </a>
+          </Link>
+        </li>
+        <div className="dropdown-divider"></div>
+        <li className="dropdown-item">
+          <div
+            role="button"
+            onClick={() => {
+              onNavClick && onNavClick();
+              Auth.signOut().catch(console.error);
+            }}
           >
-            <Image
-              src="/images/profile.png"
-              alt=""
-              className="rounded-circle"
-              layout="fill"
-              objectFit="cover"
-            />
-          </div> */}
-                <span className="">Hi, {payload.name ?? ""}</span>
-              </a>
-              <ul
-                className="dropdown-menu dropdown-menu-end"
-                aria-labelledby="profileMenuLink"
-              >
-                {/* <li className="d-none d-lg-block">
+            Logout
+          </div>
+        </li>
+      </Dropdown>
+      {/* <li className="nav-item dropdown">
+        <a
+          ref={profileDropdownToggle}
+          href="#"
+          className="nav-link hstack dropdown-toggle"
+          role="button"
+          data-bs-toggle="dropdown"
+          id="profileMenuLink"
+          style={{
+            outlineStyle: "none"
+          }}
+        >
+          <span className="">Hi, {user?.name ?? ""}</span>
+        </a>
+        <ul
+          className="dropdown-menu dropdown-menu-end"
+          aria-labelledby="profileMenuLink"
+        >
+          <li className="d-none d-lg-block">
                   <div className="dropdown-header py-0">
                     <div className="mb-1">Signed in as</div>
-                    <h6 className="text-dark">{payload.name ?? ""}</h6>
+                    <h6 className="text-dark">{user?.name ?? ""}</h6>
                   </div>
                 </li>
                 <li className="d-none d-lg-block">
                   <hr className="dropdown-divider" />
-                </li> */}
-                <li>
-                  <Link href="/profile/overview">
-                    <a
-                      className="dropdown-item text-decoration-none"
-                      onClick={(e) => onNavClick && onNavClick()}
-                    >
-                      My profile
-                    </a>
-                  </Link>
                 </li>
-                <div className="dropdown-divider"></div>
-                <li className="dropdown-item">
-                  <div
-                    role="button"
-                    onClick={() => {
-                      onNavClick && onNavClick();
-                      Auth.signOut().catch(console.error);
-                    }}
-                  >
-                    Logout
-                  </div>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        );
-      }}
-    </AuthenticationContext.Consumer>
+          <li>
+            <Link href="/profile/overview">
+              <a
+                className="dropdown-item text-decoration-none"
+                onClick={(e) => onNavClick && onNavClick()}
+              >
+                My profile
+              </a>
+            </Link>
+          </li>
+          <div className="dropdown-divider"></div>
+          <li className="dropdown-item">
+            <div
+              role="button"
+              onClick={() => {
+                onNavClick && onNavClick();
+                Auth.signOut().catch(console.error);
+              }}
+            >
+              Logout
+            </div>
+          </li>
+        </ul>
+      </li> */}
+    </div>
   );
 }
 
@@ -156,8 +174,6 @@ function Header({ hideAuth }: HeaderProps) {
   const router = useRouter();
   const offcanvasRef = useRef<HTMLDivElement | null>(null);
   const offcanvas = useRef<Offcanvas>();
-  const [search, setSearch] = useState<string>();
-  const [searchOption, setSearchOption] = useState("product");
   const [lang, setLang] = useState("mm");
 
   useEffect(() => {
@@ -167,7 +183,7 @@ function Header({ hideAuth }: HeaderProps) {
         return;
       }
       offcanvas.current = new Offcanvas(offcanvasRef.current, {
-        scroll: true
+        scroll: false
       });
     };
 
@@ -177,10 +193,6 @@ function Header({ hideAuth }: HeaderProps) {
       offcanvas.current?.dispose();
     };
   }, []);
-
-  function handleSubmit(event: FormEvent<HTMLElement>) {
-    event.preventDefault();
-  }
 
   const localeImage = (
     <Image
@@ -243,40 +255,7 @@ function Header({ hideAuth }: HeaderProps) {
           <div className="hstack w-100">
             <ul className="navbar-nav align-items-lg-center gap-2">
               <li className="nav-item">
-                <form className="d-flex" onSubmit={handleSubmit}>
-                  <div className="input-group flex-nowrap">
-                    <div className="d-flex">
-                      <select
-                        className="form-select bg-light rounded-0 rounded-start"
-                        value={searchOption}
-                        onChange={(e) => {
-                          setSearchOption(e.target.value);
-                        }}
-                      >
-                        <option value="product">Product</option>
-                        <option value="shop">Shop</option>
-                      </select>
-                    </div>
-                    <input
-                      className="form-control"
-                      type="search"
-                      placeholder={`Search ${searchOption}s...`}
-                      aria-label="Search"
-                      size={20}
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      style={{
-                        height: 44
-                      }}
-                    />
-                    <button
-                      type="submit"
-                      className="btn btn-primary shadow-none"
-                    >
-                      <MagnifyingGlassIcon width={20} />
-                    </button>
-                  </div>
-                </form>
+                <HeaderSearchHints />
               </li>
             </ul>
 
@@ -284,14 +263,14 @@ function Header({ hideAuth }: HeaderProps) {
 
             <AuthenticationContext.Consumer>
               {({ payload, status }) => {
-                if (payload) {
+                if (payload || status === "loading") {
                   return null;
                 }
                 return (
                   <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0">
                     <div className="nav-item">
                       <Link href="/sign-up">
-                        <a className="btn btn-outline-primary d-none d-lg-block">
+                        <a className="btn btn-outline-primary d-none d-lg-block text-nowrap">
                           Sign up
                         </a>
                       </Link>
@@ -389,19 +368,24 @@ function Header({ hideAuth }: HeaderProps) {
 
               <div className="flex-grow-1"></div>
 
-              <AccountMenu onNavClick={() => offcanvas.current?.hide()} />
-
               <AuthenticationContext.Consumer>
                 {({ payload, status }) => {
-                  if (payload) {
+                  if (status === "loading") {
                     return null;
                   }
+                  if (payload) {
+                    return (
+                      <AccountMenu
+                        onNavClick={() => offcanvas.current?.hide()}
+                      />
+                    );
+                  }
                   return (
-                    <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0">
+                    <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0 d-lg-none">
                       <div className="nav-item">
                         <div
                           role="button"
-                          className="btn btn-outline-primary d-block d-lg-none"
+                          className="btn btn-outline-primary text-nowrap"
                           data-bs-toggle="offcanvas"
                           data-bs-target="#offcanvasNavbar"
                           onClick={(e) => {
@@ -415,7 +399,7 @@ function Header({ hideAuth }: HeaderProps) {
                       <div className="nav-item">
                         <div
                           role="button"
-                          className="btn btn-primary ms-2 d-block d-lg-none"
+                          className="btn btn-primary ms-2"
                           data-bs-toggle="offcanvas"
                           data-bs-target="#offcanvasNavbar"
                           onClick={(e) => {

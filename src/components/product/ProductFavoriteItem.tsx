@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Product } from "../../common/models";
 import {
   deleteFavoriteProduct,
-  addToFavoriteProduct,
+  addToFavoriteProduct
 } from "../../services/FavoriteProductService";
 
 interface ProductFavoriteProps {
@@ -12,7 +12,6 @@ interface ProductFavoriteProps {
 }
 
 function ProductFavoriteItem({ value }: ProductFavoriteProps) {
-
   function getProductImageUrl(p: Product) {
     return p.thumbnail ?? "/placeholder.jpeg";
   }
@@ -26,7 +25,7 @@ function ProductFavoriteItem({ value }: ProductFavoriteProps) {
             onContextMenu={(e) => e.preventDefault()}
             style={{
               minWidth: 120,
-              height: 120,
+              height: 120
             }}
           >
             <Image
@@ -46,7 +45,7 @@ function ProductFavoriteItem({ value }: ProductFavoriteProps) {
 
             <Link href={`/`}>
               <a className="text-decoration-none fw-medium text-truncate mb-2">
-                {value.category.name}
+                {value.category?.name}
               </a>
             </Link>
 

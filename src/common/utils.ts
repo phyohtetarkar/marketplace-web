@@ -85,11 +85,11 @@ export async function getAuthHeader() {
       .getJwtToken();
     return "Bearer " + accessToken;
   } catch (error) {}
-  return "Bearer ";
+  return "";
 }
 
 export async function validateResponse(resp: Response) {
-  if (resp.status === 401 || resp.status === 403) {
+  if (resp.status === 401) {
     throw new UnauthorizeError("Unauthorized");
   }
   if (!resp.ok) {
@@ -97,8 +97,8 @@ export async function validateResponse(resp: Response) {
   }
 }
 
-export function parseErrorResponse(error: any) {
-  if (error instanceof UnauthorizeError) {
+export function parseErrorResponse(error: any, skipAuth?: boolean) {
+  if (error instanceof UnauthorizeError && !skipAuth) {
     Auth.signOut()
       .catch(console.error)
       .finally(() => {

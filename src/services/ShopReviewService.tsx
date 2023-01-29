@@ -8,7 +8,7 @@ import {
 
 const basePath = "shop-reviews";
 
-export async function postReview(value: ShopReview) {
+export async function writeReview(value: ShopReview) {
   const url = `${getAPIBasePath()}${basePath}`;
   const resp = await fetch(url, {
     method: "POST",

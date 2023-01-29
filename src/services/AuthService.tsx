@@ -1,5 +1,5 @@
-import { Auth } from "aws-amplify";
 import { CognitoUser } from "amazon-cognito-identity-js";
+import { Auth } from "aws-amplify";
 
 export async function login({
   username,
@@ -44,6 +44,22 @@ export async function signUp({
     });
     console.log(result);
     return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function confirmSignUp({
+  phone,
+  password,
+  code
+}: {
+  phone: string;
+  password: string;
+  code: string;
+}) {
+  try {
+    await Auth.confirmSignUp(phone, code, { forceAliasCreation: false });
   } catch (error) {
     throw error;
   }

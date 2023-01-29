@@ -1,8 +1,10 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useState } from "react";
 import useSWR from "swr";
 import { Discount, PageData } from "../../common/models";
 import { getAllDiscounts } from "../../services/DiscountService";
+import Loading from "../Loading";
 import Pagination from "../Pagination";
 
 interface DiscountProps {
@@ -23,11 +25,9 @@ function DiscountRow({ value }: DiscountProps) {
       </td>
       <td>
         <div className="hstack align-items-center gap-2">
-          <Link href="#">
-            <a className="btn btn-primary">
-              <PencilSquareIcon width={20} />
-            </a>
-          </Link>
+          <button className="btn btn-primary">
+            <PencilSquareIcon width={20} />
+          </button>
           <button
             disabled={false}
             className="btn btn-danger"
@@ -42,13 +42,22 @@ function DiscountRow({ value }: DiscountProps) {
 }
 
 function ManageDiscounts({ shopId }: { shopId: number }) {
-  const { data, error, isLoading } = useSWR<PageData<Discount>, Error>(
-    ["/discounts"],
-    ([url]) => getAllDiscounts(shopId),
+  const [page, setPage] = useState(0);
+  const { data, error, isLoading, mutate } = useSWR<PageData<Discount>, Error>(
+    ["/discounts", page],
+    ([url, p]) => getAllDiscounts(shopId, p),
     {
       revalidateOnFocus: false
     }
   );
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return null;
+  }
 
   return (
     <div className="p-0">
@@ -93,6 +102,7 @@ function ManageDiscounts({ shopId }: { shopId: number }) {
             <Pagination
               currentPage={data?.currentPage}
               totalPage={data?.totalPage}
+              onChange={setPage}
             />
           </div>
         </div>

@@ -1,8 +1,7 @@
 import { useFormik } from "formik";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect } from "react";
 import { AuthenticationContext } from "../common/contexts";
 import { Input, PasswordInput } from "../components/forms";
 import { signUp } from "../services/AuthService";
@@ -121,6 +120,7 @@ function Register() {
                     id="phoneInput"
                     type="tel"
                     name="phone"
+                    autoComplete="username"
                     placeholder="09xxxxxxxx"
                     value={values.phone}
                     onChange={handleChange}
@@ -131,6 +131,7 @@ function Register() {
                   <PasswordInput
                     label="Password"
                     name="password"
+                    autoComplete="new-password"
                     placeholder="Minimum 8 characters"
                     value={values.password}
                     onChange={handleChange}
@@ -141,6 +142,7 @@ function Register() {
                   <PasswordInput
                     label="Confirm Password"
                     name="confirmPassword"
+                    autoComplete="new-password"
                     placeholder="Minimum 8 characters"
                     value={values.confirmPassword}
                     onChange={handleChange}

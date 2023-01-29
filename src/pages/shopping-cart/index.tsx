@@ -15,7 +15,7 @@ interface CartGroupItem {
 
 function ShoppingCart() {
   const { data, error, isLoading } = useSWR<CartItem[], Error>(
-    "/profile/cart-items",
+    "/cart-items",
     getCartItemsByUser,
     {
       revalidateOnFocus: false
@@ -29,30 +29,35 @@ function ShoppingCart() {
       return items;
     }
 
-    const shops = new Set(data.map((item) => item.product.shop.id!));
+    const shops = new Set(
+      data
+        .filter((item) => item.product.shop?.status === "ACTIVE")
+        .map((item) => item.product.shop?.id!)
+    );
 
     shops.forEach((id, i) => {
-      const shopItems = data.filter((item) => item.product.shop.id === id);
-      items.push({
-        shop: shopItems[0].product.shop,
-        items: shopItems
-      });
+      const shopItems = data.filter((item) => item.product.shop?.id === id);
+      const shop = shopItems[0].product.shop;
+      if (shop && shopItems.length > 0) {
+        items.push({
+          shop: shop,
+          items: shopItems
+        });
+      }
     });
 
     return items;
   }, [data]);
 
-  const list = [
-    [1, 2],
-    [3, 4]
-  ];
+  // const list = [
+  //   [1, 2],
+  //   [3, 4]
+  // ];
 
   let content = <div></div>;
   if (group.length === 0) {
     content = (
-      <div>
-        <h6 className="text-center text-muted p-3">No Product in cart.</h6>
-      </div>
+      <div className="text-center text-muted p-3">No products in cart.</div>
     );
   } else {
     content = (
@@ -103,24 +108,29 @@ function ShoppingCart() {
       <div className="container py-3">
         <div className="row g-3">
           <div className="col-lg-8">
-            <div className="card mb-3 shadow-sm">
-              <div className="card-body py-2h">
-                <div className="hstack gap-2 flex-grow-1">
-                  <div className="form-check">
-                    <input className="form-check-input" type="checkbox"></input>
-                    <label className="form-check-label">SELECT ALL</label>
+            {group.length > 0 && (
+              <div className="card mb-3 shadow-sm">
+                <div className="card-body py-2h">
+                  <div className="hstack gap-2 flex-grow-1">
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                      ></input>
+                      <label className="form-check-label">SELECT ALL</label>
+                    </div>
+
+                    <div className="flex-grow-1"></div>
+
+                    <Tooltip title="Remove all">
+                      <button disabled={false} className="btn btn-danger">
+                        <TrashIcon width={20} />
+                      </button>
+                    </Tooltip>
                   </div>
-
-                  <div className="flex-grow-1"></div>
-
-                  <Tooltip title="Remove all">
-                    <button disabled={false} className="btn btn-danger">
-                      <TrashIcon width={20} />
-                    </button>
-                  </Tooltip>
                 </div>
               </div>
-            </div>
+            )}
             {content}
           </div>
           <div className="col-lg-4 ">

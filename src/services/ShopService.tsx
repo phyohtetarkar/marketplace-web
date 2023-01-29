@@ -8,6 +8,11 @@ import {
 
 const basePath = "shops";
 
+export interface ShopQuery {
+  q?: string;
+  page?: number;
+}
+
 export async function createShop(value: Shop) {
   const url = getAPIBasePath() + basePath;
   const formData = new FormData();
@@ -27,18 +32,6 @@ export async function createShop(value: Shop) {
   });
 
   await validateResponse(resp);
-}
-
-export async function getShops(page?: number) {
-  const query = buildQueryParams({
-    page: page
-  });
-  const url = `${getAPIBasePath()}${basePath}${query}`;
-  const resp = await fetch(url);
-
-  await validateResponse(resp);
-
-  return resp.json() as Promise<PageData<Shop>>;
 }
 
 export async function updateShopGeneral(value: ShopGeneral) {
@@ -90,4 +83,53 @@ export async function existsShopBySlug(slug: String, excludeId: number) {
   await validateResponse(resp);
 
   return resp.json() as Promise<boolean>;
+}
+
+export async function isShopMember(shopId: number) {
+  const url = `${getAPIBasePath()}shop-members/${shopId}/check`;
+  const resp = await fetch(url, {
+    headers: {
+      Authorization: await getAuthHeader()
+    }
+  });
+
+  await validateResponse(resp);
+
+  return resp.json() as Promise<boolean>;
+}
+
+export async function getMyShops(page?: number) {
+  const query = buildQueryParams({
+    page: page
+  });
+  const url = `${getAPIBasePath()}shops/me${query}`;
+  const resp = await fetch(url, {
+    headers: {
+      Authorization: await getAuthHeader()
+    }
+  });
+
+  await validateResponse(resp);
+
+  return resp.json() as Promise<PageData<Shop>>;
+}
+
+export async function getShopHints(q: string) {
+  const query = buildQueryParams({ q: q });
+  const url = `${getAPIBasePath()}${basePath}/hints${query}`;
+  const resp = await fetch(url);
+
+  await validateResponse(resp);
+
+  return resp.json() as Promise<Shop[]>;
+}
+
+export async function findShops(query: ShopQuery) {
+  const q = buildQueryParams({ ...query });
+  const url = `${getAPIBasePath()}${basePath}${q}`;
+  const resp = await fetch(url);
+
+  await validateResponse(resp);
+
+  return resp.json() as Promise<PageData<Shop>>;
 }
