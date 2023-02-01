@@ -13,7 +13,7 @@ export function useCategories(flat: boolean) {
   );
 
   return {
-    data: data,
+    categories: data,
     error: error,
     isLoading: isLoading
   };

@@ -5,7 +5,7 @@ import { Category } from "../../common/models";
 import MultiLevelDropdown from "../MultiLevelDropdown";
 
 function MultiCategoryDropdown() {
-  const { data, error, isLoading } = useCategories(false);
+  const { categories, error, isLoading } = useCategories(false);
 
   return (
     <MultiLevelDropdown<Category>
@@ -15,7 +15,7 @@ function MultiCategoryDropdown() {
           <span>Categories</span>
         </div>
       }
-      items={data ?? []}
+      items={categories ?? []}
       getMenuLabel={(v) => v.name}
       getSubItems={(v) => v.children}
       onMenuClick={(v) => {

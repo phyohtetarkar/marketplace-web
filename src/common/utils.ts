@@ -76,6 +76,7 @@ export function buildQueryParams(params: any) {
 
 export function getAPIBasePath() {
   return process.env.NEXT_PUBLIC_API_URL ?? "";
+  //return location.origin + ":8080/api/v1/";
 }
 
 export async function getAuthHeader() {
@@ -110,6 +111,6 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
   if (error instanceof APIError) {
     return error.message;
   }
-  console.log(error);
+  //console.log(error);
   return "Something went wrong, please try again";
 }

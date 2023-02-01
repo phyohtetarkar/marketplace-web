@@ -4,6 +4,7 @@ import {
   FocusEvent,
   forwardRef,
   HTMLInputTypeAttribute,
+  KeyboardEvent,
   MouseEvent,
   ReactNode
 } from "react";
@@ -12,6 +13,7 @@ import { formControlHeight } from "../../common/app.config";
 type OnChange<E> = (e: ChangeEvent<E>) => void;
 type OnBlur<E> = (e: FocusEvent<E, Element>) => void;
 type OnClick<E> = (e: MouseEvent<E>) => void;
+type OnKeyDown<E> = (e: KeyboardEvent<E>) => void;
 
 export interface InputProps<ElementType> {
   label?: ReactNode;
@@ -32,6 +34,7 @@ export interface InputProps<ElementType> {
   onChange?: OnChange<ElementType>;
   onBlur?: OnBlur<ElementType>;
   onClick?: OnClick<ElementType>;
+  onKeyDown?: OnKeyDown<ElementType>;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps<HTMLInputElement>>(
@@ -51,6 +54,7 @@ const Input = forwardRef<HTMLInputElement, InputProps<HTMLInputElement>>(
       onChange,
       onBlur,
       onClick,
+      onKeyDown,
       error,
       className,
       style,
@@ -82,6 +86,7 @@ const Input = forwardRef<HTMLInputElement, InputProps<HTMLInputElement>>(
           onChange={onChange}
           onBlur={onBlur}
           onClick={onClick}
+          onKeyDown={onKeyDown}
           style={{
             ...style,
             height: height

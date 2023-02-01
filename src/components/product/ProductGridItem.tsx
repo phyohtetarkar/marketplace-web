@@ -20,7 +20,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
   let popular;
   let available;
   // let image = product.images![0]!;
-  // let price = <>{formatPrice(product.price ?? 0)} Ks</>;
+  let price = <>{formatPrice(value.price ?? 0)} Ks</>;
 
   //   if (data.images && data.images.length > 0) {
   //     image = `${baseImagbaePath}/books%2F${data.images[0]}?alt=media`;
@@ -103,9 +103,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
             </a>
           </Link>
 
-          <h6 className="fw-semibold mt-2 mb-3">
-            {formatPrice(value.price ?? 0)} Ks
-          </h6>
+          <h6 className="fw-semibold mt-2 mb-3">{price}</h6>
 
           <div className="hstack align-items-stretch gap-2">
             <button

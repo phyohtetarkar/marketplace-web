@@ -10,7 +10,7 @@ import { ProductGridItem, ProductManageGridItem } from "../product";
 interface ShopProductListingProps {
   shop: Shop;
   isMember: boolean;
-  onProductEdit?: (id: number) => void;
+  onProductEdit?: (slug?: string) => void;
   onProductCreate?: () => void;
 }
 
@@ -51,7 +51,10 @@ function ShopProductListing(props: ShopProductListingProps) {
               return (
                 <div className="col" key={i}>
                   {props.isMember ? (
-                    <ProductManageGridItem value={p} />
+                    <ProductManageGridItem
+                      value={p}
+                      onEditClick={() => props.onProductEdit?.(p.slug)}
+                    />
                   ) : (
                     <ProductGridItem value={p} />
                   )}

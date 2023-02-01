@@ -11,7 +11,7 @@ const basePath = "shop-reviews";
 export async function writeReview(value: ShopReview) {
   const url = `${getAPIBasePath()}${basePath}`;
   const resp = await fetch(url, {
-    method: "POST",
+    method: !value.id ? "POST" : "PUT",
     body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",
@@ -32,6 +32,19 @@ export async function deleteReview(id: string) {
   });
 
   await validateResponse(resp);
+}
+
+export async function getUserReview(shopId: number) {
+  const url = `${getAPIBasePath()}${basePath}/${shopId}/me`;
+  const resp = await fetch(url, {
+    headers: {
+      Authorization: await getAuthHeader()
+    }
+  });
+
+  await validateResponse(resp);
+
+  return resp.body ? (resp.json() as Promise<ShopReview>) : null;
 }
 
 export async function getReviews(

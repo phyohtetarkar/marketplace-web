@@ -18,7 +18,7 @@ function Review({ value }: ShopReviewProps) {
       <div className="hstack gap-3 align-items-start">
         <div className="position-relative flex-shrink-0">
           <Image
-            src={value.reviewer?.image ?? "/images/placeholder.jpeg"}
+            src={value.reviewer?.image ?? "/images/profile.png"}
             width={60}
             height={60}
             alt=""
@@ -43,8 +43,8 @@ function Review({ value }: ShopReviewProps) {
 
 function ShopReviewListing({ shopId }: { shopId: number }) {
   const { data, error, isLoading } = useSWR<PageData<ShopReview>, Error>(
-    ["/shop-reviews", shopId],
-    ([url, id]) => getReviews(id, "ASC"),
+    ["/shop-reviews"],
+    ([url]) => getReviews(shopId, "ASC"),
     {
       revalidateOnFocus: false
     }
@@ -69,7 +69,7 @@ function ShopReviewListing({ shopId }: { shopId: number }) {
           {data?.contents &&
             data?.contents.map((r, i) => <Review key={i} value={r} />)}
         </ul>
-        <div className="hstack justify-content-end">
+        <div className="hstack justify-content-end mt-2">
           <div>
             <Pagination
               currentPage={data?.currentPage}

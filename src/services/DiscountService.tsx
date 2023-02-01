@@ -11,7 +11,7 @@ const basePath = "discounts";
 export async function saveDiscount(value: Discount) {
   const url = `${getAPIBasePath()}${basePath}`;
   const resp = await fetch(url, {
-    method: value.id ? "PUT" : "POST",
+    method: !value.id ? "POST" : "PUT",
     body: JSON.stringify(value),
     headers: {
       "Content-Type": "application/json",

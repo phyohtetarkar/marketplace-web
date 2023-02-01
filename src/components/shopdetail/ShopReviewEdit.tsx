@@ -1,10 +1,13 @@
 import { useFormik } from "formik";
-import { useContext } from "react";
-import { useSWRConfig } from "swr";
-import { ShopDetailContext } from "../../common/contexts";
+import { useContext, useEffect } from "react";
+import useSWR, { useSWRConfig } from "swr";
+import {
+  AuthenticationContext,
+  ShopDetailContext
+} from "../../common/contexts";
 import { ShopReview } from "../../common/models";
 import { parseErrorResponse } from "../../common/utils";
-import { writeReview } from "../../services/ShopReviewService";
+import { getUserReview, writeReview } from "../../services/ShopReviewService";
 import Dropdown from "../Dropdown";
 import { Textarea } from "../forms";
 import Rating from "../Rating";
@@ -14,6 +17,15 @@ const _ratings = [5, 4, 3, 2, 1];
 function ShopReviewEdit() {
   const { mutate } = useSWRConfig();
   const shopContext = useContext(ShopDetailContext);
+  const authContext = useContext(AuthenticationContext);
+
+  // const { data, error, isLoading } = useSWR(
+  //   "/shop-reviews/me",
+  //   () => getUserReview(shopContext?.id ?? 0),
+  //   {
+  //     revalidateOnFocus: false
+  //   }
+  // );
 
   const formik = useFormik<ShopReview>({
     initialValues: {
@@ -27,10 +39,22 @@ function ShopReviewEdit() {
     }
   });
 
+  useEffect(() => {
+    if (authContext.status === "success") {
+      //console.log("load user review");
+      getUserReview(shopContext?.id ?? 0)
+        .then((review) => {
+          review && formik.setValues({ ...review, shopId: shopContext?.id });
+        })
+        .catch((error) => {});
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authContext]);
+
   const postReview = async (values: ShopReview) => {
     try {
       await writeReview(values);
-      mutate(["/shop-reviews", values.shopId]);
+      mutate(["/shop-reviews"]);
       formik.setValues({
         shopId: shopContext?.id
       });
@@ -45,7 +69,9 @@ function ShopReviewEdit() {
     <form onSubmit={formik.handleSubmit}>
       <div className="card mb-3 shadow-sm">
         <div className="card-header py-3">
-          <h5 className="mb-0">Write review</h5>
+          <h5 className="mb-0">
+            {(formik.values.id ?? 0) > 0 ? "Your Review" : "Write Review"}
+          </h5>
         </div>
         <div className="card-body">
           <div className="row gap-3">
@@ -117,7 +143,7 @@ function ShopReviewEdit() {
                   aria-hidden="true"
                 ></span>
               )}
-              Post review
+              {(formik.values.id ?? 0) > 0 ? "Update review" : "Post review"}
             </button>
           </div>
         </div>

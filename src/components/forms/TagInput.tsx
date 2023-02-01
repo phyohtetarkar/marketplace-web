@@ -52,6 +52,7 @@ function TagInput({
   }, [tags]);
 
   function handleKey(e: KeyboardEvent) {
+    e.preventDefault();
     if (e.key === "Enter") {
       if (!inputRef.current) {
         return;

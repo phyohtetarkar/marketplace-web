@@ -80,6 +80,11 @@ function AccountMenu({ onNavClick }: { onNavClick?: () => void }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (error instanceof TypeError) {
+    }
+  }, [error]);
+
   if (isLoading || error) {
     return null;
   }

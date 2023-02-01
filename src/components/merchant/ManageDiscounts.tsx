@@ -43,6 +43,7 @@ function DiscountRow({ value }: DiscountProps) {
 
 function ManageDiscounts({ shopId }: { shopId: number }) {
   const [page, setPage] = useState(0);
+  const [discount, setDiscount] = useState<Discount>();
   const { data, error, isLoading, mutate } = useSWR<PageData<Discount>, Error>(
     ["/discounts", page],
     ([url, p]) => getAllDiscounts(shopId, p),

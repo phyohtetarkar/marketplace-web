@@ -1,4 +1,4 @@
-import { useFormik } from "formik";
+import { FormikErrors, useFormik } from "formik";
 import { useContext } from "react";
 import { ShopDetailContext } from "../../common/contexts";
 import { ShopContact } from "../../common/models";
@@ -17,6 +17,19 @@ function ShopContactEdit() {
       longitude: shopContext?.contact?.longitude
     },
     enableReinitialize: true,
+    validate: (values) => {
+      const errors: FormikErrors<ShopContact> = {};
+      const floatRegex = "^([0-9]*[.])?[0-9]+$";
+
+      if (values.latitude && !`${values.latitude}`.match(floatRegex)) {
+        errors.latitude = "Please enter valid value";
+      }
+
+      if (values.longitude && !`${values.longitude}`.match(floatRegex)) {
+        errors.latitude = "Please enter valid value";
+      }
+      return errors;
+    },
     validateOnChange: false,
     validateOnBlur: false,
     onSubmit: (values) => {
@@ -60,12 +73,8 @@ function ShopContactEdit() {
                   name="latitude"
                   placeholder="Enter latitude"
                   value={formik.values.latitude ?? ""}
-                  onChange={(evt) => {
-                    const value = evt.target.value;
-                    if (value.length === 0 || !isNaN(parseInt(value))) {
-                      formik.handleChange(evt);
-                    }
-                  }}
+                  onChange={formik.handleChange}
+                  error={formik.errors.latitude}
                 />
               </div>
               <div className="col-md-6">
@@ -73,12 +82,8 @@ function ShopContactEdit() {
                   name="longitude"
                   placeholder="Enter longitude"
                   value={formik.values.longitude ?? ""}
-                  onChange={(evt) => {
-                    const value = evt.target.value;
-                    if (value.length === 0 || !isNaN(parseInt(value))) {
-                      formik.handleChange(evt);
-                    }
-                  }}
+                  onChange={formik.handleChange}
+                  error={formik.errors.longitude}
                 />
               </div>
             </div>

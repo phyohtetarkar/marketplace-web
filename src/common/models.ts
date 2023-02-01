@@ -58,7 +58,7 @@ export interface Shop {
   rating?: number;
   featured?: boolean;
   createdAt?: number;
-  status?: string;
+  status?: "PENDING" | "ACTIVE" | "SUBSCRIPTION_EXPIRED" | "DENIED";
   logo?: string;
   cover?: string;
   about?: string;
@@ -101,10 +101,12 @@ export interface Product {
   price?: number;
   brand?: string;
   thumbnail?: string;
+  videoId?: string;
   stockLeft?: number;
   featured?: boolean;
+  newArrival?: boolean;
   description?: string;
-  status?: string;
+  status?: "DRAFT" | "ARCHIVED" | "PUBLISHED" | "DENIED";
   discount?: Discount;
   category?: Category;
   shop?: Shop;
@@ -113,13 +115,13 @@ export interface Product {
   variants?: ProductVariant[];
   categoryId?: number;
   shopId?: number;
-  discountId?: string;
+  discountId?: number;
 }
 
 export interface ProductImage {
   id?: number;
   productId?: number;
-  name?: string;
+  name?: string | null;
   thumbnail?: boolean;
   file?: File;
   deleted?: boolean;

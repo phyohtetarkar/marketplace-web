@@ -98,7 +98,6 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
     placeholder,
     error,
     onChange,
-    defaultValue,
     maxHeight,
     formatSelectedOption,
     ...optionProps
@@ -160,6 +159,17 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
       document.removeEventListener("click", handleDocumentClick);
     };
   }, [handleDocumentClick]);
+
+  useEffect(() => {
+    if (props.defaultValue) {
+      setSelectedOption({
+        key: props.getOptionKey(props.defaultValue!),
+        value: props.defaultValue! as T
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.defaultValue]);
 
   function handleFilter(v: T) {
     if (!filter) {

@@ -152,6 +152,7 @@ function ShopHome({ shop }: { shop: Shop }) {
         shop={shop!}
         isMember={isMember}
         onProductCreate={() => setPendingProductId("new")}
+        onProductEdit={(id) => setPendingProductId(id)}
       />
     );
   };
@@ -163,10 +164,11 @@ function ShopHome({ shop }: { shop: Shop }) {
     </>
   );
 
-  if (pendingProductId === "new") {
+  if (pendingProductId) {
     return (
       <ProductEdit
         shop={shop}
+        productSlug={pendingProductId}
         onPopBack={() => setPendingProductId(undefined)}
       />
     );
