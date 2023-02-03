@@ -1,5 +1,4 @@
 import {
-  AdjustmentsHorizontalIcon,
   Bars3Icon,
   CubeIcon,
   InformationCircleIcon,
@@ -11,9 +10,10 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import { ShopDetailContext } from "../../../common/contexts";
 import { Shop } from "../../../common/models";
+import { getAPIBasePath } from "../../../common/utils";
 import Dropdown from "../../../components/Dropdown";
 import { ShopDashboard, ShopSetting } from "../../../components/merchant";
 import { ProductEdit } from "../../../components/product";
@@ -24,7 +24,7 @@ import {
   ShopReviewListing
 } from "../../../components/shopdetail";
 import Tabs from "../../../components/Tabs";
-import { getShopBySlug, isShopMember } from "../../../services/ShopService";
+import { getShopBySlug } from "../../../services/ShopService";
 
 type PageTab =
   | "products"
@@ -34,7 +34,7 @@ type PageTab =
   | "settings"
   | "insights";
 
-function ShopHome({ shop }: { shop: Shop }) {
+function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
   const router = useRouter();
 
   const { tab } = router.query;
@@ -44,8 +44,6 @@ function ShopHome({ shop }: { shop: Shop }) {
   );
 
   const [pendingProductId, setPendingProductId] = useState<string>();
-
-  const [isMember, setIsMember] = useState(false);
 
   const iconSize = 20;
 
@@ -61,13 +59,13 @@ function ShopHome({ shop }: { shop: Shop }) {
   //   }
   // }, [router]);
 
-  useEffect(() => {
-    isShopMember(shop.id ?? 0)
-      .then(setIsMember)
-      .catch((error) => {
-        setIsMember(false);
-      });
-  }, [shop]);
+  // useEffect(() => {
+  //   isShopMember(shop.id ?? 0)
+  //     .then(setIsMember)
+  //     .catch((error) => {
+  //       setIsMember(false);
+  //     });
+  // }, [shop]);
 
   function menuLink({
     href,
@@ -379,13 +377,35 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const { slug } = context.query;
     const { Auth } = withSSRContext(context);
-    //const accessToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
 
     const shop = await getShopBySlug(slug as string);
 
+    let isMember = false;
+
+    try {
+      const accessToken = (await Auth.currentSession())
+        ?.getAccessToken()
+        ?.getJwtToken();
+
+      const url = `${getAPIBasePath()}shop-members/${shop.id}/check`;
+
+      if (accessToken) {
+        const resp = await fetch(url, {
+          headers: {
+            Authorization: "Bearer " + accessToken
+          }
+        });
+
+        if (resp.ok) {
+          isMember = (await resp.json()) as boolean;
+        }
+      }
+    } catch (error) {}
+
     return {
       props: {
-        shop: shop
+        shop: shop,
+        isMember: isMember
       } // will be passed to the page component as props
     };
   } catch (e) {

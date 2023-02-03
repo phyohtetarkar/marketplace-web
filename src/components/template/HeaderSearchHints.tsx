@@ -105,7 +105,7 @@ function HeaderSearchHints() {
                             alt=""
                             width={40}
                             height={40}
-                            className="flex-shrink-0"
+                            className="flex-shrink-0 rounded-1"
                           />
                           <div className="">{e.name}</div>
                         </a>

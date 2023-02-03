@@ -29,6 +29,10 @@ function MyFavorites() {
     if (error) {
     }
 
+    if (data?.contents.length === 0) {
+      return <div className="text-muted text-center">No items found</div>;
+    }
+
     return (
       <>
         <div className="row row-cols-1 row-cols-md-2 g-3">

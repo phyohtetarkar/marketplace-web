@@ -88,15 +88,15 @@ export async function existsShopBySlug(slug: String, excludeId: number) {
 export async function isShopMember(shopId: number) {
   const url = `${getAPIBasePath()}shop-members/${shopId}/check`;
 
-  const authHeadher = await getAuthHeader();
+  const authHeader = await getAuthHeader();
 
-  if (!authHeadher) {
+  if (!authHeader) {
     return false;
   }
 
   const resp = await fetch(url, {
     headers: {
-      Authorization: authHeadher
+      Authorization: authHeader
     }
   });
 

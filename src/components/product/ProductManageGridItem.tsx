@@ -15,12 +15,26 @@ function ProductManageGridItem({
 }: ProductManageGridItemProps) {
   let popular;
   let available;
+  let draft;
 
   let price = <>{formatPrice(value.price ?? 0)} Ks</>;
 
   //   if (data.images && data.images.length > 0) {
   //     image = `${baseImagbaePath}/books%2F${data.images[0]}?alt=media`;
   //   }
+
+  if (value.status && value.status !== "PUBLISHED") {
+    draft = (
+      <div
+        className="bg-danger px-2 py-1 text-light rounded-1 position-absolute top-0 end-0 m-2"
+        style={{
+          fontSize: 12
+        }}
+      >
+        {value.status}
+      </div>
+    );
+  }
 
   //   if (data.popular) {
   //     popular = (
@@ -74,6 +88,7 @@ function ProductManageGridItem({
             </div>
             {available && available}
             {popular && popular}
+            {draft && draft}
           </div>
         </a>
       </Link>

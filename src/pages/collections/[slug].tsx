@@ -108,7 +108,7 @@ function Collection() {
 
   const { data, error, isLoading } = useSWR<PageData<Product>, Error>(
     ["/products"],
-    ([url]) => findProducts({}),
+    ([url]) => findProducts({ status: "PUBLISHED" }),
     {
       revalidateOnFocus: false
     }

@@ -1,5 +1,5 @@
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { PageData, Product, Shop } from "../../common/models";
 import { findProducts, ProductQuery } from "../../services/ProductService";
