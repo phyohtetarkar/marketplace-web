@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import {
@@ -18,6 +19,7 @@ function ShopReviewEdit() {
   const { mutate } = useSWRConfig();
   const shopContext = useContext(ShopDetailContext);
   const authContext = useContext(AuthenticationContext);
+  const router = useRouter();
 
   // const { data, error, isLoading } = useSWR(
   //   "/shop-reviews/me",
@@ -53,6 +55,10 @@ function ShopReviewEdit() {
 
   const postReview = async (values: ShopReview) => {
     try {
+      if (authContext.status !== "success") {
+        router.push("/login");
+        return;
+      }
       await writeReview(values);
       mutate(["/shop-reviews"]);
       formik.setValues({

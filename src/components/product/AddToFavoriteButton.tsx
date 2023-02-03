@@ -6,23 +6,25 @@ import Tooltip from "../Tooltip";
 interface AddToFavoriteButtonProps {
   productId: number;
   className?: string;
+  disabled?: boolean;
 }
 
 function AddToFavoriteButton({
   productId,
-  className
+  className,
+  disabled
 }: AddToFavoriteButtonProps) {
   const authContext = useContext(AuthenticationContext);
   const [adding, setAdding] = useState(false);
 
-  if (authContext.status !== "success") {
-    return null;
-  }
+  // if (authContext.status !== "success") {
+  //   return null;
+  // }
 
   return (
     <Tooltip title="Add to favorite">
       <button
-        disabled={adding}
+        disabled={adding || disabled}
         className={`btn btn-outline-light text-primary border h-100 position-relative ${
           className ?? ""
         }`}

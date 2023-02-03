@@ -5,9 +5,14 @@ import { AuthenticationContext } from "../../common/contexts";
 interface AddToCartButtonProps {
   productId: number;
   className?: string;
+  disabled?: boolean;
 }
 
-function AddToCartButton({ productId, className }: AddToCartButtonProps) {
+function AddToCartButton({
+  productId,
+  className,
+  disabled
+}: AddToCartButtonProps) {
   const authContext = useContext(AuthenticationContext);
   const [adding, setAdding] = useState(false);
 
@@ -17,7 +22,7 @@ function AddToCartButton({ productId, className }: AddToCartButtonProps) {
 
   return (
     <button
-      disabled={adding}
+      disabled={adding || disabled}
       className={`btn btn-primary hstack gap-2 justify-content-center ${
         className ?? ""
       }`}

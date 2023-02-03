@@ -68,7 +68,7 @@ function ProductManageGridItem({
                 src={value.thumbnail ?? "/placeholder.jpeg"}
                 alt="Product image."
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain"
                 priority
               />
             </div>

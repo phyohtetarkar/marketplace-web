@@ -65,7 +65,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
             className="position-relative"
             onContextMenu={(e) => e.preventDefault()}
           >
-            <div className="ratio ratio-4x3 bg-light">
+            <div className="ratio ratio-4x3">
               <Image
                 className="card-img-top"
                 src={value.thumbnail ?? "/placeholder.jpeg"}
@@ -105,7 +105,9 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
           <h6 className="fw-semibold mt-2 mb-3">{price}</h6>
 
           <div className="hstack align-items-stretch gap-2">
-            {value.id && <AddToCartButton productId={value.id} />}
+            {value.id && (
+              <AddToCartButton productId={value.id} className="flex-grow-1" />
+            )}
             {value.id && <AddToFavoriteButton productId={value.id} />}
           </div>
         </div>

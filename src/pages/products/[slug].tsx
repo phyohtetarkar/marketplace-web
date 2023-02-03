@@ -10,6 +10,7 @@ import { Swiper as SwiperView, SwiperSlide } from "swiper/react";
 import { Product, ProductVariant } from "../../common/models";
 import { formatPrice } from "../../common/utils";
 import { AddToCartButton, AddToFavoriteButton } from "../../components/product";
+import Rating from "../../components/Rating";
 import Tabs from "../../components/Tabs";
 import { getProductBySlug } from "../../services/ProductService";
 
@@ -42,6 +43,10 @@ function ProductDetail({ product }: { product: Product }) {
 
   useEffect(() => {
     if (!product) {
+      return;
+    }
+
+    if (!product.variants || product.variants.length === 0) {
       return;
     }
 
@@ -80,14 +85,14 @@ function ProductDetail({ product }: { product: Product }) {
   // )}`;
   let price = (
     <>
-      {formatPrice(((variant ? variant.price : product.price) ?? 0) * quantity)}
+      {formatPrice((variant?.price ?? product.price ?? 0) * quantity)}
       &nbsp;Ks
     </>
   );
 
   return (
     <div className="vstack">
-      <div className="bg-primary">
+      <div className="header-bar">
         <div className="container">
           <div className="row py-4 px-2">
             <nav aria-label="breadcrumb col-12">
@@ -236,7 +241,13 @@ function ProductDetail({ product }: { product: Product }) {
                     {!product.brand ? <>&nbsp;</> : product.brand}
                   </dd>
                   <dt className="col-sm-3 fw-semibold">Category</dt>
-                  <dd className="col-sm-9">{product.category?.name}</dd>
+                  <dd className="col-sm-9">
+                    <Link href={`/collections/${product.category?.slug}`}>
+                      <a className="text-decoration-none fw-medium">
+                        {product.category?.name}
+                      </a>
+                    </Link>
+                  </dd>
                   <dt className="col-sm-3 fw-semibold">Availability</dt>
                   <dd className="col-sm-9">
                     {(product.stockLeft ?? 0) > 1 ? (
@@ -251,7 +262,9 @@ function ProductDetail({ product }: { product: Product }) {
                   </dd>
                 </dl>
 
-                <hr className="bg-dark-gray" />
+                {product.variants && product.variants.length > 0 && (
+                  <hr className="bg-dark-gray" />
+                )}
 
                 <div className="row g-2 mb-4 mb-lg-3">
                   {product.options?.map((op, i) => {
@@ -340,6 +353,10 @@ function ProductDetail({ product }: { product: Product }) {
                       <AddToCartButton
                         productId={product.id}
                         className="py-2h py-lg-2 w-100"
+                        disabled={
+                          (variant && variant.stockLeft === 0) ||
+                          product.stockLeft === 0
+                        }
                       />
                     )}
                   </div>
@@ -408,7 +425,7 @@ function ProductDetail({ product }: { product: Product }) {
               </div>
               <div className="card-body">
                 <div className="vstack">
-                  <div className="d-flex align-items-center">
+                  <div className="d-flex align-items-start">
                     <div
                       className="flex-shrink-0"
                       onContextMenu={(evt) => evt.preventDefault()}
@@ -427,23 +444,16 @@ function ProductDetail({ product }: { product: Product }) {
                       <h5 className="mb-0 text-truncate">
                         {product.shop?.name}
                       </h5>
-                      <div className="text-muted small text-truncate">
+                      <div className="text-muted small text-truncate mb-2">
                         {product.shop?.headline}
                       </div>
+                      <Rating rating={product.shop?.rating ?? 0} />
                     </div>
                   </div>
 
-                  <hr className="bg-dark-gray my-2" />
-
-                  <p className="text-muted fw-light">
-                    Established in 1980, lorem ipsum dolor sit amet, consectetur
-                    adipisicing elit, sed do eiusmod tempor ut labore et dolore
-                    ipsum
-                  </p>
-
-                  <div>
+                  <div className="clearfix mt-3">
                     <Link href={`/shops/${product.shop?.slug}`}>
-                      <a className="btn btn-outline-light border text-primary">
+                      <a className="btn btn-outline-light border text-primary float-end">
                         Visit store
                       </a>
                     </Link>

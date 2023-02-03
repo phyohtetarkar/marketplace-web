@@ -5,10 +5,7 @@ import { useContext } from "react";
 import { ShopDetailContext } from "../../common/contexts";
 import { ShopGeneral } from "../../common/models";
 import { parseErrorResponse } from "../../common/utils";
-import {
-  existsShopBySlug,
-  updateShopGeneral
-} from "../../services/ShopService";
+import { updateShopGeneral } from "../../services/ShopService";
 import { Input } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 
@@ -39,19 +36,19 @@ function ShopGeneralEdit() {
         errors.name = "Please enter shop name";
       }
 
-      if (!values.slug || values.slug.trim().length === 0) {
-        errors.slug = "Please enter shop slug";
-      } else {
-        try {
-          if (await existsShopBySlug(values.slug, values.shopId ?? 0)) {
-            errors.slug = "Shop slug already in use";
-          }
-        } catch (error: any) {
-          if (error?.status !== 404) {
-            errors.slug = "Error checking, please try again";
-          }
-        }
-      }
+      // if (!values.slug || values.slug.trim().length === 0) {
+      //   errors.slug = "Please enter shop slug";
+      // } else {
+      //   try {
+      //     if (await existsShopBySlug(values.slug, values.shopId ?? 0)) {
+      //       errors.slug = "Shop slug already in use";
+      //     }
+      //   } catch (error: any) {
+      //     if (error?.status !== 404) {
+      //       errors.slug = "Error checking, please try again";
+      //     }
+      //   }
+      // }
 
       return errors;
     },
@@ -83,7 +80,7 @@ function ShopGeneralEdit() {
         </div>
         <div className="card-body">
           <div className="row g-3 mb-3">
-            <div className="col-lg-6">
+            <div className="col-lg-12">
               <Input
                 label="Name *"
                 id="shopNameInput"
@@ -101,7 +98,7 @@ function ShopGeneralEdit() {
                 error={formik.errors.name}
               />
             </div>
-            <div className="col-lg-6">
+            {/* <div className="col-lg-6">
               <Input
                 label="Slug *"
                 id="slugInput"
@@ -112,7 +109,7 @@ function ShopGeneralEdit() {
                 onChange={formik.handleChange}
                 error={formik.errors.slug}
               />
-            </div>
+            </div> */}
           </div>
           <div className="row g-3 mb-3">
             <div className="order-5 order-lg-3 order-md-5 col-lg-6">

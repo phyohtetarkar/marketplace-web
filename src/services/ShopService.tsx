@@ -17,7 +17,7 @@ export async function createShop(value: Shop) {
   const url = getAPIBasePath() + basePath;
   const formData = new FormData();
   formData.append("name", value.name!);
-  formData.append("slug", value.slug!);
+  value.slug && formData.append("slug", value.slug);
   value.headline && formData.append("headline", value.headline);
   value.about && formData.append("about", value.about);
   value.contact?.address && formData.append("address", value.contact.address);
@@ -87,9 +87,16 @@ export async function existsShopBySlug(slug: String, excludeId: number) {
 
 export async function isShopMember(shopId: number) {
   const url = `${getAPIBasePath()}shop-members/${shopId}/check`;
+
+  const authHeadher = await getAuthHeader();
+
+  if (!authHeadher) {
+    return false;
+  }
+
   const resp = await fetch(url, {
     headers: {
-      Authorization: await getAuthHeader()
+      Authorization: authHeadher
     }
   });
 

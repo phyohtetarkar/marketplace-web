@@ -9,7 +9,7 @@ import { debounce, parseErrorResponse } from "../../../common/utils";
 import { withAuthentication } from "../../../common/WithAuthentication";
 import { Input } from "../../../components/forms";
 import { RichTextEditorInputProps } from "../../../components/forms/RichTextEditor";
-import { createShop, existsShopBySlug } from "../../../services/ShopService";
+import { createShop } from "../../../services/ShopService";
 
 const _steps = [
   { step: 1, title: "Basic information" },
@@ -49,10 +49,10 @@ const BasicInformation = (props: FormProps) => {
                 placeholder="Enter shop name"
                 value={props.values.name ?? ""}
                 onChange={(evt) => {
-                  const slug = evt.target.value
-                    .replace(/\s+/g, "-")
-                    .toLowerCase();
-                  props.setFieldValue?.("slug", slug);
+                  // const slug = evt.target.value
+                  //   .replace(/\s+/g, "-")
+                  //   .toLowerCase();
+                  // props.setFieldValue?.("slug", slug);
                   props.handleChange?.(evt);
                 }}
                 error={props.errors.name}
@@ -60,6 +60,16 @@ const BasicInformation = (props: FormProps) => {
             </div>
             <div className="col-lg-6">
               <Input
+                label="Headline"
+                id="headlineInput"
+                name="headline"
+                type="text"
+                className="mb-3"
+                placeholder="Enter shop headline"
+                value={props.values.headline ?? ""}
+                onChange={props.handleChange}
+              />
+              {/* <Input
                 label="Slug *"
                 id="slugInput"
                 name="slug"
@@ -68,7 +78,7 @@ const BasicInformation = (props: FormProps) => {
                 value={props.values.slug ?? ""}
                 onChange={props.handleChange}
                 error={props.errors.slug}
-              />
+              /> */}
             </div>
           </div>
           <div className="row g-4">
@@ -87,16 +97,6 @@ const BasicInformation = (props: FormProps) => {
               </div>
             </div>
             <div className="order-3 order-lg-4 order-md-3 order-1 col-lg-6">
-              <Input
-                label="Headline"
-                id="headlineInput"
-                name="headline"
-                type="text"
-                className="mb-3"
-                placeholder="Enter shop headline"
-                value={props.values.headline ?? ""}
-                onChange={props.handleChange}
-              />
               <Input
                 label="Address"
                 id="addressInput"
@@ -231,17 +231,17 @@ function CreateShop() {
         errors.name = "Please enter shop name";
       }
 
-      if (!values.slug || values.slug.length === 0) {
-        errors.slug = "Please enter shop slug";
-      } else {
-        try {
-          if (await existsShopBySlug(values.slug, values.id ?? 0)) {
-            errors.slug = "Shop slug already in use";
-          }
-        } catch (error: any) {
-          errors.slug = "Error checking, please try again";
-        }
-      }
+      // if (!values.slug || values.slug.length === 0) {
+      //   errors.slug = "Please enter shop slug";
+      // } else {
+      //   try {
+      //     if (await existsShopBySlug(values.slug, values.id ?? 0)) {
+      //       errors.slug = "Shop slug already in use";
+      //     }
+      //   } catch (error: any) {
+      //     errors.slug = "Error checking, please try again";
+      //   }
+      // }
 
       return errors;
     },

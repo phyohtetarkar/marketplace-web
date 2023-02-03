@@ -21,6 +21,7 @@ import {
   ProductQuery,
   saveProduct
 } from "../../services/ProductService";
+import Dropdown from "../Dropdown";
 import { AutocompleteSelect, Input, TagInput } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import Modal from "../Modal";
@@ -315,7 +316,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
 
       //props.setFieldValue?.(`${name}Image`, file);
 
-      if (fileSize <= 0.6) {
+      if (fileSize <= 0.512) {
         var reader = new FileReader();
         reader.onload = function (e) {
           if (e.target?.result && typeof e.target.result === "string") {
@@ -401,8 +402,6 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
         });
       }
 
-      product.status = "PUBLISHED";
-
       console.log(product);
       await saveProduct(product);
       mutate(["/products", { "shop-id": values.shopId } as ProductQuery]);
@@ -458,20 +457,54 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                 </nav>
               </div>
               <div className="ms-auto">
-                <button
-                  type="submit"
-                  className="btn btn-accent py-2 px-3 ms-2"
-                  disabled={formik.isSubmitting}
+                <Dropdown
+                  toggle={
+                    <button
+                      type="button"
+                      className="btn btn-accent py-2 px-3 ms-2"
+                      disabled={formik.isSubmitting}
+                    >
+                      {formik.isSubmitting && (
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                      )}
+                      Save as
+                    </button>
+                  }
+                  className="dropdown-menu-end"
                 >
-                  {formik.isSubmitting && (
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      role="status"
-                      aria-hidden="true"
-                    ></span>
-                  )}
-                  {!productSlug ? "Create" : "Update"}
-                </button>
+                  <li
+                    className="dropdown-item"
+                    role="button"
+                    onClick={() => {
+                      formik
+                        .setFieldValue("status", "DRAFT")
+                        .then((v) => {
+                          formik.submitForm();
+                        })
+                        .catch((error) => {});
+                    }}
+                  >
+                    Draft
+                  </li>
+                  <li
+                    className="dropdown-item"
+                    role="button"
+                    onClick={() => {
+                      formik
+                        .setFieldValue("status", "PUBLISHED")
+                        .then((v) => {
+                          formik.submitForm();
+                        })
+                        .catch((error) => {});
+                    }}
+                  >
+                    Published
+                  </li>
+                </Dropdown>
               </div>
             </div>
           </div>
@@ -1019,7 +1052,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
               <div className="card-footer px-4 py-3">
                 <span className="text-muted">
                   Product image can upload up to <strong>5</strong> images with
-                  size constraint of at most <strong>600KB</strong> each.
+                  size constraint of at most <strong>512KB</strong> each.
                 </span>
               </div>
             </div>

@@ -1,6 +1,7 @@
 import {
+  AdjustmentsHorizontalIcon,
+  Bars3Icon,
   CubeIcon,
-  EllipsisVerticalIcon,
   InformationCircleIcon,
   MapPinIcon,
   StarIcon
@@ -218,14 +219,15 @@ function ShopHome({ shop }: { shop: Shop }) {
                 {isMember && (
                   <Dropdown
                     toggle={
-                      <EllipsisVerticalIcon
+                      <Bars3Icon
                         width={24}
                         strokeWidth={1.5}
                         className="text-light"
                       />
                     }
                     className="position-absolute top-0 end-0 m-3"
-                    toggleClassName="bg-dark px-2h py-2 border rounded bg-opacity-50"
+                    toggleClassName="bg-dark px-2 py-1 border rounded bg-opacity-50"
+                    menuClassName="shadow"
                   >
                     <li role={"button"} className="dropdown-item">
                       Upload Logo

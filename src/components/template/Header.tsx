@@ -304,7 +304,7 @@ function Header({ hideAuth }: HeaderProps) {
                         height: 17
                       }}
                     >
-                      3
+                      0
                     </div>
                   </div>
                 </a>
