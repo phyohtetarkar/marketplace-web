@@ -34,7 +34,7 @@ function RichTextEditor({
       value={value}
       onEditorChange={(newValue, editor) => {
         //formik.setFieldValue("body", newValue)
-        onEditorChange && onEditorChange(newValue);
+        onEditorChange?.(newValue);
       }}
       onInit={(evt, editor) => {
         //editorRef.current = editor;

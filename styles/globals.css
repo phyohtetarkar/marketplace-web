@@ -364,6 +364,10 @@ svg {
   background-color: #fff;
 }
 
+.swiper-button-next, .swiper-button-prev {
+  --swiper-navigation-color: var(--bs-primary);
+}
+
 /* Tinymce */
 .tox-pop .tox-pop__dialog .tox-toolbar {
   padding: 0 !important;

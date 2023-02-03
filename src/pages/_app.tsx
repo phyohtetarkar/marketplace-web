@@ -1,5 +1,6 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "swiper/css";
+import "swiper/css/zoom";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "../../styles/bootstrap-custom.css";
@@ -15,8 +16,10 @@ import { Layout } from "../components/template";
 
 Amplify.configure({
   ...awsconfig,
+  ssr: true,
   Auth: {
     ...awsconfig,
+    ssr: true,
     cookieStorage: {
       domain: process.env.NEXT_PUBLIC_DOMAIN,
       path: "/",

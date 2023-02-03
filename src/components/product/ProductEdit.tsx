@@ -3,7 +3,7 @@ import { FormikErrors, useFormik } from "formik";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSWRConfig } from "swr";
 import { useCategories } from "../../common/hooks";
 import {
@@ -65,7 +65,8 @@ function OptionsEdit({
         } else if (
           values.find(
             (e, index) =>
-              i !== index && e.name.toLowerCase() === op.name.toLowerCase()
+              i !== index &&
+              e.name.toLowerCase().trim() === op.name.toLowerCase().trim()
           )
         ) {
           error["name"] = "Duplicate option name";
@@ -395,8 +396,8 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
       }
 
       if (!product.id) {
-        product.options = options.map((op) => {
-          return { name: op.name, position: op.position } as ProductOption;
+        product.options = options.map((op, i) => {
+          return { name: op.name, position: i } as ProductOption;
         });
       }
 
@@ -404,10 +405,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
 
       console.log(product);
       await saveProduct(product);
-      mutate([
-        "/products",
-        { "shop-id": values.shopId, status: "PUBLISHED" } as ProductQuery
-      ]);
+      mutate(["/products", { "shop-id": values.shopId } as ProductQuery]);
       onPopBack?.();
     } catch (error) {
       const msg = parseErrorResponse(error);

@@ -1,12 +1,11 @@
-import { HeartIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../../common/contexts";
 import { Product } from "../../common/models";
 import { formatPrice } from "../../common/utils";
-import { addToFavoriteProduct } from "../../services/FavoriteProductService";
-import Tooltip from "../Tooltip";
+import AddToCartButton from "./AddToCartButton";
+import AddToFavoriteButton from "./AddToFavoriteButton";
 
 interface ProductGridItemProps {
   value: Product;
@@ -66,13 +65,13 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
             className="position-relative"
             onContextMenu={(e) => e.preventDefault()}
           >
-            <div className="ratio ratio-4x3">
+            <div className="ratio ratio-4x3 bg-light">
               <Image
                 className="card-img-top"
                 src={value.thumbnail ?? "/placeholder.jpeg"}
                 alt="Product image."
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain"
                 priority
               />
             </div>
@@ -106,45 +105,8 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
           <h6 className="fw-semibold mt-2 mb-3">{price}</h6>
 
           <div className="hstack align-items-stretch gap-2">
-            <button
-              disabled={false}
-              className="btn btn-primary flex-grow-1 hstack justify-content-center gap-2"
-              onClick={() => {
-                // addToCard(data, settingContext.setting.minimumOrderLimit)
-                //   .then((result) => {
-                //     if (result) {
-                //       toast.success(localize("product_added_to_cart"));
-                //     } else {
-                //       toast.info(localize("product_already_in_cart"));
-                //     }
-                //   })
-                //   .catch((e) => {
-                //     console.log(e);
-                //   });
-              }}
-            >
-              <ShoppingCartIcon width={20} />
-              <span>Add to cart</span>
-            </button>
-            <Tooltip title="Add to favorite">
-              {!addingToFavorite ? (
-                <button
-                  disabled={addingToFavorite}
-                  className="btn btn-outline-light text-primary border h-100 hstack"
-                  onClick={() => {
-                    addToFavoriteProduct(value.id!);
-                  }}
-                >
-                  <HeartIcon width={20} strokeWidth={2} />
-                </button>
-              ) : (
-                <span
-                  className="spinner-border spinner-border-sm"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-              )}
-            </Tooltip>
+            {value.id && <AddToCartButton productId={value.id} />}
+            {value.id && <AddToFavoriteButton productId={value.id} />}
           </div>
         </div>
       </div>

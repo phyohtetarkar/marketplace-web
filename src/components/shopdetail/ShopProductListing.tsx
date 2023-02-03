@@ -17,7 +17,7 @@ interface ShopProductListingProps {
 function ShopProductListing(props: ShopProductListingProps) {
   const [query, setQuery] = useState<ProductQuery>({
     "shop-id": props.shop.id,
-    status: "PUBLISHED"
+    status: !props.isMember ? "PUBLISHED" : undefined
   });
 
   const { data, error, isLoading } = useSWR<PageData<Product>, Error>(

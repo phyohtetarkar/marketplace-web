@@ -1,26 +1,24 @@
 import {
   CubeIcon,
+  EllipsisVerticalIcon,
   InformationCircleIcon,
   MapPinIcon,
-  PencilSquareIcon,
   StarIcon
 } from "@heroicons/react/24/outline";
+import { withSSRContext } from "aws-amplify";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactNode, useContext, useEffect, useState } from "react";
-import {
-  AuthenticationContext,
-  ShopDetailContext
-} from "../../../common/contexts";
+import { ReactNode, useEffect, useState } from "react";
+import { ShopDetailContext } from "../../../common/contexts";
 import { Shop } from "../../../common/models";
+import Dropdown from "../../../components/Dropdown";
 import { ShopDashboard, ShopSetting } from "../../../components/merchant";
 import { ProductEdit } from "../../../components/product";
 import Rating from "../../../components/Rating";
 import {
   AboutUs,
-  ShopBranchListing,
   ShopProductListing,
   ShopReviewListing
 } from "../../../components/shopdetail";
@@ -176,7 +174,7 @@ function ShopHome({ shop }: { shop: Shop }) {
 
   return (
     <div className="vstack">
-      <div className="bg-primary">
+      <div className="header-bar">
         <div className="container">
           <div className="row py-4">
             <nav aria-label="breadcrumb col-12">
@@ -218,12 +216,24 @@ function ShopHome({ shop }: { shop: Shop }) {
                   priority
                 />
                 {isMember && (
-                  <div
-                    role="button"
-                    className="position-absolute bg-dark px-2h py-2 border rounded bg-opacity-50 top-0 end-0 m-3"
+                  <Dropdown
+                    toggle={
+                      <EllipsisVerticalIcon
+                        width={24}
+                        strokeWidth={1.5}
+                        className="text-light"
+                      />
+                    }
+                    className="position-absolute top-0 end-0 m-3"
+                    toggleClassName="bg-dark px-2h py-2 border rounded bg-opacity-50"
                   >
-                    <PencilSquareIcon width={20} className="text-light" />
-                  </div>
+                    <li role={"button"} className="dropdown-item">
+                      Upload Logo
+                    </li>
+                    <li role={"button"} className="dropdown-item">
+                      Upload Cover
+                    </li>
+                  </Dropdown>
                 )}
               </div>
               <div className="row p-3 py-sm-4" style={{ zIndex: 999 }}>
@@ -239,14 +249,14 @@ function ShopHome({ shop }: { shop: Shop }) {
                           className="rounded-1"
                           objectFit="cover"
                         />
-                        {isMember && (
+                        {/* {isMember && (
                           <div
                             role="button"
                             className="position-absolute bg-dark rounded-bottom py-1 text-center bg-opacity-50 bottom-0 start-0 end-0"
                           >
                             <span className="small text-light">Edit</span>
                           </div>
-                        )}
+                        )} */}
                       </div>
                     </div>
                     <div className="ms-3 flex-column mt-n2 mt-sm-n3 d-none d-md-flex">
@@ -366,6 +376,8 @@ function ShopHome({ shop }: { shop: Shop }) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const { slug } = context.query;
+    const { Auth } = withSSRContext(context);
+    //const accessToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
 
     const shop = await getShopBySlug(slug as string);
 
