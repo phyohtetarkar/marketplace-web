@@ -90,6 +90,10 @@ function ProductDetail({ product }: { product: Product }) {
     </>
   );
 
+  const noStock = () => {
+    return !variant || variant.stockLeft === 0 || product.stockLeft === 0;
+  };
+
   return (
     <div className="vstack">
       <div className="header-bar">
@@ -292,6 +296,8 @@ function ProductDetail({ product }: { product: Product }) {
                                     op.name && newMap.set(op.name, v);
                                     return newMap;
                                   });
+
+                                  setQuantity(1);
                                 }}
                               >
                                 {v}
@@ -312,6 +318,7 @@ function ProductDetail({ product }: { product: Product }) {
                       <button
                         type="button"
                         className="btn btn-outline text-muted border border-end-0"
+                        disabled={noStock()}
                         onClick={() => {
                           setQuantity((qty) => {
                             if (qty > 1) {
@@ -332,11 +339,19 @@ function ProductDetail({ product }: { product: Product }) {
                       <button
                         type="button"
                         className="btn btn-outline text-muted border border-start-0"
+                        disabled={noStock()}
                         onClick={() => {
                           setQuantity((qty) => {
+                            if (variant && qty < (variant.stockLeft ?? 0)) {
+                              return qty + 1;
+                            } else if (variant) {
+                              return qty;
+                            }
+
                             if (qty < (product.stockLeft ?? 0)) {
                               return qty + 1;
                             }
+
                             return qty;
                           });
                         }}
@@ -353,11 +368,7 @@ function ProductDetail({ product }: { product: Product }) {
                       <AddToCartButton
                         productId={product.id}
                         className="py-2h py-lg-2 w-100"
-                        disabled={
-                          !variant ||
-                          (variant && variant.stockLeft === 0) ||
-                          product.stockLeft === 0
-                        }
+                        disabled={noStock()}
                       />
                     )}
                   </div>

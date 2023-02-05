@@ -393,7 +393,9 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
         let totalStock = 0;
         product.variants = product.variants.map((v) => {
           const vp = parseFloat(`${v.price}`);
-          totalStock += v.stockLeft ?? 0;
+          if (!v.deleted) {
+            totalStock += v.stockLeft ?? 0;
+          }
           return {
             ...v,
             price: isNaN(vp) ? undefined : vp
