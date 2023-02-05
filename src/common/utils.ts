@@ -64,11 +64,18 @@ export function buildQueryParams(params: any) {
   let query = "";
 
   for (const p in params) {
-    if (params[p] === undefined || params[p] === null) {
+    const value = params[p];
+    if (value === undefined || value === null) {
       continue;
     }
+
     const delimiter = query.length > 0 ? "&" : "?";
-    query += delimiter + `${p}=${params[p]}`;
+
+    if (value instanceof Array) {
+      query += delimiter + value.map((v) => `${p}=${v}`).join("&");
+    } else {
+      query += delimiter + `${p}=${value}`;
+    }
   }
 
   return query;

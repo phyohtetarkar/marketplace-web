@@ -1,18 +1,24 @@
-import useSWR from "swr";
-import { ListBulletIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
+import { useBrands, useCategory } from "../../common/hooks";
 import Accordion from "../../components/Accordion";
+import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
 import { ProductGridItem } from "../../components/product";
-import { PageData, Product } from "../../common/models";
-import Loading from "../../components/Loading";
-import { findProducts } from "../../services/ProductService";
+import { findProducts, ProductQuery } from "../../services/ProductService";
 
-const Filter = () => {
+interface FilterProps {
+  slug: string;
+}
+
+const Filter = ({ slug }: FilterProps) => {
+  const { brands, error, isLoading } = useBrands(slug);
+
   const [maxPrice, setMaxPrice] = useState(300000);
+
   return (
     <div className="rounded shadow-sm bg-white">
       <Accordion
@@ -36,39 +42,30 @@ const Filter = () => {
           </div> */}
           <div className="p-3 border-bottom">
             <div className="small text-muted mb-3">BRANDS</div>
-            <div className="vstack gap-2">
-              <div className="form-check">
-                <input
-                  id="beginner"
-                  type="checkbox"
-                  name="level"
-                  className="form-check-input"
-                />
-                <label htmlFor="beginner" className="form-check-label">
-                  Samsung
-                </label>
-              </div>
-              <div className="form-check">
-                <input
-                  id="intermediate"
-                  type="checkbox"
-                  name="level"
-                  className="form-check-input"
-                />
-                <label htmlFor="intermediate" className="form-check-label">
-                  Panasonic
-                </label>
-              </div>
-              <div className="form-check">
-                <input
-                  id="advance"
-                  type="checkbox"
-                  name="level"
-                  className="form-check-input"
-                />
-                <label htmlFor="advance" className="form-check-label">
-                  Huawei
-                </label>
+            <div
+              className="scrollbar-custom py-1"
+              style={{ overflowY: "auto", overflowX: "hidden" }}
+            >
+              <div
+                className="vstack gap-2"
+                style={{ maxHeight: 250, minHeight: 100 }}
+              >
+                {brands?.map((b, i) => {
+                  return (
+                    <div key={i} className="form-check">
+                      <input
+                        id={`brand${i}`}
+                        type="checkbox"
+                        name="brand"
+                        className="form-check-input shadow-none"
+                      />
+                      <label htmlFor={`brand${i}`} className="form-check-label">
+                        {b}
+                      </label>
+                    </div>
+                  );
+                })}
+                <div className="invisible p-1"></div>
               </div>
             </div>
           </div>
@@ -105,32 +102,85 @@ const Filter = () => {
 function Collection() {
   const router = useRouter();
   const { slug } = router.query;
+  const [query, setQuery] = useState<ProductQuery>();
 
-  const { data, error, isLoading } = useSWR<PageData<Product>, Error>(
-    ["/products"],
-    ([url]) => findProducts({ status: "PUBLISHED" }),
+  const { category } = useCategory(slug as string);
+
+  const { data, error, isLoading } = useSWR(
+    ["/products", query],
+    ([url, q]) => (q ? findProducts(q) : undefined),
     {
       revalidateOnFocus: false
     }
   );
 
+  useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+
+    const { slug } = router.query;
+
+    setQuery({
+      "category-slug": slug as string,
+      status: "PUBLISHED"
+    });
+  }, [router]);
+
+  const breadcrumb = () => {
+    const element: JSX.Element[] = [];
+
+    if (!category) {
+      return null;
+    }
+
+    element.push(
+      <li
+        key={category.id}
+        className="breadcrumb-item active"
+        aria-current="page"
+      >
+        {category.name}
+      </li>
+    );
+
+    for (let c = category?.category; !!c; c = c?.category) {
+      const e = (
+        <li key={c.id} className="breadcrumb-item">
+          <Link href={`/collections/${c.slug}`}>
+            <a className="text-light">{c.name}</a>
+          </Link>
+        </li>
+      );
+      element.push(e);
+    }
+
+    return element.reverse();
+  };
+
   const content = () => {
+    if (error) {
+      return null;
+    }
+
     if (isLoading) {
       return <Loading />;
     }
 
-    if (error) {
-      return null;
+    if (data?.contents.length === 0) {
+      return (
+        <div className="text-center py-3 text-muted">No products found</div>
+      );
     }
 
     return (
       <>
         <div className="row row-cols-1 row-cols-md-2 row-cols-xxl-3 g-3">
           {data?.contents &&
-            data.contents.map((s, i) => {
+            data.contents.map((p, i) => {
               return (
-                <div className="col" key={s.id}>
-                  <ProductGridItem value={s} />
+                <div className="col" key={p.id}>
+                  <ProductGridItem value={p} />
                 </div>
               );
             })}
@@ -159,7 +209,7 @@ function Collection() {
           <div className="row py-4 px-2">
             <nav aria-label="breadcrumb col-12">
               <ol className="breadcrumb mb-1">
-                <li className="breadcrumb-item">
+                {/* <li className="breadcrumb-item">
                   <Link href="/">
                     <a className="text-light">Home</a>
                   </Link>
@@ -171,7 +221,8 @@ function Collection() {
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
                   Child Category
-                </li>
+                </li> */}
+                {breadcrumb()}
               </ol>
             </nav>
           </div>
@@ -180,18 +231,18 @@ function Collection() {
       <div className="container py-4">
         <div className="row g-3">
           <div className="col-lg-4 col-xl-3">
-            <Filter />
+            <Filter slug={slug as string} />
           </div>
           <div className="col-lg-8 col-xl-9 mt-3 mt-lg-0">
             <div className="d-flex mb-3">
-              <div className="btn-group ms-auto d-none d-md-block">
+              {/* <div className="btn-group ms-auto d-none d-md-block">
                 <button className="btn py-2 btn-outline-primary">
                   <ListBulletIcon width={24} />
                 </button>
                 <button className="btn py-2 btn-primary">
                   <Squares2X2Icon width={24} />
                 </button>
-              </div>
+              </div> */}
             </div>
             {content()}
           </div>

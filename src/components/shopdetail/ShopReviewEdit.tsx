@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import {
   AuthenticationContext,
@@ -29,6 +29,14 @@ function ShopReviewEdit() {
   //   }
   // );
 
+  const loadUserReview = useCallback(async (shopId: number) => {
+    try {
+      const review = await getUserReview(shopId);
+      review && formik.setValues({ ...review, shopId: shopId });
+    } catch (error) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const formik = useFormik<ShopReview>({
     initialValues: {
       shopId: shopContext?.id
@@ -42,14 +50,10 @@ function ShopReviewEdit() {
   });
 
   useEffect(() => {
-    if (authContext.status === "success") {
-      //console.log("load user review");
-      getUserReview(shopContext?.id ?? 0)
-        .then((review) => {
-          review && formik.setValues({ ...review, shopId: shopContext?.id });
-        })
-        .catch((error) => {});
+    if (authContext.status !== "success") {
+      return;
     }
+    loadUserReview(shopContext?.id ?? 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authContext]);
 
@@ -60,10 +64,11 @@ function ShopReviewEdit() {
         return;
       }
       await writeReview(values);
-      mutate(["/shop-reviews"]);
-      formik.setValues({
-        shopId: shopContext?.id
-      });
+      mutate(["/shop-reviews", values.shopId ?? 0]);
+      // formik.setValues({
+      //   shopId: shopContext?.id
+      // });
+      await loadUserReview(values.shopId ?? 0);
     } catch (error) {
       const msg = parseErrorResponse(error);
     } finally {

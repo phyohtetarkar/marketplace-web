@@ -1,10 +1,9 @@
 import { FormikErrors, useFormik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
-import { useContext } from "react";
-import { AuthenticationContext } from "../../common/contexts";
 import { useLoginUser } from "../../common/hooks";
 import { User } from "../../common/models";
+import { parseErrorResponse } from "../../common/utils";
 import { withAuthentication } from "../../common/WithAuthentication";
 import AccountMenu from "../../components/account/AccountMenu";
 import { Input } from "../../components/forms";
@@ -49,8 +48,12 @@ function ProfileSetting() {
     }
   });
 
-  const save = (values: User) => {
-    updateProfile(values);
+  const save = async (values: User) => {
+    try {
+      await updateProfile(values);
+    } catch (error) {
+      const msg = parseErrorResponse(error);
+    }
   };
 
   if (isLoading) {
@@ -167,6 +170,13 @@ function ProfileSetting() {
                         className="btn btn-primary p-2 flex-grow-1 flex-md-grow-0"
                         disabled={formik.isSubmitting}
                       >
+                        {formik.isSubmitting && (
+                          <span
+                            className="spinner-border spinner-border-sm me-2"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                        )}
                         Update profile
                       </button>
                     </div>

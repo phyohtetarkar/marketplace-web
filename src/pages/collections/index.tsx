@@ -1,4 +1,4 @@
-import { SwatchIcon, TagIcon } from "@heroicons/react/24/outline";
+import { SwatchIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useState } from "react";
 import { useCategories } from "../../common/hooks";
@@ -35,7 +35,7 @@ const CollectionItem = ({ item, onClick }: CollectionItemProps) => {
 };
 
 function Collections() {
-  const { data, error, isLoading } = useCategories(false);
+  const { categories, error, isLoading } = useCategories(false);
 
   const [subCategories, setSubCategories] = useState<Category[]>();
 
@@ -55,7 +55,7 @@ function Collections() {
           style={{ width: 108 }}
         >
           <ul className="list-group list-group-flush">
-            {data?.map((e, i) => {
+            {categories?.map((e, i) => {
               return (
                 <li key={i} className="list-group-item p-0">
                   <CollectionItem

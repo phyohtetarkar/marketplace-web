@@ -25,6 +25,8 @@ import Dropdown from "../Dropdown";
 import { AutocompleteSelect, Input, TagInput } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import Modal from "../Modal";
+import OptionEdit, { Option } from "./OptionEdit";
+import VaraintEdit from "./VariantEdit";
 
 const DynamicEditor = dynamic<RichTextEditorInputProps>(
   () => import("../forms").then((f) => f.RichTextEditor),
@@ -33,172 +35,172 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
   }
 );
 
-interface Option {
-  name: string;
-  position: number;
-  values: string[];
-}
+// interface Option {
+//   name: string;
+//   position: number;
+//   values: string[];
+// }
 
-function OptionsEdit({
-  data,
-  updateOptions,
-  hide
-}: {
-  data: Option[];
-  updateOptions: (list: Option[]) => void;
-  hide: () => void;
-}) {
-  const [errors, setErrors] = useState<
-    ({ name: string; values: string } | undefined)[]
-  >([]);
+// function OptionsEdit({
+//   data,
+//   updateOptions,
+//   hide
+// }: {
+//   data: Option[];
+//   updateOptions: (list: Option[]) => void;
+//   hide: () => void;
+// }) {
+//   const [errors, setErrors] = useState<
+//     ({ name: string; values: string } | undefined)[]
+//   >([]);
 
-  const formik = useFormik<Option[]>({
-    initialValues: data,
-    enableReinitialize: true,
-    validate: (values) => {
-      const errors: ({ name: string; values: string } | undefined)[] = [];
-      const len = values.length;
-      for (let i = 0; i < len; i++) {
-        const op = values[i];
-        const error = {} as any;
-        if (op.name.length === 0) {
-          error["name"] = "Enter option name";
-        } else if (
-          values.find(
-            (e, index) =>
-              i !== index &&
-              e.name.toLowerCase().trim() === op.name.toLowerCase().trim()
-          )
-        ) {
-          error["name"] = "Duplicate option name";
-        }
+//   const formik = useFormik<Option[]>({
+//     initialValues: data,
+//     enableReinitialize: true,
+//     validate: (values) => {
+//       const errors: ({ name: string; values: string } | undefined)[] = [];
+//       const len = values.length;
+//       for (let i = 0; i < len; i++) {
+//         const op = values[i];
+//         const error = {} as any;
+//         if (op.name.length === 0) {
+//           error["name"] = "Enter option name";
+//         } else if (
+//           values.find(
+//             (e, index) =>
+//               i !== index &&
+//               e.name.toLowerCase().trim() === op.name.toLowerCase().trim()
+//           )
+//         ) {
+//           error["name"] = "Duplicate option name";
+//         }
 
-        if (op.values.length === 0) {
-          error["values"] = "Option values must not empty";
-        }
+//         if (op.values.length === 0) {
+//           error["values"] = "Option values must not empty";
+//         }
 
-        Object.keys(error).length > 0
-          ? errors.push(error)
-          : errors.push(undefined);
-      }
-      setErrors(errors);
-      return undefined;
-    },
-    validateOnBlur: false,
-    validateOnChange: false,
-    onSubmit: (values) => {
-      if (errors.filter((e) => !!e).length === 0) {
-        updateOptions([...values]);
-        setErrors([]);
-      }
+//         Object.keys(error).length > 0
+//           ? errors.push(error)
+//           : errors.push(undefined);
+//       }
+//       setErrors(errors);
+//       return undefined;
+//     },
+//     validateOnBlur: false,
+//     validateOnChange: false,
+//     onSubmit: (values) => {
+//       if (errors.filter((e) => !!e).length === 0) {
+//         updateOptions([...values]);
+//         setErrors([]);
+//       }
 
-      formik.setSubmitting(false);
-    }
-  });
+//       formik.setSubmitting(false);
+//     }
+//   });
 
-  return (
-    <>
-      <div className="modal-header">
-        <h5 className="modal-title">Edit Options</h5>
-      </div>
+//   return (
+//     <>
+//       <div className="modal-header">
+//         <h5 className="modal-title">Edit Options</h5>
+//       </div>
 
-      <div className="modal-body">
-        <>
-          {formik.values.map((o, i) => {
-            return (
-              <div key={i} className="row g-3 mb-3">
-                <div className="col-auto">
-                  <Input
-                    name="name"
-                    value={formik.values[i].name}
-                    placeholder="Name"
-                    onChange={(evt) => {
-                      formik.setFieldValue(`[${i}].name`, evt.target.value);
-                    }}
-                    error={errors[i]?.name}
-                  />
-                </div>
-                <div className="col-12 col-md">
-                  <div className="hstack gap-2 align-items-start">
-                    <div className="flex-grow-1">
-                      <TagInput
-                        data={formik.values[i].values ?? []}
-                        placeholder="Add value"
-                        onTagsChange={(tags) => {
-                          formik.setFieldValue(`[${i}].values`, tags);
-                        }}
-                        error={errors[i]?.values as string}
-                      />
-                    </div>
-                    <div
-                      role="button"
-                      className="link-danger mt-2h"
-                      onClick={() => {
-                        const list = [...formik.values];
-                        list.splice(i, 1);
-                        formik.setValues(list);
-                      }}
-                    >
-                      <TrashIcon width={24} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-          <div>
-            <button
-              type="button"
-              className="btn btn-outline-primary hstack gap-1"
-              onClick={() => {
-                const old = formik.values;
-                const op = {
-                  name: "",
-                  values: [],
-                  position: old.length
-                };
-                formik.setValues([...old, op]);
-                // setOptions((old) => {
-                //   const v = {
-                //     name: "",
-                //     values: [],
-                //     position: data.length
-                //   };
-                //   return [...old, v];
-                // });
-              }}
-            >
-              <PlusIcon width={20} strokeWidth={2} />
-              Add option
-            </button>
-          </div>
-        </>
-      </div>
+//       <div className="modal-body">
+//         <>
+//           {formik.values.map((o, i) => {
+//             return (
+//               <div key={i} className="row g-3 mb-3">
+//                 <div className="col-auto">
+//                   <Input
+//                     name="name"
+//                     value={formik.values[i].name}
+//                     placeholder="Name"
+//                     onChange={(evt) => {
+//                       formik.setFieldValue(`[${i}].name`, evt.target.value);
+//                     }}
+//                     error={errors[i]?.name}
+//                   />
+//                 </div>
+//                 <div className="col-12 col-md">
+//                   <div className="hstack gap-2 align-items-start">
+//                     <div className="flex-grow-1">
+//                       <TagInput
+//                         data={formik.values[i].values ?? []}
+//                         placeholder="Add value"
+//                         onTagsChange={(tags) => {
+//                           formik.setFieldValue(`[${i}].values`, tags);
+//                         }}
+//                         error={errors[i]?.values as string}
+//                       />
+//                     </div>
+//                     <div
+//                       role="button"
+//                       className="link-danger mt-2h"
+//                       onClick={() => {
+//                         const list = [...formik.values];
+//                         list.splice(i, 1);
+//                         formik.setValues(list);
+//                       }}
+//                     >
+//                       <TrashIcon width={24} />
+//                     </div>
+//                   </div>
+//                 </div>
+//               </div>
+//             );
+//           })}
+//           <div>
+//             <button
+//               type="button"
+//               className="btn btn-outline-primary hstack gap-1"
+//               onClick={() => {
+//                 const old = formik.values;
+//                 const op = {
+//                   name: "",
+//                   values: [],
+//                   position: old.length
+//                 };
+//                 formik.setValues([...old, op]);
+//                 // setOptions((old) => {
+//                 //   const v = {
+//                 //     name: "",
+//                 //     values: [],
+//                 //     position: data.length
+//                 //   };
+//                 //   return [...old, v];
+//                 // });
+//               }}
+//             >
+//               <PlusIcon width={20} strokeWidth={2} />
+//               Add option
+//             </button>
+//           </div>
+//         </>
+//       </div>
 
-      <div className="modal-footer">
-        <button
-          type="button"
-          className="btn btn-default"
-          disabled={formik.isSubmitting}
-          onClick={() => hide()}
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          className="btn btn-primary"
-          disabled={formik.isSubmitting}
-          onClick={() => {
-            //updateOptions([...options]);
-            formik.handleSubmit();
-          }}
-        >
-          Save
-        </button>
-      </div>
-    </>
-  );
-}
+//       <div className="modal-footer">
+//         <button
+//           type="button"
+//           className="btn btn-default"
+//           disabled={formik.isSubmitting}
+//           onClick={() => hide()}
+//         >
+//           Cancel
+//         </button>
+//         <button
+//           type="button"
+//           className="btn btn-primary"
+//           disabled={formik.isSubmitting}
+//           onClick={() => {
+//             //updateOptions([...options]);
+//             formik.handleSubmit();
+//           }}
+//         >
+//           Save
+//         </button>
+//       </div>
+//     </>
+//   );
+// }
 
 interface ProductEditProps {
   shop: Shop;
@@ -210,6 +212,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
   const { mutate } = useSWRConfig();
 
   const [editorHeight, setEditorHeight] = useState(300);
+  const [showOptionModal, setShowOptionModal] = useState(false);
   const [showVariantModal, setShowVariantModal] = useState(false);
   const [options, setOptions] = useState<Option[]>([]);
   //const [variants, setVariants] = useState<ProductVariant[]>([]);
@@ -252,21 +255,23 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
       }
 
       const variantErrors = [] as ({ price: string } | undefined)[];
+      let hasVariantErrors = false;
       values.variants?.forEach((v, i) => {
         if (!v.price || !`${v.price}`.match(floatRegex)) {
           variantErrors.push({
             price: "Invalid price input"
           });
+          hasVariantErrors = true;
         } else {
           variantErrors.push(undefined);
         }
       });
 
-      if (variantErrors.filter((e) => e !== undefined).length === 0) {
-        setVariantErrors(undefined);
-      } else {
+      if (hasVariantErrors) {
         setVariantErrors(variantErrors);
         errors.variants = "Variant input errors";
+      } else {
+        setVariantErrors(undefined);
       }
 
       return errors;
@@ -279,7 +284,11 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
   });
 
   useEffect(() => {
-    if (!productSlug || productSlug.trim().length === 0) {
+    if (
+      !productSlug ||
+      productSlug.trim().length === 0 ||
+      productSlug === "new"
+    ) {
       return;
     }
 
@@ -351,8 +360,8 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
       if (index < list.length - 1) {
         const options = variantOptions ? variantOptions : [];
         options.push({
-          option: option.name,
-          value: value
+          option: option.name.trim(),
+          value: value.trim()
         });
         result.push(
           ...generateVariant(
@@ -366,7 +375,10 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
         const options = variantOptions ? variantOptions : [];
         result.push({
           title: `${index > 0 ? key + " / " + value : value}`,
-          options: [...options, { option: option.name, value: value }]
+          options: [
+            ...options,
+            { option: option.name.trim(), value: value.trim() }
+          ]
         });
       }
     }
@@ -398,7 +410,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
 
       if (!product.id) {
         product.options = options.map((op, i) => {
-          return { name: op.name, position: i } as ProductOption;
+          return { name: op.name.trim(), position: i } as ProductOption;
         });
       }
 
@@ -681,7 +693,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                         type="button"
                         className="btn btn-primary ms-2"
                         onClick={() => {
-                          setShowVariantModal(true);
+                          setShowOptionModal(true);
                         }}
                       >
                         Edit Options
@@ -690,7 +702,9 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                       <button
                         type="button"
                         className="btn btn-primary ms-2"
-                        onClick={() => {}}
+                        onClick={() => {
+                          setShowVariantModal(true);
+                        }}
                       >
                         Add Variant
                       </button>
@@ -737,7 +751,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                                   <Input
                                     name={`variants[${i}].price`}
                                     type="text"
-                                    placeholder="Enter price"
+                                    placeholder="Enter variant price"
                                     height={40}
                                     value={
                                       formik.values.variants?.[i].price ?? ""
@@ -750,7 +764,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                                   <Input
                                     name={`variants[${i}].sku`}
                                     type="text"
-                                    placeholder="Enter sku"
+                                    placeholder="Enter variant sku"
                                     height={40}
                                     value={
                                       formik.values.variants?.[i].sku ?? ""
@@ -813,32 +827,6 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                     </table>
                   </div>
                 </div>
-                <Modal
-                  id="varientEditModal"
-                  show={showVariantModal}
-                  variant="large"
-                >
-                  {(isShown) =>
-                    isShown && options ? (
-                      <OptionsEdit
-                        data={[...options]}
-                        updateOptions={(list) => {
-                          setOptions(list);
-                          setShowVariantModal(false);
-                          setVariantErrors(undefined);
-
-                          formik.setFieldValue(
-                            "variants",
-                            list.length > 0 ? generateVariant(list, 0, "") : []
-                          );
-                        }}
-                        hide={() => setShowVariantModal(false)}
-                      />
-                    ) : (
-                      <></>
-                    )
-                  }
-                </Modal>
               </div>
             )}
 
@@ -1078,6 +1066,51 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
           </div>
         </div>
       </form>
+
+      <Modal id="optionEditModal" show={showOptionModal} variant="large">
+        {(isShown) =>
+          isShown && options ? (
+            <OptionEdit
+              data={[...options]}
+              handleClose={(list) => {
+                if (list) {
+                  setOptions(list);
+                  setVariantErrors(undefined);
+
+                  formik.setFieldValue(
+                    "variants",
+                    list.length > 0 ? generateVariant(list, 0, "") : []
+                  );
+                }
+
+                setShowOptionModal(false);
+              }}
+            />
+          ) : (
+            <></>
+          )
+        }
+      </Modal>
+
+      <Modal id="varientEditModal" show={showVariantModal} variant="large">
+        {(isShown) =>
+          isShown && formik.values.id ? (
+            <VaraintEdit
+              product={formik.values}
+              handleClose={(value) => {
+                if (value) {
+                  const variants = [...(formik.values.variants ?? []), value];
+                  formik.setFieldValue("variants", variants);
+                }
+
+                setShowVariantModal(false);
+              }}
+            />
+          ) : (
+            <></>
+          )
+        }
+      </Modal>
     </div>
   );
 }

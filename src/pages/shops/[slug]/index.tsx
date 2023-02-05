@@ -374,33 +374,32 @@ function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { slug } = context.query;
+  const { Auth } = withSSRContext(context);
+  let isMember = false;
+
   try {
-    const { slug } = context.query;
-    const { Auth } = withSSRContext(context);
+    const accessToken = (await Auth.currentSession())
+      ?.getAccessToken()
+      ?.getJwtToken();
 
-    const shop = await getShopBySlug(slug as string);
+    const url = `${getAPIBasePath()}shop-members/check?slug=${slug ?? ""}`;
 
-    let isMember = false;
-
-    try {
-      const accessToken = (await Auth.currentSession())
-        ?.getAccessToken()
-        ?.getJwtToken();
-
-      const url = `${getAPIBasePath()}shop-members/${shop.id}/check`;
-
-      if (accessToken) {
-        const resp = await fetch(url, {
-          headers: {
-            Authorization: "Bearer " + accessToken
-          }
-        });
-
-        if (resp.ok) {
-          isMember = (await resp.json()) as boolean;
+    if (accessToken) {
+      const resp = await fetch(url, {
+        headers: {
+          Authorization: "Bearer " + accessToken
         }
+      });
+
+      if (resp.ok) {
+        isMember = (await resp.json()) as boolean;
       }
-    } catch (error) {}
+    }
+  } catch (error) {}
+
+  try {
+    const shop = await getShopBySlug(slug as string);
 
     return {
       props: {

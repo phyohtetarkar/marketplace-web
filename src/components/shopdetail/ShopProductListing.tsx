@@ -1,9 +1,8 @@
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
-import { PageData, Product, Shop } from "../../common/models";
+import { Shop } from "../../common/models";
 import { findProducts, ProductQuery } from "../../services/ProductService";
-import { Input } from "../forms";
 import Loading from "../Loading";
 import Pagination from "../Pagination";
 import { ProductGridItem, ProductManageGridItem } from "../product";
@@ -21,7 +20,7 @@ function ShopProductListing(props: ShopProductListingProps) {
     status: !props.isMember ? "PUBLISHED" : undefined
   });
 
-  const { data, error, isLoading } = useSWR<PageData<Product>, Error>(
+  const { data, error, isLoading } = useSWR(
     ["/products", query],
     ([url, query]) => findProducts(query),
     {

@@ -10,9 +10,10 @@ const basePath = "products";
 
 export interface ProductQuery {
   q?: String;
-  "category-slug"?: number;
+  "category-slug"?: string;
   "shop-id"?: number;
   "max-price"?: number;
+  brand?: string[];
   status?: "PUBLISHED";
   page?: number;
 }

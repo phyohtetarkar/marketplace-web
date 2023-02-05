@@ -78,7 +78,7 @@ function HeaderSearchHints() {
             </Popover.Reference>,
             <Popover.Popper key={2}>
               {hints && hints.length > 0 && (
-                <div className="vstack gap-2 bg-white shadow p-2 border rounded">
+                <div className="vstack bg-white shadow border rounded">
                   {hints.map((e, i) => {
                     let imageUrl = "/images/placeholder.jpeg";
                     let href = "";
@@ -94,20 +94,20 @@ function HeaderSearchHints() {
                     return (
                       <Link key={i} href={href}>
                         <a
-                          className="hstack gap-2h text-decoration-none text-dark"
+                          className="hstack text-decoration-none dropdown-item"
                           onClick={() => {
                             setSearch("");
                             hide();
                           }}
                         >
-                          <Image
+                          {/* <Image
                             src={imageUrl}
                             alt=""
                             width={40}
                             height={40}
                             className="flex-shrink-0 rounded-1"
-                          />
-                          <div className="">{e.name}</div>
+                          /> */}
+                          <div className="fw-medium py-2">{e.name}</div>
                         </a>
                       </Link>
                     );

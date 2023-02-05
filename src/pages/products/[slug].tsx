@@ -118,7 +118,7 @@ function ProductDetail({ product }: { product: Product }) {
       <div className="bg-white mb-4 border-bottom">
         <div className="container py-3">
           <div className="row gy-3 gx-4">
-            <div className="col-lg-5">
+            <div className="col-lg-5 col-xxl-6">
               <div
                 className="hstack align-items-start gap-2"
                 onContextMenu={(evt) => evt.preventDefault()}
@@ -207,7 +207,7 @@ function ProductDetail({ product }: { product: Product }) {
                 </SwiperView>
               </div>
             </div>
-            <div className="col-lg-7">
+            <div className="col-lg-7 col-xxl-6">
               <div className="d-flex flex-column h-100">
                 <div className="hstack gap-2">
                   <h4 className="d-inline text-muted me-3">
@@ -354,6 +354,7 @@ function ProductDetail({ product }: { product: Product }) {
                         productId={product.id}
                         className="py-2h py-lg-2 w-100"
                         disabled={
+                          !variant ||
                           (variant && variant.stockLeft === 0) ||
                           product.stockLeft === 0
                         }
