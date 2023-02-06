@@ -1,8 +1,9 @@
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+//import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "swiper/css";
 import "swiper/css/zoom";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import "react-toastify/dist/ReactToastify.css";
 import "../../styles/bootstrap-custom.css";
 import "../../styles/globals.css";
 import { Amplify } from "aws-amplify";
@@ -13,6 +14,7 @@ import { ReactElement, ReactNode } from "react";
 import awsconfig from "../aws-exports";
 import { AuthenticationContextProvider } from "../common/AuthenticationContextProvider";
 import { Layout } from "../components/template";
+import { ToastContainer } from "react-toastify";
 
 Amplify.configure({
   ...awsconfig,
@@ -52,6 +54,13 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         options={{
           showSpinner: false
         }}
+      />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop
+        theme="colored"
       />
       <AuthenticationContextProvider>
         {getLayout(<Component {...pageProps} />)}

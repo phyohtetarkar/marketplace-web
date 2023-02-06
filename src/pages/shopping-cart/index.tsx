@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import useSWR from "swr";
 import { CartItem, Shop } from "../../common/models";
+import Loading from "../../components/Loading";
 import PricingCard from "../../components/order/PricingCard";
 import ShoppingCartItem from "../../components/order/ShoppingCartItem";
 import Tooltip from "../../components/Tooltip";
@@ -54,13 +55,49 @@ function ShoppingCart() {
   //   [3, 4]
   // ];
 
-  let content = <div></div>;
-  if (group.length === 0) {
-    content = (
-      <div className="text-center text-muted p-3">No products in cart.</div>
-    );
-  } else {
-    content = (
+  // let content = <div></div>;
+  // if (group.length === 0) {
+  //   content = (
+  //     <div className="text-center text-muted p-3">No products in cart.</div>
+  //   );
+  // } else {
+  //   content = (
+  //     <div className="vstack gap-3">
+  //       {group.map((g, i) => {
+  //         return (
+  //           <div key={i} className="card shadow-sm">
+  //             <div className="card-header bg-white py-2h border-bottom">
+  //               <div className="form-check">
+  //                 <input className="form-check-input" type="checkbox"></input>
+  //                 <label className="form-check-label">{g.shop.name}</label>
+  //               </div>
+  //             </div>
+  //             <div className="card-body">
+  //               <div className="vstack gap-3">
+  //                 {g.items.map((item, i) => {
+  //                   return <ShoppingCartItem key={i} />;
+  //                 })}
+  //               </div>
+  //             </div>
+  //           </div>
+  //         );
+  //       })}
+  //     </div>
+  //   );
+  // }
+
+  const content = () => {
+    if (isLoading) {
+      return <Loading />;
+    }
+
+    if (group.length === 0) {
+      return (
+        <div className="text-center text-muted p-3">No products in cart.</div>
+      );
+    }
+
+    return (
       <div className="vstack gap-3">
         {group.map((g, i) => {
           return (
@@ -74,7 +111,7 @@ function ShoppingCart() {
               <div className="card-body">
                 <div className="vstack gap-3">
                   {g.items.map((item, i) => {
-                    return <ShoppingCartItem key={i} />;
+                    return <ShoppingCartItem key={i} item={item} />;
                   })}
                 </div>
               </div>
@@ -83,7 +120,7 @@ function ShoppingCart() {
         })}
       </div>
     );
-  }
+  };
 
   return (
     <div className="vstack mb-5">
@@ -131,7 +168,7 @@ function ShoppingCart() {
                 </div>
               </div>
             )}
-            {content}
+            {content()}
           </div>
           <div className="col-lg-4 ">
             <PricingCard />

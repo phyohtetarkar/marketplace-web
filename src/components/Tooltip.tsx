@@ -24,7 +24,7 @@ function Tooltip({ title, className, children }: TooltipProps) {
     return () => {
       tooltip?.dispose();
     };
-  }, []);
+  }, [title]);
 
   return (
     <div

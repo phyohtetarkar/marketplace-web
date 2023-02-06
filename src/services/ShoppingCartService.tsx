@@ -34,18 +34,18 @@ export async function addToCart(value: CartItem) {
   await validateResponse(resp);
 }
 
-export async function updateQuantity(value: CartItem) {
-  const url = getAPIBasePath() + basePath;
+export async function updateQuantity(id: number, quantity: number) {
+  const url = `${getAPIBasePath()}${basePath}/${id}?quantity=${quantity}`;
   const resp = await fetch(url, {
     method: "PUT",
-    body: JSON.stringify(value),
     headers: {
-      "Content-Type": "application/json",
       Authorization: await getAuthHeader()
     }
   });
 
   await validateResponse(resp);
+
+  return resp.json() as Promise<CartItem>;
 }
 
 export async function removeFromCart(ids: [string]) {

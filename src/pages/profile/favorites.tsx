@@ -1,7 +1,8 @@
+import { useState } from "react";
 import useSWR from "swr";
-import { PageData, Product } from "../../common/models";
 import { withAuthentication } from "../../common/WithAuthentication";
 import AccountMenu from "../../components/account/AccountMenu";
+import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
 import { ProductFavoriteItem } from "../../components/product";
 import { getFavoriteProducts } from "../../services/FavoriteProductService";
@@ -14,9 +15,11 @@ function MyFavorites() {
   //   id ? getFavoriteProductsByUser({ userId: id }) : []
   // );
 
-  const { data, error, isLoading } = useSWR<PageData<Product>, Error>(
-    ["/favorite-products"],
-    ([url]) => getFavoriteProducts(),
+  const [page, setPage] = useState(0);
+
+  const { data, error, isLoading } = useSWR(
+    ["/favorite-products", page],
+    ([url, p]) => getFavoriteProducts(p),
     {
       revalidateOnFocus: false
     }
@@ -24,6 +27,7 @@ function MyFavorites() {
 
   const content = () => {
     if (isLoading) {
+      return <Loading />;
     }
 
     if (error) {
@@ -49,6 +53,7 @@ function MyFavorites() {
           <Pagination
             currentPage={data?.currentPage}
             totalPage={data?.totalPage}
+            onChange={setPage}
           />
         </div>
       </>

@@ -6,16 +6,14 @@ import {
   deleteFavoriteProduct,
   addToFavoriteProduct
 } from "../../services/FavoriteProductService";
+import AddToCartButton from "./AddToCartButton";
+import DeleteFromFavoriteButton from "./DeleteFromFavoriteButton";
 
 interface ProductFavoriteProps {
   value: Product;
 }
 
 function ProductFavoriteItem({ value }: ProductFavoriteProps) {
-  function getProductImageUrl(p: Product) {
-    return p.thumbnail ?? "/placeholder.jpeg";
-  }
-
   return (
     <div className="card shadow-sm">
       <div className="card-body">
@@ -29,21 +27,21 @@ function ProductFavoriteItem({ value }: ProductFavoriteProps) {
             }}
           >
             <Image
-              className="p-2"
-              src={getProductImageUrl(value)}
+              className="rounded border"
+              src={value.thumbnail ?? "/images/placeholder.jpeg"}
               alt="Product image."
               layout="fill"
-              objectFit="cover"
+              objectFit="contain"
             />
           </div>
           <div className="vstack overflow-hidden">
-            <Link href={`/products/${1}`}>
+            <Link href={`/products/${value.slug}`}>
               <a className="text-muted text-decoration-none text-truncate">
                 {value.name}
               </a>
             </Link>
 
-            <Link href={`/`}>
+            <Link href={`/collections/${value.category?.slug}`}>
               <a className="text-decoration-none fw-medium text-truncate mb-2">
                 {value.category?.name}
               </a>
@@ -51,25 +49,9 @@ function ProductFavoriteItem({ value }: ProductFavoriteProps) {
 
             <div className="flex-grow-1"></div>
 
-            <div className="hstack align-items-stretch">
-              <button
-                disabled={false}
-                className="btn btn-primary text-truncate me-2"
-                onClick={() => {
-                  addToFavoriteProduct(value.id!);
-                }}
-              >
-                Add to cart
-              </button>
-              <button
-                disabled={false}
-                className="btn btn-outline-danger"
-                onClick={() => {
-                  deleteFavoriteProduct(value.id!);
-                }}
-              >
-                <TrashIcon width={20} onClick={() => {}} />
-              </button>
+            <div className="hstack align-items-stretch gap-2">
+              <AddToCartButton productId={value.id ?? 0} />
+              <DeleteFromFavoriteButton productId={value.id ?? 0} />
             </div>
           </div>
         </div>

@@ -88,7 +88,7 @@ function AccountMenu({}) {
     <div className="rounded shadow-sm bg-white">
       <div className="d-block d-lg-none">
         <Accordion
-          open={false}
+          open={true}
           header={(open) => {
             return <span className="fw-bold">Menu</span>;
           }}

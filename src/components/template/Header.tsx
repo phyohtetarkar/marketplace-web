@@ -10,13 +10,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { AuthenticationContext } from "../../common/contexts";
+import { useLoginUser } from "../../common/hooks";
 import MultiCategoryDropdown from "../category/MultiCategoryDropdown";
 import Dropdown from "../Dropdown";
 import HeaderSearchHints from "./HeaderSearchHints";
-import useSWR from "swr";
-import { User } from "../../common/models";
-import { getLoginUser } from "../../services/UserService";
-import { useLoginUser } from "../../common/hooks";
 
 interface HeaderProps {
   hideAuth?: boolean;
@@ -104,6 +101,26 @@ function AccountMenu({ onNavClick }: { onNavClick?: () => void }) {
               onClick={(e) => onNavClick && onNavClick()}
             >
               My profile
+            </a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/profile/favorites">
+            <a
+              className="dropdown-item text-decoration-none"
+              onClick={(e) => onNavClick && onNavClick()}
+            >
+              My favorites
+            </a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/profile/orders">
+            <a
+              className="dropdown-item text-decoration-none"
+              onClick={(e) => onNavClick && onNavClick()}
+            >
+              My orders
             </a>
           </Link>
         </li>

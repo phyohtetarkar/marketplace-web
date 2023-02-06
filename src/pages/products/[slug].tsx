@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import Swiper, { Navigation, Pagination, Zoom } from "swiper";
 import { Swiper as SwiperView, SwiperSlide } from "swiper/react";
 import { Product, ProductVariant } from "../../common/models";
-import { formatPrice } from "../../common/utils";
+import { formatPrice, getAPIBasePath } from "../../common/utils";
 import { AddToCartButton, AddToFavoriteButton } from "../../components/product";
 import Rating from "../../components/Rating";
 import Tabs from "../../components/Tabs";
@@ -229,7 +229,9 @@ function ProductDetail({ product }: { product: Product }) {
                     </button>
                   </Tooltip> */}
                   <div className="flex-grow-1"></div>
-                  {product.id && <AddToFavoriteButton productId={product.id} />}
+                  {product.id && (
+                    <AddToFavoriteButton productId={product.id} check={true} />
+                  )}
                 </div>
                 <h4 className="mb-0">{price}</h4>
 
@@ -498,9 +500,10 @@ function ProductDetail({ product }: { product: Product }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { slug } = context.query;
+  const { Auth } = withSSRContext(context);
+
   try {
-    const { slug } = context.query;
-    const { Auth } = withSSRContext(context);
     //const accessToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
     const product = await getProductBySlug(slug as string);
     return {

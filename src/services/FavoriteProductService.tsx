@@ -39,9 +39,9 @@ export async function addToFavoriteProduct(productId: number) {
   await validateResponse(resp);
 }
 
-export async function deleteFavoriteProduct(id: number) {
+export async function deleteFavoriteProduct(productId: number) {
   const query = buildQueryParams({
-    "product-id": id
+    "product-id": productId
   });
   const url = `${getAPIBasePath()}${basePath}${query}`;
   const resp = await fetch(url, {
@@ -52,4 +52,20 @@ export async function deleteFavoriteProduct(id: number) {
   });
 
   await validateResponse(resp);
+}
+
+export async function checkFavorite(productId: number) {
+  const query = buildQueryParams({
+    "product-id": productId
+  });
+  const url = `${getAPIBasePath()}${basePath}/check${query}`;
+  const resp = await fetch(url, {
+    headers: {
+      Authorization: await getAuthHeader()
+    }
+  });
+
+  await validateResponse(resp);
+
+  return resp.json() as Promise<boolean>;
 }
