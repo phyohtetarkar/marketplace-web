@@ -443,7 +443,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
             <div className="hstack">
               <div>
                 <h3 className="fw-bold">
-                  {!productSlug ? "Create" : "Update"} Product
+                  {!formik.values.id ? "Create" : "Update"} Product
                 </h3>
                 <nav aria-label="breadcrumb col-12">
                   <ol className="breadcrumb mb-1">
@@ -465,7 +465,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                       </a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      {!productSlug ? "Create" : "Update"} Product
+                      {!formik.values.id ? "Create" : "Update"} Product
                     </li>
                   </ol>
                 </nav>
@@ -475,7 +475,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                   toggle={
                     <button
                       type="button"
-                      className="btn btn-accent py-2 px-3 ms-2"
+                      className="btn btn-accent dropdown-toggle py-2 px-3 ms-2"
                       disabled={formik.isSubmitting}
                     >
                       {formik.isSubmitting && (
@@ -633,35 +633,37 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                 </div>
 
                 <div className="row g-4 my-4">
-                  <div className="col-auto">
-                    <div className="form-check form-switch">
-                      <input
-                        id="variantCheck"
-                        className="form-check-input"
-                        type="checkbox"
-                        role="switch"
-                        checked={withVariant}
-                        onChange={(evt) => {
-                          setWithVariant(evt.target.checked);
-                          if (!evt.target.checked) {
-                            formik.setFieldValue("variants", undefined);
-                            setOptions([]);
-                            formik.setFieldValue("stockLeft", undefined);
-                          } else {
-                            formik.setFieldValue("price", undefined);
-                            formik.setFieldValue("sku", undefined);
-                            formik.setFieldValue("stockLeft", undefined);
-                          }
-                        }}
-                      ></input>
-                      <label
-                        htmlFor="variantCheck"
-                        className="form-check-label fw-medium"
-                      >
-                        With variants
-                      </label>
+                  {!formik.values.id && (
+                    <div className="col-auto">
+                      <div className="form-check form-switch">
+                        <input
+                          id="variantCheck"
+                          className="form-check-input"
+                          type="checkbox"
+                          role="switch"
+                          checked={withVariant}
+                          onChange={(evt) => {
+                            setWithVariant(evt.target.checked);
+                            if (!evt.target.checked) {
+                              formik.setFieldValue("variants", undefined);
+                              setOptions([]);
+                              formik.setFieldValue("stockLeft", undefined);
+                            } else {
+                              formik.setFieldValue("price", undefined);
+                              formik.setFieldValue("sku", undefined);
+                              formik.setFieldValue("stockLeft", undefined);
+                            }
+                          }}
+                        ></input>
+                        <label
+                          htmlFor="variantCheck"
+                          className="form-check-label fw-medium"
+                        >
+                          With variants
+                        </label>
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <div className="col-auto">
                     <div className="form-check form-switch">
                       <input

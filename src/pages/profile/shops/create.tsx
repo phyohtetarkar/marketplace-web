@@ -9,6 +9,7 @@ import { debounce, parseErrorResponse } from "../../../common/utils";
 import { withAuthentication } from "../../../common/WithAuthentication";
 import { Input } from "../../../components/forms";
 import { RichTextEditorInputProps } from "../../../components/forms/RichTextEditor";
+import StepView from "../../../components/order/StepView";
 import { createShop } from "../../../services/ShopService";
 
 const _steps = [
@@ -254,6 +255,7 @@ function CreateShop() {
 
   const getStepView = (step: number, title: String, end: boolean = false) => {
     const active = step === currentStep;
+
     return (
       <div className="row gx-2 align-items-center" onClick={() => {}}>
         <div
@@ -322,7 +324,7 @@ function CreateShop() {
 
   return (
     <div className="pb-5">
-      <div className="bg-primary mb-3">
+      <div className="header-bar mb-3">
         <div className="container py-4">
           <div className="row g-3">
             <div className="col-lg-6">
@@ -364,7 +366,13 @@ function CreateShop() {
                   {_steps.map((s, i) => {
                     return (
                       <div className={s.end ? "col-auto" : "col-md"} key={i}>
-                        {getStepView(s.step, s.title, s.end)}
+                        {/* {getStepView(s.step, s.title, s.end)} */}
+                        <StepView
+                          step={s.step}
+                          title={s.title}
+                          active={currentStep === s.step}
+                          end={s.end}
+                        />
                       </div>
                     );
                   })}

@@ -32,13 +32,13 @@ function ShoppingCart() {
 
     const shops = new Set(
       data
-        .filter((item) => item.product.shop?.status === "ACTIVE")
-        .map((item) => item.product.shop?.id!)
+        .filter((item) => item.product?.shop?.status === "ACTIVE")
+        .map((item) => item.product?.shop?.id!)
     );
 
     shops.forEach((id, i) => {
-      const shopItems = data.filter((item) => item.product.shop?.id === id);
-      const shop = shopItems[0].product.shop;
+      const shopItems = data.filter((item) => item.product?.shop?.id === id);
+      const shop = shopItems[0].product?.shop;
       if (shop && shopItems.length > 0) {
         items.push({
           shop: shop,

@@ -13,6 +13,7 @@ import { AuthenticationContext } from "../../common/contexts";
 import { useLoginUser } from "../../common/hooks";
 import MultiCategoryDropdown from "../category/MultiCategoryDropdown";
 import Dropdown from "../Dropdown";
+import ShoppingCartView from "../order/ShoppingCartView";
 import HeaderSearchHints from "./HeaderSearchHints";
 
 interface HeaderProps {
@@ -309,8 +310,9 @@ function Header({ hideAuth }: HeaderProps) {
               }}
             </AuthenticationContext.Consumer>
 
-            <div className="nav-item">
-              <Link href="/shopping-cart">
+            <div className="nav-item ms-2">
+              <ShoppingCartView />
+              {/* <Link href="/shopping-cart">
                 <a className="nav-link">
                   <div className="position-relative ms-2 hstack">
                     <ShoppingCartIcon width={24} strokeWidth={1.5} />
@@ -325,7 +327,7 @@ function Header({ hideAuth }: HeaderProps) {
                     </div>
                   </div>
                 </a>
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>

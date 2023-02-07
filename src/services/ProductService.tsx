@@ -14,7 +14,7 @@ export interface ProductQuery {
   "shop-id"?: number;
   "max-price"?: number;
   brand?: string[];
-  status?: "PUBLISHED";
+  status?: "PUBLISHED" | "DRAFT" | "DENIED" | string;
   page?: number;
 }
 
@@ -39,7 +39,13 @@ export async function saveProduct(value: Product) {
 
   value.images?.forEach((v, i) => {
     v.id && form.append(`images[${i}].id`, v.id.toPrecision());
-    !v.id && v.name && form.append(`images[${i}].name`, v.name);
+    if (v.id && v.id > 0) {
+      const imageName = v.name?.split("/").pop();
+      imageName && form.append(`images[${i}].name`, imageName);
+    } else {
+      v.name && form.append(`images[${i}].name`, v.name);
+    }
+    //!v.id && v.name && form.append(`images[${i}].name`, v.name);
     form.append(`images[${i}].thumbnail`, v.thumbnail ? "true" : "false");
     form.append(`images[${i}].deleted`, v.deleted ? "true" : "false");
     v.file && form.append(`images[${i}].file`, v.file);

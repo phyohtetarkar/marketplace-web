@@ -100,6 +100,9 @@ export async function validateResponse(resp: Response) {
   if (resp.status === 401) {
     throw new UnauthorizeError("Unauthorized");
   }
+  if (resp.status === 500) {
+    throw new APIError(resp.status, "server-error");
+  }
   if (!resp.ok) {
     throw new APIError(resp.status, await resp.text());
   }

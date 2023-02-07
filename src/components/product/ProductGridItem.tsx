@@ -105,10 +105,15 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
           <h6 className="fw-semibold mt-2 mb-3">{price}</h6>
 
           <div className="hstack align-items-stretch gap-2">
-            {value.id && (
+            {value.id && !value.withVariant && (
               <AddToCartButton productId={value.id} className="flex-grow-1" />
             )}
-            {value.id && <AddToFavoriteButton productId={value.id} />}
+            {value.id && value.withVariant && (
+              <Link href={`/products/${value.slug}`}>
+                <a className="btn btn-primary flex-grow-1">Select options</a>
+              </Link>
+            )}
+            {/* {value.id && <AddToFavoriteButton productId={value.id} />} */}
           </div>
         </div>
       </div>

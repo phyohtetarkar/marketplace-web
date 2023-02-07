@@ -20,6 +20,19 @@ export async function getCartItemsByUser() {
   return resp.json() as Promise<CartItem[]>;
 }
 
+export async function countCartItemsByUser() {
+  const url = `${getAPIBasePath()}${basePath}/count`;
+  const resp = await fetch(url, {
+    headers: {
+      Authorization: await getAuthHeader()
+    }
+  });
+
+  await validateResponse(resp);
+
+  return resp.json() as Promise<number>;
+}
+
 export async function addToCart(value: CartItem) {
   const url = getAPIBasePath() + basePath;
   const resp = await fetch(url, {
@@ -48,12 +61,16 @@ export async function updateQuantity(id: number, quantity: number) {
   return resp.json() as Promise<CartItem>;
 }
 
-export async function removeFromCart(ids: [string]) {
+export async function removeFromCart(ids: [number]) {
   const url = getAPIBasePath() + basePath;
+  const body = {
+    idList: ids
+  };
   const resp = await fetch(url, {
     method: "DELETE",
     body: JSON.stringify(ids),
     headers: {
+      "Content-Type": "application/json",
       Authorization: await getAuthHeader()
     }
   });

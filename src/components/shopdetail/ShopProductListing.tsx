@@ -2,7 +2,9 @@ import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import useSWR from "swr";
 import { Shop } from "../../common/models";
+import shops from "../../pages/profile/shops";
 import { findProducts, ProductQuery } from "../../services/ProductService";
+import { Select } from "../forms";
 import Loading from "../Loading";
 import Pagination from "../Pagination";
 import { ProductGridItem, ProductManageGridItem } from "../product";
@@ -79,22 +81,39 @@ function ShopProductListing(props: ShopProductListingProps) {
   return (
     <div className="p-0">
       <div className="row g-3 mb-2">
-        <div className="col"></div>
+        <div className="col d-none d-md-block"></div>
         {props.isMember && (
-          <div className="col-auto">
-            <button
-              className="btn btn-primary h-100 hstack"
-              onClick={() => props.onProductCreate?.()}
-            >
-              Create new
-            </button>
-          </div>
+          <>
+            <div className="col-auto">
+              <Select
+                onChange={(evt) => {
+                  const status = !evt.target.value
+                    ? undefined
+                    : evt.target.value;
+                  setQuery({ "shop-id": props.shop.id, status: status });
+                }}
+              >
+                <option value="">All Status</option>
+                <option value="PUBLISHED">Published</option>
+                <option value="DRAFT">Draft</option>
+                <option value="DENIED">Denied</option>
+              </Select>
+            </div>
+            <div className="col-auto">
+              <button
+                className="btn btn-primary h-100 hstack"
+                onClick={() => props.onProductCreate?.()}
+              >
+                Create new
+              </button>
+            </div>
+          </>
         )}
-        <div className="col-auto">
+        {/* <div className="col-auto">
           <button className="btn btn-outline-primary">
             <AdjustmentsHorizontalIcon width={24} />
           </button>
-        </div>
+        </div> */}
       </div>
 
       {content()}

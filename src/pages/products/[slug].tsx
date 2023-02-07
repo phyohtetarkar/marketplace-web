@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import Swiper, { Navigation, Pagination, Zoom } from "swiper";
 import { Swiper as SwiperView, SwiperSlide } from "swiper/react";
 import { Product, ProductVariant } from "../../common/models";
-import { formatPrice, getAPIBasePath } from "../../common/utils";
+import { formatPrice } from "../../common/utils";
 import { AddToCartButton, AddToFavoriteButton } from "../../components/product";
 import Rating from "../../components/Rating";
 import Tabs from "../../components/Tabs";
@@ -369,6 +369,8 @@ function ProductDetail({ product }: { product: Product }) {
                     {product.id && (
                       <AddToCartButton
                         productId={product.id}
+                        variantId={variant?.id}
+                        quantity={quantity}
                         className="py-2h py-lg-2 w-100"
                         disabled={noStock()}
                       />

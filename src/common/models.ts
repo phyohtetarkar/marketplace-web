@@ -105,6 +105,7 @@ export interface Product {
   stockLeft?: number;
   featured?: boolean;
   newArrival?: boolean;
+  withVariant?: boolean;
   description?: string;
   status?: "DRAFT" | "ARCHIVED" | "PUBLISHED" | "DENIED";
   discount?: Discount;
@@ -159,8 +160,8 @@ export interface Discount {
 export interface CartItem {
   id?: number;
   productId: number;
-  variantId?: string;
+  variantId?: number;
   quantity: number;
-  product: Product;
+  product?: Product;
   variant?: ProductVariant;
 }

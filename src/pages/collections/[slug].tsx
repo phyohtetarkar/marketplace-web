@@ -204,7 +204,7 @@ function Collection() {
       <Head>
         <title>All Proudcts</title>
       </Head>
-      <div className="header-bar mb-3">
+      <div className="header-bar">
         <div className="container">
           <div className="row py-4 px-2">
             <nav aria-label="breadcrumb col-12">
@@ -228,7 +228,7 @@ function Collection() {
           </div>
         </div>
       </div>
-      <div className="container py-4">
+      <div className="container py-3">
         <div className="row g-3">
           <div className="col-lg-4 col-xl-3">
             <Filter slug={slug as string} />
