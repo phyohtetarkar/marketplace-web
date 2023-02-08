@@ -91,7 +91,7 @@ function ProductDetail({ product }: { product: Product }) {
   );
 
   const noStock = () => {
-    return !variant || variant.stockLeft === 0 || product.stockLeft === 0;
+    return (variant && variant.stockLeft === 0) || product.stockLeft === 0;
   };
 
   return (
@@ -172,7 +172,7 @@ function ProductDetail({ product }: { product: Product }) {
                 </div> */}
                 <SwiperView
                   onInit={setSwiper}
-                  className="overflow-hidden border rounded flex-grow-1"
+                  className="overflow-hidden border rounded flex-grow-1 position-relative"
                   initialSlide={imageIndex}
                   autoplay={false}
                   spaceBetween={0}
@@ -208,6 +208,29 @@ function ProductDetail({ product }: { product: Product }) {
                       </SwiperSlide>
                     );
                   })}
+                  <div
+                    className="position-absolute bottom-0 end-0 m-2 hstack"
+                    style={{
+                      zIndex: 99
+                    }}
+                  >
+                    <div
+                      role="button"
+                      className="bg-dark px-2h py-2 bg-opacity-75 rounded-start"
+                      onClick={() => {
+                        swiper?.zoom.out();
+                      }}
+                    >
+                      <MinusIcon width={20} className="text-light" />
+                    </div>
+                    <div
+                      role="button"
+                      className="bg-dark px-2h py-2 bg-opacity-75 rounded-end"
+                      onClick={() => swiper?.zoom.in()}
+                    >
+                      <PlusIcon width={20} className="text-light" />
+                    </div>
+                  </div>
                 </SwiperView>
               </div>
             </div>

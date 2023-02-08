@@ -63,9 +63,6 @@ export async function updateQuantity(id: number, quantity: number) {
 
 export async function removeFromCart(ids: [number]) {
   const url = getAPIBasePath() + basePath;
-  const body = {
-    idList: ids
-  };
   const resp = await fetch(url, {
     method: "DELETE",
     body: JSON.stringify(ids),

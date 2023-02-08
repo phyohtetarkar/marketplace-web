@@ -3,7 +3,7 @@ import { FormikErrors, useFormik } from "formik";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useSWRConfig } from "swr";
 import { useCategories } from "../../common/hooks";
 import {
@@ -24,6 +24,7 @@ import {
 import Dropdown from "../Dropdown";
 import { AutocompleteSelect, Input, TagInput } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
+import Loading from "../Loading";
 import Modal from "../Modal";
 import OptionEdit, { Option } from "./OptionEdit";
 import VaraintEdit from "./VariantEdit";
@@ -35,173 +36,6 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
   }
 );
 
-// interface Option {
-//   name: string;
-//   position: number;
-//   values: string[];
-// }
-
-// function OptionsEdit({
-//   data,
-//   updateOptions,
-//   hide
-// }: {
-//   data: Option[];
-//   updateOptions: (list: Option[]) => void;
-//   hide: () => void;
-// }) {
-//   const [errors, setErrors] = useState<
-//     ({ name: string; values: string } | undefined)[]
-//   >([]);
-
-//   const formik = useFormik<Option[]>({
-//     initialValues: data,
-//     enableReinitialize: true,
-//     validate: (values) => {
-//       const errors: ({ name: string; values: string } | undefined)[] = [];
-//       const len = values.length;
-//       for (let i = 0; i < len; i++) {
-//         const op = values[i];
-//         const error = {} as any;
-//         if (op.name.length === 0) {
-//           error["name"] = "Enter option name";
-//         } else if (
-//           values.find(
-//             (e, index) =>
-//               i !== index &&
-//               e.name.toLowerCase().trim() === op.name.toLowerCase().trim()
-//           )
-//         ) {
-//           error["name"] = "Duplicate option name";
-//         }
-
-//         if (op.values.length === 0) {
-//           error["values"] = "Option values must not empty";
-//         }
-
-//         Object.keys(error).length > 0
-//           ? errors.push(error)
-//           : errors.push(undefined);
-//       }
-//       setErrors(errors);
-//       return undefined;
-//     },
-//     validateOnBlur: false,
-//     validateOnChange: false,
-//     onSubmit: (values) => {
-//       if (errors.filter((e) => !!e).length === 0) {
-//         updateOptions([...values]);
-//         setErrors([]);
-//       }
-
-//       formik.setSubmitting(false);
-//     }
-//   });
-
-//   return (
-//     <>
-//       <div className="modal-header">
-//         <h5 className="modal-title">Edit Options</h5>
-//       </div>
-
-//       <div className="modal-body">
-//         <>
-//           {formik.values.map((o, i) => {
-//             return (
-//               <div key={i} className="row g-3 mb-3">
-//                 <div className="col-auto">
-//                   <Input
-//                     name="name"
-//                     value={formik.values[i].name}
-//                     placeholder="Name"
-//                     onChange={(evt) => {
-//                       formik.setFieldValue(`[${i}].name`, evt.target.value);
-//                     }}
-//                     error={errors[i]?.name}
-//                   />
-//                 </div>
-//                 <div className="col-12 col-md">
-//                   <div className="hstack gap-2 align-items-start">
-//                     <div className="flex-grow-1">
-//                       <TagInput
-//                         data={formik.values[i].values ?? []}
-//                         placeholder="Add value"
-//                         onTagsChange={(tags) => {
-//                           formik.setFieldValue(`[${i}].values`, tags);
-//                         }}
-//                         error={errors[i]?.values as string}
-//                       />
-//                     </div>
-//                     <div
-//                       role="button"
-//                       className="link-danger mt-2h"
-//                       onClick={() => {
-//                         const list = [...formik.values];
-//                         list.splice(i, 1);
-//                         formik.setValues(list);
-//                       }}
-//                     >
-//                       <TrashIcon width={24} />
-//                     </div>
-//                   </div>
-//                 </div>
-//               </div>
-//             );
-//           })}
-//           <div>
-//             <button
-//               type="button"
-//               className="btn btn-outline-primary hstack gap-1"
-//               onClick={() => {
-//                 const old = formik.values;
-//                 const op = {
-//                   name: "",
-//                   values: [],
-//                   position: old.length
-//                 };
-//                 formik.setValues([...old, op]);
-//                 // setOptions((old) => {
-//                 //   const v = {
-//                 //     name: "",
-//                 //     values: [],
-//                 //     position: data.length
-//                 //   };
-//                 //   return [...old, v];
-//                 // });
-//               }}
-//             >
-//               <PlusIcon width={20} strokeWidth={2} />
-//               Add option
-//             </button>
-//           </div>
-//         </>
-//       </div>
-
-//       <div className="modal-footer">
-//         <button
-//           type="button"
-//           className="btn btn-default"
-//           disabled={formik.isSubmitting}
-//           onClick={() => hide()}
-//         >
-//           Cancel
-//         </button>
-//         <button
-//           type="button"
-//           className="btn btn-primary"
-//           disabled={formik.isSubmitting}
-//           onClick={() => {
-//             //updateOptions([...options]);
-//             formik.handleSubmit();
-//           }}
-//         >
-//           Save
-//         </button>
-//       </div>
-//     </>
-//   );
-// }
-
 interface ProductEditProps {
   shop: Shop;
   productSlug?: string;
@@ -211,12 +45,12 @@ interface ProductEditProps {
 function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
   const { mutate } = useSWRConfig();
 
+  const [fetching, setFetching] = useState(productSlug !== "new");
   const [editorHeight, setEditorHeight] = useState(300);
   const [showOptionModal, setShowOptionModal] = useState(false);
   const [showVariantModal, setShowVariantModal] = useState(false);
   const [options, setOptions] = useState<Option[]>([]);
   //const [variants, setVariants] = useState<ProductVariant[]>([]);
-  const [withVariant, setWithVariant] = useState(false);
   const [imageCount, setImageCount] = useState(0);
   const [variantErrors, setVariantErrors] =
     useState<({ price: string } | undefined)[]>();
@@ -250,26 +84,38 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
       //   }
       // }
 
-      if (!withVariant && !`${values.price}`.match(floatRegex)) {
+      if ((values.images?.filter((img) => !img.deleted).length ?? 0) === 0) {
+        errors.images = "At least one image required";
+      }
+
+      if (!values.withVariant && !`${values.price}`.match(floatRegex)) {
         errors.price = "Invalid price input";
       }
 
-      const variantErrors = [] as ({ price: string } | undefined)[];
       let hasVariantErrors = false;
-      values.variants?.forEach((v, i) => {
-        if (!v.price || !`${v.price}`.match(floatRegex)) {
-          variantErrors.push({
-            price: "Invalid price input"
-          });
-          hasVariantErrors = true;
-        } else {
-          variantErrors.push(undefined);
-        }
-      });
+      const variantErrors = [] as ({ price: string } | undefined)[];
+
+      if (
+        values.withVariant &&
+        (values.variants?.filter((v) => !v.deleted).length ?? 0) === 0
+      ) {
+        errors.variants = "At least one variant required";
+      } else {
+        values.variants?.forEach((v, i) => {
+          if (!v.price || !`${v.price}`.match(floatRegex)) {
+            variantErrors.push({
+              price: "Invalid price input"
+            });
+            hasVariantErrors = true;
+          } else {
+            variantErrors.push(undefined);
+          }
+        });
+      }
 
       if (hasVariantErrors) {
         setVariantErrors(variantErrors);
-        errors.variants = "Variant input errors";
+        errors.variants = "";
       } else {
         setVariantErrors(undefined);
       }
@@ -304,10 +150,13 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
           categoryId: p.category?.id,
           discountId: p.discount?.id
         });
-        setWithVariant(!!p.variants && p.variants.length > 0);
+        //setWithVariant(!!p.variants && p.variants.length > 0);
       })
       .catch((error) => {
         const msg = parseErrorResponse(error);
+      })
+      .finally(() => {
+        setFetching(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productSlug, categories]);
@@ -427,6 +276,14 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
       formik.setSubmitting(false);
     }
   };
+
+  if (fetching) {
+    return (
+      <div className="py-3">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -641,9 +498,10 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                           className="form-check-input"
                           type="checkbox"
                           role="switch"
-                          checked={withVariant}
+                          name="withVariant"
+                          checked={formik.values.withVariant ?? false}
                           onChange={(evt) => {
-                            setWithVariant(evt.target.checked);
+                            formik.handleChange(evt);
                             if (!evt.target.checked) {
                               formik.setFieldValue("variants", undefined);
                               setOptions([]);
@@ -687,9 +545,9 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
               </div>
             </div>
 
-            {withVariant && (
+            {formik.values.withVariant && (
               <div className="card shadow-sm">
-                <div className="card-header bg-white py-3">
+                <div className="card-header bg-white py-3 px-md-4">
                   <div className="hstack justify-content-between">
                     <h5 className="mb-0">Variants</h5>
                     {!formik.values.id ? (
@@ -723,7 +581,9 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                     <table className="table align-middle">
                       <thead className="table-light text-nowrap align-middle">
                         <tr style={{ height: 50 }}>
-                          <th className="ps-3 fw-medium w-100">VARIANT</th>
+                          <th className="ps-3 ps-md-4 fw-medium w-100">
+                            VARIANT
+                          </th>
                           <th className="fw-medium" style={{ minWidth: 200 }}>
                             PRICE
                           </th>
@@ -746,7 +606,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                             }
                             return (
                               <tr key={i}>
-                                <td className="ps-3 w-100">
+                                <td className="ps-3 ps-md-4 w-100">
                                   <span className="text-nowrap me-3">
                                     {v.title}
                                   </span>
@@ -830,11 +690,17 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                       </tbody>
                     </table>
                   </div>
+
+                  {formik.errors.variants && (
+                    <div className="text-danger medium px-3 pb-3 px-md-4 pb-md-4">
+                      {formik.errors.variants}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
-            {!withVariant && (
+            {!formik.values.withVariant && (
               <div className="card shadow-sm">
                 <div className="card-header bg-white py-3 px-md-4 border-bottom">
                   <h5 className="mb-0">Pricing</h5>
@@ -944,6 +810,9 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                 <h5 className="mb-0">Images</h5>
               </div>
               <div className="card-body p-md-4">
+                {formik.errors.images && (
+                  <div className="text-danger mb-3">{formik.errors.images}</div>
+                )}
                 <div className="d-flex flex-wrap gap-3">
                   {formik.values.images
                     ?.filter((v) => !v.deleted)
@@ -1085,6 +954,8 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                     "variants",
                     list.length > 0 ? generateVariant(list, 0, "") : []
                   );
+
+                  formik.errors.variants = undefined;
                 }
 
                 setShowOptionModal(false);

@@ -65,7 +65,7 @@ function RichTextEditor({
           });
         },
         content_style:
-          "body { font-family: Noto Sans Myanmar UI, Helvetica, Arial, sans-serif; font-size: 16px; }",
+          "body { font-family: Inter, Noto Sans Myanmar UI, Helvetica, Arial, sans-serif; font-size: 16px; }",
         quickbars_insert_toolbar: false,
         quickbars_selection_toolbar:
           "blocks | bold italic underline strikethrough",

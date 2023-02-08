@@ -63,7 +63,7 @@ function OptionEdit(props: OptionEditProps) {
         setErrors(undefined);
       }
 
-      return hasError ? error : undefined;
+      return error;
     },
     validateOnBlur: false,
     validateOnChange: false,
