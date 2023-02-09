@@ -1,11 +1,11 @@
-import { FormikErrors, useFormik } from "formik";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEvent, CSSProperties, useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { Shop } from "../../../common/models";
-import { debounce, parseErrorResponse } from "../../../common/utils";
+import { parseErrorResponse, setEmptyOrString } from "../../../common/utils";
 import { withAuthentication } from "../../../common/WithAuthentication";
 import { Input } from "../../../components/forms";
 import { RichTextEditorInputProps } from "../../../components/forms/RichTextEditor";
@@ -27,50 +27,59 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
 
 interface FormProps {
   values: Shop;
-  errors: FormikErrors<Shop>;
-  handleChange?: (e: ChangeEvent<any>) => void;
-  setFieldValue?: (field: string, value: any, shouldValidate?: boolean) => void;
+  onSubmit?: (values: Shop) => void;
+  onPrev?: () => void;
+  onNext?: () => void;
 }
 
 const BasicInformation = (props: FormProps) => {
+  const {
+    register,
+    formState: { errors, isSubmitting },
+    setValue,
+    handleSubmit,
+    control
+  } = useForm<Shop>({ defaultValues: props.values });
   return (
-    <div className="card shadow-sm">
-      <div className="card-header bg-white py-3 px-md-4 border-bottom">
-        <h5 className="mb-0">Basic information</h5>
-      </div>
-      <div className="card-body px-md-4">
-        <div className="vstack">
-          <div className="row g-4 mb-3">
-            <div className="col-lg-6">
-              <Input
-                label="Name *"
-                id="shopNameInput"
-                name="name"
-                type="text"
-                placeholder="Enter shop name"
-                value={props.values.name ?? ""}
-                onChange={(evt) => {
-                  // const slug = evt.target.value
-                  //   .replace(/\s+/g, "-")
-                  //   .toLowerCase();
-                  // props.setFieldValue?.("slug", slug);
-                  props.handleChange?.(evt);
-                }}
-                error={props.errors.name}
-              />
-            </div>
-            <div className="col-lg-6">
-              <Input
-                label="Headline"
-                id="headlineInput"
-                name="headline"
-                type="text"
-                className="mb-3"
-                placeholder="Enter shop headline"
-                value={props.values.headline ?? ""}
-                onChange={props.handleChange}
-              />
-              {/* <Input
+    <form
+      onSubmit={(evt) => {
+        evt.preventDefault();
+        handleSubmit((data) => {
+          props.onSubmit?.(data);
+          props.onNext?.();
+        })();
+      }}
+    >
+      <div className="card shadow-sm mb-3">
+        <div className="card-header bg-white py-3 px-md-4 border-bottom">
+          <h5 className="mb-0">Basic information</h5>
+        </div>
+        <div className="card-body px-md-4">
+          <div className="vstack">
+            <div className="row g-4 mb-3">
+              <div className="col-lg-6">
+                <Input
+                  label="Name *"
+                  id="nameInput"
+                  type="text"
+                  placeholder="Enter shop name"
+                  {...register("name", {
+                    required: true,
+                    setValueAs: setEmptyOrString
+                  })}
+                  error={errors.name && "Please enter shop name"}
+                />
+              </div>
+              <div className="col-lg-6">
+                <Input
+                  label="Headline"
+                  id="headlineInput"
+                  type="text"
+                  className="mb-3"
+                  placeholder="Enter shop headline"
+                  {...register("headline")}
+                />
+                {/* <Input
                 label="Slug *"
                 id="slugInput"
                 name="slug"
@@ -80,38 +89,55 @@ const BasicInformation = (props: FormProps) => {
                 onChange={props.handleChange}
                 error={props.errors.slug}
               /> */}
-            </div>
-          </div>
-          <div className="row g-4">
-            <div className="order-5 order-lg-3 order-md-5 col-lg-6">
-              <label className="form-label">About Us</label>
-              <div className="flex-grow-1">
-                <DynamicEditor
-                  id="aboutInput"
-                  placeholder="Enter about us..."
-                  minHeight={300}
-                  value={props.values.about ?? ""}
-                  onEditorChange={(value) => {
-                    props.setFieldValue?.("about", value);
-                  }}
-                />
               </div>
             </div>
-            <div className="order-3 order-lg-4 order-md-3 order-1 col-lg-6">
-              <Input
-                label="Address"
-                id="addressInput"
-                name="contact.address"
-                type="text"
-                placeholder="Enter shop address"
-                value={props.values.contact?.address ?? ""}
-                onChange={props.handleChange}
-              />
+            <div className="row g-4">
+              <div className="order-5 order-lg-3 order-md-5 col-lg-6">
+                <label className="form-label">About Us</label>
+                <div className="flex-grow-1">
+                  <Controller
+                    name="about"
+                    control={control}
+                    render={({ field }) => {
+                      return (
+                        <DynamicEditor
+                          id="aboutInput"
+                          placeholder="Enter about us..."
+                          minHeight={300}
+                          value={field.value}
+                          onEditorChange={(value) => {
+                            //props.setFieldValue?.("about", value);
+                            setValue(field.name, value);
+                          }}
+                        />
+                      );
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="order-3 order-lg-4 order-md-3 order-1 col-lg-6">
+                <Input
+                  label="Address"
+                  id="addressInput"
+                  type="text"
+                  placeholder="Enter shop address"
+                  {...register("contact.address")}
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      <div className="hstack gap-2">
+        <button
+          type="submit"
+          className="btn btn-primary px-3 py-2 ms-auto"
+          disabled={isSubmitting}
+        >
+          Next
+        </button>
+      </div>
+    </form>
   );
 };
 
@@ -119,98 +145,210 @@ const ShopMedia = (props: FormProps) => {
   const logoRef = useRef<HTMLInputElement>(null);
   const coverRef = useRef<HTMLInputElement>(null);
 
+  const [logo, setLogo] = useState<string | null | undefined>(
+    props.values.logo
+  );
+  const [logoImage, setLogoImage] = useState(props.values.logoImage);
+  const [cover, setCover] = useState<string | null | undefined>(
+    props.values.cover
+  );
+  const [coverImage, setCoverImage] = useState(props.values.coverImage);
+
   function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
     let files = event.target.files;
     const name = event.target.name;
     if (files && files.length > 0) {
       let file = files[0];
-      props.setFieldValue?.(`${name}Image`, file);
+      //props.setFieldValue?.(`${name}Image`, file);
 
       var reader = new FileReader();
       reader.onload = function (e) {
-        props.setFieldValue?.(name, e.target?.result);
+        //props.setFieldValue?.(name, e.target?.result);
+        const result = e.target?.result;
+        if (!result) {
+          return;
+        }
+
+        if (name === "logo" && logoRef.current) {
+          setLogo(result as string);
+        } else if (name === "cover" && coverRef.current) {
+          setCover(result as string);
+        }
       };
       reader.readAsDataURL(file);
 
       if (name === "logo" && logoRef.current) {
+        setLogoImage(file);
         logoRef.current.value = "";
       } else if (name === "cover" && coverRef.current) {
+        setCoverImage(file);
         coverRef.current.value = "";
       }
     }
   }
 
   return (
-    <div className="card shadow-sm">
-      <div className="card-header bg-white py-3 px-md-4 border-bottom">
-        <h5 className="mb-0">Shop media</h5>
-      </div>
-      <div className="card-body px-md-4">
-        <div className="vstack">
-          <div className="row g-4">
-            <div className="col-lg-3 col-12">
-              <label htmlFor="logoInput" className="form-label">
-                Logo image
-              </label>
-              <div
-                role="button"
-                className="ratio ratio-1x1 border rounded"
-                style={{ width: 80 }}
-                onClick={() => {
-                  logoRef.current?.click();
-                }}
-              >
-                <Image
-                  src={props.values.logo ?? "/images/placeholder.jpeg"}
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-1"
-                  alt=""
-                />
-                <input
-                  ref={logoRef}
-                  onChange={handleImageChange}
-                  name="logo"
-                  className="form-control d-none"
-                  type="file"
-                  accept="image/x-png,image/jpeg"
-                />
-              </div>
-            </div>
-            <div className="col-lg-12">
-              <label className="form-label">Cover image</label>
-              <div
-                role="button"
-                className="ratio rounded border position-relative bg-light"
-                style={{ "--bs-aspect-ratio": "20%" } as CSSProperties}
-                onClick={() => {
-                  coverRef.current?.click();
-                }}
-              >
-                <div className="position-absolute text-muted top-50 start-50 translate-middle h-auto w-auto fw-medium">
-                  Click here to upload
-                </div>
-                {props.values.cover && (
+    <>
+      <div className="card shadow-sm mb-3">
+        <div className="card-header bg-white py-3 px-md-4 border-bottom">
+          <h5 className="mb-0">Shop media</h5>
+        </div>
+        <div className="card-body px-md-4">
+          <div className="vstack">
+            <div className="row g-4">
+              <div className="col-lg-3 col-12">
+                <label htmlFor="logoInput" className="form-label">
+                  Logo image
+                </label>
+                <div
+                  role="button"
+                  className="ratio ratio-1x1 border rounded"
+                  style={{ width: 80 }}
+                  onClick={() => {
+                    logoRef.current?.click();
+                  }}
+                >
                   <Image
-                    src={props.values.cover}
+                    src={logo ?? "/images/placeholder.jpeg"}
                     layout="fill"
                     objectFit="cover"
                     className="rounded-1"
                     alt=""
                   />
-                )}
-                <input
-                  ref={coverRef}
-                  onChange={handleImageChange}
-                  name="cover"
-                  className="d-none"
-                  type="file"
-                  accept="image/x-png,image/jpeg"
-                />
+                  <input
+                    ref={logoRef}
+                    onChange={handleImageChange}
+                    name="logo"
+                    className="form-control d-none"
+                    type="file"
+                    accept="image/x-png,image/jpeg"
+                  />
+                </div>
+              </div>
+              <div className="col-lg-12">
+                <label className="form-label">Cover image</label>
+                <div
+                  role="button"
+                  className="ratio rounded border position-relative bg-light"
+                  style={{ "--bs-aspect-ratio": "20%" } as CSSProperties}
+                  onClick={() => {
+                    coverRef.current?.click();
+                  }}
+                >
+                  <div className="position-absolute text-muted top-50 start-50 translate-middle h-auto w-auto fw-medium">
+                    Click here to upload
+                  </div>
+                  {cover && (
+                    <Image
+                      src={cover}
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-1"
+                      alt=""
+                    />
+                  )}
+                  <input
+                    ref={coverRef}
+                    onChange={handleImageChange}
+                    name="cover"
+                    className="d-none"
+                    type="file"
+                    accept="image/x-png,image/jpeg"
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div className="hstack gap-2">
+        <button
+          className="btn btn-default px-3 py-2"
+          onClick={() => props.onPrev?.()}
+        >
+          Previous
+        </button>
+
+        <button
+          className="btn btn-primary px-3 py-2 ms-auto"
+          onClick={() => {
+            props.onSubmit?.({
+              ...props.values,
+              logo: logo,
+              cover: cover,
+              logoImage: logoImage,
+              coverImage: coverImage
+            });
+            props.onNext?.();
+          }}
+        >
+          Next
+        </button>
+      </div>
+    </>
+  );
+};
+
+const PackageSelection = (props: FormProps) => {
+  const router = useRouter();
+  const [isSubmitting, setSubmitting] = useState(false);
+
+  const executeCreate = async (shop: Shop) => {
+    try {
+      setSubmitting(true);
+
+      await createShop(shop);
+      router.replace("/profile/shops");
+    } catch (error) {
+      const msg = parseErrorResponse(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div>
+      <div className="form-check mb-3">
+        <input
+          id="termsAndConditions"
+          type="checkbox"
+          name="level"
+          className="form-check-input"
+        />
+        <label className="form-check-label text-muted">
+          By checking, you have read and agree to the&nbsp;
+          <Link href={"/"}>
+            <a target="_blank" className="text-decoration-none fw-medium">
+              terms of service
+            </a>
+          </Link>
+          .
+        </label>
+      </div>
+      <div className="hstack gap-2">
+        <button
+          className="btn btn-default px-3 py-2"
+          disabled={isSubmitting}
+          onClick={() => props.onPrev?.()}
+        >
+          Previous
+        </button>
+        <button
+          className="btn btn-danger px-3 py-2 ms-auto"
+          disabled={isSubmitting}
+          onClick={() => {
+            executeCreate(props.values);
+          }}
+        >
+          {isSubmitting && (
+            <span
+              className="spinner-border spinner-border-sm me-2"
+              role="status"
+              aria-hidden="true"
+            ></span>
+          )}
+          Create shop
+        </button>
       </div>
     </div>
   );
@@ -219,107 +357,39 @@ const ShopMedia = (props: FormProps) => {
 function CreateShop() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
-  const [validating, setValidating] = useState(false);
 
-  const formik = useFormik<Shop>({
-    initialValues: {
-      contact: {}
-    },
-    validate: async (values) => {
-      const errors: FormikErrors<Shop> = {};
-
-      if (!values.name || values.name.length === 0) {
-        errors.name = "Please enter shop name";
-      }
-
-      // if (!values.slug || values.slug.length === 0) {
-      //   errors.slug = "Please enter shop slug";
-      // } else {
-      //   try {
-      //     if (await existsShopBySlug(values.slug, values.id ?? 0)) {
-      //       errors.slug = "Shop slug already in use";
-      //     }
-      //   } catch (error: any) {
-      //     errors.slug = "Error checking, please try again";
-      //   }
-      // }
-
-      return errors;
-    },
-    validateOnBlur: false,
-    validateOnChange: false,
-    onSubmit: (values) => {
-      executeCreate(values);
-    }
-  });
-
-  const getStepView = (step: number, title: String, end: boolean = false) => {
-    const active = step === currentStep;
-
-    return (
-      <div className="row gx-2 align-items-center" onClick={() => {}}>
-        <div
-          className={`col-auto rounded-circle d-flex align-items-center justify-content-center ${
-            active ? "bg-primary text-light" : "bg-light-gray"
-          }`}
-          style={{ width: 40, height: 40 }}
-        >
-          {step}
-        </div>
-        <span className={`col-auto ${active ? "text-primary" : "text-dark"}`}>
-          {title}
-        </span>
-        {!end && (
-          <>
-            <hr className="col my-0 d-none d-md-block" />
-            <div className="col-12 b-block d-md-none px-0">
-              <div
-                className="d-flex justify-content-center py-1"
-                style={{ width: 40 }}
-              >
-                <div className="vr"></div>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-    );
-  };
+  const [shop, setShop] = useState<Shop>({ contact: {} });
 
   const getBodyView = () => {
     switch (currentStep) {
       case 1:
         return (
           <BasicInformation
-            values={formik.values}
-            errors={formik.errors}
-            handleChange={formik.handleChange}
-            setFieldValue={formik.setFieldValue}
+            values={shop}
+            onSubmit={setShop}
+            onNext={() => setCurrentStep((s) => s + 1)}
           />
         );
       case 2:
         return (
           <ShopMedia
-            values={formik.values}
-            errors={formik.errors}
-            handleChange={formik.handleChange}
-            setFieldValue={formik.setFieldValue}
+            values={shop}
+            onSubmit={setShop}
+            onPrev={() => setCurrentStep((s) => s - 1)}
+            onNext={() => setCurrentStep((s) => s + 1)}
+          />
+        );
+
+      case 3:
+        return (
+          <PackageSelection
+            values={shop}
+            onPrev={() => setCurrentStep((s) => s - 1)}
           />
         );
     }
 
     return null;
-  };
-
-  const executeCreate = async (shop: Shop) => {
-    try {
-      await createShop(shop);
-      router.replace("/profile/shops");
-    } catch (error) {
-      const msg = parseErrorResponse(error);
-    } finally {
-      formik.setSubmitting(false);
-    }
   };
 
   return (
@@ -347,7 +417,7 @@ function CreateShop() {
             <div className="col-lg-6">
               <div className="hstack h-100">
                 <Link href="/profile/shops">
-                  <a className="btn btn-light py-2 px-3 ms-lg-auto">
+                  <a className="btn btn-light text-dark py-2 px-3 ms-lg-auto">
                     Back to shops
                   </a>
                 </Link>
@@ -386,7 +456,7 @@ function CreateShop() {
           <div className="col-12">{getBodyView()}</div>
         </div>
 
-        {currentStep === _steps.length && (
+        {/* {currentStep === _steps.length && (
           <div className="row">
             <div className="col-12">
               <div className="form-check">
@@ -471,7 +541,7 @@ function CreateShop() {
               </button>
             )}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
 import { FormikErrors, useFormik } from "formik";
 import { useState } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { Product, ProductVariant } from "../../common/models";
+import { setEmptyOrString } from "../../common/utils";
 import { Input } from "../forms";
 
 interface VaraintEditProps {
@@ -10,6 +12,16 @@ interface VaraintEditProps {
 
 function VaraintEdit(props: VaraintEditProps) {
   const { product, handleClose } = props;
+
+  const {
+    control,
+    register,
+    formState: { errors },
+    handleSubmit,
+    setValue
+  } = useForm<ProductVariant>();
+
+  const optionsField = useFieldArray({ control, name: "options" });
 
   const [optionErrors, setOptionErrors] =
     useState<({ value: string } | undefined)[]>();
@@ -96,22 +108,54 @@ function VaraintEdit(props: VaraintEditProps) {
       </div>
 
       <div className="modal-body">
-        {duplicateError && (
+        {errors.options?.message && (
           <div className="alert alert-danger mb-2h py-2h" role="alert">
-            {duplicateError}
+            {errors.options.message}
           </div>
         )}
+        <Controller
+          control={control}
+          name="options"
+          rules={{
+            validate: (pvo) => {
+              if (
+                product.variants
+                  ?.map((v) =>
+                    v.options
+                      .map((op) => op.value.trim().toLowerCase())
+                      .join("-")
+                  )
+                  .find((key) => {
+                    return (
+                      key ===
+                      pvo.map((op) => op.value.trim().toLowerCase()).join("-")
+                    );
+                  })
+              ) {
+                return "Duplicate variant";
+              }
+              return true;
+            }
+          }}
+          render={() => <></>}
+        />
         <div className="row g-3">
-          {formik.values.options.map((op, i) => {
+          {optionsField.fields.map((op, i) => {
             return (
               <div key={i} className="col-12">
                 <Input
                   label={op.option}
-                  name={`options[${i}].value`}
-                  value={formik.values.options[i].value}
                   placeholder={`Enter ${op.option.toLowerCase()}`}
-                  onChange={formik.handleChange}
-                  error={optionErrors?.[i]?.value}
+                  error={errors.options?.[i]?.value?.message}
+                  {...register(`options.${i}.value`, {
+                    setValueAs: setEmptyOrString,
+                    validate: (v, fv) => {
+                      if (!v) {
+                        return `Please enter ${op.option}`;
+                      }
+                      return true;
+                    }
+                  })}
                 />
               </div>
             );
@@ -119,40 +163,42 @@ function VaraintEdit(props: VaraintEditProps) {
           <div className="col-lg-6">
             <Input
               label="Price"
-              name="price"
-              value={formik.values.price ?? ""}
               placeholder="Enter variant price"
-              onChange={formik.handleChange}
-              error={formik.errors.price}
+              error={errors.price?.message}
+              {...register("price", {
+                validate: (v) => {
+                  const floatRegex = "^([0-9]*[.])?[0-9]+$";
+                  if (!`${v}`.match(floatRegex)) {
+                    return "Invalid price input";
+                  }
+                  return true;
+                }
+              })}
             />
           </div>
           <div className="col-lg-6">
             <Input
               label="SKU"
-              name="sku"
-              value={formik.values.sku ?? ""}
               placeholder="Enter variant sku"
-              onChange={formik.handleChange}
+              {...register("sku")}
             />
           </div>
           <div className="col-12">
             <Input
               label="Stock amount"
-              name="stockLeft"
               type="text"
               placeholder="Enter stock amount"
               value={formik.values.stockLeft ?? ""}
-              onChange={(evt) => {
-                const value = evt.target.value;
-                if (value.trim().length > 0 && !isNaN(parseInt(value))) {
-                  formik.setFieldValue(
-                    evt.target.name,
-                    parseInt(evt.target.value)
-                  );
-                } else {
-                  formik.setFieldValue(evt.target.name, undefined);
+              {...register("stockLeft", {
+                validate: (v, fv) => {
+                  const numRegex = "^[0-9]*$";
+                  if (!`${v}`.match(numRegex)) {
+                    return "Invalid stock amount input";
+                  }
+                  return true;
                 }
-              }}
+              })}
+              error={errors.stockLeft?.message}
             />
           </div>
         </div>
@@ -162,7 +208,6 @@ function VaraintEdit(props: VaraintEditProps) {
         <button
           type="button"
           className="btn btn-default"
-          disabled={formik.isSubmitting}
           onClick={() => handleClose?.()}
         >
           Cancel
@@ -170,9 +215,10 @@ function VaraintEdit(props: VaraintEditProps) {
         <button
           type="button"
           className="btn btn-primary"
-          disabled={formik.isSubmitting}
           onClick={() => {
-            formik.handleSubmit();
+            handleSubmit((data) => {
+              handleClose?.(data);
+            })();
           }}
         >
           Add

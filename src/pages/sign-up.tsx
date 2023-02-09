@@ -2,11 +2,13 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { AuthenticationContext } from "../common/contexts";
+import { setEmptyOrString } from "../common/utils";
 import { Input, PasswordInput } from "../components/forms";
 import { signUp } from "../services/AuthService";
 
-interface FormValues {
+interface SignUpInputs {
   fullName?: string;
   phone?: string;
   password?: string;
@@ -18,45 +20,51 @@ function Register() {
   const authContext = useContext(AuthenticationContext);
 
   const {
-    values,
-    errors,
-    handleChange,
-    handleSubmit,
-    isSubmitting,
-    setSubmitting
-  } = useFormik<FormValues>({
-    initialValues: {
-      fullName: "",
-      phone: "",
-      password: "",
-      confirmPassword: ""
-    },
-    validate: (values) => {
-      const errors: FormValues = {};
-      const phoneRegex = "^(09)\\d{7,12}$";
+    register,
+    formState: { errors, isSubmitting },
+    handleSubmit
+  } = useForm<SignUpInputs>();
 
-      if (!values.fullName || values.fullName.trim().length === 0) {
-        errors.fullName = "Please enter your fullname.";
-      }
+  // const {
+  //   values,
+  //   errors,
+  //   handleChange,
+  //   handleSubmit,
+  //   isSubmitting,
+  //   setSubmitting
+  // } = useFormik<FormValues>({
+  //   initialValues: {
+  //     fullName: "",
+  //     phone: "",
+  //     password: "",
+  //     confirmPassword: ""
+  //   },
+  //   validate: (values) => {
+  //     const errors: FormValues = {};
+  //     const phoneRegex = "^(09)\\d{7,12}$";
 
-      if (!values.phone || !values.phone.match(phoneRegex)) {
-        errors.phone = "Please enter valid phone number.";
-      }
+  //     if (!values.fullName || values.fullName.trim().length === 0) {
+  //       errors.fullName = "Please enter your fullname.";
+  //     }
 
-      if (!values.password || values.password.trim().length < 8) {
-        errors.password = "Password must be at least 8 characters.";
-      } else if (values.password !== values.confirmPassword) {
-        errors.confirmPassword = "Password does not match.";
-      }
+  //     if (!values.phone || !values.phone.match(phoneRegex)) {
+  //       errors.phone = "Please enter valid phone number.";
+  //     }
 
-      return errors;
-    },
-    validateOnBlur: false,
-    validateOnChange: false,
-    onSubmit: (values) => {
-      processSignUp(values);
-    }
-  });
+  //     if (!values.password || values.password.trim().length < 8) {
+  //       errors.password = "Password must be at least 8 characters.";
+  //     } else if (values.password !== values.confirmPassword) {
+  //       errors.confirmPassword = "Password does not match.";
+  //     }
+
+  //     return errors;
+  //   },
+  //   validateOnBlur: false,
+  //   validateOnChange: false,
+  //   onSubmit: (values) => {
+  //     processSignUp(values);
+  //   }
+  // });
 
   useEffect(() => {
     if (!router.isReady) {
@@ -68,7 +76,7 @@ function Register() {
     }
   }, [router, authContext]);
 
-  const processSignUp = async (values: FormValues) => {
+  const processSignUp = async (values: SignUpInputs) => {
     try {
       const phone = `+95${values.phone!.substring(1)}`;
       const { user } = await signUp({
@@ -79,7 +87,6 @@ function Register() {
     } catch (error) {
       console.log("error signing up:", error);
     } finally {
-      setSubmitting(false);
     }
   };
 
@@ -101,17 +108,24 @@ function Register() {
                 </div>
               )} */}
 
-              <form className="row g-2" onSubmit={handleSubmit}>
+              <form
+                className="row g-2"
+                onSubmit={(evt) => {
+                  evt.preventDefault();
+                  handleSubmit(async (data) => await processSignUp(data))();
+                }}
+              >
                 <div className="col-md-12 mb-2">
                   <Input
                     label="Full Name"
                     id="nameInput"
                     type="text"
-                    name="fullName"
                     placeholder="Your full name"
-                    value={values.fullName}
-                    onChange={handleChange}
-                    error={errors.fullName}
+                    {...register("fullName", {
+                      required: true,
+                      setValueAs: setEmptyOrString
+                    })}
+                    error={errors.fullName && "Please enter full name"}
                   />
                 </div>
                 <div className="col-md-12 mb-2">
@@ -119,34 +133,37 @@ function Register() {
                     label="Phone Number"
                     id="phoneInput"
                     type="tel"
-                    name="phone"
                     autoComplete="username"
                     placeholder="09xxxxxxxx"
-                    value={values.phone}
-                    onChange={handleChange}
-                    error={errors.phone}
+                    {...register("phone", { pattern: /^(09)\\d{7,12}$/ })}
+                    error={errors.phone && "Please enter valid phone number"}
                   />
                 </div>
                 <div className="col-md-12 mb-2">
                   <PasswordInput
                     label="Password"
-                    name="password"
                     autoComplete="new-password"
                     placeholder="Minimum 8 characters"
-                    value={values.password}
-                    onChange={handleChange}
-                    error={errors.password}
+                    {...register("password", {
+                      minLength: 8,
+                      setValueAs: setEmptyOrString
+                    })}
+                    error={
+                      errors.password &&
+                      "Password must be at least 8 charachers"
+                    }
                   />
                 </div>
                 <div className="col-md-12 mb-2">
                   <PasswordInput
                     label="Confirm Password"
-                    name="confirmPassword"
                     autoComplete="new-password"
                     placeholder="Minimum 8 characters"
-                    value={values.confirmPassword}
-                    onChange={handleChange}
-                    error={errors.confirmPassword}
+                    {...register("confirmPassword", {
+                      setValueAs: setEmptyOrString,
+                      validate: (v, fv) => v === fv.password
+                    })}
+                    error={errors.confirmPassword && "Password does not match"}
                   />
                 </div>
                 <div className="col-md-12 mt-4 mb-2">

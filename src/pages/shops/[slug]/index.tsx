@@ -32,7 +32,8 @@ type PageTab =
   | "reviews"
   | "about-us"
   | "settings"
-  | "insights";
+  | "insights"
+  | "orders";
 
 function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
   const router = useRouter();
@@ -142,6 +143,8 @@ function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
         return <ShopSetting />;
       case "insights":
         return <ShopDashboard />;
+      case "orders":
+        return null;
     }
 
     return (
@@ -326,6 +329,14 @@ function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
                   <Tabs.Tab
                     tabKey="insights"
                     title="Insights"
+                    tabClassName="text-nowrap"
+                    hidden={!isMember}
+                  >
+                    <div></div>
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                    tabKey="orders"
+                    title="Orders"
                     tabClassName="text-nowrap"
                     hidden={!isMember}
                   >

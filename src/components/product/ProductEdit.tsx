@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useSWRConfig } from "swr";
 import { useCategories } from "../../common/hooks";
 import {
@@ -15,7 +16,7 @@ import {
   ProductVariantOption,
   Shop
 } from "../../common/models";
-import { parseErrorResponse } from "../../common/utils";
+import { parseErrorResponse, setEmptyOrString } from "../../common/utils";
 import {
   getProductBySlug,
   ProductQuery,
@@ -46,18 +47,59 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
   const { mutate } = useSWRConfig();
 
   const [fetching, setFetching] = useState(productSlug !== "new");
-  const [editorHeight, setEditorHeight] = useState(300);
+  const [product, setProduct] = useState<Product>({
+    shopId: shop.id,
+    images: []
+  });
+
   const [showOptionModal, setShowOptionModal] = useState(false);
   const [showVariantModal, setShowVariantModal] = useState(false);
   const [options, setOptions] = useState<Option[]>([]);
   //const [variants, setVariants] = useState<ProductVariant[]>([]);
   const [imageCount, setImageCount] = useState(0);
+  const [withVariant, setWithVariant] = useState<boolean>();
+
   const [variantErrors, setVariantErrors] =
     useState<({ price: string } | undefined)[]>();
 
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const { categories } = useCategories(false);
+
+  const {
+    control,
+    register,
+    formState: { errors, isSubmitting },
+    handleSubmit,
+    setValue,
+    clearErrors
+  } = useForm<Product>({ values: product });
+
+  const varaintsField = useFieldArray({
+    control,
+    name: "variants",
+    rules: {
+      validate: (v) => {
+        return (
+          v.filter((v) => !v.deleted).length > 0 ||
+          "At least one variant required"
+        );
+      }
+    }
+  });
+
+  const imagesField = useFieldArray({
+    control,
+    name: "images",
+    rules: {
+      validate: (v) => {
+        return (
+          v.filter((img) => !img.deleted).length > 0 ||
+          "Required at least one image"
+        );
+      }
+    }
+  });
 
   const formik = useFormik<Product>({
     initialValues: {
@@ -144,13 +186,19 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
 
     getProductBySlug(productSlug)
       .then((p) => {
-        formik.setValues({
+        // formik.setValues({
+        //   ...p,
+        //   shopId: p.shop?.id,
+        //   categoryId: p.category?.id,
+        //   discountId: p.discount?.id
+        // });
+        setProduct({
           ...p,
           shopId: p.shop?.id,
           categoryId: p.category?.id,
           discountId: p.discount?.id
         });
-        //setWithVariant(!!p.variants && p.variants.length > 0);
+        setWithVariant(p.withVariant);
       })
       .catch((error) => {
         const msg = parseErrorResponse(error);
@@ -179,10 +227,14 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
         reader.onload = function (e) {
           if (e.target?.result && typeof e.target.result === "string") {
             image.name = e.target?.result;
-            const images = formik.values.images ?? [];
-            images.push(image);
-            formik.setFieldValue("images", images);
-            setImageCount(images.filter((img) => !img.deleted).length);
+            // const images = formik.values.images ?? [];
+            // images.push(image);
+            // formik.setFieldValue("images", images);
+            imagesField.append(image);
+            //setImageCount(images.filter((img) => !img.deleted).length);
+            setImageCount(
+              imagesField.fields.filter((img) => !img.deleted).length
+            );
           }
 
           //props.setFieldValue?.(name, e.target?.result);
@@ -266,14 +318,14 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
       }
 
       console.log(product);
-      await saveProduct(product);
-      mutate(["/products", { "shop-id": values.shopId } as ProductQuery]);
-      onPopBack?.();
+      // await saveProduct(product);
+      // mutate(["/products", { "shop-id": values.shopId } as ProductQuery]);
+      // onPopBack?.();
     } catch (error) {
       const msg = parseErrorResponse(error);
       console.log(msg);
     } finally {
-      formik.setSubmitting(false);
+      //formik.setSubmitting(false);
     }
   };
 
@@ -288,7 +340,12 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
   return (
     <div>
       <form
-        onSubmit={formik.handleSubmit}
+        onSubmit={(evt) => {
+          evt.preventDefault();
+          handleSubmit(async (data) => {
+            await executeSave(data);
+          })();
+        }}
         onKeyDown={(evt) => {
           if (evt.key === "Enter") {
             evt.preventDefault();
@@ -333,9 +390,9 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                     <button
                       type="button"
                       className="btn btn-accent dropdown-toggle py-2 px-3 ms-2"
-                      disabled={formik.isSubmitting}
+                      disabled={isSubmitting}
                     >
-                      {formik.isSubmitting && (
+                      {isSubmitting && (
                         <span
                           className="spinner-border spinner-border-sm me-2"
                           role="status"
@@ -351,12 +408,16 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                     className="dropdown-item"
                     role="button"
                     onClick={() => {
-                      formik
-                        .setFieldValue("status", "DRAFT")
-                        .then((v) => {
-                          formik.submitForm();
-                        })
-                        .catch((error) => {});
+                      handleSubmit(
+                        async (data) =>
+                          await executeSave({ ...data, status: "DRAFT" })
+                      )();
+                      // formik
+                      //   .setFieldValue("status", "DRAFT")
+                      //   .then((v) => {
+                      //     formik.submitForm();
+                      //   })
+                      //   .catch((error) => {});
                     }}
                   >
                     Draft
@@ -365,12 +426,16 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                     className="dropdown-item"
                     role="button"
                     onClick={() => {
-                      formik
-                        .setFieldValue("status", "PUBLISHED")
-                        .then((v) => {
-                          formik.submitForm();
-                        })
-                        .catch((error) => {});
+                      handleSubmit(
+                        async (data) =>
+                          await executeSave({ ...data, status: "PUBLISHED" })
+                      )();
+                      // formik
+                      //   .setFieldValue("status", "PUBLISHED")
+                      //   .then((v) => {
+                      //     formik.submitForm();
+                      //   })
+                      //   .catch((error) => {});
                     }}
                   >
                     Published
@@ -392,18 +457,13 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                     <Input
                       label="Name *"
                       id="nameInput"
-                      name="name"
                       type="text"
                       placeholder="Enter product name"
-                      value={formik.values.name ?? ""}
-                      onChange={(evt) => {
-                        // const slug = evt.target.value
-                        //   .replace(/\s+/g, "-")
-                        //   .toLowerCase();
-                        // formik.setFieldValue?.("slug", slug);
-                        formik.handleChange(evt);
-                      }}
-                      error={formik.errors.name}
+                      {...register("name", {
+                        required: "Please enter product name",
+                        setValueAs: setEmptyOrString
+                      })}
+                      error={errors.name?.message}
                     />
                   </div>
 
@@ -419,16 +479,35 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                       error={formik.errors.slug}
                     /> */}
                     <label className="form-label">Category *</label>
-                    <AutocompleteSelect<Category, number>
-                      options={categories ?? []}
-                      defaultValue={formik.values.category}
-                      getOptionLabel={(v) => v.name}
-                      getOptionKey={(v) => v.id}
-                      getNestedData={(v) => v.children}
-                      canSelect={(v) => !v.children || v.children?.length === 0}
-                      onChange={(v) => {
-                        formik.setFieldValue("category", v);
-                        formik.setFieldValue("categoryId", v.id);
+                    <Controller
+                      name="category"
+                      control={control}
+                      rules={{
+                        validate: (v) => !!v || "Please select category"
+                      }}
+                      render={({ field, fieldState: { error } }) => {
+                        return (
+                          <AutocompleteSelect<Category, number>
+                            options={categories ?? []}
+                            defaultValue={field.value}
+                            getOptionLabel={(v) => v.name}
+                            getOptionKey={(v) => v.id}
+                            getNestedData={(v) => v.children}
+                            canSelect={(v) =>
+                              !v.children || v.children?.length === 0
+                            }
+                            onChange={(v) => {
+                              // formik.setFieldValue("category", v);
+                              // formik.setFieldValue("categoryId", v.id);
+                              if (!v) {
+                                return;
+                              }
+                              setValue("category", v, { shouldValidate: true });
+                              setValue("categoryId", v.id);
+                            }}
+                            error={error?.message}
+                          />
+                        );
                       }}
                     />
                   </div>
@@ -438,18 +517,27 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                     <label className="form-label">Description</label>
                     <div
                       className="flex-grow-1"
-                      ref={(e) => {
-                        const h = e?.clientHeight ?? 300;
-                        setEditorHeight(h > 250 ? h : 300);
-                      }}
+                      // ref={(e) => {
+                      //   const h = e?.clientHeight ?? 300;
+                      //   setEditorHeight(h > 250 ? h : 300);
+                      // }}
                     >
-                      <DynamicEditor
-                        id="descriptionInput"
-                        placeholder="Enter product description..."
-                        minHeight={editorHeight}
-                        value={formik.values.description ?? ""}
-                        onEditorChange={(v) => {
-                          formik.setFieldValue("description", v);
+                      <Controller
+                        control={control}
+                        name="description"
+                        render={({ field }) => {
+                          return (
+                            <DynamicEditor
+                              id="descriptionInput"
+                              placeholder="Enter product description..."
+                              minHeight={300}
+                              value={field.value}
+                              onEditorChange={(v) => {
+                                //formik.setFieldValue("description", v);
+                                setValue("description", v);
+                              }}
+                            />
+                          );
                         }}
                       />
                     </div>
@@ -461,12 +549,11 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                         <Input
                           label="Brand name"
                           id="brandInput"
-                          name="brand"
                           type="text"
                           placeholder="Enter brand name"
-                          value={formik.values.brand ?? ""}
-                          onChange={formik.handleChange}
-                          error={formik.errors.brand}
+                          {...register("brand", {
+                            setValueAs: setEmptyOrString
+                          })}
                         />
                       </div>
 
@@ -490,7 +577,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                 </div>
 
                 <div className="row g-4 my-4">
-                  {!formik.values.id && (
+                  {!product.id && (
                     <div className="col-auto">
                       <div className="form-check form-switch">
                         <input
@@ -498,20 +585,32 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                           className="form-check-input"
                           type="checkbox"
                           role="switch"
-                          name="withVariant"
-                          checked={formik.values.withVariant ?? false}
-                          onChange={(evt) => {
-                            formik.handleChange(evt);
-                            if (!evt.target.checked) {
-                              formik.setFieldValue("variants", undefined);
-                              setOptions([]);
-                              formik.setFieldValue("stockLeft", undefined);
-                            } else {
-                              formik.setFieldValue("price", undefined);
-                              formik.setFieldValue("sku", undefined);
-                              formik.setFieldValue("stockLeft", undefined);
+                          {...register("withVariant", {
+                            onChange: (evt) => {
+                              if (!evt.target.checked) {
+                                setValue("variants", undefined);
+                                setOptions([]);
+                              } else {
+                                setValue("price", undefined);
+                                setValue("sku", undefined);
+                              }
+                              setValue("stockLeft", undefined);
+                              setWithVariant(evt.target.checked);
                             }
-                          }}
+                          })}
+                          // checked={formik.values.withVariant ?? false}
+                          // onChange={(evt) => {
+                          //   formik.handleChange(evt);
+                          //   if (!evt.target.checked) {
+                          //     formik.setFieldValue("variants", undefined);
+                          //     setOptions([]);
+                          //     formik.setFieldValue("stockLeft", undefined);
+                          //   } else {
+                          //     formik.setFieldValue("price", undefined);
+                          //     formik.setFieldValue("sku", undefined);
+                          //     formik.setFieldValue("stockLeft", undefined);
+                          //   }
+                          // }}
                         ></input>
                         <label
                           htmlFor="variantCheck"
@@ -529,9 +628,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                         className="form-check-input"
                         type="checkbox"
                         role="switch"
-                        name="newArrival"
-                        checked={formik.values.newArrival ?? false}
-                        onChange={formik.handleChange}
+                        {...register("newArrival")}
                       ></input>
                       <label
                         htmlFor="newArrivalCheck"
@@ -545,12 +642,12 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
               </div>
             </div>
 
-            {formik.values.withVariant && (
+            {withVariant && (
               <div className="card shadow-sm">
                 <div className="card-header bg-white py-3 px-md-4">
                   <div className="hstack justify-content-between">
                     <h5 className="mb-0">Variants</h5>
-                    {!formik.values.id ? (
+                    {!product.id ? (
                       <button
                         type="button"
                         className="btn btn-primary ms-2"
@@ -599,108 +696,99 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                         </tr>
                       </thead>
                       <tbody className="border-top-0">
-                        {formik.values.variants &&
-                          formik.values.variants.map((v, i) => {
-                            if (v.deleted) {
-                              return null;
-                            }
-                            return (
-                              <tr key={i}>
-                                <td className="ps-3 ps-md-4 w-100">
-                                  <span className="text-nowrap me-3">
-                                    {v.title}
-                                  </span>
-                                </td>
-                                <td className="align-top">
-                                  <Input
-                                    name={`variants[${i}].price`}
-                                    type="text"
-                                    placeholder="Enter variant price"
-                                    height={40}
-                                    value={
-                                      formik.values.variants?.[i].price ?? ""
-                                    }
-                                    onChange={formik.handleChange}
-                                    error={variantErrors?.[i]?.price}
-                                  />
-                                </td>
-                                <td className="align-top">
-                                  <Input
-                                    name={`variants[${i}].sku`}
-                                    type="text"
-                                    placeholder="Enter variant sku"
-                                    height={40}
-                                    value={
-                                      formik.values.variants?.[i].sku ?? ""
-                                    }
-                                    onChange={formik.handleChange}
-                                  />
-                                </td>
-                                <td className="align-top">
-                                  <Input
-                                    name={`variants[${i}].stockLeft`}
-                                    type="text"
-                                    placeholder="Enter stock amount"
-                                    height={40}
-                                    value={
-                                      formik.values.variants?.[i].stockLeft ??
-                                      ""
-                                    }
-                                    onChange={(evt) => {
-                                      const value = evt.target.value;
-                                      if (
-                                        value.trim().length > 0 &&
-                                        !isNaN(parseInt(value))
-                                      ) {
-                                        formik.setFieldValue(
-                                          evt.target.name,
-                                          parseInt(evt.target.value)
-                                        );
-                                      } else {
-                                        formik.setFieldValue(
-                                          evt.target.name,
-                                          undefined
-                                        );
+                        {varaintsField.fields.map((variant, i) => {
+                          if (variant.deleted) {
+                            return null;
+                          }
+                          return (
+                            <tr key={i}>
+                              <td className="ps-3 ps-md-4 w-100">
+                                <span className="text-nowrap me-3">
+                                  {variant.title}
+                                </span>
+                              </td>
+                              <td className="align-top">
+                                <Input
+                                  type="text"
+                                  placeholder="Enter variant price"
+                                  height={40}
+                                  {...register(`variants.${i}.price`, {
+                                    validate: (v) => {
+                                      const floatRegex = "^([0-9]*[.])?[0-9]+$";
+                                      if (!`${v}`.match(floatRegex)) {
+                                        return "Invalid price input";
                                       }
-                                    }}
-                                  />
-                                </td>
-                                <td>
-                                  <div
-                                    role="button"
-                                    className="link-danger"
-                                    onClick={() => {
-                                      const ary = formik.values.variants ?? [];
-                                      if ((v.id ?? 0) > 0) {
-                                        const old = ary[i];
-                                        ary[i] = { ...old, deleted: true };
-                                      } else {
-                                        ary?.splice(i, 1);
+                                      return true;
+                                    }
+                                  })}
+                                  error={errors.variants?.[i]?.price?.message}
+                                />
+                              </td>
+                              <td className="align-top">
+                                <Input
+                                  type="text"
+                                  placeholder="Enter variant sku"
+                                  height={40}
+                                  {...register(`variants.${i}.sku`)}
+                                />
+                              </td>
+                              <td className="align-top">
+                                <Input
+                                  type="text"
+                                  placeholder="Enter stock amount"
+                                  height={40}
+                                  value={
+                                    formik.values.variants?.[i].stockLeft ?? ""
+                                  }
+                                  {...register(`variants.${i}.stockLeft`, {
+                                    validate: (v) => {
+                                      const numRegex = "^[0-9]*$";
+                                      if (!`${v}`.match(numRegex)) {
+                                        return "Invalid stock amount input";
                                       }
+                                      return true;
+                                    }
+                                  })}
+                                />
+                              </td>
+                              <td>
+                                <div
+                                  role="button"
+                                  className="link-danger"
+                                  onClick={() => {
+                                    //const ary = formik.values.variants ?? [];
+                                    if ((variant.id ?? 0) > 0) {
+                                      //const old = ary[i];
+                                      //ary[i] = { ...old, deleted: true };
+                                      setValue(`variants.${i}.deleted`, true);
+                                    } else {
+                                      //ary?.splice(i, 1);
+                                      varaintsField.remove(i);
+                                    }
 
-                                      formik.setFieldValue("variants", ary);
-                                    }}
-                                  >
-                                    <TrashIcon width={20} />
-                                  </div>
-                                </td>
-                              </tr>
-                            );
-                          })}
+                                    //formik.setFieldValue("variants", ary);
+                                  }}
+                                >
+                                  <TrashIcon width={20} />
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
 
-                  {formik.errors.variants && (
+                  {errors.variants?.root?.message && (
                     <div className="text-danger medium px-3 pb-3 px-md-4 pb-md-4">
-                      {formik.errors.variants}
+                      {errors.variants.root.message}
                     </div>
                   )}
                 </div>
               </div>
             )}
 
-            {!formik.values.withVariant && (
+            {!withVariant && (
               <div className="card shadow-sm">
                 <div className="card-header bg-white py-3 px-md-4 border-bottom">
                   <h5 className="mb-0">Pricing</h5>
@@ -711,49 +799,60 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                       <Input
                         label="Price *"
                         id="priceInput"
-                        name="price"
                         type="text"
                         placeholder="Enter price"
-                        value={formik.values.price ?? ""}
-                        onChange={formik.handleChange}
-                        error={formik.errors.price}
+                        error={errors.price?.message}
+                        {...register("price", {
+                          validate: (v, fv) => {
+                            const floatRegex = "^([0-9]*[.])?[0-9]+$";
+                            if (!fv.withVariant && !`${v}`.match(floatRegex)) {
+                              return "Invalid price input";
+                            }
+                            return true;
+                          }
+                        })}
                       />
                     </div>
                     <div className="col-lg-6">
                       <Input
                         label="SKU"
                         id="skuInput"
-                        name="sku"
                         type="text"
                         placeholder="Enter product sku"
-                        value={formik.values.sku ?? ""}
-                        onChange={formik.handleChange}
                         error={formik.errors.sku}
+                        {...register("sku")}
                       />
                     </div>
                     <div className="col-12">
                       <Input
                         label="Stock *"
                         id="stockInput"
-                        name="stockLeft"
                         type="text"
                         placeholder="Enter stock amount"
-                        value={formik.values.stockLeft ?? ""}
-                        onChange={(evt) => {
-                          const value = evt.target.value;
-                          if (
-                            value.trim().length > 0 &&
-                            !isNaN(parseInt(value))
-                          ) {
-                            formik.setFieldValue(
-                              evt.target.name,
-                              parseInt(evt.target.value)
-                            );
-                          } else {
-                            formik.setFieldValue(evt.target.name, undefined);
+                        // onChange={(evt) => {
+                        //   const value = evt.target.value;
+                        //   if (
+                        //     value.trim().length > 0 &&
+                        //     !isNaN(parseInt(value))
+                        //   ) {
+                        //     formik.setFieldValue(
+                        //       evt.target.name,
+                        //       parseInt(evt.target.value)
+                        //     );
+                        //   } else {
+                        //     formik.setFieldValue(evt.target.name, undefined);
+                        //   }
+                        // }}
+                        {...register("stockLeft", {
+                          validate: (v, fv) => {
+                            const numRegex = "^[0-9]*$";
+                            if (!fv.withVariant && !`${v}`.match(numRegex)) {
+                              return "Invalid stock amount input";
+                            }
+                            return true;
                           }
-                        }}
-                        error={formik.errors.stockLeft}
+                        })}
+                        error={errors.stockLeft?.message}
                       />
                     </div>
                     {/* <div className="col-lg-12">
@@ -810,11 +909,112 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                 <h5 className="mb-0">Images</h5>
               </div>
               <div className="card-body p-md-4">
-                {formik.errors.images && (
-                  <div className="text-danger mb-3">{formik.errors.images}</div>
+                {errors.images?.root?.message && (
+                  <div className="text-danger mb-3">
+                    {errors.images.root.message}
+                  </div>
                 )}
                 <div className="d-flex flex-wrap gap-3">
-                  {formik.values.images
+                  {imagesField.fields
+                    .filter((img) => !img.deleted)
+                    .map((img, index) => {
+                      return (
+                        <div key={index} className="position-relative">
+                          <Image
+                            src={img.name ?? "/images/placeholder.jpeg"}
+                            width={150}
+                            height={150}
+                            alt=""
+                            objectFit="contain"
+                            className="rounded border"
+                          />
+                          <div className="hstack justify-content-center">
+                            <div className="form-check">
+                              <input
+                                id={`thumbnail${index}Check`}
+                                className="form-check-input"
+                                type="radio"
+                                defaultChecked={img.thumbnail ?? false}
+                                {...register(`images.${index}.thumbnail`, {
+                                  onChange: (evt) => {
+                                    // const oldIndex =
+                                    //   imagesField.fields.findIndex(
+                                    //     (m) => m.thumbnail === true
+                                    //   );
+                                    // if (oldIndex >= 0) {
+                                    //   setValue(
+                                    //     `images.${oldIndex}.thumbnail`,
+                                    //     false
+                                    //   );
+                                    // }
+                                    imagesField.fields.forEach((m, j) => {
+                                      if (index !== j) {
+                                        setValue(
+                                          `images.${j}.thumbnail`,
+                                          false
+                                        );
+                                      }
+                                    });
+                                    //setValue(`images.${index}.thumbnail`, true);
+                                    imagesField.update(index, {
+                                      ...img,
+                                      thumbnail: true
+                                    });
+                                  }
+                                })}
+                                // onChange={(evt) => {
+                                //   const images = formik.values.images ?? [];
+                                //   images.forEach((img, j) => {
+                                //     if (i !== j) {
+                                //       img.thumbnail = false;
+                                //     } else {
+                                //       img.thumbnail = evt.target.checked;
+                                //     }
+                                //   });
+                                //   formik.setFieldValue("images", [...images]);
+                                // }}
+                              ></input>
+                              <label
+                                htmlFor={`thumbnail${index}Check`}
+                                className="form-check-label"
+                              >
+                                Thumbnail
+                              </label>
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            className="position-absolute top-0 end-0 m-2 btn btn-sm btn-danger"
+                            onClick={() => {
+                              if (img.id && img.id > 0) {
+                                // const old = formik.values.images![i];
+                                // old.deleted = true;
+                                // old.thumbnail = false;
+                                // formik.setFieldValue(`images[${i}]`, old);
+                                setValue(`images.${index}.deleted`, true);
+                              } else {
+                                // formik.values.images?.splice(i, 1);
+                                // formik.setFieldValue(
+                                //   `images`,
+                                //   formik.values.images
+                                // );
+                                imagesField.remove(index);
+                              }
+
+                              // setImageCount(
+                              //   formik.values.images?.filter(
+                              //     (img) => !img.deleted
+                              //   ).length ?? 0
+                              // );
+                            }}
+                          >
+                            <TrashIcon width={18} />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  {/* {formik.values.images
                     ?.filter((v) => !v.deleted)
                     .map((v, i) => {
                       return (
@@ -886,7 +1086,7 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
                           </button>
                         </div>
                       );
-                    })}
+                    })} */}
                   {imageCount <= 5 && (
                     <button
                       type="button"
@@ -948,14 +1148,18 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
               handleClose={(list) => {
                 if (list) {
                   setOptions(list);
-                  setVariantErrors(undefined);
+                  //setVariantErrors(undefined);
 
-                  formik.setFieldValue(
-                    "variants",
+                  // formik.setFieldValue(
+                  //   "variants",
+                  //   list.length > 0 ? generateVariant(list, 0, "") : []
+                  // );
+
+                  //formik.errors.variants = undefined;
+                  varaintsField.replace(
                     list.length > 0 ? generateVariant(list, 0, "") : []
                   );
-
-                  formik.errors.variants = undefined;
+                  clearErrors("variants");
                 }
 
                 setShowOptionModal(false);
@@ -969,13 +1173,14 @@ function ProductEdit({ shop, productSlug, onPopBack }: ProductEditProps) {
 
       <Modal id="varientEditModal" show={showVariantModal} variant="large">
         {(isShown) =>
-          isShown && formik.values.id ? (
+          isShown && product.id ? (
             <VaraintEdit
               product={formik.values}
               handleClose={(value) => {
                 if (value) {
-                  const variants = [...(formik.values.variants ?? []), value];
-                  formik.setFieldValue("variants", variants);
+                  //const variants = [...(formik.values.variants ?? []), value];
+                  //formik.setFieldValue("variants", variants);
+                  varaintsField.append(value);
                 }
 
                 setShowVariantModal(false);

@@ -1,6 +1,6 @@
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { FormikErrors, useFormik } from "formik";
-import { useState } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { setEmptyOrString } from "../../common/utils";
 import { Input, TagInput } from "../forms";
 
 export interface Option {
@@ -17,61 +17,75 @@ interface OptionEditProps {
 function OptionEdit(props: OptionEditProps) {
   const { data, handleClose } = props;
 
-  const [errors, setErrors] =
-    useState<({ name: string; values: string } | undefined)[]>();
-
-  const formik = useFormik<Option[]>({
-    initialValues: data,
-    enableReinitialize: true,
-    validate: (values) => {
-      const error: FormikErrors<Option> = {};
-
-      const errors: ({ name: string; values: string } | undefined)[] = [];
-      const len = values.length;
-      let hasError = false;
-      for (let i = 0; i < len; i++) {
-        const op = values[i];
-        const error = {} as any;
-        if (op.name.length === 0) {
-          error["name"] = "Enter option name";
-        } else if (
-          values.find(
-            (e, index) =>
-              i !== index &&
-              e.name.toLowerCase().trim() === op.name.toLowerCase().trim()
-          )
-        ) {
-          error["name"] = "Duplicate option name";
-        }
-
-        if (op.values.length === 0) {
-          error["values"] = "Option values must not empty";
-        }
-
-        if (Object.keys(error).length > 0) {
-          errors.push(error);
-          hasError = true;
-        } else {
-          errors.push(undefined);
-        }
-      }
-
-      if (hasError) {
-        setErrors(errors);
-        error.name = "Option input errors";
-      } else {
-        setErrors(undefined);
-      }
-
-      return error;
-    },
-    validateOnBlur: false,
-    validateOnChange: false,
-    onSubmit: (values) => {
-      handleClose?.([...values]);
-      formik.setSubmitting(false);
+  const {
+    control,
+    register,
+    formState: { errors, isSubmitting },
+    setValue,
+    handleSubmit
+  } = useForm({
+    defaultValues: {
+      options: data
     }
   });
+  const { fields, append, prepend, remove, swap, move, insert, update } =
+    useFieldArray({ control, name: "options" });
+
+  // const [errors, setErrors] =
+  //   useState<({ name: string; values: string } | undefined)[]>();
+
+  // const formik = useFormik<Option[]>({
+  //   initialValues: data,
+  //   enableReinitialize: true,
+  //   validate: (values) => {
+  //     const error: FormikErrors<Option> = {};
+
+  //     const errors: ({ name: string; values: string } | undefined)[] = [];
+  //     const len = values.length;
+  //     let hasError = false;
+  //     for (let i = 0; i < len; i++) {
+  //       const op = values[i];
+  //       const error = {} as any;
+  //       if (op.name.length === 0) {
+  //         error["name"] = "Enter option name";
+  //       } else if (
+  //         values.find(
+  //           (e, index) =>
+  //             i !== index &&
+  //             e.name.toLowerCase().trim() === op.name.toLowerCase().trim()
+  //         )
+  //       ) {
+  //         error["name"] = "Duplicate option name";
+  //       }
+
+  //       if (op.values.length === 0) {
+  //         error["values"] = "Option values must not empty";
+  //       }
+
+  //       if (Object.keys(error).length > 0) {
+  //         errors.push(error);
+  //         hasError = true;
+  //       } else {
+  //         errors.push(undefined);
+  //       }
+  //     }
+
+  //     if (hasError) {
+  //       setErrors(errors);
+  //       error.name = "Option input errors";
+  //     } else {
+  //       setErrors(undefined);
+  //     }
+
+  //     return error;
+  //   },
+  //   validateOnBlur: false,
+  //   validateOnChange: false,
+  //   onSubmit: (values) => {
+  //     handleClose?.([...values]);
+  //     formik.setSubmitting(false);
+  //   }
+  // });
 
   return (
     <>
@@ -81,7 +95,78 @@ function OptionEdit(props: OptionEditProps) {
 
       <div className="modal-body">
         <>
-          {formik.values.map((o, i) => {
+          {fields.map((f, index) => {
+            return (
+              <div key={index} className="row g-3 mb-3">
+                <div className="col-auto">
+                  <Input
+                    placeholder="Name"
+                    {...register(`options.${index}.name`, {
+                      setValueAs: setEmptyOrString,
+                      validate: (v, fv) => {
+                        if (!v) {
+                          return "Enter option name";
+                        }
+                        if (
+                          fv.options.find(
+                            (e, j) =>
+                              j !== index &&
+                              e.name?.toLowerCase()?.trim() ===
+                                v?.toLowerCase()?.trim()
+                          )
+                        ) {
+                          return "Duplicate option name";
+                        }
+                        return true;
+                      }
+                    })}
+                    error={errors.options?.[index]?.name?.message}
+                  />
+                </div>
+                <div className="col-12 col-md">
+                  <div className="hstack gap-2 align-items-start">
+                    <div className="flex-grow-1">
+                      <Controller
+                        name={`options.${index}.values`}
+                        control={control}
+                        rules={{
+                          validate: (v) =>
+                            v.length > 0 || "Option values must not empty"
+                        }}
+                        render={({ field, fieldState: { error } }) => {
+                          return (
+                            <TagInput
+                              data={field.value ?? []}
+                              placeholder="Add value"
+                              onTagsChange={(tags) => {
+                                if (tags.length === 0) {
+                                  return;
+                                }
+                                setValue(`options.${index}.values`, tags, {
+                                  shouldValidate: true
+                                });
+                              }}
+                              error={error?.message}
+                            />
+                          );
+                        }}
+                      />
+                    </div>
+                    <div
+                      role="button"
+                      className="link-danger mt-2h"
+                      onClick={() => {
+                        remove(index);
+                      }}
+                    >
+                      <TrashIcon width={24} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          {/* {formik.values.map((o, i) => {
             return (
               <div key={i} className="row g-3 mb-3">
                 <div className="col-auto">
@@ -122,27 +207,25 @@ function OptionEdit(props: OptionEditProps) {
                 </div>
               </div>
             );
-          })}
+          })} */}
           <div>
             <button
               type="button"
               className="btn btn-outline-primary hstack gap-1"
               onClick={() => {
-                const old = formik.values;
-                const op = {
+                // const old = formik.values;
+                // const op = {
+                //   name: "",
+                //   values: [],
+                //   position: 0
+                // };
+                // formik.setValues([...old, op]);
+
+                append({
                   name: "",
                   values: [],
                   position: 0
-                };
-                formik.setValues([...old, op]);
-                // setOptions((old) => {
-                //   const v = {
-                //     name: "",
-                //     values: [],
-                //     position: data.length
-                //   };
-                //   return [...old, v];
-                // });
+                });
               }}
             >
               <PlusIcon width={20} strokeWidth={2} />
@@ -156,7 +239,6 @@ function OptionEdit(props: OptionEditProps) {
         <button
           type="button"
           className="btn btn-default"
-          disabled={formik.isSubmitting}
           onClick={() => handleClose?.()}
         >
           Cancel
@@ -164,9 +246,12 @@ function OptionEdit(props: OptionEditProps) {
         <button
           type="button"
           className="btn btn-primary"
-          disabled={formik.isSubmitting}
+          disabled={isSubmitting || fields.length === 0}
           onClick={() => {
-            formik.handleSubmit();
+            //formik.handleSubmit();
+            handleSubmit((data) => {
+              handleClose?.(data.options);
+            })();
           }}
         >
           Save

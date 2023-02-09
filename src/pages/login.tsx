@@ -2,11 +2,12 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { AuthenticationContext } from "../common/contexts";
 import { Input, PasswordInput } from "../components/forms";
 import { login } from "../services/AuthService";
 
-interface FormValues {
+interface LoginInputs {
   phone?: string;
   password?: string;
 }
@@ -16,38 +17,44 @@ function Login() {
   const authContext = useContext(AuthenticationContext);
 
   const {
-    values,
-    errors,
-    handleChange,
-    handleSubmit,
-    isSubmitting,
-    setSubmitting
-  } = useFormik<FormValues>({
-    initialValues: {
-      phone: "",
-      password: ""
-    },
-    validate: (values) => {
-      let errors: FormValues = {};
+    register,
+    formState: { errors, isSubmitting },
+    handleSubmit
+  } = useForm<LoginInputs>();
 
-      const phoneRegex = "^(09)\\d{7,12}$";
+  // const {
+  //   values,
+  //   errors,
+  //   handleChange,
+  //   handleSubmit,
+  //   isSubmitting,
+  //   setSubmitting
+  // } = useFormik<LoginInputs>({
+  //   initialValues: {
+  //     phone: "",
+  //     password: ""
+  //   },
+  //   validate: (values) => {
+  //     let errors: LoginInputs = {};
 
-      if (!values.phone || !values.phone.match(phoneRegex)) {
-        errors.phone = "Please enter valid phone number.";
-      }
+  //     const phoneRegex = "^(09)\\d{7,12}$";
 
-      if (!values.password || values.password.trim().length == 0) {
-        errors.password = "Password enter password.";
-      }
+  //     if (!values.phone || !values.phone.match(phoneRegex)) {
+  //       errors.phone = "Please enter valid phone number.";
+  //     }
 
-      return errors;
-    },
-    validateOnBlur: false,
-    validateOnChange: false,
-    onSubmit: (values) => {
-      processLogin(values);
-    }
-  });
+  //     if (!values.password || values.password.trim().length == 0) {
+  //       errors.password = "Password enter password.";
+  //     }
+
+  //     return errors;
+  //   },
+  //   validateOnBlur: false,
+  //   validateOnChange: false,
+  //   onSubmit: (values) => {
+  //     processLogin(values);
+  //   }
+  // });
 
   useEffect(() => {
     if (!router.isReady) {
@@ -61,7 +68,7 @@ function Login() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, authContext]);
 
-  const processLogin = async (values: FormValues) => {
+  const processLogin = async (values: LoginInputs) => {
     try {
       const phone = `+95${values.phone!.substring(1)}`;
 
@@ -72,7 +79,7 @@ function Login() {
     } catch (error: any) {
       console.log("error signing in:", error.code);
     } finally {
-      setSubmitting(false);
+      //setSubmitting(false);
     }
   };
 
@@ -94,29 +101,36 @@ function Login() {
                 </div>
               )} */}
 
-              <form className="row" onSubmit={handleSubmit}>
+              <form
+                className="row"
+                onSubmit={(evt) => {
+                  evt.preventDefault();
+                  handleSubmit(async (data) => await processLogin(data))();
+                }}
+              >
                 <div className="col-md-12 mb-3">
                   <Input
                     label="Phone Number"
                     id="phoneInput"
                     type="tel"
-                    name="phone"
                     autoComplete="username"
                     placeholder="09xxxxxxxx"
-                    value={values.phone}
-                    onChange={handleChange}
-                    error={errors.phone}
+                    // value={values.phone}
+                    // onChange={handleChange}
+                    // error={errors.phone}
+                    {...register("phone", { pattern: /^(09)\\d{7,12}$/ })}
+                    error={errors.phone && "Please enter valid phone number"}
                   />
                 </div>
                 <div className="col-md-12 mb-2">
                   <PasswordInput
                     label="Password"
-                    name="password"
                     placeholder=""
                     autoComplete="current-password"
-                    value={values.password}
-                    onChange={handleChange}
-                    error={errors.password}
+                    {...register("password", {
+                      required: "Please enter password"
+                    })}
+                    error={errors.password?.message}
                   />
                 </div>
                 <div className="col-md-12">

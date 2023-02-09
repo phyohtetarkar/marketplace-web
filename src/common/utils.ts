@@ -56,6 +56,22 @@ export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+export function setEmptyOrString(v: any) {
+  if (typeof v === "string") {
+    return v.trim().length > 0 ? v.trim() : undefined;
+  }
+
+  return undefined;
+}
+
+export function setEmptyOrNumber(v: any) {
+  if (typeof v === "string") {
+    return v.trim().length > 0 ? parseInt(v) : undefined;
+  }
+
+  return undefined;
+}
+
 export function buildQueryParams(params: any) {
   if (typeof params !== "object" || params instanceof Array) {
     return "";

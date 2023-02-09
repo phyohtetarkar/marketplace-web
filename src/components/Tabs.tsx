@@ -2,7 +2,7 @@ import { ReactElement, ReactNode, useState } from "react";
 
 interface TabProps {
   tabKey: string;
-  title: string;
+  title: ReactNode;
   disabled?: boolean;
   hidden?: boolean;
   tabClassName?: string;

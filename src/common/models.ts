@@ -59,8 +59,8 @@ export interface Shop {
   featured?: boolean;
   createdAt?: number;
   status?: "PENDING" | "ACTIVE" | "SUBSCRIPTION_EXPIRED" | "DENIED";
-  logo?: string;
-  cover?: string;
+  logo?: string | null;
+  cover?: string | null;
   about?: string;
   contact?: ShopContact;
   logoImage?: File;

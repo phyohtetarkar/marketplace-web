@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { forwardRef, ReactNode } from "react";
 import { formControlHeight } from "../../common/app.config";
 import { InputProps } from "./Input";
 
@@ -6,18 +6,19 @@ interface SelectInputProps extends InputProps<HTMLSelectElement> {
   children: ReactNode;
 }
 
-function Select({
-  label,
-  id,
-  name,
-  value,
-  onChange,
-  onBlur,
-  error,
-  disabled,
-  children,
-  height = formControlHeight,
-}: SelectInputProps) {
+const Select = forwardRef<HTMLSelectElement, SelectInputProps>((props, ref) => {
+  const {
+    label,
+    id,
+    name,
+    value,
+    onChange,
+    onBlur,
+    error,
+    disabled,
+    children,
+    height = formControlHeight
+  } = props;
   return (
     <>
       {label && <label className="form-label">{label}</label>}
@@ -30,7 +31,7 @@ function Select({
         disabled={disabled}
         className={`form-select ps-3 ${error ? "is-invalid" : ""}`}
         style={{
-          height: height,
+          height: height
         }}
       >
         {children}
@@ -38,6 +39,8 @@ function Select({
       {error && <div className="invalid-feedback">{error}</div>}
     </>
   );
-}
+});
+
+Select.displayName = "Select";
 
 export default Select;
