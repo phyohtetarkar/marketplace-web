@@ -1,9 +1,9 @@
-import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import useSWR from "swr";
 import { Shop } from "../../common/models";
-import shops from "../../pages/profile/shops";
+import { parseErrorResponse } from "../../common/utils";
 import { findProducts, ProductQuery } from "../../services/ProductService";
+import Alert from "../Alert";
 import { Select } from "../forms";
 import Loading from "../Loading";
 import Pagination from "../Pagination";
@@ -12,8 +12,8 @@ import { ProductGridItem, ProductManageGridItem } from "../product";
 interface ShopProductListingProps {
   shop: Shop;
   isMember: boolean;
-  onProductEdit?: (slug?: string) => void;
-  onProductCreate?: () => void;
+  onProductEdit?: (slug: string, query: ProductQuery) => void;
+  onProductCreate?: (query: ProductQuery) => void;
 }
 
 function ShopProductListing(props: ShopProductListingProps) {
@@ -36,13 +36,11 @@ function ShopProductListing(props: ShopProductListingProps) {
     }
 
     if (error) {
-      return null;
+      return <Alert message={parseErrorResponse(error)} variant="danger" />;
     }
 
     if (data?.contents.length === 0) {
-      return (
-        <div className="text-muted text-center py-3">No products found</div>
-      );
+      return <Alert message="No products found" />;
     }
 
     return (
@@ -55,7 +53,9 @@ function ShopProductListing(props: ShopProductListingProps) {
                   {props.isMember ? (
                     <ProductManageGridItem
                       value={p}
-                      onEditClick={() => props.onProductEdit?.(p.slug)}
+                      onEditClick={() =>
+                        p.slug && props.onProductEdit?.(p.slug, query)
+                      }
                     />
                   ) : (
                     <ProductGridItem value={p} />
@@ -102,7 +102,7 @@ function ShopProductListing(props: ShopProductListingProps) {
             <div className="col-auto">
               <button
                 className="btn btn-primary h-100 hstack"
-                onClick={() => props.onProductCreate?.()}
+                onClick={() => props.onProductCreate?.(query)}
               >
                 Create new
               </button>

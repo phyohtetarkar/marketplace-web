@@ -153,8 +153,9 @@ export interface Discount {
   id?: number;
   shopId?: number;
   title?: string;
-  value?: string;
+  value?: number;
   type?: string;
+  createdAt?: number;
 }
 
 export interface CartItem {

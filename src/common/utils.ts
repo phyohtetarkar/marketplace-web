@@ -132,11 +132,34 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
         const href = process.env.NEXT_PUBLIC_LOGIN_URL ?? "";
         window.location.href = href;
       });
-    return null;
+    return "Unauthorized";
   }
   if (error instanceof APIError) {
     return error.message;
   }
   //console.log(error);
   return "Something went wrong, please try again";
+}
+
+export async function checkShopMember(shopId: number, auth: any) {
+  try {
+    const accessToken = (await auth.currentSession())
+      ?.getAccessToken()
+      ?.getJwtToken();
+
+    const url = `${getAPIBasePath()}shop-members/check?shop-id=${shopId ?? ""}`;
+
+    if (accessToken) {
+      const resp = await fetch(url, {
+        headers: {
+          Authorization: "Bearer " + accessToken
+        }
+      });
+
+      if (resp.ok) {
+        return (await resp.json()) as boolean;
+      }
+    }
+  } catch (error) {}
+  return false;
 }

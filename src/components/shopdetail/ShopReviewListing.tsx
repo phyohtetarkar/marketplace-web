@@ -6,7 +6,8 @@ import ShopReviewEdit from "./ShopReviewEdit";
 import { PageData, ShopReview } from "../../common/models";
 import { getReviews } from "../../services/ShopReviewService";
 import Loading from "../Loading";
-import { formatTimestamp } from "../../common/utils";
+import { formatTimestamp, parseErrorResponse } from "../../common/utils";
+import Alert from "../Alert";
 
 interface ShopReviewProps {
   value: ShopReview;
@@ -56,11 +57,11 @@ function ShopReviewListing({ shopId }: { shopId: number }) {
     }
 
     if (error) {
-      return null;
+      return <Alert message={parseErrorResponse(error)} variant="danger" />;
     }
 
     if (data?.contents.length === 0) {
-      return <div className="text-muted text-center">No reviews found</div>;
+      return <Alert message="No reviews found" />;
     }
 
     return (

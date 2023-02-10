@@ -47,7 +47,7 @@ export async function getDiscountById(id: string) {
   return resp.json() as Promise<Discount>;
 }
 
-export async function getAllDiscounts(shopId: number, page?: number) {
+export async function findDiscounts(shopId: number, page?: number) {
   const query = buildQueryParams({
     "shop-id": shopId,
     page: page

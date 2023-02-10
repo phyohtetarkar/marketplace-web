@@ -1,7 +1,9 @@
 import { useState } from "react";
 import useSWR from "swr";
+import { parseErrorResponse } from "../../common/utils";
 import { withAuthentication } from "../../common/WithAuthentication";
 import AccountMenu from "../../components/account/AccountMenu";
+import Alert from "../../components/Alert";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
 import { ProductFavoriteItem } from "../../components/product";
@@ -31,10 +33,11 @@ function MyFavorites() {
     }
 
     if (error) {
+      return <Alert message={parseErrorResponse(error)} variant="danger" />;
     }
 
     if (data?.contents.length === 0) {
-      return <div className="text-muted text-center">No items found</div>;
+      return <Alert message="No favorites found" />;
     }
 
     return (

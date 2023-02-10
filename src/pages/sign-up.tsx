@@ -1,4 +1,3 @@
-import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
@@ -24,47 +23,6 @@ function Register() {
     formState: { errors, isSubmitting },
     handleSubmit
   } = useForm<SignUpInputs>();
-
-  // const {
-  //   values,
-  //   errors,
-  //   handleChange,
-  //   handleSubmit,
-  //   isSubmitting,
-  //   setSubmitting
-  // } = useFormik<FormValues>({
-  //   initialValues: {
-  //     fullName: "",
-  //     phone: "",
-  //     password: "",
-  //     confirmPassword: ""
-  //   },
-  //   validate: (values) => {
-  //     const errors: FormValues = {};
-  //     const phoneRegex = "^(09)\\d{7,12}$";
-
-  //     if (!values.fullName || values.fullName.trim().length === 0) {
-  //       errors.fullName = "Please enter your fullname.";
-  //     }
-
-  //     if (!values.phone || !values.phone.match(phoneRegex)) {
-  //       errors.phone = "Please enter valid phone number.";
-  //     }
-
-  //     if (!values.password || values.password.trim().length < 8) {
-  //       errors.password = "Password must be at least 8 characters.";
-  //     } else if (values.password !== values.confirmPassword) {
-  //       errors.confirmPassword = "Password does not match.";
-  //     }
-
-  //     return errors;
-  //   },
-  //   validateOnBlur: false,
-  //   validateOnChange: false,
-  //   onSubmit: (values) => {
-  //     processSignUp(values);
-  //   }
-  // });
 
   useEffect(() => {
     if (!router.isReady) {

@@ -1,7 +1,6 @@
 import {
   BuildingStorefrontIcon,
-  QuestionMarkCircleIcon,
-  ShoppingCartIcon
+  QuestionMarkCircleIcon
 } from "@heroicons/react/24/outline";
 import { Auth } from "aws-amplify";
 import { Offcanvas } from "bootstrap";

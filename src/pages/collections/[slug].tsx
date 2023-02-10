@@ -4,7 +4,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { useBrands, useCategory } from "../../common/hooks";
+import { parseErrorResponse } from "../../common/utils";
 import Accordion from "../../components/Accordion";
+import Alert from "../../components/Alert";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
 import { ProductGridItem } from "../../components/product";
@@ -160,7 +162,7 @@ function Collection() {
 
   const content = () => {
     if (error) {
-      return null;
+      return <Alert message={parseErrorResponse(error)} variant="danger" />;
     }
 
     if (isLoading) {
@@ -168,9 +170,7 @@ function Collection() {
     }
 
     if (data?.contents.length === 0) {
-      return (
-        <div className="text-center py-3 text-muted">No products found</div>
-      );
+      return <Alert message="No products found" />;
     }
 
     return (

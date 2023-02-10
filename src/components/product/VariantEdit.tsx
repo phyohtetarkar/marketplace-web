@@ -1,8 +1,7 @@
-import { FormikErrors, useFormik } from "formik";
-import { useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { Product, ProductVariant } from "../../common/models";
 import { setEmptyOrString } from "../../common/utils";
+import Alert from "../Alert";
 import { Input } from "../forms";
 
 interface VaraintEditProps {
@@ -17,83 +16,34 @@ function VaraintEdit(props: VaraintEditProps) {
     control,
     register,
     formState: { errors },
-    handleSubmit,
-    setValue
-  } = useForm<ProductVariant>();
+    handleSubmit
+  } = useForm<ProductVariant>({
+    defaultValues: {
+      options: product.options?.map((op) => ({ option: op.name }))
+    }
+  });
 
-  const optionsField = useFieldArray({ control, name: "options" });
-
-  const [optionErrors, setOptionErrors] =
-    useState<({ value: string } | undefined)[]>();
-
-  const [duplicateError, setDuplicateError] = useState<string>();
-
-  const formik = useFormik<ProductVariant>({
-    initialValues: {
-      options:
-        product.options?.map((pop) => ({
-          option: pop.name ?? "",
-          value: ""
-        })) ?? []
-    },
-    enableReinitialize: true,
-    validate: (values) => {
-      const errors: FormikErrors<ProductVariant> = {};
-
-      const floatRegex = "^([0-9]*[.])?[0-9]+$";
-
-      if (!values.price || !`${values.price}`.match(floatRegex)) {
-        errors.price = "Invalid price input";
-      }
-
-      const optionErrors = [] as ({ value: string } | undefined)[];
-      let hasOptionErrors = false;
-      values.options.forEach((op, i) => {
-        if (!op.value || op.value.trim().length === 0) {
-          optionErrors.push({ value: `Please enter ${op.option}` });
-          hasOptionErrors = true;
-        } else {
-          optionErrors.push(undefined);
+  const optionsField = useFieldArray({
+    control,
+    name: "options",
+    rules: {
+      validate: (pvo) => {
+        if (
+          product.variants
+            ?.map((v) =>
+              v.options.map((op) => op.value?.trim()?.toLowerCase()).join("-")
+            )
+            .find((key) => {
+              return (
+                key ===
+                pvo.map((op) => op.value?.trim()?.toLowerCase()).join("-")
+              );
+            })
+        ) {
+          return "Duplicate variant";
         }
-      });
-
-      if (hasOptionErrors) {
-        setOptionErrors(optionErrors);
-        errors.options = "Option input errors";
-      } else {
-        setOptionErrors(undefined);
+        return true;
       }
-
-      if (
-        !hasOptionErrors &&
-        product.variants
-          ?.map((v) =>
-            v.options.map((op) => op.value.trim().toLowerCase()).join("-")
-          )
-          .find((key) => {
-            return (
-              key ===
-              values.options
-                .map((op) => op.value.trim().toLowerCase())
-                .join("-")
-            );
-          })
-      ) {
-        errors.options = "Option input errors";
-        setDuplicateError("Duplicate variant");
-      } else {
-        setDuplicateError(undefined);
-      }
-
-      return errors;
-    },
-    validateOnBlur: false,
-    validateOnChange: false,
-    onSubmit: (values) => {
-      const variant = { ...values };
-      variant.title = variant.options.map((op) => op.value).join(" / ");
-      handleClose?.(variant);
-      formik.setSubmitting(false);
     }
   });
 
@@ -108,37 +58,9 @@ function VaraintEdit(props: VaraintEditProps) {
       </div>
 
       <div className="modal-body">
-        {errors.options?.message && (
-          <div className="alert alert-danger mb-2h py-2h" role="alert">
-            {errors.options.message}
-          </div>
+        {errors.options?.root?.message && (
+          <Alert message={errors.options.root.message} variant="danger" />
         )}
-        <Controller
-          control={control}
-          name="options"
-          rules={{
-            validate: (pvo) => {
-              if (
-                product.variants
-                  ?.map((v) =>
-                    v.options
-                      .map((op) => op.value.trim().toLowerCase())
-                      .join("-")
-                  )
-                  .find((key) => {
-                    return (
-                      key ===
-                      pvo.map((op) => op.value.trim().toLowerCase()).join("-")
-                    );
-                  })
-              ) {
-                return "Duplicate variant";
-              }
-              return true;
-            }
-          }}
-          render={() => <></>}
-        />
         <div className="row g-3">
           {optionsField.fields.map((op, i) => {
             return (
@@ -188,7 +110,6 @@ function VaraintEdit(props: VaraintEditProps) {
               label="Stock amount"
               type="text"
               placeholder="Enter stock amount"
-              value={formik.values.stockLeft ?? ""}
               {...register("stockLeft", {
                 validate: (v, fv) => {
                   const numRegex = "^[0-9]*$";
@@ -217,7 +138,8 @@ function VaraintEdit(props: VaraintEditProps) {
           className="btn btn-primary"
           onClick={() => {
             handleSubmit((data) => {
-              handleClose?.(data);
+              const title = data.options.map((op) => op.value).join(" / ");
+              handleClose?.({ ...data, title: title });
             })();
           }}
         >

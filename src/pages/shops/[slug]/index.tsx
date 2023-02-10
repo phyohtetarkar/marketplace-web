@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import { ReactNode, useState } from "react";
 import { ShopDetailContext } from "../../../common/contexts";
 import { Shop } from "../../../common/models";
-import { getAPIBasePath } from "../../../common/utils";
+import { checkShopMember, getAPIBasePath } from "../../../common/utils";
 import Dropdown from "../../../components/Dropdown";
 import { ShopDashboard, ShopSetting } from "../../../components/merchant";
 import { ProductEdit } from "../../../components/product";
@@ -24,6 +24,7 @@ import {
   ShopReviewListing
 } from "../../../components/shopdetail";
 import Tabs from "../../../components/Tabs";
+import { ProductQuery } from "../../../services/ProductService";
 import { getShopBySlug } from "../../../services/ShopService";
 
 type PageTab =
@@ -45,6 +46,7 @@ function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
   );
 
   const [pendingProductId, setPendingProductId] = useState<string>();
+  const [pendingQuery, setPendingQuery] = useState<ProductQuery>();
 
   const iconSize = 20;
 
@@ -151,8 +153,14 @@ function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
       <ShopProductListing
         shop={shop!}
         isMember={isMember}
-        onProductCreate={() => setPendingProductId("new")}
-        onProductEdit={(id) => setPendingProductId(id)}
+        onProductCreate={(query) => {
+          setPendingQuery(query);
+          setPendingProductId("new");
+        }}
+        onProductEdit={(slug, query) => {
+          setPendingQuery(query);
+          setPendingProductId(slug);
+        }}
       />
     );
   };
@@ -169,7 +177,11 @@ function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
       <ProductEdit
         shop={shop}
         productSlug={pendingProductId}
-        onPopBack={() => setPendingProductId(undefined)}
+        pendingQuery={pendingQuery}
+        onPopBack={() => {
+          setPendingProductId(undefined);
+          setPendingQuery(undefined);
+        }}
       />
     );
   }
@@ -385,32 +397,13 @@ function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { slug } = context.query;
-  const { Auth } = withSSRContext(context);
-  let isMember = false;
-
   try {
-    const accessToken = (await Auth.currentSession())
-      ?.getAccessToken()
-      ?.getJwtToken();
+    const { slug } = context.query;
+    const { Auth } = withSSRContext(context);
 
-    const url = `${getAPIBasePath()}shop-members/check?slug=${slug ?? ""}`;
-
-    if (accessToken) {
-      const resp = await fetch(url, {
-        headers: {
-          Authorization: "Bearer " + accessToken
-        }
-      });
-
-      if (resp.ok) {
-        isMember = (await resp.json()) as boolean;
-      }
-    }
-  } catch (error) {}
-
-  try {
     const shop = await getShopBySlug(slug as string);
+
+    const isMember = await checkShopMember(shop.id ?? 0, Auth);
 
     return {
       props: {

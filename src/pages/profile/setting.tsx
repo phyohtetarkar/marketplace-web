@@ -1,9 +1,9 @@
-import { FormikErrors, useFormik } from "formik";
 import Image from "next/image";
-import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { useSWRConfig } from "swr";
 import { useLoginUser } from "../../common/hooks";
 import { User } from "../../common/models";
-import { parseErrorResponse } from "../../common/utils";
+import { parseErrorResponse, setEmptyOrString } from "../../common/utils";
 import { withAuthentication } from "../../common/WithAuthentication";
 import AccountMenu from "../../components/account/AccountMenu";
 import { Input } from "../../components/forms";
@@ -11,46 +11,19 @@ import Loading from "../../components/Loading";
 import { updateProfile } from "../../services/UserService";
 
 function ProfileSetting() {
+  const { mutate } = useSWRConfig();
   const { user, error, isLoading } = useLoginUser();
 
-  const formik = useFormik<User>({
-    initialValues: user ?? {
-      id: "",
-      name: "",
-      phone: "",
-      email: ""
-    },
-    enableReinitialize: true,
-    validate: async (values) => {
-      const errors: FormikErrors<User> = {};
-
-      const phoneRegex = "^(09)\\d{7,12}$";
-      const emailRegex = "!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i";
-
-      if (!values.name || values.name.trim().length === 0) {
-        errors.name = "Please enter user name.";
-      }
-
-      if (!values.phone || !values.phone.match(phoneRegex)) {
-        errors.phone = "Please enter valid phone number.";
-      }
-
-      if (!values.email || !values.email.match(emailRegex)) {
-        errors.email = "Please enter valid email address.";
-      }
-
-      return errors;
-    },
-    validateOnBlur: false,
-    validateOnChange: false,
-    onSubmit: (values) => {
-      save(values);
-    }
-  });
+  const {
+    register,
+    formState: { errors, isSubmitting },
+    handleSubmit
+  } = useForm<User>({ values: user });
 
   const save = async (values: User) => {
     try {
       await updateProfile(values);
+      mutate("/login-user");
     } catch (error) {
       const msg = parseErrorResponse(error);
     }
@@ -84,7 +57,14 @@ function ProfileSetting() {
           <div className="col-lg-8 col-xl-9">
             <div className="card shadow-sm">
               <div className="card-body p-md-4">
-                <form onSubmit={formik.handleSubmit}>
+                <form
+                  onSubmit={(evt) => {
+                    evt.preventDefault();
+                    handleSubmit(async (data) => {
+                      await save(data);
+                    })();
+                  }}
+                >
                   <div className="row">
                     <div className="order-2 order-md-2 col-lg-8">
                       <div className="vstack">
@@ -93,12 +73,13 @@ function ProfileSetting() {
                             <Input
                               label="Full Name"
                               id="nameInput"
-                              name="name"
                               type="text"
                               placeholder="Your full name"
-                              value={formik.values.name}
-                              onChange={formik.handleChange}
-                              error={formik.errors.name}
+                              {...register("name", {
+                                required: "Please enter full name",
+                                setValueAs: setEmptyOrString
+                              })}
+                              error={errors.name?.message}
                             />
                           </div>
                           <div className="col-lg-6">
@@ -112,11 +93,12 @@ function ProfileSetting() {
                               <div className="d-flex align-items-center">
                                 <div className="vr"></div>
                               </div>
-                              <Link href={"#"}>
-                                <a className="text-decoration-none small">
-                                  Change
-                                </a>
-                              </Link>
+                              <button
+                                type="button"
+                                className="btn btn-link text-decoration-none small"
+                              >
+                                Change
+                              </button>
                             </div>
                             <Input
                               id="phoneInput"
@@ -124,7 +106,6 @@ function ProfileSetting() {
                               type="text"
                               disabled
                               defaultValue={user?.phone ?? ""}
-                              error={formik.errors.phone}
                             />
                           </div>
                           <div className="col-lg-12">
@@ -132,12 +113,23 @@ function ProfileSetting() {
                               <Input
                                 label="Email"
                                 id="emailInput"
-                                name="email"
                                 type="email"
                                 placeholder="name@domain.com"
-                                value={formik.values.email ?? ""}
-                                onChange={formik.handleChange}
-                                error={formik.errors.email}
+                                error={
+                                  errors.email &&
+                                  "Please enter valid email address"
+                                }
+                                {...register("email", {
+                                  validate: (v) => {
+                                    const emailRegex =
+                                      "!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i";
+                                    if (!v) {
+                                      return true;
+                                    }
+
+                                    return v.match(emailRegex) !== null;
+                                  }
+                                })}
                               />
                             </div>
                           </div>
@@ -151,7 +143,7 @@ function ProfileSetting() {
                           style={{ width: 128, height: 128 }}
                         >
                           <Image
-                            src="/images/placeholder.jpeg"
+                            src={user?.image ?? "/images/profile.png"}
                             layout="fill"
                             alt="User Photo"
                             className="rounded-circle"
@@ -167,10 +159,11 @@ function ProfileSetting() {
                     <br />
                     <div className="col order-3 mt-3">
                       <button
+                        type="submit"
                         className="btn btn-primary p-2 flex-grow-1 flex-md-grow-0"
-                        disabled={formik.isSubmitting}
+                        disabled={isSubmitting}
                       >
-                        {formik.isSubmitting && (
+                        {isSubmitting && (
                           <span
                             className="spinner-border spinner-border-sm me-2"
                             role="status"
@@ -187,7 +180,10 @@ function ProfileSetting() {
                   <div className="col-md">
                     <div className="card bg-light">
                       <div className="card-body">
-                        <button className="btn btn-outline-primary bg-white btn-sm border border-light-gray float-end">
+                        <button
+                          type="button"
+                          className="btn btn-outline-primary bg-white btn-sm border border-light-gray float-end"
+                        >
                           Change
                         </button>
                         <p className="mb-0">Password</p>

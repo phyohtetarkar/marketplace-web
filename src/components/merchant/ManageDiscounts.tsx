@@ -1,9 +1,10 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
 import { Discount, PageData } from "../../common/models";
-import { getAllDiscounts } from "../../services/DiscountService";
+import { parseErrorResponse } from "../../common/utils";
+import { findDiscounts } from "../../services/DiscountService";
+import Alert from "../Alert";
 import Loading from "../Loading";
 import Pagination from "../Pagination";
 
@@ -46,7 +47,7 @@ function ManageDiscounts({ shopId }: { shopId: number }) {
   const [discount, setDiscount] = useState<Discount>();
   const { data, error, isLoading, mutate } = useSWR<PageData<Discount>, Error>(
     ["/discounts", page],
-    ([url, p]) => getAllDiscounts(shopId, p),
+    ([url, p]) => findDiscounts(shopId, p),
     {
       revalidateOnFocus: false
     }
@@ -57,7 +58,11 @@ function ManageDiscounts({ shopId }: { shopId: number }) {
   }
 
   if (error) {
-    return null;
+    return <Alert message={parseErrorResponse(error)} variant="danger" />;
+  }
+
+  if ((data?.contents.length ?? 0) === 0) {
+    return <Alert message="No data found" />;
   }
 
   return (
