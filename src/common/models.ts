@@ -154,7 +154,7 @@ export interface Discount {
   shopId?: number;
   title?: string;
   value?: number;
-  type?: string;
+  type?: "PERCENTAGE" | "FIXED_AMOUNT";
   createdAt?: number;
 }
 

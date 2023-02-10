@@ -22,7 +22,7 @@ export async function saveDiscount(value: Discount) {
   await validateResponse(resp);
 }
 
-export async function deleteDiscount(id: string) {
+export async function deleteDiscount(id: number) {
   const url = `${getAPIBasePath()}${basePath}/${id}`;
   const resp = await fetch(url, {
     method: "DELETE",
@@ -34,7 +34,7 @@ export async function deleteDiscount(id: string) {
   await validateResponse(resp);
 }
 
-export async function getDiscountById(id: string) {
+export async function getDiscountById(id: number) {
   const url = `${getAPIBasePath()}${basePath}/${id}`;
   const resp = await fetch(url, {
     headers: {

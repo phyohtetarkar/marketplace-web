@@ -66,7 +66,7 @@ export function setEmptyOrString(v: any) {
 
 export function setEmptyOrNumber(v: any) {
   if (typeof v === "string") {
-    return v.trim().length > 0 ? parseInt(v) : undefined;
+    return v.trim().length > 0 ? parseFloat(v) : undefined;
   }
 
   return undefined;
@@ -147,7 +147,7 @@ export async function checkShopMember(shopId: number, auth: any) {
       ?.getAccessToken()
       ?.getJwtToken();
 
-    const url = `${getAPIBasePath()}shop-members/check?shop-id=${shopId ?? ""}`;
+    const url = `${getAPIBasePath()}shop-members/check?shop-id=${shopId ?? 0}`;
 
     if (accessToken) {
       const resp = await fetch(url, {
@@ -160,6 +160,8 @@ export async function checkShopMember(shopId: number, auth: any) {
         return (await resp.json()) as boolean;
       }
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
   return false;
 }

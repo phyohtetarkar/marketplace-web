@@ -1,11 +1,14 @@
 interface AlertProps {
   message: string;
-  variant?: "primary" | "success" | "warning" | "danger";
+  variant?: "primary" | "info" | "success" | "warning" | "danger";
 }
 
 function Alert(props: AlertProps) {
   return (
-    <div className={`alert alert-${props.variant ?? "primary"}`} role="alert">
+    <div
+      className={`alert alert-${props.variant ?? "dark-gray"} py-2h`}
+      role="alert"
+    >
       {props.message}
     </div>
   );

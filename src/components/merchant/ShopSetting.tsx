@@ -15,6 +15,7 @@ interface MenuItemProps {
 const MenuItem = (props: MenuItemProps) => {
   return (
     <div
+      role="button"
       className={`d-flex align-items-center p-2 my-list-item ${
         props.active ? "active" : ""
       }`}

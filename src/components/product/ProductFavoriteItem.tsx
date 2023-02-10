@@ -1,11 +1,6 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "../../common/models";
-import {
-  deleteFavoriteProduct,
-  addToFavoriteProduct
-} from "../../services/FavoriteProductService";
 import AddToCartButton from "./AddToCartButton";
 import DeleteFromFavoriteButton from "./DeleteFromFavoriteButton";
 
