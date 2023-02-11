@@ -24,6 +24,7 @@ const Select = forwardRef<HTMLSelectElement, SelectInputProps>((props, ref) => {
       {label && <label className="form-label">{label}</label>}
       <select
         id={id}
+        ref={ref}
         name={name}
         onChange={onChange}
         onBlur={onBlur}

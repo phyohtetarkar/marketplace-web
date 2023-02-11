@@ -81,7 +81,10 @@ function ProductEdit({
     control,
     name: "variants",
     rules: {
-      validate: (v) => {
+      validate: (v, fv) => {
+        if (!fv.withVariant) {
+          return true;
+        }
         return (
           v.filter((v) => !v.deleted).length > 0 ||
           "At least one variant required"

@@ -27,6 +27,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaInputProps>(
         )}
         <textarea
           id={id}
+          ref={ref}
           name={name}
           className={`form-control p-3 ${error ? "is-invalid" : ""}`}
           placeholder={placeholder}

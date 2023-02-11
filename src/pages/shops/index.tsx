@@ -16,7 +16,10 @@ function Shops() {
   const { data, error, isLoading } = useSWR(
     ["/shops", router.query],
     ([url, q]) =>
-      findShops({ q: q.q as string, page: parseInt(q.page as string) }),
+      findShops({
+        q: q.q as string,
+        page: q.page ? parseInt(q.page as string) : 0
+      }),
     {
       revalidateOnFocus: false
     }
