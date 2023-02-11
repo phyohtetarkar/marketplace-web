@@ -14,7 +14,11 @@ import {
   ProductVariantOption,
   Shop
 } from "../../common/models";
-import { parseErrorResponse, setEmptyOrString } from "../../common/utils";
+import {
+  parseErrorResponse,
+  setEmptyOrString,
+  setStringToSlug
+} from "../../common/utils";
 import {
   getProductBySlug,
   ProductQuery,
@@ -383,52 +387,28 @@ function ProductEdit({
                       placeholder="Enter product name"
                       {...register("name", {
                         required: "Please enter product name",
-                        setValueAs: setEmptyOrString
+                        setValueAs: setEmptyOrString,
+                        onChange: (evt) => {
+                          setValue("slug", setStringToSlug(evt.target.value), {
+                            shouldValidate: !!errors.slug?.message
+                          });
+                        }
                       })}
                       error={errors.name?.message}
                     />
                   </div>
 
                   <div className="col-lg-6">
-                    {/* <Input
+                    <Input
                       label="Slug *"
                       id="slugInput"
-                      name="slug"
                       type="text"
-                      placeholder="slug"
-                      value={formik.values.slug ?? ""}
-                      onChange={formik.handleChange}
-                      error={formik.errors.slug}
-                    /> */}
-                    <label className="form-label">Category *</label>
-                    <Controller
-                      name="category"
-                      control={control}
-                      rules={{
-                        validate: (v) => !!v || "Please select category"
-                      }}
-                      render={({ field, fieldState: { error } }) => {
-                        return (
-                          <AutocompleteSelect<Category, number>
-                            options={categories ?? []}
-                            defaultValue={field.value}
-                            getOptionLabel={(v) => v.name}
-                            getOptionKey={(v) => v.id}
-                            getNestedData={(v) => v.children}
-                            canSelect={(v) =>
-                              !v.children || v.children?.length === 0
-                            }
-                            onChange={(v) => {
-                              if (!v) {
-                                return;
-                              }
-                              setValue("category", v, { shouldValidate: true });
-                              setValue("categoryId", v.id);
-                            }}
-                            error={error?.message}
-                          />
-                        );
-                      }}
+                      placeholder="your-product-name"
+                      {...register("slug", {
+                        required: "Please enter slug",
+                        setValueAs: setEmptyOrString
+                      })}
+                      error={errors.slug?.message}
                     />
                   </div>
                 </div>
@@ -464,17 +444,50 @@ function ProductEdit({
 
                   <div className="col-lg-6 order-1 order-lg-2">
                     <div className="vstack">
-                      <div>
-                        <Input
-                          label="Brand name"
-                          id="brandInput"
-                          type="text"
-                          placeholder="Enter brand name"
-                          {...register("brand", {
-                            setValueAs: setEmptyOrString
-                          })}
+                      <div className="mb-3">
+                        <label className="form-label">Category *</label>
+                        <Controller
+                          name="category"
+                          control={control}
+                          rules={{
+                            validate: (v) => !!v || "Please select category"
+                          }}
+                          render={({ field, fieldState: { error } }) => {
+                            return (
+                              <AutocompleteSelect<Category, number>
+                                options={categories ?? []}
+                                defaultValue={field.value}
+                                getOptionLabel={(v) => v.name}
+                                getOptionKey={(v) => v.id}
+                                getNestedData={(v) => v.children}
+                                canSelect={(v) =>
+                                  !v.children || v.children?.length === 0
+                                }
+                                onChange={(v) => {
+                                  if (!v) {
+                                    return;
+                                  }
+                                  setValue("category", v, {
+                                    shouldValidate: !!error?.message
+                                  });
+                                  setValue("categoryId", v.id);
+                                }}
+                                error={error?.message}
+                              />
+                            );
+                          }}
                         />
                       </div>
+
+                      <Input
+                        label="Brand name"
+                        id="brandInput"
+                        type="text"
+                        placeholder="Enter brand name"
+                        {...register("brand", {
+                          setValueAs: setEmptyOrString
+                        })}
+                      />
 
                       <label className="form-label mt-3">
                         Country of origin

@@ -5,6 +5,7 @@ import { ShopContact } from "../../common/models";
 import { parseErrorResponse, setEmptyOrNumber } from "../../common/utils";
 import { updateShopContact } from "../../services/ShopService";
 import { Input, TagInput } from "../forms";
+import ProgressButton from "../ProgressButton";
 
 function ShopContactEdit() {
   const shopContext = useContext(ShopDetailContext);
@@ -116,20 +117,13 @@ function ShopContactEdit() {
         </div>
         <div className="card-footer py-2h">
           <div className="clearfix">
-            <button
+            <ProgressButton
               type="submit"
-              className="btn btn-primary float-end"
-              disabled={isSubmitting}
+              loading={isSubmitting}
+              className="float-end"
             >
-              {isSubmitting && (
-                <span
-                  className="spinner-border spinner-border-sm me-2"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-              )}
               Update
-            </button>
+            </ProgressButton>
           </div>
         </div>
       </div>

@@ -5,7 +5,11 @@ import { useRouter } from "next/router";
 import { ChangeEvent, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Shop } from "../../../common/models";
-import { parseErrorResponse, setEmptyOrString } from "../../../common/utils";
+import {
+  parseErrorResponse,
+  setEmptyOrString,
+  setStringToSlug
+} from "../../../common/utils";
 import { withAuthentication } from "../../../common/WithAuthentication";
 import { Input } from "../../../components/forms";
 import { RichTextEditorInputProps } from "../../../components/forms/RichTextEditor";
@@ -65,30 +69,28 @@ const BasicInformation = (props: FormProps) => {
                   placeholder="Enter shop name"
                   {...register("name", {
                     required: true,
-                    setValueAs: setEmptyOrString
+                    setValueAs: setEmptyOrString,
+                    onChange: (evt) => {
+                      setValue("slug", setStringToSlug(evt.target.value), {
+                        shouldValidate: !!errors.slug?.message
+                      });
+                    }
                   })}
                   error={errors.name && "Please enter shop name"}
                 />
               </div>
               <div className="col-lg-6">
                 <Input
-                  label="Headline"
-                  id="headlineInput"
+                  label="Slug *"
+                  id="slugInput"
                   type="text"
-                  className="mb-3"
-                  placeholder="Enter shop headline"
-                  {...register("headline")}
+                  placeholder="your-shop-name"
+                  {...register("slug", {
+                    required: "Please enter slug",
+                    setValueAs: setEmptyOrString
+                  })}
+                  error={errors.slug?.message}
                 />
-                {/* <Input
-                label="Slug *"
-                id="slugInput"
-                name="slug"
-                type="text"
-                placeholder="your-shop-name"
-                value={props.values.slug ?? ""}
-                onChange={props.handleChange}
-                error={props.errors.slug}
-              /> */}
               </div>
             </div>
             <div className="row g-4">
@@ -116,6 +118,14 @@ const BasicInformation = (props: FormProps) => {
                 </div>
               </div>
               <div className="order-3 order-lg-4 order-md-3 order-1 col-lg-6">
+                <Input
+                  label="Headline"
+                  id="headlineInput"
+                  type="text"
+                  className="mb-3"
+                  placeholder="Enter shop headline"
+                  {...register("headline")}
+                />
                 <Input
                   label="Address"
                   id="addressInput"

@@ -72,6 +72,14 @@ export function setEmptyOrNumber(v: any) {
   return undefined;
 }
 
+export function setStringToSlug(v?: string) {
+  return v
+    ?.trim()
+    .replaceAll(/[^\w-\s]*/g, "")
+    .replaceAll(/\s+/g, "-")
+    .toLowerCase();
+}
+
 export function buildQueryParams(params: any) {
   if (typeof params !== "object" || params instanceof Array) {
     return "";

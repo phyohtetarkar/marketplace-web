@@ -47,6 +47,8 @@ export async function updateShopGeneral(value: ShopGeneral) {
   });
 
   await validateResponse(resp);
+
+  return resp.json() as Promise<Shop>;
 }
 
 export async function updateShopContact(value: ShopContact) {

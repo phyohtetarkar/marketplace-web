@@ -4,10 +4,15 @@ import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ShopDetailContext } from "../../common/contexts";
 import { ShopGeneral } from "../../common/models";
-import { parseErrorResponse, setEmptyOrString } from "../../common/utils";
+import {
+  parseErrorResponse,
+  setEmptyOrString,
+  setStringToSlug
+} from "../../common/utils";
 import { updateShopGeneral } from "../../services/ShopService";
 import { Input } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
+import ProgressButton from "../ProgressButton";
 
 const DynamicEditor = dynamic<RichTextEditorInputProps>(
   () => import("../../components/forms").then((f) => f.RichTextEditor),
@@ -38,10 +43,10 @@ function ShopGeneralEdit() {
 
   const save = async (values: ShopGeneral) => {
     try {
-      await updateShopGeneral(values);
+      const shop = await updateShopGeneral(values);
       router.replace({
         href: `/shops/[slug]`,
-        query: { slug: values.slug, tab: "settings" }
+        query: { slug: shop.slug, tab: "settings" }
       });
     } catch (error) {
       const msg = parseErrorResponse(error);
@@ -63,7 +68,7 @@ function ShopGeneralEdit() {
         </div>
         <div className="card-body">
           <div className="row g-3 mb-3">
-            <div className="col-lg-12">
+            <div className="col-lg-6">
               <Input
                 label="Name *"
                 id="nameInput"
@@ -71,23 +76,29 @@ function ShopGeneralEdit() {
                 placeholder="Enter shop name"
                 {...register("name", {
                   setValueAs: setEmptyOrString,
-                  required: "Please enter shop name"
+                  required: "Please enter shop name",
+                  onChange: (evt) => {
+                    setValue("slug", setStringToSlug(evt.target.value), {
+                      shouldValidate: !!errors.slug?.message
+                    });
+                  }
                 })}
                 error={errors.name?.message}
               />
             </div>
-            {/* <div className="col-lg-6">
+            <div className="col-lg-6">
               <Input
                 label="Slug *"
                 id="slugInput"
-                name="slug"
                 type="text"
-                placeholder="https://shoppingcenter.com/page/slug"
-                value={formik.values.slug}
-                onChange={formik.handleChange}
-                error={formik.errors.slug}
+                placeholder="your-shop-name"
+                {...register("slug", {
+                  setValueAs: setEmptyOrString,
+                  required: "Please enter slug"
+                })}
+                error={errors.slug?.message}
               />
-            </div> */}
+            </div>
           </div>
           <div className="row g-3 mb-3">
             <div className="order-5 order-lg-3 order-md-5 col-lg-6">
@@ -124,20 +135,13 @@ function ShopGeneralEdit() {
         </div>
         <div className="card-footer py-2h">
           <div className="clearfix">
-            <button
+            <ProgressButton
               type="submit"
-              className="btn btn-primary float-end"
-              disabled={isSubmitting}
+              loading={isSubmitting}
+              className="float-end"
             >
-              {isSubmitting && (
-                <span
-                  className="spinner-border spinner-border-sm me-2"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-              )}
               Update
-            </button>
+            </ProgressButton>
           </div>
         </div>
       </div>
