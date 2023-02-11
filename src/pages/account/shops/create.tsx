@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEvent, CSSProperties, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Shop } from "../../../common/models";
 import { parseErrorResponse, setEmptyOrString } from "../../../common/utils";
@@ -159,31 +159,36 @@ const ShopMedia = (props: FormProps) => {
     const name = event.target.name;
     if (files && files.length > 0) {
       let file = files[0];
+      const fileSize = file.size / (1024 * 1024);
       //props.setFieldValue?.(`${name}Image`, file);
 
-      var reader = new FileReader();
-      reader.onload = function (e) {
-        //props.setFieldValue?.(name, e.target?.result);
-        const result = e.target?.result;
-        if (!result) {
-          return;
-        }
+      if (fileSize <= 0.8) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          //props.setFieldValue?.(name, e.target?.result);
+          const result = e.target?.result;
+          if (!result) {
+            return;
+          }
+
+          if (name === "logo" && logoRef.current) {
+            setLogo(result as string);
+          } else if (name === "cover" && coverRef.current) {
+            setCover(result as string);
+          }
+        };
+        reader.readAsDataURL(file);
 
         if (name === "logo" && logoRef.current) {
-          setLogo(result as string);
+          setLogoImage(file);
+          //logoRef.current.value = "";
         } else if (name === "cover" && coverRef.current) {
-          setCover(result as string);
+          setCoverImage(file);
+          //coverRef.current.value = "";
         }
-      };
-      reader.readAsDataURL(file);
-
-      if (name === "logo" && logoRef.current) {
-        setLogoImage(file);
-        logoRef.current.value = "";
-      } else if (name === "cover" && coverRef.current) {
-        setCoverImage(file);
-        coverRef.current.value = "";
       }
+
+      event.target.value = "";
     }
   }
 
@@ -229,8 +234,10 @@ const ShopMedia = (props: FormProps) => {
                 <label className="form-label">Cover image</label>
                 <div
                   role="button"
-                  className="ratio rounded border position-relative bg-light"
-                  style={{ "--bs-aspect-ratio": "20%" } as CSSProperties}
+                  className="rounded border position-relative bg-light"
+                  style={{
+                    minHeight: 200
+                  }}
                   onClick={() => {
                     coverRef.current?.click();
                   }}
@@ -402,10 +409,8 @@ function CreateShop() {
               <nav aria-label="breadcrumb col-12">
                 <ol className="breadcrumb mb-1">
                   <li className="breadcrumb-item">
-                    <Link href="/profile/shops">
-                      <a href="#" className="text-light">
-                        Shops
-                      </a>
+                    <Link href="/account/shops">
+                      <a className="text-light">Shops</a>
                     </Link>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
@@ -416,7 +421,7 @@ function CreateShop() {
             </div>
             <div className="col-lg-6">
               <div className="hstack h-100">
-                <Link href="/profile/shops">
+                <Link href="/account/shops">
                   <a className="btn btn-light text-dark py-2 px-3 ms-lg-auto">
                     Back to shops
                   </a>

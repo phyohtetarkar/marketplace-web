@@ -1,7 +1,6 @@
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import Link from "next/link";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useSWRConfig } from "swr";
@@ -26,6 +25,7 @@ import { AutocompleteSelect, Input } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import Loading from "../Loading";
 import Modal from "../Modal";
+import ProgressButton from "../ProgressButton";
 import OptionEdit, { Option } from "./OptionEdit";
 import VaraintEdit from "./VariantEdit";
 
@@ -323,20 +323,13 @@ function ProductEdit({
                   </button>
                   <Dropdown
                     toggle={
-                      <button
-                        type="button"
-                        className="btn btn-accent dropdown-toggle ms-2 px-3 py-2"
-                        disabled={isSubmitting}
+                      <ProgressButton
+                        loading={isSubmitting}
+                        variant="accent"
+                        className="ms-2 px-3 py-2 dropdown-toggle"
                       >
-                        {isSubmitting && (
-                          <span
-                            className="spinner-border spinner-border-sm me-2"
-                            role="status"
-                            aria-hidden="true"
-                          ></span>
-                        )}
                         Save as
-                      </button>
+                      </ProgressButton>
                     }
                     className="dropdown-menu-end"
                   >

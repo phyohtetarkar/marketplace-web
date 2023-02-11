@@ -10,6 +10,7 @@ import {
 } from "../../common/utils";
 import { saveDiscount } from "../../services/DiscountService";
 import { Input } from "../forms";
+import ProgressButton from "../ProgressButton";
 
 interface DiscountEditProps {
   discount?: Discount;
@@ -130,25 +131,16 @@ function DiscountEdit(props: DiscountEditProps) {
         >
           Cancel
         </button>
-        <button
-          type="button"
-          className="btn btn-primary"
-          disabled={isSubmitting}
+        <ProgressButton
+          loading={isSubmitting}
           onClick={() => {
             handleSubmit(async (data) => {
               await save(data);
             })();
           }}
         >
-          {isSubmitting && (
-            <span
-              className="spinner-border spinner-border-sm me-2"
-              role="status"
-              aria-hidden="true"
-            ></span>
-          )}
           Save
-        </button>
+        </ProgressButton>
       </div>
     </>
   );

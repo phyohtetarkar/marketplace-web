@@ -3,7 +3,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { PageData, Shop } from "../../common/models";
+import Alert from "../../components/Alert";
 import { Input } from "../../components/forms";
+import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
 import ShopGridItem from "../../components/shop/ShopGridItem";
 import { findShops } from "../../services/ShopService";
@@ -11,9 +13,10 @@ import { findShops } from "../../services/ShopService";
 function Shops() {
   const router = useRouter();
 
-  const { data, error, isLoading } = useSWR<PageData<Shop>, Error>(
+  const { data, error, isLoading } = useSWR(
     ["/shops", router.query],
-    ([url, q]) => findShops({ q: q.q, page: q.page }),
+    ([url, q]) =>
+      findShops({ q: q.q as string, page: parseInt(q.page as string) }),
     {
       revalidateOnFocus: false
     }
@@ -21,13 +24,14 @@ function Shops() {
 
   const content = () => {
     if (isLoading) {
+      return <Loading />;
     }
 
     if (error) {
     }
 
     if (data?.contents.length === 0) {
-      return <div className="text-center text-muted p-3">No shops found</div>;
+      return <Alert message="No shop found" />;
     }
 
     return (

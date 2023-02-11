@@ -95,7 +95,7 @@ function AccountMenu({ onNavClick }: { onNavClick?: () => void }) {
         menuClassName="dropdown-menu-end"
       >
         <li>
-          <Link href="/profile/overview">
+          <Link href="/account/overview">
             <a
               className="dropdown-item text-decoration-none"
               onClick={(e) => onNavClick && onNavClick()}
@@ -105,7 +105,7 @@ function AccountMenu({ onNavClick }: { onNavClick?: () => void }) {
           </Link>
         </li>
         <li>
-          <Link href="/profile/favorites">
+          <Link href="/account/favorites">
             <a
               className="dropdown-item text-decoration-none"
               onClick={(e) => onNavClick && onNavClick()}
@@ -115,7 +115,7 @@ function AccountMenu({ onNavClick }: { onNavClick?: () => void }) {
           </Link>
         </li>
         <li>
-          <Link href="/profile/orders">
+          <Link href="/account/orders">
             <a
               className="dropdown-item text-decoration-none"
               onClick={(e) => onNavClick && onNavClick()}

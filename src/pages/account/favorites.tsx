@@ -10,13 +10,6 @@ import { ProductFavoriteItem } from "../../components/product";
 import { getFavoriteProducts } from "../../services/FavoriteProductService";
 
 function MyFavorites() {
-  // const authContext = useContext(AuthenticationContext);
-  // const [userId, setUserId] = useState();
-
-  // const { data, error } = useSWR([userId], (id) =>
-  //   id ? getFavoriteProductsByUser({ userId: id }) : []
-  // );
-
   const [page, setPage] = useState(0);
 
   const { data, error, isLoading } = useSWR(

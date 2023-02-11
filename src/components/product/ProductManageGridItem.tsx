@@ -14,7 +14,7 @@ function ProductManageGridItem({
   onEditClick
 }: ProductManageGridItemProps) {
   let popular;
-  let available;
+  let outOfStock;
   let draft;
 
   let price = <>{formatPrice(value.price ?? 0)} Ks</>;
@@ -47,13 +47,13 @@ function ProductManageGridItem({
   //     );
   //   }
 
-  //   if (!data.available) {
-  //     available = (
-  //       <div className="bg-dark opacity-75 py-2 text-light position-absolute text-center bottom-0 start-0 end-0">
-  //         Out Of Stock
-  //       </div>
-  //     );
-  //   }
+  if ((value.stockLeft ?? 0) === 0) {
+    outOfStock = (
+      <div className="bg-dark opacity-75 py-2 text-light position-absolute text-center bottom-0 start-0 end-0">
+        Out Of Stock
+      </div>
+    );
+  }
 
   // if (value.discount) {
   //   price = (
@@ -86,7 +86,7 @@ function ProductManageGridItem({
                 priority
               />
             </div>
-            {available && available}
+            {outOfStock && outOfStock}
             {popular && popular}
             {draft && draft}
           </div>

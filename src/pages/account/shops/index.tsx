@@ -1,25 +1,24 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useState } from "react";
 import useSWR from "swr";
-import { PageData, Shop } from "../../../common/models";
 import { withAuthentication } from "../../../common/WithAuthentication";
 import AccountMenu from "../../../components/account/AccountMenu";
+import Alert from "../../../components/Alert";
 import Loading from "../../../components/Loading";
 import Pagination from "../../../components/Pagination";
 import { ShopManageGridItem } from "../../../components/shop";
 import { getMyShops } from "../../../services/ShopService";
 
 function MyShops() {
-  const router = useRouter();
+  const [page, setPage] = useState(0);
 
-  const { page } = router.query;
-
-  const { data, error, isLoading, isValidating } = useSWR<
-    PageData<Shop>,
-    Error
-  >(["/my-shops", page], ([url, p]) => getMyShops(p), {
-    revalidateOnFocus: false
-  });
+  const { data, error, isLoading, isValidating } = useSWR(
+    ["/my-shops", page],
+    ([url, p]) => getMyShops(p),
+    {
+      revalidateOnFocus: false
+    }
+  );
 
   const content = () => {
     if (isLoading || isValidating) {
@@ -30,7 +29,7 @@ function MyShops() {
     }
 
     if (data?.contents.length === 0) {
-      return <div className="text-center text-muted p-3">No shops found</div>;
+      return <Alert message="No shops found" />;
     }
 
     return (
@@ -50,12 +49,7 @@ function MyShops() {
           <Pagination
             currentPage={data?.currentPage}
             totalPage={data?.totalPage}
-            onChange={(p) => {
-              router.push({
-                pathname: "/profile/shops",
-                query: { page: p }
-              });
-            }}
+            onChange={setPage}
           />
         </div>
       </>
@@ -99,7 +93,7 @@ function MyShops() {
                       </Select>
                     </div> */}
                     <div className="col-auto d-none d-sm-block">
-                      <Link href="/profile/shops/create">
+                      <Link href="/account/shops/create">
                         <a className="ms-auto btn btn-primary h-100 hstack py-2h">
                           Create new
                         </a>

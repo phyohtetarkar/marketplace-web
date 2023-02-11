@@ -8,6 +8,7 @@ import { withAuthentication } from "../../common/WithAuthentication";
 import AccountMenu from "../../components/account/AccountMenu";
 import { Input } from "../../components/forms";
 import Loading from "../../components/Loading";
+import ProgressButton from "../../components/ProgressButton";
 import { updateProfile } from "../../services/UserService";
 
 function ProfileSetting() {
@@ -83,7 +84,7 @@ function ProfileSetting() {
                             />
                           </div>
                           <div className="col-lg-6">
-                            <div className="hstack mb-2 gap-2">
+                            <div className="hstack gap-2 mb-2">
                               <label
                                 htmlFor="phoneInput"
                                 className="form-label mb-0"
@@ -93,12 +94,9 @@ function ProfileSetting() {
                               <div className="d-flex align-items-center">
                                 <div className="vr"></div>
                               </div>
-                              <button
-                                type="button"
-                                className="btn btn-link text-decoration-none small"
-                              >
+                              <div role="button" className="link-primary small">
                                 Change
-                              </button>
+                              </div>
                             </div>
                             <Input
                               id="phoneInput"
@@ -137,16 +135,16 @@ function ProfileSetting() {
                       </div>
                     </div>
                     <div className="d-flex justify-content-center order-lg-2 col-lg-4">
-                      <div className="mt-3 mb-2">
+                      <div className="mb-2">
                         <div
-                          className="position-relative border overflow-hidden rounded-circle"
+                          className="position-relative overflow-hidden rounded-circle"
                           style={{ width: 128, height: 128 }}
                         >
                           <Image
                             src={user?.image ?? "/images/profile.png"}
                             layout="fill"
                             alt="User Photo"
-                            className="rounded-circle"
+                            className="rounded-circle border"
                             objectFit="cover"
                             priority
                           />
@@ -157,21 +155,14 @@ function ProfileSetting() {
                       </div>
                     </div>
                     <br />
-                    <div className="col order-3 mt-3">
-                      <button
+                    <div className="col order-3 mt-4 d-flex">
+                      <ProgressButton
                         type="submit"
-                        className="btn btn-primary p-2 flex-grow-1 flex-md-grow-0"
-                        disabled={isSubmitting}
+                        className="flex-grow-1 flex-md-grow-0 px-3 py-2"
+                        loading={isSubmitting}
                       >
-                        {isSubmitting && (
-                          <span
-                            className="spinner-border spinner-border-sm me-2"
-                            role="status"
-                            aria-hidden="true"
-                          ></span>
-                        )}
                         Update profile
-                      </button>
+                      </ProgressButton>
                     </div>
                   </div>
                 </form>

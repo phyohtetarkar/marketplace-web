@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import { ReactNode, useState } from "react";
 import { ShopDetailContext } from "../../../common/contexts";
 import { Shop } from "../../../common/models";
-import { checkShopMember, getAPIBasePath } from "../../../common/utils";
+import { checkShopMember } from "../../../common/utils";
 import Dropdown from "../../../components/Dropdown";
 import { ShopDashboard, ShopSetting } from "../../../components/merchant";
 import { ProductEdit } from "../../../components/product";
@@ -217,18 +217,23 @@ function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
             <div className="shadow-sm rounded bg-white vstack overflow-hidden">
               <div
                 style={{
-                  width: "100%",
-                  height: 200
+                  width: "100%"
                 }}
                 className="position-relative"
               >
-                <Image
-                  src={shop.cover!}
-                  alt=""
-                  objectFit="cover"
-                  layout="fill"
-                  priority
-                />
+                <div
+                  style={{
+                    minHeight: 200
+                  }}
+                >
+                  <Image
+                    src={shop.cover!}
+                    alt=""
+                    objectFit="cover"
+                    layout="fill"
+                    priority
+                  />
+                </div>
                 {isMember && (
                   <Dropdown
                     toggle={

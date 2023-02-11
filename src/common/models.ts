@@ -71,7 +71,7 @@ export interface ShopContact {
   id?: number;
   shopId?: number;
   address?: string;
-  phones?: [string];
+  phones?: string[];
   latitude?: number;
   longitude?: number;
 }

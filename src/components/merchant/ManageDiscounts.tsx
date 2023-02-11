@@ -108,7 +108,7 @@ function ManageDiscounts({ shopId }: { shopId: number }) {
                           >
                             <li
                               role="button"
-                              className="my-dropdown-item"
+                              className="dropdown-item"
                               onClick={() => {
                                 setDiscount(d);
                                 setShowEdit(true);
@@ -116,13 +116,13 @@ function ManageDiscounts({ shopId }: { shopId: number }) {
                             >
                               Edit
                             </li>
-                            <li role="button" className="my-dropdown-item">
+                            <li role="button" className="dropdown-item">
                               Apply
                             </li>
                             <div className="dropdown-divider"></div>
                             <li
                               role="button"
-                              className="text-danger my-dropdown-item"
+                              className="text-danger dropdown-item"
                               onClick={() => {
                                 setDiscount(d);
                                 setShowConfirm(true);

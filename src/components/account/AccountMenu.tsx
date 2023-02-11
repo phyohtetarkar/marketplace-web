@@ -46,24 +46,24 @@ function AccountMenu({}) {
       </div>
       <div className="vstack gap-1">
         {menuLink({
-          href: "/profile/overview",
+          href: "/account/overview",
           title: "Profile overview",
           icon: <UserIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
-          href: "/profile/favorites",
+          href: "/account/favorites",
           title: "My favorites",
           icon: <HeartIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
-          href: "/profile/orders",
+          href: "/account/orders",
           title: "My orders",
           icon: (
             <ClipboardIcon className="me-2" strokeWidth={2} width={iconSize} />
           )
         })}
         {menuLink({
-          href: "/profile/shops",
+          href: "/account/shops",
           title: "My shops",
           icon: (
             <BuildingStorefrontIcon
@@ -74,7 +74,7 @@ function AccountMenu({}) {
           )
         })}
         {menuLink({
-          href: "/profile/setting",
+          href: "/account/setting",
           title: "Profile setting",
           icon: (
             <Cog8ToothIcon className="me-2" strokeWidth={2} width={iconSize} />

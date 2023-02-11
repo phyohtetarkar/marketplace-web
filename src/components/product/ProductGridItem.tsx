@@ -17,7 +17,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
   const [addingToFavorite, setAddingToFavorite] = useState(false);
 
   let popular;
-  let available;
+  let outOfStock;
   // let image = product.images![0]!;
   let price = <>{formatPrice(value.price ?? 0)} Ks</>;
 
@@ -36,13 +36,13 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
   //     );
   //   }
 
-  //   if (!data.available) {
-  //     available = (
-  //       <div className="bg-dark opacity-75 py-2 text-light position-absolute text-center bottom-0 start-0 end-0">
-  //         Out Of Stock
-  //       </div>
-  //     );
-  //   }
+  if ((value.stockLeft ?? 0) === 0) {
+    outOfStock = (
+      <div className="bg-dark opacity-75 py-2 text-light position-absolute text-center bottom-0 start-0 end-0">
+        Out Of Stock
+      </div>
+    );
+  }
 
   //   if (data.isDiscount) {
   //     price = (
@@ -75,7 +75,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
                 priority
               />
             </div>
-            {available && available}
+            {outOfStock && outOfStock}
             {popular && popular}
           </div>
         </a>
@@ -106,7 +106,11 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
 
           <div className="hstack align-items-stretch gap-2">
             {value.id && !value.withVariant && (
-              <AddToCartButton productId={value.id} className="flex-grow-1" />
+              <AddToCartButton
+                productId={value.id}
+                className="flex-grow-1"
+                disabled={!!outOfStock}
+              />
             )}
             {value.id && value.withVariant && (
               <Link href={`/products/${value.slug}`}>

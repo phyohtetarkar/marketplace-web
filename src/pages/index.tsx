@@ -29,15 +29,6 @@ const _shops = [
   "MK"
 ];
 
-const getData = async () => {
-  return {
-    banners: [],
-    categories: [],
-    shops: [],
-    newArrivals: []
-  };
-};
-
 const Home = ({ data }: { data: HomeData }) => {
   return (
     <div className="container py-3">

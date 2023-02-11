@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Modal from "./Modal";
+import ProgressButton from "./ProgressButton";
 
 interface ConfirmModalProps {
   show: boolean;
@@ -29,10 +30,8 @@ function ConfirmModal(props: ConfirmModalProps) {
               >
                 Cancel
               </button>
-              <button
-                type="button"
-                className="btn btn-primary"
-                disabled={loading}
+              <ProgressButton
+                loading={loading}
                 onClick={() => {
                   setLoading(true);
                   onConfirm?.()
@@ -43,15 +42,8 @@ function ConfirmModal(props: ConfirmModalProps) {
                     });
                 }}
               >
-                {loading && (
-                  <span
-                    className="spinner-border spinner-border-sm me-2"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>
-                )}
                 Proceed
-              </button>
+              </ProgressButton>
             </div>
           </>
         );
