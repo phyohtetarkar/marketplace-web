@@ -21,7 +21,7 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
   }
 );
 
-function ShopGeneralEdit() {
+function ShopGeneralEdit({ handleClose }: { handleClose?: () => void }) {
   const shopContext = useContext(ShopDetailContext);
   const router = useRouter();
 
@@ -46,7 +46,7 @@ function ShopGeneralEdit() {
       const shop = await updateShopGeneral(values);
       router.replace({
         href: `/shops/[slug]`,
-        query: { slug: shop.slug, tab: "settings" }
+        query: { slug: shop.slug }
       });
     } catch (error) {
       const msg = parseErrorResponse(error);
@@ -54,98 +54,99 @@ function ShopGeneralEdit() {
     }
   };
   return (
-    <form
-      onSubmit={(evt) => {
-        evt.preventDefault();
-        handleSubmit(async (data) => {
-          await save(data);
-        })();
-      }}
-    >
-      <div className="card shadow-sm">
-        <div className="card-header py-3 bg-white border-bottom">
-          <h4 className="mb-0">General</h4>
-        </div>
-        <div className="card-body">
-          <div className="row g-3 mb-3">
-            <div className="col-lg-6">
-              <Input
-                label="Name *"
-                id="nameInput"
-                type="text"
-                placeholder="Enter shop name"
-                {...register("name", {
-                  setValueAs: setEmptyOrString,
-                  required: "Please enter shop name",
-                  onChange: (evt) => {
-                    setValue("slug", setStringToSlug(evt.target.value), {
-                      shouldValidate: !!errors.slug?.message
-                    });
-                  }
-                })}
-                error={errors.name?.message}
-              />
-            </div>
-            <div className="col-lg-6">
-              <Input
-                label="Slug *"
-                id="slugInput"
-                type="text"
-                placeholder="your-shop-name"
-                {...register("slug", {
-                  setValueAs: setEmptyOrString,
-                  required: "Please enter slug"
-                })}
-                error={errors.slug?.message}
-              />
-            </div>
-          </div>
-          <div className="row g-3 mb-3">
-            <div className="order-5 order-lg-3 order-md-5 col-lg-6">
-              <label className="form-label">About us</label>
-              <Controller
-                control={control}
-                name="about"
-                render={({ field }) => {
-                  return (
-                    <DynamicEditor
-                      id="aboutInput"
-                      placeholder="Enter about us..."
-                      minHeight={300}
-                      value={field.value ?? ""}
-                      onEditorChange={(value) => {
-                        setValue("about", value);
-                      }}
-                    />
-                  );
-                }}
-              />
-            </div>
-            <div className="order-3 order-lg-4 order-md-3 order-1 col-lg-6">
-              <Input
-                label="Headline"
-                id="headlineInput"
-                type="text"
-                className="mb-3"
-                placeholder="Enter shop headline"
-                {...register("headline")}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="card-footer py-2h">
-          <div className="clearfix">
-            <ProgressButton
-              type="submit"
-              loading={isSubmitting}
-              className="float-end"
-            >
-              Update
-            </ProgressButton>
-          </div>
-        </div>
+    <>
+      <div className="modal-header">
+        <h4 className="modal-title">General info</h4>
+        <button
+          type="button"
+          className="btn-close shadow-none"
+          aria-label="Close"
+          onClick={handleClose}
+        ></button>
       </div>
-    </form>
+      <div className="modal-body">
+        {/* <div className="card-header py-3 bg-white border-bottom">
+          <h4 className="mb-0">General</h4>
+        </div> */}
+        <div className="row g-3">
+          <div className="col-lg-6">
+            <Input
+              label="Name *"
+              id="nameInput"
+              type="text"
+              placeholder="Enter shop name"
+              {...register("name", {
+                setValueAs: setEmptyOrString,
+                required: "Please enter shop name",
+                onChange: (evt) => {
+                  setValue("slug", setStringToSlug(evt.target.value), {
+                    shouldValidate: !!errors.slug?.message
+                  });
+                }
+              })}
+              error={errors.name?.message}
+            />
+          </div>
+          <div className="col-lg-6">
+            <Input
+              label="Slug *"
+              id="slugInput"
+              type="text"
+              placeholder="your-shop-name"
+              {...register("slug", {
+                setValueAs: setEmptyOrString,
+                required: "Please enter slug"
+              })}
+              error={errors.slug?.message}
+            />
+          </div>
+          <div className="col-12">
+            <Input
+              label="Headline"
+              id="headlineInput"
+              type="text"
+              placeholder="Enter shop headline"
+              {...register("headline")}
+            />
+          </div>
+          <div className="col-12">
+            <label className="form-label">About us</label>
+            <Controller
+              control={control}
+              name="about"
+              render={({ field }) => {
+                return (
+                  <DynamicEditor
+                    id="aboutInput"
+                    placeholder="Enter about us..."
+                    minHeight={300}
+                    value={field.value ?? ""}
+                    onEditorChange={(value) => {
+                      setValue("about", value);
+                    }}
+                  />
+                );
+              }}
+            />
+          </div>
+        </div>
+        {/* <div className="card-footer py-2h">
+            <div className="clearfix"></div>
+          </div> */}
+      </div>
+      <div className="modal-footer">
+        <ProgressButton
+          loading={isSubmitting}
+          onClick={() => {
+            handleSubmit(async (data) => {
+              await save(data);
+            })();
+          }}
+        >
+          Update
+        </ProgressButton>
+      </div>
+    </>
   );
 }
 

@@ -166,3 +166,8 @@ export interface CartItem {
   product?: Product;
   variant?: ProductVariant;
 }
+
+export interface Location {
+  latitude: number;
+  longitude: number;
+}

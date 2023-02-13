@@ -183,13 +183,24 @@ svg {
   background-color: var(--bs-red);
 } */
 
-.my-dropdown-item {
+.dropdown-item-primary {
   color: #444;
   padding: 0.5rem 1rem;
   white-space: nowrap;
 }
 
-.my-dropdown-item:hover {
+.dropdown-item-primary:hover {
+  color: var(--bs-light);
+  background-color: var(--bs-primary);
+}
+
+.dropdown-item-secondary {
+  color: #444;
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+}
+
+.dropdown-item-secondary:hover {
   color: var(--bs-primary);
   background-color: var(--bs-secondary);
 }

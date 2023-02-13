@@ -7,7 +7,7 @@ import { updateShopContact } from "../../services/ShopService";
 import { Input, TagInput } from "../forms";
 import ProgressButton from "../ProgressButton";
 
-function ShopContactEdit() {
+function ShopContactEdit({ handleClose }: { handleClose?: () => void }) {
   const shopContext = useContext(ShopDetailContext);
 
   const {
@@ -31,6 +31,7 @@ function ShopContactEdit() {
     try {
       console.log(values);
       await updateShopContact(values);
+      handleClose?.();
     } catch (error) {
       const msg = parseErrorResponse(error);
       console.log(error);
@@ -38,20 +39,19 @@ function ShopContactEdit() {
   };
 
   return (
-    <form
-      onSubmit={(evt) => {
-        evt.preventDefault();
-        handleSubmit(async (data) => {
-          await save(data);
-        })();
-      }}
-    >
-      <div className="card shadow-sm">
-        <div className="card-header bg-white py-3 border-bottom">
-          <h4 className="mb-0">Contact</h4>
-        </div>
-        <div className="card-body">
-          <div className="mb-3">
+    <>
+      <div className="modal-header">
+        <h4 className="modal-title">Contact</h4>
+        <button
+          type="button"
+          className="btn-close shadow-none"
+          aria-label="Close"
+          onClick={handleClose}
+        ></button>
+      </div>
+      <div className="modal-body">
+        <div className="row g-3">
+          <div className="col-12">
             <label className="form-label">Phones</label>
             <Controller
               control={control}
@@ -70,64 +70,68 @@ function ShopContactEdit() {
             />
           </div>
 
-          <div className="mb-3">
+          <div className="col-12">
             <Input
               label="Address"
               placeholder="Enter shop address"
               {...register("address")}
             />
           </div>
-          <div className="mb-3">
-            <label className="form-label">Location</label>
-            <div className="row g-3">
-              <div className="col-md-6">
-                <Input
-                  placeholder="Enter latitude"
-                  error={errors.latitude?.message}
-                  {...register("latitude", {
-                    setValueAs: setEmptyOrNumber,
-                    validate: (v) => {
-                      const floatRegex = "^([0-9]*[.])?[0-9]+$";
-                      if (!`${v}`.match(floatRegex)) {
-                        return "Invalid value";
-                      }
-                      return true;
+
+          <div className="col-lg-6">
+            <Input
+              label="Latitude"
+              placeholder="Enter latitude"
+              error={errors.latitude?.message}
+              {...register("latitude", {
+                setValueAs: setEmptyOrNumber,
+                validate: (v) => {
+                  if (v) {
+                    const floatRegex = "^([0-9]*[.])?[0-9]+$";
+                    if (!`${v}`.match(floatRegex)) {
+                      return "Invalid value";
                     }
-                  })}
-                />
-              </div>
-              <div className="col-md-6">
-                <Input
-                  placeholder="Enter longitude"
-                  error={errors.longitude?.message}
-                  {...register("longitude", {
-                    setValueAs: setEmptyOrNumber,
-                    validate: (v) => {
-                      const floatRegex = "^([0-9]*[.])?[0-9]+$";
-                      if (!`${v}`.match(floatRegex)) {
-                        return "Invalid value";
-                      }
-                      return true;
-                    }
-                  })}
-                />
-              </div>
-            </div>
+                  }
+                  return true;
+                }
+              })}
+            />
           </div>
-        </div>
-        <div className="card-footer py-2h">
-          <div className="clearfix">
-            <ProgressButton
-              type="submit"
-              loading={isSubmitting}
-              className="float-end"
-            >
-              Update
-            </ProgressButton>
+
+          <div className="col-lg-6">
+            <Input
+              label="Longitude"
+              placeholder="Enter longitude"
+              error={errors.longitude?.message}
+              {...register("longitude", {
+                setValueAs: setEmptyOrNumber,
+                validate: (v) => {
+                  if (v) {
+                    const floatRegex = "^([0-9]*[.])?[0-9]+$";
+                    if (!`${v}`.match(floatRegex)) {
+                      return "Invalid value";
+                    }
+                  }
+                  return true;
+                }
+              })}
+            />
           </div>
         </div>
       </div>
-    </form>
+      <div className="modal-footer">
+        <ProgressButton
+          loading={isSubmitting}
+          onClick={() => {
+            handleSubmit(async (data) => {
+              await save(data);
+            })();
+          }}
+        >
+          Update
+        </ProgressButton>
+      </div>
+    </>
   );
 }
 

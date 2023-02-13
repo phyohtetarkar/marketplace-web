@@ -2,7 +2,6 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import { PageData, Shop } from "../../common/models";
 import Alert from "../../components/Alert";
 import { Input } from "../../components/forms";
 import Loading from "../../components/Loading";

@@ -1,13 +1,30 @@
-function AboutUs({ value }: { value: string }) {
+import { ShopDetailContext } from "../../common/contexts";
+import ContactUs from "./ContactUs";
+
+function AboutUs() {
   return (
-    <div className="card shadow-sm">
-      <div className="card-header border-bottom bg-white py-2h">
-        <h4 className="mb-0">About us</h4>
-      </div>
-      <div className="card-body">
-        <div dangerouslySetInnerHTML={{ __html: value }}></div>
-      </div>
-    </div>
+    <ShopDetailContext.Consumer>
+      {(shop) => {
+        if (!shop) {
+          return null;
+        }
+        return (
+          <>
+            <div className="card shadow-sm mb-3">
+              <div className="card-header border-bottom bg-white py-3">
+                <h5 className="mb-0">About us</h5>
+              </div>
+              <div className="card-body">
+                <div
+                  dangerouslySetInnerHTML={{ __html: shop?.about ?? "" }}
+                ></div>
+              </div>
+            </div>
+            <ContactUs />
+          </>
+        );
+      }}
+    </ShopDetailContext.Consumer>
   );
 }
 

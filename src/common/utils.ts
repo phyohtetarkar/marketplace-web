@@ -143,6 +143,9 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
     return "Unauthorized";
   }
   if (error instanceof APIError) {
+    if (error.message === "server-error") {
+      return "Something went wrong, please try again";
+    }
     return error.message;
   }
   //console.log(error);

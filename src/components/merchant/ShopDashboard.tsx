@@ -56,7 +56,7 @@ function ShopDashboard() {
           </div>
         </div>
       </div>
-      <div className="row g-3">
+      {/* <div className="row g-3">
         <div className="col-lg-8">
           <div className="card h-100 shadow-sm">
             <div className="card-body">
@@ -71,7 +71,7 @@ function ShopDashboard() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

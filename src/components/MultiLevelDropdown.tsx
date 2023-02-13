@@ -1,5 +1,4 @@
 import { ReactNode, useRef, useState } from "react";
-import Popover from "./Popover";
 
 export const sampleList = [
   {
@@ -84,7 +83,7 @@ function MenuItem<T>(props: MenuItemProps<T> & { item: T }) {
   return (
     <div
       ref={itemRef}
-      className="my-dropdown-item"
+      className="dropdown-item-secondary"
       style={{ cursor: "default" }}
       onClick={(evt) => {
         if (itemRef.current === evt.target) {

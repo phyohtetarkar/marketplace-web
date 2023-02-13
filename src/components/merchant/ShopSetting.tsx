@@ -2,8 +2,7 @@ import { ReactNode, useContext, useState } from "react";
 import { ShopDetailContext } from "../../common/contexts";
 import Accordion from "../Accordion";
 import ManageDiscounts from "./ManageDiscounts";
-import ShopContactEdit from "./ShopContactEdit";
-import ShopGeneralEdit from "./ShopGeneralEdit";
+import ShopDashboard from "./ShopDashboard";
 
 interface MenuItemProps {
   title: string;
@@ -31,22 +30,15 @@ const MenuItem = (props: MenuItemProps) => {
 
 function ShopSetting() {
   const shopContext = useContext(ShopDetailContext);
-  const [activeMenu, setActiveMenu] = useState<string>("general");
+  const [activeMenu, setActiveMenu] = useState<string>("dashboard");
 
   const menus = (
     <div className="vstack gap-1">
       <MenuItem
-        title="General"
-        active={activeMenu === "general"}
+        title="Dashboard"
+        active={activeMenu === "dashboard"}
         onClick={() => {
-          setActiveMenu("general");
-        }}
-      />
-      <MenuItem
-        title="Contact"
-        active={activeMenu === "contact"}
-        onClick={() => {
-          setActiveMenu("contact");
+          setActiveMenu("dashboard");
         }}
       />
       <MenuItem
@@ -60,15 +52,11 @@ function ShopSetting() {
   );
 
   const content = () => {
-    if (activeMenu === "contact") {
-      return <ShopContactEdit />;
-    }
-
     if (activeMenu === "discounts") {
       return <ManageDiscounts shopId={shopContext?.id ?? 0} />;
     }
 
-    return <ShopGeneralEdit />;
+    return <ShopDashboard />;
   };
 
   return (
