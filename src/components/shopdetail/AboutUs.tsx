@@ -9,19 +9,23 @@ function AboutUs() {
           return null;
         }
         return (
-          <>
-            <div className="card shadow-sm mb-3">
-              <div className="card-header border-bottom bg-white py-3">
-                <h5 className="mb-0">About us</h5>
-              </div>
-              <div className="card-body">
-                <div
-                  dangerouslySetInnerHTML={{ __html: shop?.about ?? "" }}
-                ></div>
+          <div className="row g-3">
+            <div className="col-lg-8">
+              <div className="card shadow-sm">
+                <div className="card-header border-bottom bg-white py-3">
+                  <h5 className="mb-0">About us</h5>
+                </div>
+                <div className="card-body">
+                  <div
+                    dangerouslySetInnerHTML={{ __html: shop?.about ?? "" }}
+                  ></div>
+                </div>
               </div>
             </div>
-            <ContactUs />
-          </>
+            <div className="col-lg-4">
+              <ContactUs />
+            </div>
+          </div>
         );
       }}
     </ShopDetailContext.Consumer>

@@ -14,20 +14,23 @@ function ContactUs() {
               <h5 className="mb-0">Contact us</h5>
             </div>
             <div className="card-body">
-              <div className="row g-3">
-                <div className="col-lg-8">
+              <div className="row">
+                <div className="col-12">
                   <dl className="row mb-0">
                     <dt className="col-12 fw-medium">Address</dt>
                     <dd className="col-12 text-muted">
                       {shop.contact?.address}
                     </dd>
                     <dt className="col-12 fw-medium">Phone numbers</dt>
-                    <dd className="col-12 text-muted">
+                    <dd className="col-12 text-muted mb-0">
                       {shop.contact?.phones?.join(", ")}
                     </dd>
                   </dl>
                 </div>
-                <div className="col-lg-4">
+                <div className="col-12">
+                  <hr className="bg-dark-gray" />
+                </div>
+                <div className="col-12">
                   <MapView
                     location={{
                       latitude: 16.7983725,
