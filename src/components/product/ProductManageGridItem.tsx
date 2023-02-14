@@ -2,7 +2,7 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "../../common/models";
-import { formatPrice } from "../../common/utils";
+import { formatPrice, transformDiscount } from "../../common/utils";
 
 interface ProductManageGridItemProps {
   value: Product;
@@ -46,6 +46,17 @@ function ProductManageGridItem({
   //       </div>
   //     );
   //   }
+
+  if (value.discount) {
+    price = (
+      <>
+        <del className="text-muted small fw-normal me-1">
+          {formatPrice(value.price ?? 0)}&nbsp;Ks
+        </del>
+        {transformDiscount(value.discount, value.price)}&nbsp;Ks
+      </>
+    );
+  }
 
   if ((value.stockLeft ?? 0) === 0) {
     outOfStock = (

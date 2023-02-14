@@ -1,7 +1,7 @@
 import { ReactNode, useContext, useState } from "react";
 import { ShopDetailContext } from "../../common/contexts";
 import Accordion from "../Accordion";
-import ManageDiscounts from "./ManageDiscounts";
+import DiscountListing from "./DiscountListing";
 import ShopDashboard from "./ShopDashboard";
 
 interface MenuItemProps {
@@ -53,7 +53,7 @@ function ShopSetting() {
 
   const content = () => {
     if (activeMenu === "discounts") {
-      return <ManageDiscounts shopId={shopContext?.id ?? 0} />;
+      return <DiscountListing shopId={shopContext?.id ?? 0} />;
     }
 
     return <ShopDashboard />;

@@ -88,23 +88,27 @@ export async function existsShopBySlug(slug: String, excludeId: number) {
 }
 
 export async function isShopMember(shopId: number) {
-  const url = `${getAPIBasePath()}shop-members/${shopId}/check`;
+  try {
+    const url = `${getAPIBasePath()}shop-members/check?shop-id=${shopId}`;
 
-  const authHeader = await getAuthHeader();
+    const authHeader = await getAuthHeader();
 
-  if (!authHeader) {
-    return false;
-  }
-
-  const resp = await fetch(url, {
-    headers: {
-      Authorization: authHeader
+    if (!authHeader) {
+      return false;
     }
-  });
 
-  await validateResponse(resp);
+    const resp = await fetch(url, {
+      headers: {
+        Authorization: authHeader
+      }
+    });
 
-  return resp.json() as Promise<boolean>;
+    if (resp.ok) {
+      return resp.json() as Promise<boolean>;
+    }
+  } catch (error) {}
+
+  return false;
 }
 
 export async function getMyShops(page?: number) {

@@ -12,6 +12,7 @@ export interface ProductQuery {
   q?: String;
   "category-slug"?: string;
   "shop-id"?: number;
+  "discount-id"?: number;
   "max-price"?: number;
   brand?: string[];
   status?: "PUBLISHED" | "DRAFT" | "DENIED" | string;

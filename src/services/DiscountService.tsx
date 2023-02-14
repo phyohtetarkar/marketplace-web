@@ -34,6 +34,32 @@ export async function deleteDiscount(id: number) {
   await validateResponse(resp);
 }
 
+export async function applyDiscount(discountId: number, productIds: [number]) {
+  const url = `${getAPIBasePath()}${basePath}/${discountId}/apply`;
+  const resp = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(productIds),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: await getAuthHeader()
+    }
+  });
+
+  await validateResponse(resp);
+}
+
+export async function removeDiscount(discountId: number, productId: number) {
+  const url = `${getAPIBasePath()}${basePath}/${discountId}/remove?product-id=${productId}`;
+  const resp = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: await getAuthHeader()
+    }
+  });
+
+  await validateResponse(resp);
+}
+
 export async function getDiscountById(id: number) {
   const url = `${getAPIBasePath()}${basePath}/${id}`;
   const resp = await fetch(url, {

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../../common/contexts";
 import { Product } from "../../common/models";
-import { formatPrice } from "../../common/utils";
+import { formatPrice, transformDiscount } from "../../common/utils";
 import AddToCartButton from "./AddToCartButton";
 import AddToFavoriteButton from "./AddToFavoriteButton";
 
@@ -44,18 +44,16 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
     );
   }
 
-  //   if (data.isDiscount) {
-  //     price = (
-  //       <>
-  //         {transformDiscount(data.price, data.discount)}&nbsp;
-  //         {localize("kyat")}
-  //         <del className="text-muted small fw-normal ms-1">
-  //           {formatPrice(data.price)}&nbsp;
-  //           {localize("kyat")}
-  //         </del>
-  //       </>
-  //     );
-  //   }
+  if (value.discount) {
+    price = (
+      <>
+        <del className="text-muted small fw-normal me-1">
+          {formatPrice(value.price ?? 0)}&nbsp;Ks
+        </del>
+        {transformDiscount(value.discount, value.price)}&nbsp;Ks
+      </>
+    );
+  }
 
   return (
     <div className="card h-100 border-0 shadow-sm">

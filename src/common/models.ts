@@ -3,6 +3,7 @@ export interface PageData<T> {
   currentPage: number;
   totalPage: number;
   pageSize: number;
+  totalElements: number;
 }
 
 export interface AuthUser {

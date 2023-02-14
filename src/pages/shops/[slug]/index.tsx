@@ -10,10 +10,9 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { ShopDetailContext } from "../../../common/contexts";
 import { Shop } from "../../../common/models";
-import { checkShopMember } from "../../../common/utils";
 import Dropdown from "../../../components/Dropdown";
 import {
   ShopContactEdit,
@@ -31,7 +30,7 @@ import {
 import ContactUs from "../../../components/shopdetail/ContactUs";
 import Tabs from "../../../components/Tabs";
 import { ProductQuery } from "../../../services/ProductService";
-import { getShopBySlug } from "../../../services/ShopService";
+import { getShopBySlug, isShopMember } from "../../../services/ShopService";
 
 type PageTab =
   | "products"
@@ -44,7 +43,7 @@ type PageTab =
 
 type EditTab = "general" | "contact";
 
-function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
+function ShopHome({ shop }: { shop: Shop }) {
   const router = useRouter();
 
   const { tab } = router.query;
@@ -52,11 +51,13 @@ function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
   const [editTab, setEditTab] = useState<EditTab>();
 
   const [activeTab, setActiveTab] = useState<PageTab | undefined>(
-    tab as PageTab
+    (tab as PageTab) ?? "products"
   );
 
   const [pendingProductId, setPendingProductId] = useState<string>();
   const [pendingQuery, setPendingQuery] = useState<ProductQuery>();
+
+  const [isMember, setMember] = useState<boolean>();
 
   const iconSize = 20;
 
@@ -72,13 +73,13 @@ function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
   //   }
   // }, [router]);
 
-  // useEffect(() => {
-  //   isShopMember(shop.id ?? 0)
-  //     .then(setIsMember)
-  //     .catch((error) => {
-  //       setIsMember(false);
-  //     });
-  // }, [shop]);
+  useEffect(() => {
+    isShopMember(shop.id ?? 0)
+      .then(setMember)
+      .catch((error) => {
+        setMember(false);
+      });
+  }, [shop]);
 
   function menuLink({
     href,
@@ -147,6 +148,24 @@ function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
 
   const activeContent = () => {
     switch (activeTab) {
+      case "products":
+        if (isMember === undefined) {
+          return null;
+        }
+        return (
+          <ShopProductListing
+            shop={shop}
+            isMember={isMember}
+            onProductCreate={(query) => {
+              setPendingQuery(query);
+              setPendingProductId("new");
+            }}
+            onProductEdit={(slug, query) => {
+              setPendingQuery(query);
+              setPendingProductId(slug);
+            }}
+          />
+        );
       case "reviews":
         return <ShopReviewListing shopId={shop.id!} />;
       case "about-us":
@@ -159,20 +178,7 @@ function ShopHome({ shop, isMember }: { shop: Shop; isMember: boolean }) {
         return <ShopSetting />;
     }
 
-    return (
-      <ShopProductListing
-        shop={shop!}
-        isMember={isMember}
-        onProductCreate={(query) => {
-          setPendingQuery(query);
-          setPendingProductId("new");
-        }}
-        onProductEdit={(slug, query) => {
-          setPendingQuery(query);
-          setPendingProductId(slug);
-        }}
-      />
-    );
+    return null;
   };
 
   const heading = (
@@ -432,12 +438,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const shop = await getShopBySlug(slug as string);
 
-    const isMember = await checkShopMember(shop.id ?? 0, Auth);
+    //const isMember = await checkShopMember(shop.id ?? 0, Auth);
 
     return {
       props: {
-        shop: shop,
-        isMember: isMember
+        shop: shop
       } // will be passed to the page component as props
     };
   } catch (e) {

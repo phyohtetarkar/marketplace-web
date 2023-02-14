@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import Swiper, { Navigation, Pagination, Zoom } from "swiper";
 import { Swiper as SwiperView, SwiperSlide } from "swiper/react";
 import { Product, ProductVariant } from "../../common/models";
-import { formatPrice } from "../../common/utils";
+import { formatPrice, transformDiscount } from "../../common/utils";
 import { AddToCartButton, AddToFavoriteButton } from "../../components/product";
 import Rating from "../../components/Rating";
 import Tabs from "../../components/Tabs";
@@ -78,6 +78,8 @@ function ProductDetail({ product }: { product: Product }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOptions]);
 
+  const unitPrice = variant?.price ?? product.price ?? 0;
+
   let popular;
   let available;
   // let image = `https://source.unsplash.com/random/200x240?random=${Math.floor(
@@ -85,10 +87,21 @@ function ProductDetail({ product }: { product: Product }) {
   // )}`;
   let price = (
     <>
-      {formatPrice((variant?.price ?? product.price ?? 0) * quantity)}
+      {formatPrice(unitPrice * quantity)}
       &nbsp;Ks
     </>
   );
+
+  if (product.discount) {
+    price = (
+      <>
+        <del className="text-muted small fw-normal me-1">
+          {formatPrice(unitPrice * quantity)}&nbsp;Ks
+        </del>
+        {transformDiscount(product.discount, unitPrice, quantity)}&nbsp;Ks
+      </>
+    );
+  }
 
   const noStock = () => {
     return (variant && variant.stockLeft === 0) || product.stockLeft === 0;

@@ -10,12 +10,14 @@ import Dropdown from "../Dropdown";
 import Loading from "../Loading";
 import Modal from "../Modal";
 import Pagination from "../Pagination";
+import DiscountApply from "./DiscountApply";
 import DiscountEdit from "./DiscountEdit";
 
-function ManageDiscounts({ shopId }: { shopId: number }) {
+function DiscountListing({ shopId }: { shopId: number }) {
   const [page, setPage] = useState(0);
   const [discount, setDiscount] = useState<Discount>();
   const [showEdit, setShowEdit] = useState(false);
+  const [showApply, setShowApply] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const { data, error, isLoading, mutate } = useSWR<PageData<Discount>, Error>(
     [`/discounts/${shopId}`, page],
@@ -116,7 +118,14 @@ function ManageDiscounts({ shopId }: { shopId: number }) {
                             >
                               Edit
                             </li>
-                            <li role="button" className="dropdown-item">
+                            <li
+                              role="button"
+                              className="dropdown-item"
+                              onClick={() => {
+                                setDiscount(d);
+                                setShowApply(true);
+                              }}
+                            >
                               Apply
                             </li>
                             <div className="dropdown-divider"></div>
@@ -195,6 +204,7 @@ function ManageDiscounts({ shopId }: { shopId: number }) {
       </div>
 
       <Modal
+        id="discountEditModal"
         show={showEdit}
         onHidden={() => setDiscount(undefined)}
         variant="large"
@@ -207,6 +217,27 @@ function ManageDiscounts({ shopId }: { shopId: number }) {
               handleClose={(result) => {
                 result && mutate();
                 setShowEdit(false);
+              }}
+            />
+          ) : (
+            <></>
+          );
+        }}
+      </Modal>
+      <Modal
+        id="applyDiscountModal"
+        show={showApply}
+        variant="large"
+        onHidden={() => {
+          setDiscount(undefined);
+        }}
+      >
+        {(isShown) => {
+          return isShown && discount ? (
+            <DiscountApply
+              discount={discount}
+              handleClose={() => {
+                setShowApply(false);
               }}
             />
           ) : (
@@ -235,4 +266,4 @@ function ManageDiscounts({ shopId }: { shopId: number }) {
   );
 }
 
-export default ManageDiscounts;
+export default DiscountListing;

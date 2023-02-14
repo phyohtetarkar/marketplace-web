@@ -8,45 +8,30 @@ interface PaginationProps {
 
 function Pagination(props: PaginationProps) {
   const { totalPage = 0, currentPage = 0, onChange } = props;
-  const hasPrev = currentPage > 1;
-  const hasNext = currentPage < totalPage;
+  const hasPrev = currentPage > 0;
+  const hasNext = currentPage < totalPage - 1;
 
   const pages = useMemo(() => {
-    const pages = [0, 0, 0];
-
     if (currentPage > totalPage) {
-      return pages;
+      return [];
     }
 
-    if (currentPage === 1) {
-      pages[0] = currentPage;
-    } else if (currentPage === totalPage && currentPage - 2 > 0) {
-      pages[0] = currentPage - 2;
-    } else if (currentPage - 1 > 0) {
-      pages[0] = currentPage - 1;
+    if (totalPage <= 1) {
+      return [];
     }
 
-    if (currentPage === 1 && currentPage + 1 <= totalPage) {
-      pages[1] = currentPage + 1;
-    } else if (currentPage === totalPage && currentPage - 1 > 0) {
-      pages[1] = currentPage - 1;
-    } else if (currentPage > 1) {
-      pages[1] = currentPage;
-    }
+    const pages = Array(totalPage > 3 ? 3 : totalPage).fill(0);
+    const len = pages.length;
 
-    if (totalPage < 3) {
-      return pages;
-    }
-
-    if (currentPage === totalPage) {
-      pages[2] = currentPage;
-    } else if (currentPage === 1 && currentPage + 2 <= totalPage) {
-      pages[2] = currentPage + 2;
-    } else if (currentPage + 1 <= totalPage) {
-      pages[2] = currentPage + 1;
-    }
-
-    return pages;
+    return pages.map((p, i) => {
+      if (currentPage - 1 >= 0) {
+        if (currentPage === totalPage - 1) {
+          return totalPage - len + i;
+        }
+        return p + i + (currentPage - 1);
+      }
+      return p + i + currentPage;
+    });
   }, [currentPage, totalPage]);
 
   if (totalPage <= 1) {
@@ -56,6 +41,23 @@ function Pagination(props: PaginationProps) {
   return (
     <nav aria-label="Pagination">
       <ul className="pagination mb-0">
+        {currentPage === 0 ? (
+          <li className="page-item disabled">
+            <span className={"page-link user-select-none"}>First</span>
+          </li>
+        ) : (
+          <li className="page-item">
+            <div
+              role="button"
+              className="page-link"
+              onClick={() => {
+                onChange?.(0);
+              }}
+            >
+              First
+            </div>
+          </li>
+        )}
         {!hasPrev ? (
           <li className="page-item disabled">
             <span className={"page-link user-select-none"}>Prev</span>
@@ -74,11 +76,11 @@ function Pagination(props: PaginationProps) {
           </li>
         )}
         {pages.map((e, i) => {
-          if (e === 0) {
-            return null;
-          }
           return (
-            <li className={`page-item ${currentPage === e ? "active" : ""}`} key={i}>
+            <li
+              className={`page-item ${currentPage === e ? "active" : ""}`}
+              key={i}
+            >
               <div
                 role="button"
                 className="page-link"
@@ -86,7 +88,7 @@ function Pagination(props: PaginationProps) {
                   onChange?.(e);
                 }}
               >
-                {e}
+                {e + 1}
               </div>
             </li>
           );
@@ -105,6 +107,23 @@ function Pagination(props: PaginationProps) {
               }}
             >
               Next
+            </div>
+          </li>
+        )}
+        {currentPage === totalPage - 1 ? (
+          <li className="page-item disabled">
+            <span className={"page-link user-select-none"}>Last</span>
+          </li>
+        ) : (
+          <li className="page-item">
+            <div
+              role="button"
+              className="page-link"
+              onClick={() => {
+                onChange?.(totalPage - 1);
+              }}
+            >
+              Last
             </div>
           </li>
         )}

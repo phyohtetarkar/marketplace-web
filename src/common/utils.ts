@@ -1,6 +1,7 @@
 import { Auth } from "aws-amplify";
 import dayjs from "dayjs";
 import { APIError, UnauthorizeError } from "./customs";
+import { Discount } from "./models";
 
 export function formatTimestamp(timestamp: number | string, withTime = false) {
   let date = dayjs(timestamp);
@@ -19,17 +20,14 @@ export function formatPrice(value: number) {
   return Intl.NumberFormat("en-US").format(value);
 }
 
-export function transformDiscount(
-  price = 0,
-  discount = { value: 0, type: "fixed" }
-) {
-  if (discount.type === "fixed") {
-    return formatPrice(discount.value);
+export function transformDiscount(discount: Discount, price = 0, qty = 1) {
+  if (discount.type === "FIXED_AMOUNT") {
+    return formatPrice((price - (discount.value ?? 0)) * qty);
   }
 
-  const percent = discount.value;
+  const percent = discount.value ?? 0;
   const discountPrice = (percent * price) / 100;
-  return formatPrice(price - discountPrice);
+  return formatPrice((price - discountPrice) * qty);
 }
 
 export function wordPerMinute(wordCount: number) {
