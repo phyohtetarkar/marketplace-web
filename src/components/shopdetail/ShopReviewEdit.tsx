@@ -142,7 +142,7 @@ function ShopReviewEdit() {
                         })}
                       </Dropdown>
                       {error?.message && (
-                        <small className="text-danger">${error.message}</small>
+                        <small className="text-danger">{error.message}</small>
                       )}
                     </>
                   );

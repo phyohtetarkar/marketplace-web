@@ -63,8 +63,9 @@ export function setEmptyOrString(v: any) {
 }
 
 export function setEmptyOrNumber(v: any) {
-  if (typeof v === "string") {
-    return v.trim().length > 0 ? parseFloat(v) : undefined;
+  if (!!v) {
+    const numRegex = "^[0-9]+$";
+    return `${v}`.match(numRegex) ? parseInt(v) : undefined;
   }
 
   return undefined;
