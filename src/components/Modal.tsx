@@ -31,6 +31,18 @@ function Modal({
       onHidden?.();
     };
 
+    const handleFocus = (event: FocusEvent) => {
+      if (event.target && event.target instanceof HTMLElement) {
+        if (
+          event.target.closest(
+            ".tox-tinymce, .tox-tinymce-aux, .moxman-window, .tam-assetmanager-root"
+          ) !== null
+        ) {
+          event.stopImmediatePropagation();
+        }
+      }
+    };
+
     const initModal = async () => {
       const Modal = (await import("bootstrap")).Modal;
       element = modalRef.current;
@@ -46,11 +58,14 @@ function Modal({
       element.addEventListener("show.bs.modal", handleShown);
 
       element.addEventListener("hidden.bs.modal", handleHidden);
+
+      document.addEventListener("focusin", handleFocus);
     };
 
     initModal();
 
     return () => {
+      document?.removeEventListener("focusin", handleFocus);
       element?.removeEventListener("show.bs.modal", handleShown);
       element?.removeEventListener("hidden.bs.modal", handleHidden);
       modalInstance.current?.dispose();

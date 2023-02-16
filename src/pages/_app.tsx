@@ -15,6 +15,16 @@ import awsconfig from "../aws-exports";
 import { AuthenticationContextProvider } from "../common/AuthenticationContextProvider";
 import { Layout } from "../components/template";
 import { ToastContainer } from "react-toastify";
+import {
+  CategoryScale,
+  Chart,
+  Filler,
+  LinearScale,
+  LineController,
+  LineElement,
+  PointElement,
+  Tooltip
+} from "chart.js";
 
 Amplify.configure({
   ...awsconfig,
@@ -31,6 +41,16 @@ Amplify.configure({
     }
   }
 });
+
+Chart.register(
+  LineController,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Filler,
+  Tooltip
+);
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;

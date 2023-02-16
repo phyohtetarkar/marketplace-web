@@ -64,11 +64,20 @@ export function setEmptyOrString(v: any) {
 
 export function setEmptyOrNumber(v: any) {
   if (!!v) {
-    const numRegex = "^[0-9]+$";
-    return `${v}`.match(numRegex) ? parseInt(v) : undefined;
+    const numRegex = "^([0-9]*[.])?[0-9]+$";
+    return `${v}`.match(numRegex) ? parseFloat(v) : undefined;
   }
 
   return undefined;
+}
+
+export function setZeroOrNumber(v: any) {
+  if (!!v) {
+    const numRegex = "^[0-9]+$";
+    return `${v}`.match(numRegex) ? parseFloat(v) : undefined;
+  }
+
+  return 0;
 }
 
 export function setStringToSlug(v?: string) {
@@ -147,7 +156,7 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
     }
     return error.message;
   }
-  //console.log(error);
+  console.log(error);
   return "Something went wrong, please try again";
 }
 

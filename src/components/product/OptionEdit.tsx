@@ -29,63 +29,7 @@ function OptionEdit(props: OptionEditProps) {
     }
   });
   const { fields, append, prepend, remove, swap, move, insert, update } =
-    useFieldArray({ control, name: "options" });
-
-  // const [errors, setErrors] =
-  //   useState<({ name: string; values: string } | undefined)[]>();
-
-  // const formik = useFormik<Option[]>({
-  //   initialValues: data,
-  //   enableReinitialize: true,
-  //   validate: (values) => {
-  //     const error: FormikErrors<Option> = {};
-
-  //     const errors: ({ name: string; values: string } | undefined)[] = [];
-  //     const len = values.length;
-  //     let hasError = false;
-  //     for (let i = 0; i < len; i++) {
-  //       const op = values[i];
-  //       const error = {} as any;
-  //       if (op.name.length === 0) {
-  //         error["name"] = "Enter option name";
-  //       } else if (
-  //         values.find(
-  //           (e, index) =>
-  //             i !== index &&
-  //             e.name.toLowerCase().trim() === op.name.toLowerCase().trim()
-  //         )
-  //       ) {
-  //         error["name"] = "Duplicate option name";
-  //       }
-
-  //       if (op.values.length === 0) {
-  //         error["values"] = "Option values must not empty";
-  //       }
-
-  //       if (Object.keys(error).length > 0) {
-  //         errors.push(error);
-  //         hasError = true;
-  //       } else {
-  //         errors.push(undefined);
-  //       }
-  //     }
-
-  //     if (hasError) {
-  //       setErrors(errors);
-  //       error.name = "Option input errors";
-  //     } else {
-  //       setErrors(undefined);
-  //     }
-
-  //     return error;
-  //   },
-  //   validateOnBlur: false,
-  //   validateOnChange: false,
-  //   onSubmit: (values) => {
-  //     handleClose?.([...values]);
-  //     formik.setSubmitting(false);
-  //   }
-  // });
+    useFieldArray({ control, name: "options", keyName: "vId" });
 
   return (
     <>

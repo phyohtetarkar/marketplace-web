@@ -15,7 +15,9 @@ import { ShopDetailContext } from "../../../common/contexts";
 import { Shop } from "../../../common/models";
 import Dropdown from "../../../components/Dropdown";
 import {
+  DiscountListing,
   ShopContactEdit,
+  ShopDashboard,
   ShopGeneralEdit,
   ShopSetting
 } from "../../../components/merchant";
@@ -39,7 +41,10 @@ type PageTab =
   | "about-us"
   | "contact-us"
   | "orders"
-  | "settings";
+  | "settings"
+  | "insights"
+  | "discounts"
+  | "more";
 
 type EditTab = "general" | "contact";
 
@@ -174,6 +179,10 @@ function ShopHome({ shop }: { shop: Shop }) {
         return <ContactUs />;
       case "orders":
         return null;
+      case "insights":
+        return <ShopDashboard />;
+      case "discounts":
+        return <DiscountListing shopId={shop.id!} />;
       case "settings":
         return <ShopSetting />;
     }
@@ -377,7 +386,51 @@ function ShopHome({ shop }: { shop: Shop }) {
                       tabKey="settings"
                       title="Settings"
                       tabClassName="text-nowrap"
+                      hidden={true}
+                    >
+                      <div></div>
+                    </Tabs.Tab>
+                    <Tabs.Tab
+                      tabKey="more"
                       hidden={!isMember}
+                      title={(onTabChange, isActive) => {
+                        return (
+                          <div>
+                            <Dropdown
+                              toggle="More"
+                              toggleClassName={`dropdown-toggle nav-link py-3 ${
+                                isActive ? "active" : ""
+                              }`}
+                              popperConfig={{
+                                strategy: "fixed"
+                              }}
+                              menuClassName="shadow border-0"
+                            >
+                              <li
+                                role="button"
+                                className="dropdown-item"
+                                onClick={() => {
+                                  onTabChange();
+                                  setActiveTab("insights");
+                                }}
+                              >
+                                Insights
+                              </li>
+                              <li
+                                role="button"
+                                className="dropdown-item"
+                                onClick={() => {
+                                  onTabChange();
+                                  setActiveTab("discounts");
+                                }}
+                              >
+                                Discounts
+                              </li>
+                            </Dropdown>
+                          </div>
+                        );
+                      }}
+                      tabClassName="text-nowrap"
                     >
                       <div></div>
                     </Tabs.Tab>

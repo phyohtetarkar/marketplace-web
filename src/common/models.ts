@@ -124,6 +124,7 @@ export interface ProductImage {
   id?: number;
   productId?: number;
   name?: string | null;
+  url?: string | null;
   thumbnail?: boolean;
   file?: File;
   deleted?: boolean;

@@ -1,19 +1,23 @@
 import {
   CubeIcon,
-  CurrencyDollarIcon,
+  DocumentTextIcon,
+  InboxStackIcon,
   ShoppingBagIcon
 } from "@heroicons/react/24/solid";
+import SaleLineChart from "../shopdetail/SaleLineChart";
 
 function ShopDashboard() {
   const iconSize = 56;
   return (
     <div>
+      <h3 className="fw-semibold">Insights</h3>
+      <hr className="bg-dark-gray" />
       <div className="row g-3 mb-3">
         <div className="col-lg-4">
           <div className="card p-3 shadow-sm">
             <div className="hstack gap-3">
               <div className="bg-warning text-light rounded">
-                <CurrencyDollarIcon
+                <ShoppingBagIcon
                   width={iconSize}
                   className="flex-shrink-0 p-2"
                 />
@@ -30,7 +34,7 @@ function ShopDashboard() {
           <div className="card p-3 shadow-sm">
             <div className="hstack gap-3">
               <div className="bg-success text-light rounded">
-                <ShoppingBagIcon
+                <DocumentTextIcon
                   width={iconSize}
                   className="flex-shrink-0 p-2"
                 />
@@ -46,7 +50,10 @@ function ShopDashboard() {
           <div className="card p-3 shadow-sm">
             <div className="hstack gap-3">
               <div className="bg-primary text-light rounded">
-                <CubeIcon width={iconSize} className="flex-shrink-0 p-2" />
+                <InboxStackIcon
+                  width={iconSize}
+                  className="flex-shrink-0 p-2"
+                />
               </div>
               <div className="vstack gap-1 text-nowrap">
                 <h6 className="text-muted mb-auto">Total Products</h6>
@@ -56,22 +63,12 @@ function ShopDashboard() {
           </div>
         </div>
       </div>
-      {/* <div className="row g-3">
+      <div className="row g-3">
         <div className="col-lg-8">
-          <div className="card h-100 shadow-sm">
-            <div className="card-body">
-              <h5 className="mb -0">Earnings</h5>
-            </div>
-          </div>
+          <SaleLineChart />
         </div>
-        <div className="col-lg-4">
-          <div className="card h-100 shadow-sm">
-            <div className="card-body">
-              <h5 className="mb-0">Sales by category</h5>
-            </div>
-          </div>
-        </div>
-      </div> */}
+        <div className="col-lg-4"></div>
+      </div>
     </div>
   );
 }

@@ -74,7 +74,7 @@ function AddToFavoriteButton({
               })
               .catch((error) => {
                 const msg = parseErrorResponse(error);
-                console.log(msg);
+                toast.error(msg);
               })
               .finally(() => {
                 setLoading(false);

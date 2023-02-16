@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
 import { useCategories } from "../../common/hooks";
 import {
@@ -16,6 +17,7 @@ import {
 } from "../../common/models";
 import {
   parseErrorResponse,
+  setEmptyOrNumber,
   setEmptyOrString,
   setStringToSlug
 } from "../../common/utils";
@@ -69,6 +71,7 @@ function ProductEdit({
   const [withVariant, setWithVariant] = useState<boolean>();
 
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const imagesRef = useRef<HTMLDivElement | null>(null);
 
   const { categories } = useCategories(false);
 
@@ -84,6 +87,7 @@ function ProductEdit({
   const varaintsField = useFieldArray({
     control,
     name: "variants",
+    keyName: "vId",
     rules: {
       validate: (v, fv) => {
         if (!fv.withVariant) {
@@ -100,12 +104,18 @@ function ProductEdit({
   const imagesField = useFieldArray({
     control,
     name: "images",
+    keyName: "vId",
     rules: {
       validate: (v) => {
-        return (
-          v.filter((img) => !img.deleted).length > 0 ||
-          "Required at least one image"
-        );
+        if (v.filter((img) => !img.deleted).length <= 0) {
+          imagesRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+          return "Required at least one image";
+        }
+
+        return true;
       }
     }
   });
@@ -254,9 +264,11 @@ function ProductEdit({
       await saveProduct(product);
       mutate(["/products", pendingQuery]);
       onPopBack?.();
+      toast.success("Product successfully saved");
     } catch (error) {
       const msg = parseErrorResponse(error);
       console.log(msg);
+      toast.error(msg);
     } finally {
       //formik.setSubmitting(false);
     }
@@ -657,6 +669,8 @@ function ProductEdit({
                                   placeholder="Enter stock amount"
                                   height={40}
                                   {...register(`variants.${i}.stockLeft`, {
+                                    setValueAs: (v) =>
+                                      !v ? 0 : setEmptyOrNumber(v),
                                     validate: (v) => {
                                       const numRegex = "^[0-9]*$";
                                       if (!`${v}`.match(numRegex)) {
@@ -665,6 +679,9 @@ function ProductEdit({
                                       return true;
                                     }
                                   })}
+                                  error={
+                                    errors.variants?.[i]?.stockLeft?.message
+                                  }
                                 />
                               </td>
                               <td>
@@ -739,6 +756,7 @@ function ProductEdit({
                         type="text"
                         placeholder="Enter stock amount"
                         {...register("stockLeft", {
+                          setValueAs: (v) => (!v ? 0 : setEmptyOrNumber(v)),
                           validate: (v, fv) => {
                             const numRegex = "^[0-9]*$";
                             if (!fv.withVariant && !`${v}`.match(numRegex)) {
@@ -803,7 +821,7 @@ function ProductEdit({
               <div className="card-header bg-white py-3 px-md-4 border-bottom">
                 <h5 className="mb-0">Images</h5>
               </div>
-              <div className="card-body p-md-4">
+              <div ref={imagesRef} className="card-body p-md-4">
                 {errors.images?.root?.message && (
                   <div className="text-danger mb-3">
                     {errors.images.root.message}
@@ -840,6 +858,7 @@ function ProductEdit({
                                         );
                                       }
                                     });
+
                                     imagesField.update(index, {
                                       ...img,
                                       thumbnail: true

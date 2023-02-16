@@ -1,6 +1,6 @@
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { Product, ProductVariant } from "../../common/models";
-import { setEmptyOrString } from "../../common/utils";
+import { setEmptyOrNumber, setEmptyOrString } from "../../common/utils";
 import Alert from "../Alert";
 import { Input } from "../forms";
 
@@ -26,6 +26,7 @@ function VaraintEdit(props: VaraintEditProps) {
   const optionsField = useFieldArray({
     control,
     name: "options",
+    keyName: "vId",
     rules: {
       validate: (pvo) => {
         if (
@@ -111,6 +112,7 @@ function VaraintEdit(props: VaraintEditProps) {
               type="text"
               placeholder="Enter stock amount"
               {...register("stockLeft", {
+                setValueAs: (v) => (!v ? 0 : setEmptyOrNumber(v)),
                 validate: (v, fv) => {
                   const numRegex = "^[0-9]*$";
                   if (!`${v}`.match(numRegex)) {

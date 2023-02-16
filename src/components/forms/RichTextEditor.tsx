@@ -57,6 +57,7 @@ function RichTextEditor({
         inline: inline ?? false,
         skin: "tinymce-5",
         link_default_target: "_blank",
+        help_tabs: ["shortcuts"],
         images_upload_handler: (info, progress) => {
           return new Promise<string>((resolve, reject) => {
             //console.log(info.blob().size);
@@ -79,7 +80,8 @@ function RichTextEditor({
           "quickbars",
           "table",
           "code",
-          "autolink"
+          "autolink",
+          "help"
         ],
         menu: {
           file: { title: "File", items: "preview" },
@@ -135,7 +137,7 @@ function RichTextEditor({
             name: "indentation",
             items: ["outdent", "indent"]
           },
-          { name: "view", items: ["preview", "fullscreen", "code"] }
+          { name: "view", items: ["preview", "fullscreen", "code", "help"] }
         ]
       }}
     />

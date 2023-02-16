@@ -1,10 +1,13 @@
 import { ReactElement, ReactNode, useState } from "react";
 
+type RenderTitle = (onTabChange: () => void, isActive: boolean) => ReactNode;
+
 interface TabProps {
   tabKey: string;
-  title: ReactNode;
+  title: ReactNode | RenderTitle;
   disabled?: boolean;
   hidden?: boolean;
+  actionTitle?: boolean;
   tabClassName?: string;
   children: ReactNode;
 }
@@ -39,18 +42,24 @@ function Tabs({ defaultTabKey, className, onTabChange, children }: TabsProps) {
           return (
             <li key={tabKey} className="nav-item">
               <div className="position-relative">
-                <button
-                  disabled={disabled}
-                  className={`nav-link py-3 ${active ? "active" : ""} ${
-                    tabClassName ?? ""
-                  } ${disabled ? "disabled" : ""}`}
-                  onClick={() => {
-                    onTabChange?.(tabKey);
+                {typeof title !== "function" ? (
+                  <button
+                    disabled={disabled}
+                    className={`nav-link py-3 ${active ? "active" : ""} ${
+                      tabClassName ?? ""
+                    } ${disabled ? "disabled" : ""}`}
+                    onClick={() => {
+                      onTabChange?.(tabKey);
+                      setActiveTabKey(tabKey);
+                    }}
+                  >
+                    {title}
+                  </button>
+                ) : (
+                  title(() => {
                     setActiveTabKey(tabKey);
-                  }}
-                >
-                  {title}
-                </button>
+                  }, active)
+                )}
                 {active && (
                   <div
                     className="position-absolute w-100 bg-primary bottom-0"
