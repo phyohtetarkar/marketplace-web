@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { AuthenticationContext } from "../common/contexts";
 import { setEmptyOrString } from "../common/utils";
 import { Input, PasswordInput } from "../components/forms";
+import ProgressButton from "../components/ProgressButton";
 import { signUp } from "../services/AuthService";
 
 interface SignUpInputs {
@@ -93,7 +94,7 @@ function Register() {
                     type="tel"
                     autoComplete="username"
                     placeholder="09xxxxxxxx"
-                    {...register("phone", { pattern: /^(09)\\d{7,12}$/ })}
+                    {...register("phone", { pattern: /^(09)\d{7,12}$/ })}
                     error={errors.phone && "Please enter valid phone number"}
                   />
                 </div>
@@ -125,20 +126,13 @@ function Register() {
                   />
                 </div>
                 <div className="col-md-12 mt-4 mb-2">
-                  <button
+                  <ProgressButton
                     type="submit"
-                    className="btn btn-primary w-100 py-2h"
-                    disabled={isSubmitting}
+                    className="w-100 py-2h"
+                    loading={isSubmitting}
                   >
-                    {isSubmitting && (
-                      <span
-                        className="spinner-border spinner-border-sm me-2"
-                        role="status"
-                        aria-hidden="true"
-                      ></span>
-                    )}
                     Sign up
-                  </button>
+                  </ProgressButton>
                 </div>
                 {/* <div className="col-md-12 mb-2">
                   <div className="row g-2">

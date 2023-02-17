@@ -1,6 +1,6 @@
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
-import Image from "next/image";
+import { default as NextImage } from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -67,7 +67,6 @@ function ProductEdit({
   const [showVariantModal, setShowVariantModal] = useState(false);
   const [options, setOptions] = useState<Option[]>([]);
   //const [variants, setVariants] = useState<ProductVariant[]>([]);
-  const [imageCount, setImageCount] = useState(0);
   const [withVariant, setWithVariant] = useState<boolean>();
 
   const fileRef = useRef<HTMLInputElement | null>(null);
@@ -159,31 +158,28 @@ function ProductEdit({
       let file = files[0];
       const fileSize = file.size / (1024 * 1024);
 
-      const image: ProductImage = {
-        file: file
-      };
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        const result = e.target?.result;
+        if (result && typeof result === "string") {
+          const img = new Image();
 
-      //props.setFieldValue?.(`${name}Image`, file);
+          img.onload = (evt) => {
+            if (img.width > 800 || img.height > 800) {
+              return;
+            }
 
-      if (fileSize <= 0.512) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          if (e.target?.result && typeof e.target.result === "string") {
-            image.name = e.target?.result;
-            // const images = formik.values.images ?? [];
-            // images.push(image);
-            // formik.setFieldValue("images", images);
+            const image: ProductImage = {
+              file: file,
+              url: result
+            };
             imagesField.append(image);
-            //setImageCount(images.filter((img) => !img.deleted).length);
-            setImageCount(
-              imagesField.fields.filter((img) => !img.deleted).length
-            );
-          }
+          };
 
-          //props.setFieldValue?.(name, e.target?.result);
-        };
-        reader.readAsDataURL(file);
-      }
+          img.src = result;
+        }
+      };
+      reader.readAsDataURL(file);
     }
 
     if (fileRef.current) {
@@ -817,11 +813,11 @@ function ProductEdit({
             </div>
           </div> */}
 
-            <div className="card shadow-sm">
+            <div ref={imagesRef} className="card shadow-sm">
               <div className="card-header bg-white py-3 px-md-4 border-bottom">
                 <h5 className="mb-0">Images</h5>
               </div>
-              <div ref={imagesRef} className="card-body p-md-4">
+              <div className="card-body p-md-4">
                 {errors.images?.root?.message && (
                   <div className="text-danger mb-3">
                     {errors.images.root.message}
@@ -833,8 +829,8 @@ function ProductEdit({
                     .map((img, index) => {
                       return (
                         <div key={index} className="position-relative">
-                          <Image
-                            src={img.name ?? "/images/placeholder.jpeg"}
+                          <NextImage
+                            src={img.url ?? "/images/placeholder.jpeg"}
                             width={150}
                             height={150}
                             alt=""
@@ -884,12 +880,6 @@ function ProductEdit({
                               } else {
                                 imagesField.remove(index);
                               }
-
-                              // setImageCount(
-                              //   formik.values.images?.filter(
-                              //     (img) => !img.deleted
-                              //   ).length ?? 0
-                              // );
                             }}
                           >
                             <TrashIcon width={18} />
@@ -897,20 +887,32 @@ function ProductEdit({
                         </div>
                       );
                     })}
-                  {imageCount <= 5 && (
-                    <button
-                      type="button"
-                      className="btn btn-light-gray hstack justify-content-center"
-                      style={{ width: 150, height: 150 }}
-                      onClick={() => fileRef.current?.click()}
-                    >
-                      <PlusIcon
-                        width={44}
-                        strokeWidth={2}
-                        className="text-muted"
-                      />
-                    </button>
-                  )}
+                  <Controller
+                    control={control}
+                    name="images"
+                    render={({ field }) => {
+                      const list =
+                        field.value?.filter((img) => !img.deleted) ?? [];
+
+                      if (list.length >= 5) {
+                        return <></>;
+                      }
+                      return (
+                        <button
+                          type="button"
+                          className="btn btn-light-gray hstack justify-content-center"
+                          style={{ width: 150, height: 150 }}
+                          onClick={() => fileRef.current?.click()}
+                        >
+                          <PlusIcon
+                            width={44}
+                            strokeWidth={2}
+                            className="text-muted"
+                          />
+                        </button>
+                      );
+                    }}
+                  />
                 </div>
                 <input
                   ref={fileRef}
@@ -923,7 +925,7 @@ function ProductEdit({
               <div className="card-footer px-4 py-3">
                 <span className="text-muted">
                   Product image can upload up to <strong>5</strong> images with
-                  size constraint of at most <strong>512KB</strong> each.
+                  size constraint of at most <strong>800x800</strong>px.
                 </span>
               </div>
             </div>

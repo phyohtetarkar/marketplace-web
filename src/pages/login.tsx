@@ -4,6 +4,7 @@ import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { AuthenticationContext } from "../common/contexts";
 import { Input, PasswordInput } from "../components/forms";
+import ProgressButton from "../components/ProgressButton";
 import { login } from "../services/AuthService";
 
 interface LoginInputs {
@@ -117,7 +118,9 @@ function Login() {
                     // value={values.phone}
                     // onChange={handleChange}
                     // error={errors.phone}
-                    {...register("phone", { pattern: /^(09)\\d{7,12}$/ })}
+                    {...register("phone", {
+                      pattern: /^(09)\d{7,12}$/
+                    })}
                     error={errors.phone && "Please enter valid phone number"}
                   />
                 </div>
@@ -138,7 +141,7 @@ function Login() {
                   </Link>
                 </div>
                 <div className="col-md-12 mt-4 mb-2">
-                  <button
+                  {/* <button
                     type="submit"
                     className="btn btn-primary w-100 py-2h"
                     disabled={isSubmitting}
@@ -151,7 +154,14 @@ function Login() {
                       ></span>
                     )}
                     Login
-                  </button>
+                  </button> */}
+                  <ProgressButton
+                    type="submit"
+                    className="w-100 py-2h"
+                    loading={isSubmitting}
+                  >
+                    Login
+                  </ProgressButton>
                 </div>
                 {/* <div className="col-md-12 mb-2">
                   <div className="row g-2">

@@ -6,7 +6,11 @@ import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
 import { AuthenticationContext } from "../../common/contexts";
 import { CartItem } from "../../common/models";
-import { formatPrice, parseErrorResponse } from "../../common/utils";
+import {
+  formatPrice,
+  parseErrorResponse,
+  transformDiscount
+} from "../../common/utils";
 import { removeFromCart } from "../../services/ShoppingCartService";
 
 interface ShoppingCartItemProps {
@@ -24,7 +28,23 @@ function ShoppingCartItem({ item }: ShoppingCartItemProps) {
 
   const [removing, setRemoving] = useState(false);
 
+  const [quantity, setQuantity] = useState(item.quantity);
+
   const image = item.product?.thumbnail ?? "/images/placeholder.jpeg";
+
+  let price = <>{formatPrice(item.product?.price ?? 0)} Ks</>;
+
+  if (item.product?.discount) {
+    price = (
+      <>
+        <del className="text-muted small fw-normal me-1">
+          {formatPrice(item.product?.price ?? 0)}&nbsp;Ks
+        </del>
+        {transformDiscount(item.product.discount, item.product.price, quantity)}
+        &nbsp;Ks
+      </>
+    );
+  }
 
   const getQtyInput = () => {
     return (
@@ -75,7 +95,7 @@ function ShoppingCartItem({ item }: ShoppingCartItemProps) {
               <h6 className="mb-0">
                 <Link href={`/products/${item.product?.slug}`}>
                   <a className="link-dark text-decoration-none text-truncate d-block">
-                    Product Name
+                    {item.product?.name}
                   </a>
                 </Link>
               </h6>
@@ -93,9 +113,7 @@ function ShoppingCartItem({ item }: ShoppingCartItemProps) {
               )}
               <div className="flex-grow-1"></div>
               <div>
-                <h6 className="mb-0">
-                  {formatPrice(item.product?.price ?? 0)} Ks
-                </h6>
+                <h6 className="mb-0">{price}</h6>
               </div>
             </div>
           </div>

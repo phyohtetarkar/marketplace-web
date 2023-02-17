@@ -36,23 +36,20 @@ export async function saveProduct(value: Product) {
   value.discountId && form.append("discountId", value.discountId.toPrecision());
   value.brand && form.append("brand", value.brand);
 
-  //value.images && form.append("images", JSON.stringify(value.images));
-
   value.images?.forEach((v, i) => {
     v.id && form.append(`images[${i}].id`, v.id.toPrecision());
-    if (v.id && v.id > 0) {
-      const imageName = v.name?.split("/").pop();
-      imageName && form.append(`images[${i}].name`, imageName);
-    } else {
-      v.name && form.append(`images[${i}].name`, v.name);
-    }
+    v.name && form.append(`images[${i}].name`, v.name);
+    // if (v.id && v.id > 0) {
+    //   const imageName = v.name?.split("/").pop();
+    //   imageName && form.append(`images[${i}].name`, imageName);
+    // } else {
+    //   v.name && form.append(`images[${i}].name`, v.name);
+    // }
     //!v.id && v.name && form.append(`images[${i}].name`, v.name);
     form.append(`images[${i}].thumbnail`, v.thumbnail ? "true" : "false");
     form.append(`images[${i}].deleted`, v.deleted ? "true" : "false");
     v.file && form.append(`images[${i}].file`, v.file);
   });
-
-  //value.options && form.append("options", JSON.stringify(value.options));
 
   value.options?.forEach((v, i) => {
     v.id && form.append(`options[${i}].id`, v.id.toPrecision());
@@ -60,8 +57,6 @@ export async function saveProduct(value: Product) {
     v.position &&
       form.append(`options[${i}].position`, v.position.toPrecision());
   });
-
-  //value.variants && form.append("variants", JSON.stringify(value.variants));
 
   value.variants?.forEach((v, i) => {
     v.id && form.append(`variants[${i}].id`, v.id.toPrecision());

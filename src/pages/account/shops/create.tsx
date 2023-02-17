@@ -13,7 +13,7 @@ import {
 import { withAuthentication } from "../../../common/WithAuthentication";
 import { Input } from "../../../components/forms";
 import { RichTextEditorInputProps } from "../../../components/forms/RichTextEditor";
-import StepView from "../../../components/order/StepView";
+import StepView from "../../../components/StepView";
 import { createShop } from "../../../services/ShopService";
 
 const _steps = [

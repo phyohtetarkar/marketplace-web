@@ -14,6 +14,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { ShopDetailContext } from "../../../common/contexts";
 import { Shop } from "../../../common/models";
 import Dropdown from "../../../components/Dropdown";
+import Loading from "../../../components/Loading";
 import {
   DiscountListing,
   ShopContactEdit,
@@ -155,7 +156,7 @@ function ShopHome({ shop }: { shop: Shop }) {
     switch (activeTab) {
       case "products":
         if (isMember === undefined) {
-          return null;
+          return <Loading />;
         }
         return (
           <ShopProductListing

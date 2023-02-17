@@ -5,7 +5,6 @@ import {
   getCategory
 } from "../services/CategoryService";
 import { getLoginUser } from "../services/UserService";
-import { Category, User } from "./models";
 
 export function useCategory(slug?: string) {
   const { data, error, isLoading } = useSWR(
@@ -56,13 +55,9 @@ export function useBrands(categorySlug?: string) {
 }
 
 export function useLoginUser() {
-  const { data, error, isLoading } = useSWR<User, Error>(
-    "/login-user",
-    getLoginUser,
-    {
-      revalidateOnFocus: false
-    }
-  );
+  const { data, error, isLoading } = useSWR("/login-user", getLoginUser, {
+    revalidateOnFocus: false
+  });
 
   return {
     user: data,

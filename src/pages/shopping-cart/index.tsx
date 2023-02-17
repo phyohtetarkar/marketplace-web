@@ -4,8 +4,8 @@ import { useMemo } from "react";
 import useSWR from "swr";
 import { CartItem, Shop } from "../../common/models";
 import Loading from "../../components/Loading";
-import PricingCard from "../../components/order/PricingCard";
-import ShoppingCartItem from "../../components/order/ShoppingCartItem";
+import PricingCard from "../../components/checkout/PricingCard";
+import ShoppingCartItem from "../../components/checkout/ShoppingCartItem";
 import Tooltip from "../../components/Tooltip";
 import { getCartItemsByUser } from "../../services/ShoppingCartService";
 

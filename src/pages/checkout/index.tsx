@@ -1,5 +1,5 @@
 import { useState } from "react";
-import StepView from "../../components/order/StepView";
+import StepView from "../../components/StepView";
 
 const _steps = [
   { step: 1, title: "Customer info" },

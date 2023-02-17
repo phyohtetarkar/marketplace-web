@@ -158,7 +158,7 @@ function ProductDetail({ product }: { product: Product }) {
                       >
                         <Image
                           className="rounded"
-                          src={img.name ?? "/images/palceholder.jpeg"}
+                          src={img.url ?? "/images/palceholder.jpeg"}
                           alt="Product image."
                           layout="fill"
                           objectFit="contain"
@@ -211,7 +211,7 @@ function ProductDetail({ product }: { product: Product }) {
                         zoom={true}
                       >
                         <img
-                          src={img?.name ?? "/images/placeholder.jpeg"}
+                          src={img?.url ?? "/images/placeholder.jpeg"}
                           alt="Product image."
                           className="w-100 h-100"
                           style={{

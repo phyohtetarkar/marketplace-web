@@ -11,8 +11,8 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import { AuthenticationContext } from "../../common/contexts";
 import { useLoginUser } from "../../common/hooks";
 import MultiCategoryDropdown from "../category/MultiCategoryDropdown";
+import { ShoppingCartView } from "../checkout";
 import Dropdown from "../Dropdown";
-import ShoppingCartView from "../order/ShoppingCartView";
 import HeaderSearchHints from "./HeaderSearchHints";
 
 interface HeaderProps {
