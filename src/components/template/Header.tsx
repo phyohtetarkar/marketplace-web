@@ -1,18 +1,18 @@
 import {
   BuildingStorefrontIcon,
+  PlusCircleIcon,
   QuestionMarkCircleIcon
 } from "@heroicons/react/24/outline";
-import { Auth } from "aws-amplify";
 import { Offcanvas } from "bootstrap";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { AuthenticationContext } from "../../common/contexts";
-import { useLoginUser } from "../../common/hooks";
 import MultiCategoryDropdown from "../category/MultiCategoryDropdown";
 import { ShoppingCartView } from "../checkout";
 import Dropdown from "../Dropdown";
+import AccountDropdown from "./AccountDropdown";
 import HeaderSearchHints from "./HeaderSearchHints";
 
 interface HeaderProps {
@@ -41,154 +41,6 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
         {children}
       </div>
     </>
-  );
-}
-
-function AccountMenu({ onNavClick }: { onNavClick?: () => void }) {
-  const profileDropdownToggle = useRef<HTMLAnchorElement | null>(null);
-
-  const { user, error, isLoading } = useLoginUser();
-
-  useEffect(() => {
-    let profileDropdown: any;
-
-    const initDropdowns = async () => {
-      const Dropdown = (await import("bootstrap")).Dropdown;
-      if (!profileDropdownToggle.current) {
-        return;
-      }
-      profileDropdown = new Dropdown(profileDropdownToggle.current);
-    };
-
-    const handleClick = (e: MouseEvent) => {
-      e.preventDefault();
-      profileDropdown?.show();
-    };
-
-    initDropdowns();
-
-    const element = profileDropdownToggle.current;
-
-    element?.addEventListener("click", handleClick);
-
-    return () => {
-      element?.removeEventListener("click", handleClick);
-      profileDropdown?.dispose();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (error instanceof TypeError) {
-    }
-  }, [error]);
-
-  if (isLoading || error) {
-    return null;
-  }
-
-  return (
-    <div className="navbar-nav align-items-lg-center mt-3 mt-lg-0">
-      <Dropdown
-        toggle={<span className="">Hi, {user?.name ?? ""}</span>}
-        className="nav-item"
-        toggleClassName="dropdown-toggle hstack"
-        menuClassName="dropdown-menu-end"
-      >
-        <li>
-          <Link href="/account/overview">
-            <a
-              className="dropdown-item text-decoration-none"
-              onClick={(e) => onNavClick && onNavClick()}
-            >
-              My profile
-            </a>
-          </Link>
-        </li>
-        <li>
-          <Link href="/account/favorites">
-            <a
-              className="dropdown-item text-decoration-none"
-              onClick={(e) => onNavClick && onNavClick()}
-            >
-              My favorites
-            </a>
-          </Link>
-        </li>
-        <li>
-          <Link href="/account/orders">
-            <a
-              className="dropdown-item text-decoration-none"
-              onClick={(e) => onNavClick && onNavClick()}
-            >
-              My orders
-            </a>
-          </Link>
-        </li>
-        <div className="dropdown-divider"></div>
-        <li className="dropdown-item">
-          <div
-            role="button"
-            onClick={() => {
-              onNavClick && onNavClick();
-              Auth.signOut().catch(console.error);
-            }}
-          >
-            Logout
-          </div>
-        </li>
-      </Dropdown>
-      {/* <li className="nav-item dropdown">
-        <a
-          ref={profileDropdownToggle}
-          href="#"
-          className="nav-link hstack dropdown-toggle"
-          role="button"
-          data-bs-toggle="dropdown"
-          id="profileMenuLink"
-          style={{
-            outlineStyle: "none"
-          }}
-        >
-          <span className="">Hi, {user?.name ?? ""}</span>
-        </a>
-        <ul
-          className="dropdown-menu dropdown-menu-end"
-          aria-labelledby="profileMenuLink"
-        >
-          <li className="d-none d-lg-block">
-                  <div className="dropdown-header py-0">
-                    <div className="mb-1">Signed in as</div>
-                    <h6 className="text-dark">{user?.name ?? ""}</h6>
-                  </div>
-                </li>
-                <li className="d-none d-lg-block">
-                  <hr className="dropdown-divider" />
-                </li>
-          <li>
-            <Link href="/profile/overview">
-              <a
-                className="dropdown-item text-decoration-none"
-                onClick={(e) => onNavClick && onNavClick()}
-              >
-                My profile
-              </a>
-            </Link>
-          </li>
-          <div className="dropdown-divider"></div>
-          <li className="dropdown-item">
-            <div
-              role="button"
-              onClick={() => {
-                onNavClick && onNavClick();
-                Auth.signOut().catch(console.error);
-              }}
-            >
-              Logout
-            </div>
-          </li>
-        </ul>
-      </li> */}
-    </div>
   );
 }
 
@@ -293,7 +145,7 @@ function Header({ hideAuth }: HeaderProps) {
                     <div className="nav-item">
                       <Link href="/sign-up">
                         <a className="btn btn-outline-primary d-none d-lg-block text-nowrap">
-                          Sign up
+                          Register
                         </a>
                       </Link>
                     </div>
@@ -365,6 +217,13 @@ function Header({ hideAuth }: HeaderProps) {
                 <li className="nav-item d-none d-lg-block">
                   <MultiCategoryDropdown />
                 </li>
+                <li className="nav-item d-block d-lg-none">
+                  <NavLink href="/collections">
+                    <div className="hstack">
+                      <span>Categories</span>
+                    </div>
+                  </NavLink>
+                </li>
                 <li className="nav-item">
                   <NavLink href="/shops">
                     <div className="hstack">
@@ -376,7 +235,7 @@ function Header({ hideAuth }: HeaderProps) {
                     </div>
                   </NavLink>
                 </li>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <NavLink href="/shops">
                     <div className="hstack">
                       <QuestionMarkCircleIcon
@@ -384,6 +243,17 @@ function Header({ hideAuth }: HeaderProps) {
                         className="me-1 d-none d-lg-block"
                       />
                       <span>FAQs</span>
+                    </div>
+                  </NavLink>
+                </li> */}
+                <li className="nav-item">
+                  <NavLink href="/account/shops/create">
+                    <div className="hstack">
+                      <PlusCircleIcon
+                        width={20}
+                        className="me-1 d-none d-lg-block"
+                      />
+                      <span>Create shop</span>
                     </div>
                   </NavLink>
                 </li>
@@ -398,9 +268,11 @@ function Header({ hideAuth }: HeaderProps) {
                   }
                   if (payload) {
                     return (
-                      <AccountMenu
-                        onNavClick={() => offcanvas.current?.hide()}
-                      />
+                      <div className="navbar-nav align-items-lg-center mt-3 mt-lg-0">
+                        <AccountDropdown
+                          onNavClick={() => offcanvas.current?.hide()}
+                        />
+                      </div>
                     );
                   }
                   return (
@@ -416,7 +288,7 @@ function Header({ hideAuth }: HeaderProps) {
                             router.push("/sign-up");
                           }}
                         >
-                          Sign up
+                          Register
                         </div>
                       </div>
                       <div className="nav-item">

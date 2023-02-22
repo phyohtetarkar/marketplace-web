@@ -44,7 +44,7 @@ function ProfileOverview() {
                 <div className="hstack">
                   <div className="position-relative flex-shrink-0">
                     <Image
-                      src={user?.image ?? "/images/placeholder.jpeg"}
+                      src={user?.image ?? "/images/profile.png"}
                       width={60}
                       height={60}
                       alt=""

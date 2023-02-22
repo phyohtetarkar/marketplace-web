@@ -8,7 +8,7 @@ function Footer() {
 
   return (
     <div className="bg-primary">
-      <footer className="py-4">
+      <footer className="py-4 d-none d-lg-block">
         <div className="container py-3">
           <div className="row g-3">
             <div className="col-lg-4">
@@ -82,9 +82,9 @@ function Footer() {
                 {copyRight}
               </div>
             </div>
-            <div className="col order-2 order-lg-2"></div>
+            {/* <div className="col order-2 order-lg-2"></div>
             <div className="col-12 col-lg-auto order-1 order-lg-3">
-              {/* <div className="hstack gap-4 justify-content-center small">
+              = <div className="hstack gap-4 justify-content-center small">
                 <Link href="/privacy-policy">
                   <a className="link-light text-decoration-none">Privacy</a>
                 </Link>
@@ -94,8 +94,8 @@ function Footer() {
                 <Link href="/about-us">
                   <a className="link-light text-decoration-none">About</a>
                 </Link>
-              </div> */}
-            </div>
+              </div>
+            </div> */}
           </div>
           {/* <div className="ms-auto hstack gap-4">
             <a href="#" className="ms-auto text-muted"></a>

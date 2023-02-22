@@ -1,5 +1,6 @@
 import { SwatchIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useCategories } from "../../common/hooks";
 import { Category } from "../../common/models";
@@ -7,7 +8,7 @@ import Accordion from "../../components/Accordion";
 import Loading from "../../components/Loading";
 
 interface CollectionItemProps {
-  item?: Category;
+  item: Category;
   onClick?: (c?: Category) => void;
 }
 
@@ -27,7 +28,7 @@ const CollectionItem = ({ item, onClick }: CollectionItemProps) => {
           objectFit="contain"
         />
       ) : (
-        <SwatchIcon width={44} className="text-dark-gray mx-auto" />
+        <SwatchIcon width={44} className="text-default mx-auto" />
       )}
       <div className="text-center small">{item?.name}</div>
     </div>
@@ -35,6 +36,8 @@ const CollectionItem = ({ item, onClick }: CollectionItemProps) => {
 };
 
 function Collections() {
+  const router = useRouter();
+
   const { categories, error, isLoading } = useCategories(false);
 
   const [subCategories, setSubCategories] = useState<Category[]>();
@@ -89,7 +92,11 @@ function Collections() {
                   return (
                     <div
                       key={i}
+                      role="button"
                       className="fw-semibold px-3 py-2h border-bottom"
+                      onClick={() => {
+                        router.push(`/collections/${e.slug}`);
+                      }}
                     >
                       <div className="text-truncate">{e.name}</div>
                     </div>
@@ -113,7 +120,12 @@ function Collections() {
                       {e.children.map((c, i) => {
                         return (
                           <div key={i} className="col">
-                            <CollectionItem item={c} />
+                            <CollectionItem
+                              item={c}
+                              onClick={(item) => {
+                                router.push(`/collections/${item?.slug}`);
+                              }}
+                            />
                           </div>
                         );
                       })}

@@ -686,7 +686,10 @@ function ProductEdit({
                                   className="link-danger"
                                   onClick={() => {
                                     if ((variant.id ?? 0) > 0) {
-                                      setValue(`variants.${i}.deleted`, true);
+                                      varaintsField.update(i, {
+                                        ...variant,
+                                        deleted: true
+                                      });
                                     } else {
                                       varaintsField.remove(i);
                                     }

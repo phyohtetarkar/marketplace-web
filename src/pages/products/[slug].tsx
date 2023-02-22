@@ -9,7 +9,11 @@ import Swiper, { Navigation, Pagination, Zoom } from "swiper";
 import { Swiper as SwiperView, SwiperSlide } from "swiper/react";
 import { Product, ProductVariant } from "../../common/models";
 import { formatPrice, transformDiscount } from "../../common/utils";
-import { AddToCartButton, AddToFavoriteButton } from "../../components/product";
+import {
+  AddToCartButton,
+  AddToFavoriteButton,
+  RelatedProducts
+} from "../../components/product";
 import Rating from "../../components/Rating";
 import Tabs from "../../components/Tabs";
 import { getProductBySlug } from "../../services/ProductService";
@@ -167,22 +171,6 @@ function ProductDetail({ product }: { product: Product }) {
                     );
                   })}
                 </div>
-                {/* <div
-                  className="ratio ratio-1x1 rounded border d-none d-lg-block"
-                  onContextMenu={(evt) => evt.preventDefault()}
-                >
-                  <Image
-                    className="rounded"
-                    src={
-                      product.images?.[imageIndex].name ??
-                      "/images/placeholder.jpeg"
-                    }
-                    alt="Product image."
-                    layout="fill"
-                    priority
-                    objectFit="contain"
-                  />
-                </div> */}
                 <SwiperView
                   onInit={setSwiper}
                   className="overflow-hidden border rounded flex-grow-1 position-relative"
@@ -199,9 +187,6 @@ function ProductDetail({ product }: { product: Product }) {
                   onActiveIndexChange={(swiper) => {
                     setImageIndex(swiper.activeIndex);
                   }}
-                  // onClick={(evt) => {
-                  //   swiper?.zoom.in();
-                  // }}
                 >
                   {product.images?.map((img, i) => {
                     return (
@@ -421,34 +406,6 @@ function ProductDetail({ product }: { product: Product }) {
               </div>
             </div>
           </div>
-          {/* <div className="row mt-3 d-none">
-            <div className="col-5 hstack gap-2">
-              {product.images?.map((img, i) => {
-                const selected =
-                  i === imageIndex ? "border border-primary" : "";
-                return (
-                  <div
-                    role={"button"}
-                    key={i}
-                    style={{ width: 80 }}
-                    className={`ratio ratio-1x1 rounded border ${selected}`}
-                    onClick={() => {
-                      setImageIndex(i);
-                    }}
-                    onContextMenu={(evt) => evt.preventDefault()}
-                  >
-                    <Image
-                      className=""
-                      src={img.name ?? "/images/palceholder.jpeg"}
-                      alt="Product image."
-                      layout="fill"
-                      objectFit="contain"
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div> */}
         </div>
       </div>
       <div className="container">
@@ -514,22 +471,12 @@ function ProductDetail({ product }: { product: Product }) {
               </div>
             </div>
           </div>
-          <div className="col-12 mt-12">
+          <div className="col-12 mt-6">
             <h4 className="mb-3">Related Products</h4>
-            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
-              {/* <div className="col">
-                <ProductGridItem />
-              </div>
-              <div className="col">
-                <ProductGridItem />
-              </div>
-              <div className="col">
-                <ProductGridItem />
-              </div>
-              <div className="col">
-                <ProductGridItem />
-              </div> */}
-            </div>
+            <RelatedProducts
+              productId={product.id ?? 0}
+              categoryId={product.category?.id ?? 0}
+            />
           </div>
         </div>
       </div>

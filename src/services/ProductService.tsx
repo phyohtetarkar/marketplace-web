@@ -130,6 +130,15 @@ export async function getProductHints(q: string) {
   return resp.json() as Promise<Product[]>;
 }
 
+export async function getRelatedProducts(id: number, categoryId: number) {
+  const url = `${getAPIBasePath()}${basePath}/${id}/related?category-id=${categoryId}`;
+  const resp = await fetch(url);
+
+  await validateResponse(resp);
+
+  return resp.json() as Promise<Product[]>;
+}
+
 export async function findProducts(value: ProductQuery) {
   const query = buildQueryParams(value);
 

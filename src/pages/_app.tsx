@@ -25,6 +25,7 @@ import {
   PointElement,
   Tooltip
 } from "chart.js";
+import { LocalizationContextProvider } from "../common/localization";
 
 Amplify.configure({
   ...awsconfig,
@@ -83,7 +84,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         theme="colored"
       />
       <AuthenticationContextProvider>
-        {getLayout(<Component {...pageProps} />)}
+        <LocalizationContextProvider>
+          {getLayout(<Component {...pageProps} />)}
+        </LocalizationContextProvider>
       </AuthenticationContextProvider>
     </>
   );

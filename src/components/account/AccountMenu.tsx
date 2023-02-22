@@ -47,7 +47,7 @@ function AccountMenu({}) {
       <div className="vstack gap-1">
         {menuLink({
           href: "/account/overview",
-          title: "Profile overview",
+          title: "Overview",
           icon: <UserIcon className="me-2" strokeWidth={2} width={iconSize} />
         })}
         {menuLink({
@@ -75,7 +75,7 @@ function AccountMenu({}) {
         })}
         {menuLink({
           href: "/account/setting",
-          title: "Profile setting",
+          title: "Setting",
           icon: (
             <Cog8ToothIcon className="me-2" strokeWidth={2} width={iconSize} />
           )
