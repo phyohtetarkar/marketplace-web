@@ -33,6 +33,7 @@ export interface Banner {
   id: number;
   link: string;
   image: string;
+  imageUrl: string;
   position: number;
 }
 
@@ -41,6 +42,7 @@ export interface Category {
   name: string;
   slug: string;
   image: string;
+  imageUrl: string;
   category?: Category;
   children?: Category[];
 }
@@ -92,6 +94,7 @@ export interface ShopReview {
   description?: string;
   reviewer?: User;
   createdAt?: number;
+  updatedAt?: number;
 }
 
 export interface Product {

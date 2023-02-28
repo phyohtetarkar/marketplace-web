@@ -39,7 +39,7 @@ export async function signUp({
       },
       autoSignIn: {
         // optional - enables auto sign in after user is confirmed
-        enabled: true
+        enabled: process.env.NEXT_PUBLIC_PROFILE !== "dev"
       }
     });
     console.log(result);

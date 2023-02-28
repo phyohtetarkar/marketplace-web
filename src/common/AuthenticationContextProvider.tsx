@@ -61,7 +61,7 @@ export const AuthenticationContextProvider = ({
     const listener = (data: HubCapsule) => {
       switch (data.payload.event) {
         case "signIn": {
-          console.log("signed in");
+          //console.log("signed in");
           //console.log(data.payload.data);
           const attributes = data.payload.data.attributes;
           applyUser(attributes);

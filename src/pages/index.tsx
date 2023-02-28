@@ -1,9 +1,8 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Autoplay, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import useSWR from "swr";
 import { HomeData } from "../common/models";
 import { getAPIBasePath } from "../common/utils";
 
@@ -143,7 +142,7 @@ const Home = ({ data }: { data: HomeData }) => {
                             className="ratio ratio-21x9 overflow-hidden"
                           >
                             <Image
-                              src={b.image}
+                              src={b.imageUrl}
                               alt="Cover image"
                               className="rounded-1"
                               layout="fill"

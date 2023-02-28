@@ -7,6 +7,21 @@ import {
 
 const basePath = "profile";
 
+export async function createUser(value: User) {
+  const url = `${getAPIBasePath()}users?api-key=${
+    process.env.NEXT_PUBLIC_API_KEY
+  }`;
+  const resp = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(value),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  await validateResponse(resp);
+}
+
 export async function updateProfile(value: User) {
   const url = `${getAPIBasePath()}${basePath}`;
   const resp = await fetch(url, {
@@ -22,7 +37,7 @@ export async function updateProfile(value: User) {
 }
 
 export async function getLoginUser() {
-  const url = `${getAPIBasePath()}${basePath}`;
+  const url = `${getAPIBasePath()}users/me`;
   const resp = await fetch(url, {
     headers: {
       Authorization: await getAuthHeader()

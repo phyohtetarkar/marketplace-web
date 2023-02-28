@@ -90,7 +90,7 @@ function ProductManageGridItem({
             <div className="ratio ratio-4x3">
               <Image
                 className="card-img-top"
-                src={value.thumbnail ?? "/placeholder.jpeg"}
+                src={value.thumbnail ?? "/images/placeholder.jpeg"}
                 alt="Product image."
                 layout="fill"
                 objectFit="contain"

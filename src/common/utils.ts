@@ -156,6 +156,15 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
     }
     return error.message;
   }
+
+  if (error?.code === "UsernameExistsException") {
+    return "Phone number already in use";
+  }
+
+  if (error?.code === "NotAuthorizedException") {
+    return "Phone number or password incorrect";
+  }
+
   console.log(error);
   return "Something went wrong, please try again";
 }

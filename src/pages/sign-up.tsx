@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AuthenticationContext } from "../common/contexts";
-import { setEmptyOrString } from "../common/utils";
+import { parseErrorResponse, setEmptyOrString } from "../common/utils";
+import Alert from "../components/Alert";
 import { Input, PasswordInput } from "../components/forms";
 import ProgressButton from "../components/ProgressButton";
-import { signUp } from "../services/AuthService";
+import { login, signUp } from "../services/AuthService";
+import { createUser } from "../services/UserService";
 
 interface SignUpInputs {
   fullName?: string;
@@ -18,6 +20,7 @@ interface SignUpInputs {
 function Register() {
   const router = useRouter();
   const authContext = useContext(AuthenticationContext);
+  const [error, setError] = useState<string>();
 
   const {
     register,
@@ -37,14 +40,28 @@ function Register() {
 
   const processSignUp = async (values: SignUpInputs) => {
     try {
+      setError(undefined);
       const phone = `+95${values.phone!.substring(1)}`;
-      const { user } = await signUp({
+      const { user, userSub } = await signUp({
         name: values.fullName!,
         phone: phone,
         password: values.password!
       });
+
+      if (process.env.NEXT_PUBLIC_PROFILE === "dev") {
+        await createUser({
+          id: userSub,
+          name: values.fullName,
+          phone: phone
+        });
+        await login({
+          username: phone,
+          password: values.password!
+        });
+      }
     } catch (error) {
       console.log("error signing up:", error);
+      setError(parseErrorResponse(error));
     } finally {
     }
   };
@@ -66,6 +83,8 @@ function Register() {
                   {parseError(signUpState.error)}
                 </div>
               )} */}
+
+              {error && <Alert message={error} variant="danger" />}
 
               <form
                 className="row g-2"

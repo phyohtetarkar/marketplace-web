@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AuthenticationContext } from "../common/contexts";
+import { parseErrorResponse } from "../common/utils";
+import Alert from "../components/Alert";
 import { Input, PasswordInput } from "../components/forms";
 import ProgressButton from "../components/ProgressButton";
 import { login } from "../services/AuthService";
@@ -15,6 +17,7 @@ interface LoginInputs {
 function Login() {
   const router = useRouter();
   const authContext = useContext(AuthenticationContext);
+  const [error, setError] = useState<string>();
 
   const {
     register,
@@ -70,6 +73,7 @@ function Login() {
 
   const processLogin = async (values: LoginInputs) => {
     try {
+      setError(undefined);
       const phone = `+95${values.phone!.substring(1)}`;
 
       const user = await login({
@@ -78,6 +82,7 @@ function Login() {
       });
     } catch (error: any) {
       console.log("error signing in:", error.code);
+      setError(parseErrorResponse(error));
     } finally {
       //setSubmitting(false);
     }
@@ -100,6 +105,8 @@ function Login() {
                   {parseError(loginState.error)}
                 </div>
               )} */}
+
+              {error && <Alert message={error} variant="danger" />}
 
               <form
                 className="row"

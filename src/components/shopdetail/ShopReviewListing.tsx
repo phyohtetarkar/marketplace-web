@@ -15,7 +15,7 @@ interface ShopReviewProps {
 
 function Review({ value }: ShopReviewProps) {
   return (
-    <div className="list-group-item px-0">
+    <div className="list-group-item px-0 py-2h">
       <div className="hstack gap-3 align-items-start">
         <div className="position-relative flex-shrink-0">
           <Image
@@ -30,7 +30,7 @@ function Review({ value }: ShopReviewProps) {
         <div>
           <h6 className="mb-0">{value.reviewer?.name}</h6>
           <span className="text-muted small">
-            {formatTimestamp(value.createdAt ?? 0)}
+            {formatTimestamp(value.updatedAt ?? 0)}
           </span>
           <div className="mt-3">
             <Rating rating={value.rating ?? 0} />
@@ -45,7 +45,7 @@ function Review({ value }: ShopReviewProps) {
 function ShopReviewListing({ shopId }: { shopId: number }) {
   const { data, error, isLoading } = useSWR(
     ["/shop-reviews", shopId],
-    ([url, id]) => getReviews(id, "ASC"),
+    ([url, id]) => getReviews(id, "DESC"),
     {
       revalidateOnFocus: false
     }
@@ -70,14 +70,16 @@ function ShopReviewListing({ shopId }: { shopId: number }) {
           {data?.contents &&
             data?.contents.map((r, i) => <Review key={i} value={r} />)}
         </ul>
-        <div className="hstack justify-content-end mt-2">
-          <div>
-            <Pagination
-              currentPage={data?.currentPage}
-              totalPage={data?.totalPage}
-            />
+        {(data?.totalPage ?? 0) > 1 && (
+          <div className="hstack justify-content-end mt-2">
+            <div>
+              <Pagination
+                currentPage={data?.currentPage}
+                totalPage={data?.totalPage}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </>
     );
   };

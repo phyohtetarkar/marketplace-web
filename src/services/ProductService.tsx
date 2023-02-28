@@ -29,6 +29,7 @@ export async function saveProduct(value: Product) {
   value.stockLeft && form.append("stockLeft", value.stockLeft.toPrecision());
   form.append("featured", value.featured ? "true" : "false");
   form.append("newArrival", value.newArrival ? "true" : "false");
+  form.append("withVariant", value.withVariant ? "true" : "false");
   value.description && form.append("description", value.description);
   value.status && form.append("status", value.status);
   value.categoryId && form.append("categoryId", value.categoryId.toPrecision());

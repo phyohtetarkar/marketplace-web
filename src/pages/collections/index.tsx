@@ -21,7 +21,7 @@ const CollectionItem = ({ item, onClick }: CollectionItemProps) => {
     >
       {item?.image ? (
         <Image
-          src={item.image}
+          src={item.imageUrl}
           width={50}
           height={50}
           alt=""
