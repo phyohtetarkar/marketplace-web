@@ -17,7 +17,7 @@ interface FilterProps {
 }
 
 const Filter = ({ slug }: FilterProps) => {
-  const { brands, error, isLoading } = useBrands(slug);
+  const brandState = useBrands(slug);
 
   const [maxPrice, setMaxPrice] = useState(300000);
 
@@ -52,7 +52,8 @@ const Filter = ({ slug }: FilterProps) => {
                 className="vstack gap-2"
                 style={{ maxHeight: 250, minHeight: 100 }}
               >
-                {brands?.map((b, i) => {
+                {brandState.isLoading && <Loading />}
+                {brandState.brands?.map((b, i) => {
                   return (
                     <div key={i} className="form-check">
                       <input

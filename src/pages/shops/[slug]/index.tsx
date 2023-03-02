@@ -60,7 +60,7 @@ function ShopHome({ shop }: { shop: Shop }) {
     (tab as PageTab) ?? "products"
   );
 
-  const [pendingProductId, setPendingProductId] = useState<string>();
+  const [pendingProductId, setPendingProductId] = useState<number>();
   const [pendingQuery, setPendingQuery] = useState<ProductQuery>();
 
   const [isMember, setMember] = useState<boolean>();
@@ -164,11 +164,11 @@ function ShopHome({ shop }: { shop: Shop }) {
             isMember={isMember}
             onProductCreate={(query) => {
               setPendingQuery(query);
-              setPendingProductId("new");
+              setPendingProductId(0);
             }}
-            onProductEdit={(slug, query) => {
+            onProductEdit={(id, query) => {
               setPendingQuery(query);
-              setPendingProductId(slug);
+              setPendingProductId(id);
             }}
           />
         );
@@ -198,11 +198,11 @@ function ShopHome({ shop }: { shop: Shop }) {
     </>
   );
 
-  if (pendingProductId) {
+  if (pendingProductId !== undefined) {
     return (
       <ProductEdit
         shop={shop}
-        productSlug={pendingProductId}
+        productId={pendingProductId}
         pendingQuery={pendingQuery}
         onPopBack={() => {
           setPendingProductId(undefined);

@@ -2,7 +2,11 @@ import { useState } from "react";
 import useSWR from "swr";
 import { Shop } from "../../common/models";
 import { parseErrorResponse } from "../../common/utils";
-import { findProducts, ProductQuery } from "../../services/ProductService";
+import {
+  findProducts,
+  findShopProducts,
+  ProductQuery
+} from "../../services/ProductService";
 import Alert from "../Alert";
 import { Select } from "../forms";
 import Loading from "../Loading";
@@ -12,7 +16,7 @@ import { ProductGridItem, ProductManageGridItem } from "../product";
 interface ShopProductListingProps {
   shop: Shop;
   isMember: boolean;
-  onProductEdit?: (slug: string, query: ProductQuery) => void;
+  onProductEdit?: (id: number, query: ProductQuery) => void;
   onProductCreate?: (query: ProductQuery) => void;
 }
 
@@ -24,7 +28,10 @@ function ShopProductListing(props: ShopProductListingProps) {
 
   const { data, error, isLoading } = useSWR(
     ["/products", query],
-    ([url, query]) => findProducts(query),
+    ([url, query]) =>
+      props.isMember
+        ? findShopProducts(props.shop.id!, query)
+        : findProducts(query),
     {
       revalidateOnFocus: false
     }
@@ -54,7 +61,7 @@ function ShopProductListing(props: ShopProductListingProps) {
                     <ProductManageGridItem
                       value={p}
                       onEditClick={() =>
-                        p.slug && props.onProductEdit?.(p.slug, query)
+                        p.id && props.onProductEdit?.(p.id, query)
                       }
                     />
                   ) : (

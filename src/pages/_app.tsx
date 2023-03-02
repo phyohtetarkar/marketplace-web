@@ -34,11 +34,12 @@ Amplify.configure({
     ...awsconfig,
     ssr: true,
     cookieStorage: {
-      domain: process.env.NEXT_PUBLIC_DOMAIN,
+      domain:
+        process.env.NEXT_PUBLIC_PROFILE === "dev" ? "localhost" : "localhost",
       path: "/",
       expires: 365,
       sameSite: "strict",
-      secure: process.env.NEXT_PUBLIC_DOMAIN !== "localhost"
+      secure: process.env.NEXT_PUBLIC_PROFILE !== "dev"
     }
   }
 });

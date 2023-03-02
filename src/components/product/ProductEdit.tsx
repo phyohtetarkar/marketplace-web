@@ -22,6 +22,7 @@ import {
   setStringToSlug
 } from "../../common/utils";
 import {
+  getProductById,
   getProductBySlug,
   ProductQuery,
   saveProduct
@@ -45,6 +46,7 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
 interface ProductEditProps {
   shop: Shop;
   productSlug?: string;
+  productId?: number;
   pendingQuery?: ProductQuery;
   onPopBack?: () => void;
 }
@@ -52,12 +54,13 @@ interface ProductEditProps {
 function ProductEdit({
   shop,
   productSlug,
+  productId,
   pendingQuery,
   onPopBack
 }: ProductEditProps) {
   const { mutate } = useSWRConfig();
 
-  const [fetching, setFetching] = useState(productSlug !== "new");
+  const [fetching, setFetching] = useState((productId ?? 0) > 0);
   const [product, setProduct] = useState<Product>({
     shopId: shop.id,
     images: []
@@ -120,11 +123,15 @@ function ProductEdit({
   });
 
   useEffect(() => {
-    if (
-      !productSlug ||
-      productSlug.trim().length === 0 ||
-      productSlug === "new"
-    ) {
+    // if (
+    //   !productSlug ||
+    //   productSlug.trim().length === 0 ||
+    //   productSlug === "new"
+    // ) {
+    //   return;
+    // }
+
+    if (!productId) {
       return;
     }
 
@@ -132,7 +139,7 @@ function ProductEdit({
       return;
     }
 
-    getProductBySlug(productSlug)
+    getProductById(shop.id!, productId)
       .then((p) => {
         setProduct({
           ...p,
@@ -149,7 +156,7 @@ function ProductEdit({
         setFetching(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productSlug, categories]);
+  }, [categories]);
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
     const files = event.target.files;
@@ -879,7 +886,10 @@ function ProductEdit({
                             className="position-absolute top-0 end-0 m-2 btn btn-sm btn-danger"
                             onClick={() => {
                               if (img.id && img.id > 0) {
-                                setValue(`images.${index}.deleted`, true);
+                                imagesField.update(index, {
+                                  ...img,
+                                  deleted: true
+                                });
                               } else {
                                 imagesField.remove(index);
                               }

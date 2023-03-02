@@ -129,7 +129,7 @@ export async function getMyShops(page?: number) {
 
 export async function getShopHints(q: string) {
   const query = buildQueryParams({ q: q });
-  const url = `${getAPIBasePath()}${basePath}/hints${query}`;
+  const url = `${getAPIBasePath()}search/shop-hints${query}`;
   const resp = await fetch(url);
 
   await validateResponse(resp);

@@ -8,6 +8,7 @@ import { getReviews } from "../../services/ShopReviewService";
 import Loading from "../Loading";
 import { formatTimestamp, parseErrorResponse } from "../../common/utils";
 import Alert from "../Alert";
+import { useState } from "react";
 
 interface ShopReviewProps {
   value: ShopReview;
@@ -43,9 +44,10 @@ function Review({ value }: ShopReviewProps) {
 }
 
 function ShopReviewListing({ shopId }: { shopId: number }) {
+  const [page, setPage] = useState(0);
   const { data, error, isLoading } = useSWR(
-    ["/shop-reviews", shopId],
-    ([url, id]) => getReviews(id, "DESC"),
+    ["/shop-reviews", page],
+    ([url, p]) => getReviews(shopId, "DESC", p),
     {
       revalidateOnFocus: false
     }
@@ -76,6 +78,7 @@ function ShopReviewListing({ shopId }: { shopId: number }) {
               <Pagination
                 currentPage={data?.currentPage}
                 totalPage={data?.totalPage}
+                onChange={setPage}
               />
             </div>
           </div>
