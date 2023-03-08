@@ -1,10 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Product, Shop } from "../../common/models";
 import { debounce } from "../../common/utils";
 import { getProductHints } from "../../services/ProductService";
 import { getShopHints } from "../../services/ShopService";
+import Loading from "../Loading";
 import Popover from "../Popover";
 
 function HeaderSearchHints() {
@@ -18,17 +18,27 @@ function HeaderSearchHints() {
       debounce((op, q) => {
         if (!q) {
           setHints(undefined);
-        } else if (op === "product") {
+          return;
+        }
+
+        setIsLoading(true);
+        if (op === "product") {
           getProductHints(q)
             .then(setHints)
             .catch((e) => {
               setHints(undefined);
+            })
+            .finally(() => {
+              setIsLoading(false);
             });
         } else if (op === "shop") {
           getShopHints(q)
             .then(setHints)
             .catch((e) => {
               setHints(undefined);
+            })
+            .finally(() => {
+              setIsLoading(false);
             });
         }
       }, 800),
@@ -77,6 +87,11 @@ function HeaderSearchHints() {
               />
             </Popover.Reference>,
             <Popover.Popper key={2}>
+              {isLoading && (
+                <div className="bg-white shadow border rounded">
+                  <Loading />
+                </div>
+              )}
               {hints && hints.length > 0 && (
                 <div className="vstack bg-white shadow border rounded">
                   {hints.map((e, i) => {

@@ -38,16 +38,14 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
             onContextMenu={(e) => e.preventDefault()}
           >
             <div className="ratio ratio-1x1" style={{ width: _imageSize }}>
-              {value.logo && (
-                <Image
-                  className="rounded-circle"
-                  src={value.logo ?? ""}
-                  alt="Shop image."
-                  layout="fill"
-                  objectFit="cover"
-                  priority
-                />
-              )}
+              <Image
+                className="rounded-circle"
+                src={value.logoUrl ?? "/images/placeholder.jpeg"}
+                alt="Shop image."
+                layout="fill"
+                objectFit="cover"
+                priority
+              />
             </div>
           </div>
 

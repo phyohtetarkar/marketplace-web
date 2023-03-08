@@ -155,13 +155,9 @@ const ShopMedia = (props: FormProps) => {
   const logoRef = useRef<HTMLInputElement>(null);
   const coverRef = useRef<HTMLInputElement>(null);
 
-  const [logo, setLogo] = useState<string | null | undefined>(
-    props.values.logo
-  );
+  const [logo, setLogo] = useState<string | undefined>(props.values.logoUrl);
   const [logoImage, setLogoImage] = useState(props.values.logoImage);
-  const [cover, setCover] = useState<string | null | undefined>(
-    props.values.cover
-  );
+  const [cover, setCover] = useState<string | undefined>(props.values.coverUrl);
   const [coverImage, setCoverImage] = useState(props.values.coverImage);
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
@@ -291,8 +287,8 @@ const ShopMedia = (props: FormProps) => {
           onClick={() => {
             props.onSubmit?.({
               ...props.values,
-              logo: logo,
-              cover: cover,
+              logoUrl: logo,
+              coverUrl: cover,
               logoImage: logoImage,
               coverImage: coverImage
             });
@@ -315,7 +311,7 @@ const PackageSelection = (props: FormProps) => {
       setSubmitting(true);
 
       await createShop(shop);
-      router.replace("/profile/shops");
+      router.replace("/account/shops");
     } catch (error) {
       const msg = parseErrorResponse(error);
     } finally {

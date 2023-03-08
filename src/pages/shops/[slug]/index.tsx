@@ -249,13 +249,15 @@ function ShopHome({ shop }: { shop: Shop }) {
                   }}
                   className="position-relative bg-primary"
                 >
-                  <Image
-                    src={shop.cover!}
-                    alt=""
-                    objectFit="cover"
-                    layout="fill"
-                    priority
-                  />
+                  {shop.coverUrl && (
+                    <Image
+                      src={shop.coverUrl}
+                      alt=""
+                      objectFit="cover"
+                      layout="fill"
+                      priority
+                    />
+                  )}
                   {isMember && (
                     <Dropdown
                       toggle={
@@ -298,7 +300,7 @@ function ShopHome({ shop }: { shop: Shop }) {
                       <div className="flex-shrink-0 mt-n6">
                         <div className="bg-white p-1 pb-0 rounded position-relative">
                           <Image
-                            src={shop.logo!}
+                            src={shop.logoUrl ?? "/images/placeholder.jpeg"}
                             width={100}
                             height={100}
                             alt=""

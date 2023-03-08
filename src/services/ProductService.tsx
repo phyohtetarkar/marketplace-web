@@ -10,11 +10,12 @@ const basePath = "products";
 
 export interface ProductQuery {
   q?: String;
-  "category-slug"?: string;
+  "category-slug"?: string | string[];
+  "category-id"?: number;
   "shop-id"?: number;
   "discount-id"?: number;
   "max-price"?: number;
-  brand?: string[];
+  brand?: string | string[];
   status?: "PUBLISHED" | "DRAFT" | "DENIED" | string;
   page?: number;
 }
@@ -87,8 +88,8 @@ export async function saveProduct(value: Product) {
   await validateResponse(resp);
 }
 
-export async function getProductById(shopId: number, productId: number) {
-  const url = `${getAPIBasePath()}shops/${shopId}/products/${productId}`;
+export async function getProductById(productId: number) {
+  const url = `${getAPIBasePath()}${basePath}/${productId}`;
   const resp = await fetch(url, {
     headers: {
       Authorization: await getAuthHeader()
@@ -102,11 +103,7 @@ export async function getProductById(shopId: number, productId: number) {
 
 export async function getProductBySlug(slug: String) {
   const url = `${getAPIBasePath()}${basePath}/${slug}`;
-  const resp = await fetch(url, {
-    headers: {
-      Authorization: await getAuthHeader()
-    }
-  });
+  const resp = await fetch(url);
 
   await validateResponse(resp);
 
@@ -144,8 +141,8 @@ export async function getProductHints(q: string) {
   return resp.json() as Promise<Product[]>;
 }
 
-export async function getRelatedProducts(id: number, categoryId: number) {
-  const url = `${getAPIBasePath()}${basePath}/${id}/related?category-id=${categoryId}`;
+export async function getRelatedProducts(id: number) {
+  const url = `${getAPIBasePath()}${basePath}/${id}/related`;
   const resp = await fetch(url);
 
   await validateResponse(resp);
@@ -168,7 +165,11 @@ export async function findShopProducts(shopId: number, value: ProductQuery) {
   const query = buildQueryParams(value);
 
   const url = `${getAPIBasePath()}shops/${shopId}/products${query}`;
-  const resp = await fetch(url);
+  const resp = await fetch(url, {
+    headers: {
+      Authorization: await getAuthHeader()
+    }
+  });
 
   await validateResponse(resp);
 

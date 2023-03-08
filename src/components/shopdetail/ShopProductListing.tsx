@@ -22,8 +22,7 @@ interface ShopProductListingProps {
 
 function ShopProductListing(props: ShopProductListingProps) {
   const [query, setQuery] = useState<ProductQuery>({
-    "shop-id": props.shop.id,
-    status: !props.isMember ? "PUBLISHED" : undefined
+    "shop-id": props.shop.id
   });
 
   const { data, error, isLoading } = useSWR(
@@ -87,7 +86,7 @@ function ShopProductListing(props: ShopProductListingProps) {
 
   return (
     <div className="p-0">
-      <div className="row g-3 mb-2">
+      <div className="row g-3 mb-3">
         <div className="col d-none d-md-block"></div>
         {props.isMember && (
           <>

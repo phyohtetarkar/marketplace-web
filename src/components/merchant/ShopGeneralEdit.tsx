@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ShopDetailContext } from "../../common/contexts";
 import { ShopGeneral } from "../../common/models";
@@ -10,6 +10,7 @@ import {
   setStringToSlug
 } from "../../common/utils";
 import { updateShopGeneral } from "../../services/ShopService";
+import Alert from "../Alert";
 import { Input } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import ProgressButton from "../ProgressButton";
@@ -24,6 +25,7 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
 function ShopGeneralEdit({ handleClose }: { handleClose?: () => void }) {
   const shopContext = useContext(ShopDetailContext);
   const router = useRouter();
+  const [error, setError] = useState<string>();
 
   const {
     control,
@@ -43,13 +45,16 @@ function ShopGeneralEdit({ handleClose }: { handleClose?: () => void }) {
 
   const save = async (values: ShopGeneral) => {
     try {
+      setError(undefined);
       const shop = await updateShopGeneral(values);
       router.replace({
-        href: `/shops/[slug]`,
+        pathname: `/shops/[slug]`,
         query: { slug: shop.slug }
       });
+      handleClose?.();
     } catch (error) {
       const msg = parseErrorResponse(error);
+      setError(msg);
     } finally {
     }
   };
@@ -68,6 +73,7 @@ function ShopGeneralEdit({ handleClose }: { handleClose?: () => void }) {
         {/* <div className="card-header py-3 bg-white border-bottom">
           <h4 className="mb-0">General</h4>
         </div> */}
+        {error && <Alert message={error} variant="danger" />}
         <div className="row g-3">
           <div className="col-lg-6">
             <Input

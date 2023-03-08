@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ShopDetailContext } from "../../common/contexts";
@@ -9,6 +10,7 @@ import ProgressButton from "../ProgressButton";
 
 function ShopContactEdit({ handleClose }: { handleClose?: () => void }) {
   const shopContext = useContext(ShopDetailContext);
+  const router = useRouter();
 
   const {
     control,
@@ -31,6 +33,7 @@ function ShopContactEdit({ handleClose }: { handleClose?: () => void }) {
     try {
       console.log(values);
       await updateShopContact(values);
+      router.replace(router.asPath);
       handleClose?.();
     } catch (error) {
       const msg = parseErrorResponse(error);

@@ -440,7 +440,9 @@ function ProductDetail({ product }: { product: Product }) {
                       onContextMenu={(evt) => evt.preventDefault()}
                     >
                       <Image
-                        src={product.shop?.logo ?? "/images/placeholder.jpeg"}
+                        src={
+                          product.shop?.logoUrl ?? "/images/placeholder.jpeg"
+                        }
                         width={70}
                         height={70}
                         alt=""

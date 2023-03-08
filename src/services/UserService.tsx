@@ -37,7 +37,7 @@ export async function updateProfile(value: User) {
 }
 
 export async function getLoginUser() {
-  const url = `${getAPIBasePath()}users/me`;
+  const url = `${getAPIBasePath()}${basePath}`;
   const resp = await fetch(url, {
     headers: {
       Authorization: await getAuthHeader()

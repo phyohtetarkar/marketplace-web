@@ -23,7 +23,6 @@ import {
 } from "../../common/utils";
 import {
   getProductById,
-  getProductBySlug,
   ProductQuery,
   saveProduct
 } from "../../services/ProductService";
@@ -139,7 +138,7 @@ function ProductEdit({
       return;
     }
 
-    getProductById(shop.id!, productId)
+    getProductById(productId)
       .then((p) => {
         setProduct({
           ...p,
@@ -173,6 +172,7 @@ function ProductEdit({
 
           img.onload = (evt) => {
             if (img.width > 800 || img.height > 800) {
+              toast.error("Image over dimension");
               return;
             }
 
@@ -853,22 +853,28 @@ function ProductEdit({
                                 id={`thumbnail${index}Check`}
                                 className="form-check-input"
                                 type="radio"
-                                defaultChecked={img.thumbnail ?? false}
+                                checked={img.thumbnail ?? false}
                                 {...register(`images.${index}.thumbnail`, {
                                   onChange: (evt) => {
-                                    imagesField.fields.forEach((m, j) => {
-                                      if (index !== j) {
-                                        setValue(
-                                          `images.${j}.thumbnail`,
-                                          false
-                                        );
-                                      }
-                                    });
+                                    // imagesField.fields.forEach((m, j) => {
+                                    //   if (index !== j) {
+                                    //     setValue(
+                                    //       `images.${j}.thumbnail`,
+                                    //       false
+                                    //     );
+                                    //   }
+                                    // });
 
-                                    imagesField.update(index, {
-                                      ...img,
-                                      thumbnail: true
-                                    });
+                                    const images = imagesField.fields.map(
+                                      (m, j) => {
+                                        return {
+                                          ...m,
+                                          thumbnail: index === j
+                                        };
+                                      }
+                                    );
+
+                                    imagesField.replace(images);
                                   }
                                 })}
                               ></input>
@@ -938,7 +944,7 @@ function ProductEdit({
               <div className="card-footer px-4 py-3">
                 <span className="text-muted">
                   Product image can upload up to <strong>5</strong> images with
-                  size constraint of at most <strong>800x800</strong>px.
+                  dimension constraint of at most <strong>800x800</strong>px.
                 </span>
               </div>
             </div>

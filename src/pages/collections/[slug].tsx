@@ -1,25 +1,54 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
-import { useBrands, useCategory } from "../../common/hooks";
+import { Category } from "../../common/models";
 import { parseErrorResponse } from "../../common/utils";
 import Accordion from "../../components/Accordion";
 import Alert from "../../components/Alert";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
 import { ProductGridItem } from "../../components/product";
+import {
+  getBrandsByCategoryId,
+  getCategory
+} from "../../services/CategoryService";
 import { findProducts, ProductQuery } from "../../services/ProductService";
 
 interface FilterProps {
-  slug: string;
+  categoryId?: number;
 }
 
-const Filter = ({ slug }: FilterProps) => {
-  const brandState = useBrands(slug);
+const Filter = ({ categoryId }: FilterProps) => {
+  const router = useRouter();
+
+  const { brand } = router.query;
 
   const [maxPrice, setMaxPrice] = useState(300000);
+
+  const [brands, setBrands] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!categoryId) {
+      return;
+    }
+    getBrandsByCategoryId(categoryId).then(setBrands).catch(console.error);
+  }, [categoryId]);
+
+  const isChecked = (b: string) => {
+    if (!brand) {
+      return false;
+    }
+
+    if (typeof brand === "string") {
+      return brand === b;
+    } else if (brand instanceof Array) {
+      return brand.includes(b);
+    }
+
+    return false;
+  };
 
   return (
     <div className="rounded shadow-sm bg-white">
@@ -52,8 +81,7 @@ const Filter = ({ slug }: FilterProps) => {
                 className="vstack gap-2"
                 style={{ maxHeight: 250, minHeight: 100 }}
               >
-                {brandState.isLoading && <Loading />}
-                {brandState.brands?.map((b, i) => {
+                {brands.map((b, i) => {
                   return (
                     <div key={i} className="form-check">
                       <input
@@ -61,6 +89,34 @@ const Filter = ({ slug }: FilterProps) => {
                         type="checkbox"
                         name="brand"
                         className="form-check-input shadow-none"
+                        checked={isChecked(b)}
+                        onChange={(evt) => {
+                          let brands: string[] = [];
+                          const q = { ...router.query };
+
+                          if (typeof q.brand === "string") {
+                            brands.push(q.brand);
+                          } else if (typeof q.brand === "object") {
+                            brands = [...q.brand];
+                          }
+
+                          if (evt.target.checked) {
+                            brands.push(b);
+                          } else {
+                            const index = brands.findIndex((v) => v === b);
+
+                            if (index >= 0) {
+                              brands.splice(index, 1);
+                            }
+                          }
+
+                          q.brand = brands;
+
+                          router.replace({
+                            pathname: "/collections/[slug]",
+                            query: q
+                          });
+                        }}
                       />
                       <label htmlFor={`brand${i}`} className="form-check-label">
                         {b}
@@ -104,10 +160,14 @@ const Filter = ({ slug }: FilterProps) => {
 
 function Collection() {
   const router = useRouter();
+
+  const firstLoadRef = useRef(false);
+
   const { slug } = router.query;
+
   const [query, setQuery] = useState<ProductQuery>();
 
-  const { category } = useCategory(slug as string);
+  const [category, setCategory] = useState<Category>();
 
   const { data, error, isLoading } = useSWR(
     ["/products", query],
@@ -122,12 +182,28 @@ function Collection() {
       return;
     }
 
-    const { slug } = router.query;
+    if (firstLoadRef.current) {
+      return;
+    }
 
-    setQuery({
-      "category-slug": slug as string,
-      status: "PUBLISHED"
-    });
+    const { slug, brand, page } = router.query;
+
+    getCategory(slug as string)
+      .then((value) => {
+        setCategory(value);
+        firstLoadRef.current = true;
+        setQuery({
+          "category-id": value.id,
+          brand: brand,
+          page: page && typeof page === "string" ? parseInt(page) : undefined
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    return () => {
+      firstLoadRef.current = false;
+    };
   }, [router]);
 
   const breadcrumb = () => {
@@ -185,16 +261,34 @@ function Collection() {
                 </div>
               );
             })}
-          <div className="mt-4 d-flex justify-content-end">
-            {/* <button className="btn btn-outline-primary rounded-pill">
+        </div>
+        <div className="mt-4 d-flex justify-content-end">
+          {/* <button className="btn btn-outline-primary rounded-pill">
                     Load more products
                   </button> */}
 
-            <Pagination
-              currentPage={data?.currentPage}
-              totalPage={data?.totalPage}
-            />
-          </div>
+          <Pagination
+            currentPage={data?.currentPage}
+            totalPage={data?.totalPage}
+            onChange={(page) => {
+              if (!query || query.page === page) {
+                return;
+              }
+
+              const q = { ...router.query };
+
+              if (page > 0) {
+                q["page"] = `${page}`;
+              } else {
+                delete q["page"];
+              }
+
+              router.replace({
+                pathname: "/collections/[slug]",
+                query: q
+              });
+            }}
+          />
         </div>
       </>
     );
@@ -232,7 +326,7 @@ function Collection() {
       <div className="container py-3">
         <div className="row g-3">
           <div className="col-lg-4 col-xl-3">
-            <Filter slug={slug as string} />
+            <Filter categoryId={category?.id} />
           </div>
           <div className="col-lg-8 col-xl-9 mt-3 mt-lg-0">
             <div className="d-flex mb-3">

@@ -115,7 +115,7 @@ export async function getMyShops(page?: number) {
   const query = buildQueryParams({
     page: page
   });
-  const url = `${getAPIBasePath()}shops/me${query}`;
+  const url = `${getAPIBasePath()}profile/${basePath}${query}`;
   const resp = await fetch(url, {
     headers: {
       Authorization: await getAuthHeader()

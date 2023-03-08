@@ -12,7 +12,7 @@ export async function getFavoriteProducts(page?: number) {
   const query = buildQueryParams({
     page: page
   });
-  const url = `${getAPIBasePath()}${basePath}${query}`;
+  const url = `${getAPIBasePath()}profile/${basePath}${query}`;
   const resp = await fetch(url, {
     headers: {
       Authorization: await getAuthHeader()

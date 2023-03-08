@@ -37,6 +37,15 @@ export async function getBrandsByCategory(slug: string) {
   return resp.json() as Promise<string[]>;
 }
 
+export async function getBrandsByCategoryId(id: number) {
+  const url = `${getAPIBasePath()}${basePath}/${id}/brands`;
+  const resp = await fetch(url);
+
+  await validateResponse(resp);
+
+  return resp.json() as Promise<string[]>;
+}
+
 export async function existsCateogryBySlug(slug: String, excludeId: number) {
   const query = buildQueryParams({
     exclude: excludeId

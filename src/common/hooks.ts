@@ -2,6 +2,7 @@ import useSWR from "swr";
 import {
   getAllCategories,
   getBrandsByCategory,
+  getBrandsByCategoryId,
   getCategory
 } from "../services/CategoryService";
 import { getLoginUser } from "../services/UserService";
@@ -38,10 +39,10 @@ export function useCategories(flat: boolean) {
   };
 }
 
-export function useBrands(categorySlug?: string) {
+export function useBrands(categoryId?: number) {
   const { data, error, isLoading } = useSWR(
-    ["/brands", categorySlug],
-    ([url, slug]) => (slug ? getBrandsByCategory(slug) : undefined),
+    "/brands",
+    () => (categoryId ? getBrandsByCategoryId(categoryId) : undefined),
     {
       revalidateOnFocus: false
     }
