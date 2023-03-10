@@ -93,7 +93,7 @@ function HeaderSearchHints() {
                 </div>
               )}
               {hints && hints.length > 0 && (
-                <div className="vstack bg-white shadow border rounded">
+                <div className="vstack bg-white shadow border rounded overflow-hidden">
                   {hints.map((e, i) => {
                     let imageUrl = "/images/placeholder.jpeg";
                     let href = "";
@@ -103,13 +103,13 @@ function HeaderSearchHints() {
                     }
 
                     if ("logo" in e) {
-                      imageUrl = e.logo ?? imageUrl;
+                      imageUrl = e.logoUrl ?? imageUrl;
                       href = `/shops/${e.slug}`;
                     }
                     return (
                       <Link key={i} href={href}>
                         <a
-                          className="hstack text-decoration-none dropdown-item"
+                          className="text-decoration-none dropdown-item"
                           onClick={() => {
                             setSearch("");
                             hide();
@@ -122,7 +122,17 @@ function HeaderSearchHints() {
                             height={40}
                             className="flex-shrink-0 rounded-1"
                           /> */}
-                          <div className="fw-medium py-2">{e.name}</div>
+                          <div className="py-2">
+                            <div className="fw-medium">{e.name}</div>
+                            {"headline" in e && (
+                              <div
+                                className="text-muted"
+                                style={{ fontSize: 12 }}
+                              >
+                                {e.headline}
+                              </div>
+                            )}
+                          </div>
                         </a>
                       </Link>
                     );

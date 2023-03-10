@@ -1,14 +1,14 @@
 import Image from "next/image";
+import { useState } from "react";
+import useSWR from "swr";
+import { ShopReview } from "../../common/models";
+import { formatTimestamp, parseErrorResponse } from "../../common/utils";
+import { getReviews } from "../../services/ShopReviewService";
+import Alert from "../Alert";
+import Loading from "../Loading";
 import Pagination from "../Pagination";
 import Rating from "../Rating";
-import useSWR from "swr";
 import ShopReviewEdit from "./ShopReviewEdit";
-import { PageData, ShopReview } from "../../common/models";
-import { getReviews } from "../../services/ShopReviewService";
-import Loading from "../Loading";
-import { formatTimestamp, parseErrorResponse } from "../../common/utils";
-import Alert from "../Alert";
-import { useState } from "react";
 
 interface ShopReviewProps {
   value: ShopReview;
@@ -45,7 +45,7 @@ function Review({ value }: ShopReviewProps) {
 
 function ShopReviewListing({ shopId }: { shopId: number }) {
   const [page, setPage] = useState(0);
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     ["/shop-reviews", page],
     ([url, p]) => getReviews(shopId, "DESC", p),
     {
@@ -89,7 +89,11 @@ function ShopReviewListing({ shopId }: { shopId: number }) {
 
   return (
     <div>
-      <ShopReviewEdit />
+      <ShopReviewEdit
+        reload={() => {
+          mutate();
+        }}
+      />
       <div className="card shadow-sm">
         <div className="card-body">{content()}</div>
       </div>

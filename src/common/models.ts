@@ -99,6 +99,11 @@ export interface ShopReview {
   updatedAt?: number;
 }
 
+export interface FavoriteProduct {
+  id: number;
+  product: Product;
+}
+
 export interface Product {
   id?: number;
   name?: string;

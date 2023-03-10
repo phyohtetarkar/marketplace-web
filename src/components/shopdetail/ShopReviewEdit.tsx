@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useSWRConfig } from "swr";
 import {
   AuthenticationContext,
   ShopDetailContext
@@ -16,8 +15,12 @@ import Rating from "../Rating";
 
 const _ratings = [5, 4, 3, 2, 1];
 
-function ShopReviewEdit() {
-  const { mutate } = useSWRConfig();
+interface ShopReviewEditProps {
+  reload?: () => void;
+}
+
+function ShopReviewEdit(props: ShopReviewEditProps) {
+  const { reload } = props;
   const shopContext = useContext(ShopDetailContext);
   const authContext = useContext(AuthenticationContext);
   const router = useRouter();
@@ -69,10 +72,7 @@ function ShopReviewEdit() {
         return;
       }
       await writeReview(values);
-      mutate(["/shop-reviews", values.shopId ?? 0]);
-      // formik.setValues({
-      //   shopId: shopContext?.id
-      // });
+      reload?.();
       await loadUserReview(values.shopId ?? 0);
     } catch (error) {
       const msg = parseErrorResponse(error);

@@ -1,6 +1,13 @@
 import { Placement } from "@popperjs/core";
-import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
-import { usePopper } from "react-popper";
+import {
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from "react";
+import { Modifier, usePopper } from "react-popper";
 
 interface PopoverProps {
   placement?: Placement;
@@ -47,21 +54,41 @@ function Popover(props: PopoverProps) {
   const referenceElement = useRef<HTMLDivElement>(null);
   const popperElement = useRef<HTMLDivElement>(null);
   const [arrowElement, setArrowElement] = useState<HTMLElement | null>(null);
+
+  const modifiers = useMemo(() => {
+    return [
+      { name: "arrow", options: { element: arrowElement } },
+      {
+        name: "offset",
+        options: {
+          offset: offset ?? [0, 4]
+        }
+      },
+      {
+        name: "sameWidth",
+        enabled: sameWidth,
+        fn: ({ state }) => {
+          state.styles.popper.width = `${state.rects.reference.width}px`;
+        },
+        effect: ({ state }) => {
+          state.elements.popper.style.width = `${
+            state.elements.reference.getBoundingClientRect().width
+          }px`;
+        },
+        phase: "beforeWrite",
+        requires: ["computeStyles"]
+      }
+    ] as Modifier<any, any>[];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const { styles, attributes } = usePopper(
     referenceElement.current,
     popperElement.current,
     {
-      modifiers: [
-        { name: "arrow", options: { element: arrowElement } },
-        {
-          name: "offset",
-          options: {
-            offset: offset ?? [0, 4]
-          }
-        }
-      ],
+      modifiers: modifiers,
       placement: placement ?? "bottom-start",
-      strategy: "absolute"
+      strategy: "fixed"
     }
   );
   const [open, setOpen] = useState(false);
@@ -121,8 +148,8 @@ function Popover(props: PopoverProps) {
         ref={popperElement}
         style={{
           ...styles.popper,
-          zIndex: 9999,
-          width: sameWidth ? referenceElement.current?.clientWidth : undefined
+          zIndex: 9999
+          //width: sameWidth ? referenceElement.current?.clientWidth : undefined
         }}
         {...attributes.popper}
         onMouseLeave={(evt) => {
