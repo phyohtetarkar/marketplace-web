@@ -14,8 +14,8 @@ function OrderCard() {
             <span className="fw-semibold h5 my-auto">Order ID: 20001</span>
           </div>
           <div className="col-auto">
-            <Link href={"/profile/orders/1"}>
-              <a className="btn btn-sm btn-outline-primary">View Detail</a>
+            <Link href={"/profile/orders/1"} className="btn btn-sm btn-outline-primary">
+              View Detail
             </Link>
           </div>
         </div>
@@ -113,10 +113,10 @@ function MyOrders() {
                   </Select>
                 </div>
                 <div className="col-auto d-none d-sm-block">
-                  <Link href="#">
-                    <a className="ms-auto btn btn-primary h-100 hstack">
+                  <Link href="#" className="ms-auto btn btn-primary h-100 hstack">
+                    
                       Search
-                    </a>
+                    
                   </Link>
                 </div>
               </div>

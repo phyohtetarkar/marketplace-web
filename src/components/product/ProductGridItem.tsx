@@ -57,47 +57,53 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
 
   return (
     <div className="card h-100 border-0 shadow-sm">
-      <Link href={`/products/${value.slug}`}>
-        <a className="text-decoration-none">
-          <div
-            className="position-relative"
-            onContextMenu={(e) => e.preventDefault()}
-          >
-            <div className="ratio ratio-4x3">
-              <Image
-                className="card-img-top"
-                src={value.thumbnail ?? "/placeholder.jpeg"}
-                alt="Product image."
-                layout="fill"
-                objectFit="contain"
-                priority
-              />
-            </div>
-            {outOfStock && outOfStock}
-            {popular && popular}
+      <Link href={`/products/${value.slug}`} className="text-decoration-none">
+
+        <div
+          className="position-relative"
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          <div className="ratio ratio-4x3">
+            <Image
+              className="card-img-top"
+              src={value.thumbnail ?? "/placeholder.jpeg"}
+              alt="Product image."
+              layout="fill"
+              objectFit="contain"
+              priority
+            />
           </div>
-        </a>
+          {outOfStock && outOfStock}
+          {popular && popular}
+        </div>
+
       </Link>
       <div className="card-body">
         <div className="vstack">
           {heading === "seller" ? (
-            <Link href={`/shops/${value.shop?.slug}`}>
-              <a className="text-decoration-none small text-truncate link-warning fw-medium">
-                {value.shop?.name}
-              </a>
-            </Link>
+            (<Link
+              href={`/shops/${value.shop?.slug}`}
+              className="text-decoration-none small text-truncate link-warning fw-medium">
+
+              {value.shop?.name}
+
+            </Link>)
           ) : (
-            <Link href={`/categories/${value.category?.slug}`}>
-              <a className="text-decoration-none small text-truncate link-warning fw-medium">
-                {value.category?.name}
-              </a>
-            </Link>
+            (<Link
+              href={`/categories/${value.category?.slug}`}
+              className="text-decoration-none small text-truncate link-warning fw-medium">
+
+              {value.category?.name}
+
+            </Link>)
           )}
 
-          <Link href={`/products/${value.slug}`}>
-            <a className="text-muted text-decoration-none text-truncate">
-              {value.name}
-            </a>
+          <Link
+            href={`/products/${value.slug}`}
+            className="text-muted text-decoration-none text-truncate">
+
+            {value.name}
+
           </Link>
 
           <h6 className="fw-semibold mt-2 mb-3">{price}</h6>
@@ -111,8 +117,8 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
               />
             )}
             {value.id && value.withVariant && (
-              <Link href={`/products/${value.slug}`}>
-                <a className="btn btn-primary flex-grow-1">Select options</a>
+              <Link href={`/products/${value.slug}`} className="btn btn-primary flex-grow-1">
+                Select options
               </Link>
             )}
             {/* {value.id && <AddToFavoriteButton productId={value.id} />} */}

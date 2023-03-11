@@ -15,22 +15,22 @@ function ShoppingCartView() {
     }
   );
   return (
-    <Link href="/shopping-cart">
-      <a className="nav-link">
-        <div className="position-relative hstack">
-          <ShoppingCartIcon width={24} strokeWidth={1.5} />
-          <div
-            className="position-absolute top-0 start-100 translate-middle rounded-pill bg-danger text-light px-1 hstack"
-            style={{
-              fontSize: 12,
-              height: 17
-            }}
-          >
-            {data ?? 0}
-          </div>
+    (<Link href="/shopping-cart" className="nav-link">
+
+      <div className="position-relative hstack">
+        <ShoppingCartIcon width={24} strokeWidth={1.5} />
+        <div
+          className="position-absolute top-0 start-100 translate-middle rounded-pill bg-danger text-light px-1 hstack"
+          style={{
+            fontSize: 12,
+            height: 17
+          }}
+        >
+          {data ?? 0}
         </div>
-      </a>
-    </Link>
+      </div>
+
+    </Link>)
   );
 }
 

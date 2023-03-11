@@ -143,8 +143,8 @@ function Login() {
                   />
                 </div>
                 <div className="col-md-12">
-                  <Link href="/forgot-password">
-                    <a className="text-primary-dark">Forgot password?</a>
+                  <Link href="/forgot-password" className="text-primary-dark">
+                    Forgot password?
                   </Link>
                 </div>
                 <div className="col-md-12 mt-4 mb-2">
@@ -219,8 +219,8 @@ function Login() {
             </div>
             <div className="text-center p-3 card-footer">
               Don&apos;t have an account?
-              <Link href="/sign-up">
-                <a className="text-decoration-none fw-medium ms-1">Sign Up</a>
+              <Link href="/sign-up" className="text-decoration-none fw-medium ms-1">
+                Sign Up
               </Link>
             </div>
           </div>

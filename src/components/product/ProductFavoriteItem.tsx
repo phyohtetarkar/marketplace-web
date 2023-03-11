@@ -32,16 +32,20 @@ function ProductFavoriteItem({ value }: ProductFavoriteProps) {
             />
           </div>
           <div className="vstack overflow-hidden">
-            <Link href={`/products/${product.slug}`}>
-              <a className="text-muted text-decoration-none text-truncate">
-                {product.name}
-              </a>
+            <Link
+              href={`/products/${product.slug}`}
+              className="text-muted text-decoration-none text-truncate">
+
+              {product.name}
+
             </Link>
 
-            <Link href={`/collections/${product.category?.slug}`}>
-              <a className="text-decoration-none fw-medium text-truncate mb-2">
-                {product.category?.name}
-              </a>
+            <Link
+              href={`/collections/${product.category?.slug}`}
+              className="text-decoration-none fw-medium text-truncate mb-2">
+
+              {product.category?.name}
+
             </Link>
 
             <div className="flex-grow-1"></div>

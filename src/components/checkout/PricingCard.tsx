@@ -51,11 +51,11 @@ function PricingCard() {
           {children} */}
           <div className="d-grid gap-2 mt-3">
             {/* <button className="btn btn-primary py-2">Checkout</button> */}
-            <Link href={"/checkout"}>
-              <a className="btn btn-primary py-2">Checkout</a>
+            <Link href={"/checkout"} className="btn btn-primary py-2">
+              Checkout
             </Link>
-            <Link href={"/"}>
-              <a className="btn btn-outline-primary py-2">Contine Shopping</a>
+            <Link href={"/"} className="btn btn-outline-primary py-2">
+              Contine Shopping
             </Link>
           </div>
         </div>

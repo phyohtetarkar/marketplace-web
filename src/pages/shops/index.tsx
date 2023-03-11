@@ -1,28 +1,53 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
+import { parseErrorResponse } from "../../common/utils";
 import Alert from "../../components/Alert";
 import { Input } from "../../components/forms";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
 import ShopGridItem from "../../components/shop/ShopGridItem";
-import { findShops } from "../../services/ShopService";
+import { findShops, ShopQuery } from "../../services/ShopService";
 
 function Shops() {
   const router = useRouter();
 
+  const firstLoadRef = useRef(false);
+
+  const [query, setQuery] = useState<ShopQuery>();
+
   const { data, error, isLoading } = useSWR(
-    ["/shops", router.query],
-    ([url, q]) =>
-      findShops({
-        q: q.q as string,
-        page: q.page ? parseInt(q.page as string) : 0
-      }),
+    ["/shops", query],
+    ([url, q]) => (q ? findShops(q) : undefined),
     {
       revalidateOnFocus: false
     }
   );
+
+  useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+
+    if (firstLoadRef.current) {
+      return;
+    }
+
+    firstLoadRef.current = true;
+
+    const { q, page } = router.query;
+
+    setQuery({
+      q: typeof q === "string" ? q : undefined,
+      page: page && typeof page === "string" ? parseInt(page) : undefined
+    });
+
+    return () => {
+      firstLoadRef.current = false;
+    };
+  }, [router]);
 
   const content = () => {
     if (isLoading) {
@@ -30,6 +55,7 @@ function Shops() {
     }
 
     if (error) {
+      return <Alert message={parseErrorResponse(error)} variant="danger" />;
     }
 
     if (data?.contents.length === 0) {
@@ -53,10 +79,18 @@ function Shops() {
           <Pagination
             currentPage={data?.currentPage}
             totalPage={data?.totalPage}
-            onChange={(p) => {
+            onChange={(page) => {
+              const q = { ...router.query };
+
+              if (page > 0) {
+                q["page"] = `${page}`;
+              } else {
+                delete q["page"];
+              }
+
               router.push({
                 pathname: "",
-                query: { ...router.query, page: p }
+                query: q
               });
             }}
           />
@@ -76,8 +110,8 @@ function Shops() {
             <nav aria-label="breadcrumb col-12">
               <ol className="breadcrumb mb-1">
                 <li className="breadcrumb-item">
-                  <Link href="/">
-                    <a className="text-light">Home</a>
+                  <Link href="/" className="text-light">
+                    Home
                   </Link>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">

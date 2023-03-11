@@ -226,8 +226,8 @@ function Collection() {
     for (let c = category?.category; !!c; c = c?.category) {
       const e = (
         <li key={c.id} className="breadcrumb-item">
-          <Link href={`/collections/${c.slug}`}>
-            <a className="text-light">{c.name}</a>
+          <Link href={`/collections/${c.slug}`} className="text-light">
+            {c.name}
           </Link>
         </li>
       );

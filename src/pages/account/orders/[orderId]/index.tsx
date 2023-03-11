@@ -75,10 +75,10 @@ function OrderDetail() {
                 <nav aria-label="breadcrumb col-12">
                   <ol className="breadcrumb mb-1">
                     <li className="breadcrumb-item">
-                      <Link href="/profile/orders">
-                        <a href="#" className="text-light">
+                      <Link href="/profile/orders" className="text-light">
+                        
                           Orders
-                        </a>
+                        
                       </Link>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">

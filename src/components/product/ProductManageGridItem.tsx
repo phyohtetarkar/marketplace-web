@@ -81,27 +81,27 @@ function ProductManageGridItem({
 
   return (
     <div className="card h-100 shadow-sm">
-      <Link href={`/products/${value.slug}`}>
-        <a className="text-decoration-none">
-          <div
-            className="position-relative"
-            onContextMenu={(e) => e.preventDefault()}
-          >
-            <div className="ratio ratio-4x3">
-              <Image
-                className="card-img-top"
-                src={value.thumbnail ?? "/images/placeholder.jpeg"}
-                alt="Product image."
-                layout="fill"
-                objectFit="contain"
-                priority
-              />
-            </div>
-            {outOfStock && outOfStock}
-            {popular && popular}
-            {draft && draft}
+      <Link href={`/products/${value.slug}`} className="text-decoration-none">
+
+        <div
+          className="position-relative"
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          <div className="ratio ratio-4x3">
+            <Image
+              className="card-img-top"
+              src={value.thumbnail ?? "/images/placeholder.jpeg"}
+              alt="Product image."
+              layout="fill"
+              objectFit="contain"
+              priority
+            />
           </div>
-        </a>
+          {outOfStock && outOfStock}
+          {popular && popular}
+          {draft && draft}
+        </div>
+
       </Link>
       <div className="card-body">
         <div className="vstack">
@@ -109,13 +109,13 @@ function ProductManageGridItem({
             {value.category?.name}
           </div>
 
-          <Link href={`/products/${value.slug}`}>
-            <a
-              className="text-muted text-decoration-none text-truncate"
-              style={{ fontSize: 18 }}
-            >
-              {value.name}
-            </a>
+          <Link
+            href={`/products/${value.slug}`}
+            className="text-muted text-decoration-none text-truncate"
+            style={{ fontSize: 18 }}>
+
+            {value.name}
+
           </Link>
 
           <h6 className="fw-semibold mt-2 mb-3">{price}</h6>

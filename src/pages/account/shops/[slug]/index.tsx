@@ -72,19 +72,20 @@ function MyShopDetail() {
     icon: ReactNode;
   }) {
     return (
-      <Link href={href} replace>
-        <a
-          className={`d-flex align-items-center p-2 my-list-item ${
-            active ? "active" : ""
-          }`}
-          onClick={(e) => {
-            active && e.preventDefault();
-          }}
-        >
-          {icon}
-          <span>{title}</span>
-        </a>
-      </Link>
+      (<Link
+        href={href}
+        replace
+        className={`d-flex align-items-center p-2 my-list-item ${
+          active ? "active" : ""
+        }`}
+        onClick={(e) => {
+          active && e.preventDefault();
+        }}>
+
+        {icon}
+        <span>{title}</span>
+
+      </Link>)
     );
   }
 
@@ -176,10 +177,10 @@ function MyShopDetail() {
             <nav aria-label="breadcrumb col-12">
               <ol className="breadcrumb mb-1">
                 <li className="breadcrumb-item">
-                  <Link href="/profile/shops">
-                    <a href="#" className="text-light">
+                  <Link href="/profile/shops" className="text-light">
+                    
                       Shops
-                    </a>
+                    
                   </Link>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">

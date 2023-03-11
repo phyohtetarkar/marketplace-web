@@ -93,10 +93,12 @@ function MyShops() {
                       </Select>
                     </div> */}
                     <div className="col-auto d-none d-sm-block">
-                      <Link href="/account/shops/create">
-                        <a className="ms-auto btn btn-primary h-100 hstack py-2h">
+                      <Link
+                        href="/account/shops/create"
+                        className="ms-auto btn btn-primary h-100 hstack py-2h">
+                        
                           Create new
-                        </a>
+                        
                       </Link>
                     </div>
                   </div>

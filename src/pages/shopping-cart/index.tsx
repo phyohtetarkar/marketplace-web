@@ -130,8 +130,8 @@ function ShoppingCart() {
             <nav aria-label="breadcrumb col-12">
               <ol className="breadcrumb mb-1">
                 <li className="breadcrumb-item">
-                  <Link href={`/`}>
-                    <a className="text-light">Home</a>
+                  <Link href={`/`} className="text-light">
+                    Home
                   </Link>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">

@@ -119,13 +119,13 @@ function ProductDetail({ product }: { product: Product }) {
             <nav aria-label="breadcrumb col-12">
               <ol className="breadcrumb mb-1">
                 <li className="breadcrumb-item">
-                  <Link href="/">
-                    <a className="text-light">Home</a>
+                  <Link href="/" className="text-light">
+                    Home
                   </Link>
                 </li>
                 <li className="breadcrumb-item">
-                  <Link href={`/collections/${product.category?.slug}`}>
-                    <a className="text-light">{product.category?.name}</a>
+                  <Link href={`/collections/${product.category?.slug}`} className="text-light">
+                    {product.category?.name}
                   </Link>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
@@ -269,10 +269,12 @@ function ProductDetail({ product }: { product: Product }) {
                   </dd>
                   <dt className="col-sm-3 fw-semibold">Category</dt>
                   <dd className="col-sm-9">
-                    <Link href={`/collections/${product.category?.slug}`}>
-                      <a className="text-decoration-none fw-medium">
-                        {product.category?.name}
-                      </a>
+                    <Link
+                      href={`/collections/${product.category?.slug}`}
+                      className="text-decoration-none fw-medium">
+
+                      {product.category?.name}
+
                     </Link>
                   </dd>
                   <dt className="col-sm-3 fw-semibold">Availability</dt>
@@ -463,10 +465,12 @@ function ProductDetail({ product }: { product: Product }) {
                   </div>
 
                   <div className="clearfix mt-3">
-                    <Link href={`/shops/${product.shop?.slug}`}>
-                      <a className="btn btn-outline-light border text-primary float-end">
+                    <Link
+                      href={`/shops/${product.shop?.slug}`}
+                      className="btn btn-outline-light border text-primary float-end">
+                      
                         Visit store
-                      </a>
+                      
                     </Link>
                   </div>
                 </div>

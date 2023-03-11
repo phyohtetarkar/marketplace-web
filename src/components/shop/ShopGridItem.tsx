@@ -32,13 +32,13 @@ function ShopGridItem({ value }: ShopGridItemProps) {
           </div>
 
           <div className="text-truncate">
-            <Link href={`/shops/${value.slug}`}>
-              <a
-                className="h6 mb-1 text-decoration-none link-dark"
-                style={{ fontSize: 18 }}
-              >
-                {value.name}
-              </a>
+            <Link
+              href={`/shops/${value.slug}`}
+              className="h6 mb-1 text-decoration-none link-dark"
+              style={{ fontSize: 18 }}>
+
+              {value.name}
+
             </Link>
           </div>
           <div className="small text-muted mb-5 text-truncate">

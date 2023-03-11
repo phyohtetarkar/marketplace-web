@@ -72,31 +72,33 @@ function ShoppingCartItem({ item }: ShoppingCartItemProps) {
           <div className="hstack gap-2">
             <input className="form-check-input" type="checkbox"></input>
             <div className="flex-shink-0">
-              <Link href={`/products/${item.product?.slug}`}>
-                <a className="text-decoration-none">
-                  <div
-                    className="position-relative"
-                    onContextMenu={(e) => e.preventDefault()}
-                    style={{ height: 100, width: 100 }}
-                  >
-                    <Image
-                      className="rounded border"
-                      src={image}
-                      alt="Product image."
-                      layout="fill"
-                      objectFit="contain"
-                      priority
-                    />
-                  </div>
-                </a>
+              <Link href={`/products/${item.product?.slug}`} className="text-decoration-none">
+
+                <div
+                  className="position-relative"
+                  onContextMenu={(e) => e.preventDefault()}
+                  style={{ height: 100, width: 100 }}
+                >
+                  <Image
+                    className="rounded border"
+                    src={image}
+                    alt="Product image."
+                    layout="fill"
+                    objectFit="contain"
+                    priority
+                  />
+                </div>
+
               </Link>
             </div>
             <div className="ms-2 vstack overflow-hidden">
               <h6 className="mb-0">
-                <Link href={`/products/${item.product?.slug}`}>
-                  <a className="link-dark text-decoration-none text-truncate d-block">
-                    {item.product?.name}
-                  </a>
+                <Link
+                  href={`/products/${item.product?.slug}`}
+                  className="link-dark text-decoration-none text-truncate d-block">
+
+                  {item.product?.name}
+
                 </Link>
               </h6>
               {item.variant && (

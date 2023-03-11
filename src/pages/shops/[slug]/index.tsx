@@ -99,19 +99,20 @@ function ShopHome({ shop }: { shop: Shop }) {
     icon: ReactNode;
   }) {
     return (
-      <Link href={href} replace>
-        <a
-          className={`d-flex align-items-center p-2 my-list-item ${
-            active ? "active" : ""
-          }`}
-          onClick={(e) => {
-            active && e.preventDefault();
-          }}
-        >
-          {icon}
-          <span>{title}</span>
-        </a>
-      </Link>
+      (<Link
+        href={href}
+        replace
+        className={`d-flex align-items-center p-2 my-list-item ${
+          active ? "active" : ""
+        }`}
+        onClick={(e) => {
+          active && e.preventDefault();
+        }}>
+
+        {icon}
+        <span>{title}</span>
+
+      </Link>)
     );
   }
 
@@ -212,279 +213,277 @@ function ShopHome({ shop }: { shop: Shop }) {
     );
   }
 
-  return (
-    <>
-      <div className="vstack">
-        <div className="header-bar">
-          <div className="container">
-            <div className="row py-4">
-              <nav aria-label="breadcrumb col-12">
-                <ol className="breadcrumb mb-1">
-                  <li className="breadcrumb-item">
-                    <Link href="/">
-                      <a className="text-light">Home</a>
-                    </Link>
-                  </li>
-                  <li className="breadcrumb-item">
-                    <Link href="/shops">
-                      <a className="text-light">Shops</a>
-                    </Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    {shop.name}
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-        </div>
-        <div className="container py-3">
-          <div className="row">
-            <div className="col-12">
-              <div className="shadow-sm rounded bg-white vstack overflow-hidden">
-                <div
-                  style={{
-                    width: "100%",
-                    minHeight: 200
-                  }}
-                  className="position-relative bg-primary"
-                >
-                  {shop.coverUrl && (
-                    <Image
-                      src={shop.coverUrl}
-                      alt=""
-                      objectFit="cover"
-                      layout="fill"
-                      priority
-                    />
-                  )}
-                  {isMember && (
-                    <Dropdown
-                      toggle={
-                        <AdjustmentsHorizontalIcon
-                          width={24}
-                          strokeWidth={1.5}
-                        />
-                      }
-                      className="position-absolute top-0 end-0 m-3"
-                      toggleClassName="btn btn-light shadow-sm"
-                      menuClassName="shadow"
-                    >
-                      <li
-                        role="button"
-                        className="dropdown-item-primary"
-                        onClick={() => setEditTab("general")}
-                      >
-                        Update info
-                      </li>
-                      <li
-                        role="button"
-                        className="dropdown-item-primary"
-                        onClick={() => setEditTab("contact")}
-                      >
-                        Update contact
-                      </li>
-                      <div className="dropdown-divider"></div>
-                      <li role="button" className="dropdown-item-primary">
-                        Upload Logo
-                      </li>
-                      <li role="button" className="dropdown-item-primary">
-                        Upload Cover
-                      </li>
-                    </Dropdown>
-                  )}
-                </div>
-                <div className="row p-3 py-sm-4" style={{ zIndex: 999 }}>
-                  <div className="col">
-                    <div className="hstack">
-                      <div className="flex-shrink-0 mt-n6">
-                        <div className="bg-white p-1 pb-0 rounded position-relative">
-                          <Image
-                            src={shop.logoUrl ?? "/images/placeholder.jpeg"}
-                            width={100}
-                            height={100}
-                            alt=""
-                            className="rounded-1"
-                            objectFit="cover"
-                          />
-                          {/* {isMember && (
-                          <div
-                            role="button"
-                            className="position-absolute bg-dark rounded-bottom py-1 text-center bg-opacity-50 bottom-0 start-0 end-0"
-                          >
-                            <span className="small text-light">Edit</span>
-                          </div>
-                        )} */}
-                        </div>
-                      </div>
-                      <div className="ms-3 flex-column mt-n2 mt-sm-n3 d-none d-md-flex">
-                        {heading}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-12 mt-2 d-block d-md-none">
-                    <div className="vstack">{heading}</div>
-                  </div>
-                  <div className="col-sm-auto">
-                    <div
-                      className="mt-sm-0 gap-1 hstack"
-                      style={{ zIndex: 999 }}
-                    >
-                      <div className="flex-grow-1 d-none d-md-block"></div>
-                      <div className="hstack gap-1">
-                        <Rating rating={shop.rating ?? 0} />
-                        <span className="text-dark-gray">
-                          {shop.rating?.toFixed(1)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="border-top">
-                  <Tabs
-                    defaultTabKey="products"
-                    onTabChange={(key) => {
-                      setActiveTab(key as PageTab);
-                    }}
-                  >
-                    <Tabs.Tab tabKey="products" title="Products">
-                      <div></div>
-                    </Tabs.Tab>
-                    <Tabs.Tab tabKey="reviews" title="Reviews">
-                      <div></div>
-                    </Tabs.Tab>
-                    <Tabs.Tab tabKey="branches" title="Branches" hidden>
-                      <div></div>
-                    </Tabs.Tab>
-                    <Tabs.Tab
-                      tabKey="about-us"
-                      title="About us"
-                      tabClassName="text-nowrap"
-                    >
-                      <div></div>
-                    </Tabs.Tab>
-                    {/* <Tabs.Tab
-                      tabKey="contact-us"
-                      title="Contact us"
-                      tabClassName="text-nowrap"
-                    >
-                      <div></div>
-                    </Tabs.Tab> */}
-                    <Tabs.Tab
-                      tabKey="orders"
-                      title={
-                        <div className="hstack gap-2">
-                          Orders
-                          <small className="bg-danger rounded px-1 text-light">
-                            10
-                          </small>
-                        </div>
-                      }
-                      tabClassName="text-nowrap"
-                      hidden={!isMember}
-                    >
-                      <div></div>
-                    </Tabs.Tab>
-                    <Tabs.Tab
-                      tabKey="settings"
-                      title="Settings"
-                      tabClassName="text-nowrap"
-                      hidden={true}
-                    >
-                      <div></div>
-                    </Tabs.Tab>
-                    <Tabs.Tab
-                      tabKey="more"
-                      hidden={!isMember}
-                      title={(onTabChange, isActive) => {
-                        return (
-                          <div>
-                            <Dropdown
-                              toggle="More"
-                              toggleClassName={`dropdown-toggle nav-link py-3 ${
-                                isActive ? "active" : ""
-                              }`}
-                              popperConfig={{
-                                strategy: "fixed"
-                              }}
-                              menuClassName="shadow border-0"
-                            >
-                              <li
-                                role="button"
-                                className="dropdown-item"
-                                onClick={() => {
-                                  onTabChange();
-                                  setActiveTab("insights");
-                                }}
-                              >
-                                Insights
-                              </li>
-                              <li
-                                role="button"
-                                className="dropdown-item"
-                                onClick={() => {
-                                  onTabChange();
-                                  setActiveTab("discounts");
-                                }}
-                              >
-                                Discounts
-                              </li>
-                            </Dropdown>
-                          </div>
-                        );
-                      }}
-                      tabClassName="text-nowrap"
-                    >
-                      <div></div>
-                    </Tabs.Tab>
-                  </Tabs>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="row py-4 g-4">
-            <div className="col-12">
-              <ShopDetailContext.Provider value={shop}>
-                <>
-                  {activeContent()}
-                  <Modal
-                    id="generalEdit"
-                    show={editTab === "general"}
-                    variant="large"
-                  >
-                    {(isShown) => {
-                      return (
-                        isShown && (
-                          <ShopGeneralEdit
-                            handleClose={() => setEditTab(undefined)}
-                          />
-                        )
-                      );
-                    }}
-                  </Modal>
-                  <Modal
-                    id="contactEdit"
-                    show={editTab === "contact"}
-                    variant="large"
-                  >
-                    {(isShown) => {
-                      return (
-                        isShown && (
-                          <ShopContactEdit
-                            handleClose={() => setEditTab(undefined)}
-                          />
-                        )
-                      );
-                    }}
-                  </Modal>
-                </>
-              </ShopDetailContext.Provider>
-            </div>
+  return <>
+    <div className="vstack">
+      <div className="header-bar">
+        <div className="container">
+          <div className="row py-4">
+            <nav aria-label="breadcrumb col-12">
+              <ol className="breadcrumb mb-1">
+                <li className="breadcrumb-item">
+                  <Link href="/" className="text-light">
+                    Home
+                  </Link>
+                </li>
+                <li className="breadcrumb-item">
+                  <Link href="/shops" className="text-light">
+                    Shops
+                  </Link>
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+                  {shop.name}
+                </li>
+              </ol>
+            </nav>
           </div>
         </div>
       </div>
-    </>
-  );
+      <div className="container py-3">
+        <div className="row">
+          <div className="col-12">
+            <div className="shadow-sm rounded bg-white vstack overflow-hidden">
+              <div
+                style={{
+                  width: "100%",
+                  minHeight: 200
+                }}
+                className="position-relative bg-primary"
+              >
+                {shop.coverUrl && (
+                  <Image
+                    src={shop.coverUrl}
+                    alt=""
+                    objectFit="cover"
+                    layout="fill"
+                    priority
+                  />
+                )}
+                {isMember && (
+                  <Dropdown
+                    toggle={
+                      <AdjustmentsHorizontalIcon
+                        width={24}
+                        strokeWidth={1.5}
+                      />
+                    }
+                    className="position-absolute top-0 end-0 m-3"
+                    toggleClassName="btn btn-light shadow-sm"
+                    menuClassName="shadow"
+                  >
+                    <li
+                      role="button"
+                      className="dropdown-item-primary"
+                      onClick={() => setEditTab("general")}
+                    >
+                      Update info
+                    </li>
+                    <li
+                      role="button"
+                      className="dropdown-item-primary"
+                      onClick={() => setEditTab("contact")}
+                    >
+                      Update contact
+                    </li>
+                    <div className="dropdown-divider"></div>
+                    <li role="button" className="dropdown-item-primary">
+                      Upload Logo
+                    </li>
+                    <li role="button" className="dropdown-item-primary">
+                      Upload Cover
+                    </li>
+                  </Dropdown>
+                )}
+              </div>
+              <div className="row p-3 py-sm-4" style={{ zIndex: 999 }}>
+                <div className="col">
+                  <div className="hstack">
+                    <div className="flex-shrink-0 mt-n6">
+                      <div className="bg-white p-1 pb-0 rounded position-relative">
+                        <Image
+                          src={shop.logoUrl ?? "/images/placeholder.jpeg"}
+                          width={100}
+                          height={100}
+                          alt=""
+                          className="rounded-1"
+                          objectFit="cover"
+                        />
+                        {/* {isMember && (
+                        <div
+                          role="button"
+                          className="position-absolute bg-dark rounded-bottom py-1 text-center bg-opacity-50 bottom-0 start-0 end-0"
+                        >
+                          <span className="small text-light">Edit</span>
+                        </div>
+                      )} */}
+                      </div>
+                    </div>
+                    <div className="ms-3 flex-column mt-n2 mt-sm-n3 d-none d-md-flex">
+                      {heading}
+                    </div>
+                  </div>
+                </div>
+                <div className="col-12 mt-2 d-block d-md-none">
+                  <div className="vstack">{heading}</div>
+                </div>
+                <div className="col-sm-auto">
+                  <div
+                    className="mt-sm-0 gap-1 hstack"
+                    style={{ zIndex: 999 }}
+                  >
+                    <div className="flex-grow-1 d-none d-md-block"></div>
+                    <div className="hstack gap-1">
+                      <Rating rating={shop.rating ?? 0} />
+                      <span className="text-dark-gray">
+                        {shop.rating?.toFixed(1)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="border-top">
+                <Tabs
+                  defaultTabKey="products"
+                  onTabChange={(key) => {
+                    setActiveTab(key as PageTab);
+                  }}
+                >
+                  <Tabs.Tab tabKey="products" title="Products">
+                    <div></div>
+                  </Tabs.Tab>
+                  <Tabs.Tab tabKey="reviews" title="Reviews">
+                    <div></div>
+                  </Tabs.Tab>
+                  <Tabs.Tab tabKey="branches" title="Branches" hidden>
+                    <div></div>
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                    tabKey="about-us"
+                    title="About us"
+                    tabClassName="text-nowrap"
+                  >
+                    <div></div>
+                  </Tabs.Tab>
+                  {/* <Tabs.Tab
+                    tabKey="contact-us"
+                    title="Contact us"
+                    tabClassName="text-nowrap"
+                  >
+                    <div></div>
+                  </Tabs.Tab> */}
+                  <Tabs.Tab
+                    tabKey="orders"
+                    title={
+                      <div className="hstack gap-2">
+                        Orders
+                        <small className="bg-danger rounded px-1 text-light">
+                          10
+                        </small>
+                      </div>
+                    }
+                    tabClassName="text-nowrap"
+                    hidden={!isMember}
+                  >
+                    <div></div>
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                    tabKey="settings"
+                    title="Settings"
+                    tabClassName="text-nowrap"
+                    hidden={true}
+                  >
+                    <div></div>
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                    tabKey="more"
+                    hidden={!isMember}
+                    title={(onTabChange, isActive) => {
+                      return (
+                        <div>
+                          <Dropdown
+                            toggle="More"
+                            toggleClassName={`dropdown-toggle nav-link py-3 ${
+                              isActive ? "active" : ""
+                            }`}
+                            popperConfig={{
+                              strategy: "fixed"
+                            }}
+                            menuClassName="shadow border-0"
+                          >
+                            <li
+                              role="button"
+                              className="dropdown-item"
+                              onClick={() => {
+                                onTabChange();
+                                setActiveTab("insights");
+                              }}
+                            >
+                              Insights
+                            </li>
+                            <li
+                              role="button"
+                              className="dropdown-item"
+                              onClick={() => {
+                                onTabChange();
+                                setActiveTab("discounts");
+                              }}
+                            >
+                              Discounts
+                            </li>
+                          </Dropdown>
+                        </div>
+                      );
+                    }}
+                    tabClassName="text-nowrap"
+                  >
+                    <div></div>
+                  </Tabs.Tab>
+                </Tabs>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row py-4 g-4">
+          <div className="col-12">
+            <ShopDetailContext.Provider value={shop}>
+              <>
+                {activeContent()}
+                <Modal
+                  id="generalEdit"
+                  show={editTab === "general"}
+                  variant="large"
+                >
+                  {(isShown) => {
+                    return (
+                      isShown && (
+                        <ShopGeneralEdit
+                          handleClose={() => setEditTab(undefined)}
+                        />
+                      )
+                    );
+                  }}
+                </Modal>
+                <Modal
+                  id="contactEdit"
+                  show={editTab === "contact"}
+                  variant="large"
+                >
+                  {(isShown) => {
+                    return (
+                      isShown && (
+                        <ShopContactEdit
+                          handleClose={() => setEditTab(undefined)}
+                        />
+                      )
+                    );
+                  }}
+                </Modal>
+              </>
+            </ShopDetailContext.Provider>
+          </div>
+        </div>
+      </div>
+    </div>
+  </>;
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

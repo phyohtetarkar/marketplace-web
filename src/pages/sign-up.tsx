@@ -202,8 +202,8 @@ function Register() {
             </div>
             <div className="text-center p-3 card-footer">
               Already have an account?
-              <Link href="/login">
-                <a className="text-decoration-none fw-medium ms-1">Login</a>
+              <Link href="/login" className="text-decoration-none fw-medium ms-1">
+                Login
               </Link>
             </div>
           </div>

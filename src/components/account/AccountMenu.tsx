@@ -26,16 +26,16 @@ function AccountMenu({}) {
   }) {
     const active = router.pathname === href;
     return (
-      <Link href={href}>
-        <a
-          className={`d-flex align-items-center p-2 my-list-item ${
-            active ? "active" : ""
-          }`}
-        >
-          {icon}
-          <span>{title}</span>
-        </a>
-      </Link>
+      (<Link
+        href={href}
+        className={`d-flex align-items-center p-2 my-list-item ${
+          active ? "active" : ""
+        }`}>
+
+        {icon}
+        <span>{title}</span>
+
+      </Link>)
     );
   }
 

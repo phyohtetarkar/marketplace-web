@@ -107,34 +107,35 @@ function HeaderSearchHints() {
                       href = `/shops/${e.slug}`;
                     }
                     return (
-                      <Link key={i} href={href}>
-                        <a
-                          className="text-decoration-none dropdown-item"
-                          onClick={() => {
-                            setSearch("");
-                            hide();
-                          }}
-                        >
-                          {/* <Image
-                            src={imageUrl}
-                            alt=""
-                            width={40}
-                            height={40}
-                            className="flex-shrink-0 rounded-1"
-                          /> */}
-                          <div className="py-2">
-                            <div className="fw-medium">{e.name}</div>
-                            {"headline" in e && (
-                              <div
-                                className="text-muted"
-                                style={{ fontSize: 12 }}
-                              >
-                                {e.headline}
-                              </div>
-                            )}
-                          </div>
-                        </a>
-                      </Link>
+                      (<Link
+                        key={i}
+                        href={href}
+                        className="text-decoration-none dropdown-item"
+                        onClick={() => {
+                          setSearch("");
+                          hide();
+                        }}>
+
+                        {/* <Image
+                          src={imageUrl}
+                          alt=""
+                          width={40}
+                          height={40}
+                          className="flex-shrink-0 rounded-1"
+                        /> */}
+                        <div className="py-2">
+                          <div className="fw-medium">{e.name}</div>
+                          {"headline" in e && (
+                            <div
+                              className="text-muted"
+                              style={{ fontSize: 12 }}
+                            >
+                              {e.headline}
+                            </div>
+                          )}
+                        </div>
+
+                      </Link>)
                     );
                   })}
                 </div>

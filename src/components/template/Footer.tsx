@@ -37,14 +37,14 @@ function Footer() {
             <div className="col-lg-2">
               <h5 className="text-light">Account</h5>
               <div className="vstack small gap-2">
-                <Link href="/account/favorites">
-                  <a className="dark-link">My favorites</a>
+                <Link href="/account/favorites" className="dark-link">
+                  My favorites
                 </Link>
-                <Link href="/account/orders">
-                  <a className="dark-link">My orders</a>
+                <Link href="/account/orders" className="dark-link">
+                  My orders
                 </Link>
-                <Link href="/account/setting">
-                  <a className="dark-link">Account Setting</a>
+                <Link href="/account/setting" className="dark-link">
+                  Account Setting
                 </Link>
               </div>
             </div>

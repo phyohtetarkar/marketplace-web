@@ -330,10 +330,10 @@ const PackageSelection = (props: FormProps) => {
         />
         <label className="form-check-label text-muted">
           By checking, you have read and agree to the&nbsp;
-          <Link href={"/"}>
-            <a target="_blank" className="text-decoration-none fw-medium">
+          <Link href={"/"} target="_blank" className="text-decoration-none fw-medium">
+            
               terms of service
-            </a>
+            
           </Link>
           .
         </label>
@@ -415,8 +415,8 @@ function CreateShop() {
               <nav aria-label="breadcrumb col-12">
                 <ol className="breadcrumb mb-1">
                   <li className="breadcrumb-item">
-                    <Link href="/account/shops">
-                      <a className="text-light">Shops</a>
+                    <Link href="/account/shops" className="text-light">
+                      Shops
                     </Link>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
@@ -427,10 +427,12 @@ function CreateShop() {
             </div>
             <div className="col-lg-6">
               <div className="hstack h-100">
-                <Link href="/account/shops">
-                  <a className="btn btn-light text-dark py-2 px-3 ms-lg-auto">
+                <Link
+                  href="/account/shops"
+                  className="btn btn-light text-dark py-2 px-3 ms-lg-auto">
+                  
                     Back to shops
-                  </a>
+                  
                 </Link>
               </div>
             </div>

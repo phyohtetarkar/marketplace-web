@@ -7,13 +7,13 @@ function BranchListing() {
   return (
     <div className="p-3">
       <div className="mb-3">
-        <Link href="#">
-          <a className="btn btn-primary">
-            <div className="hstack">
-              <PlusIcon className="me-2" width={20} />
-              Add new
-            </div>
-          </a>
+        <Link href="#" className="btn btn-primary">
+
+          <div className="hstack">
+            <PlusIcon className="me-2" width={20} />
+            Add new
+          </div>
+
         </Link>
       </div>
 
