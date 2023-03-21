@@ -25,7 +25,9 @@ const CollectionItem = ({ item, onClick }: CollectionItemProps) => {
           width={50}
           height={50}
           alt=""
-          objectFit="contain"
+          style={{
+            objectFit: "contain"
+          }}
         />
       ) : (
         <SwatchIcon width={44} className="text-default mx-auto" />

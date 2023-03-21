@@ -43,14 +43,13 @@ const Home = ({ data }: { data: HomeData }) => {
                         {data.mainCategories &&
                           data.mainCategories.map((e, i) => {
                             return (
-                              (<Link
+                              <Link
                                 key={e.id}
                                 href={`/collections/${e.slug}`}
-                                className="p-2 dropdown-item rounded user-select-none">
-
+                                className="p-2 dropdown-item rounded user-select-none"
+                              >
                                 {e.name}
-
-                              </Link>)
+                              </Link>
                             );
                           })}
 
@@ -148,9 +147,11 @@ const Home = ({ data }: { data: HomeData }) => {
                               src={b.imageUrl}
                               alt="Cover image"
                               className="rounded-1"
-                              layout="fill"
-                              objectFit="cover"
+                              fill
                               priority
+                              style={{
+                                objectFit: "cover"
+                              }}
                             />
                           </SwiperSlide>
                         );
@@ -242,10 +243,11 @@ const Home = ({ data }: { data: HomeData }) => {
             >
               Featured shops
             </h4>
-            <Link href="/shops" className="text-decoration-none fw-medium text-nowrap">
-              
-                View all
-              
+            <Link
+              href="/shops"
+              className="text-decoration-none fw-medium text-nowrap"
+            >
+              View all
             </Link>
           </div>
           <div className="mb-5">
@@ -282,8 +284,8 @@ const Home = ({ data }: { data: HomeData }) => {
                   <SwiperSlide key={i}>
                     <Link
                       href={`/shops/${s.slug}`}
-                      className="vstack gap-3 position-relative align-items-center text-decoration-none">
-
+                      className="vstack gap-3 position-relative align-items-center text-decoration-none"
+                    >
                       <div
                         className=""
                         onContextMenu={(e) => e.preventDefault()}
@@ -299,7 +301,6 @@ const Home = ({ data }: { data: HomeData }) => {
                         />
                       </div>
                       <h6 className="text-truncate text-dark">{s.name}</h6>
-
                     </Link>
                   </SwiperSlide>
                 );
@@ -318,7 +319,8 @@ const Home = ({ data }: { data: HomeData }) => {
         </h4>
         <Link
           href="/products/new-arrivals"
-          className="text-decoration-none fw-medium text-nowrap">
+          className="text-decoration-none fw-medium text-nowrap"
+        >
           View all
         </Link>
       </div>

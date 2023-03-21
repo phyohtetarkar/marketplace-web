@@ -25,7 +25,9 @@ function Review({ value }: ShopReviewProps) {
             height={60}
             alt=""
             className="rounded-circle"
-            objectFit="cover"
+            style={{
+              objectFit: "cover"
+            }}
           />
         </div>
         <div>

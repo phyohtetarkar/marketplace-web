@@ -49,7 +49,9 @@ function ProfileOverview() {
                       height={60}
                       alt=""
                       className="rounded-circle"
-                      objectFit="cover"
+                      style={{
+                        objectFit: "cover"
+                      }}
                     />
                   </div>
                   <div className="ms-3">

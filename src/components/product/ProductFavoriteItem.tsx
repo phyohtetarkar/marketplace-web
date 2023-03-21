@@ -27,25 +27,25 @@ function ProductFavoriteItem({ value }: ProductFavoriteProps) {
               className="rounded border"
               src={product.thumbnail ?? "/images/placeholder.jpeg"}
               alt="Product image."
-              layout="fill"
-              objectFit="contain"
+              fill
+              style={{
+                objectFit: "contain"
+              }}
             />
           </div>
           <div className="vstack overflow-hidden">
             <Link
               href={`/products/${product.slug}`}
-              className="text-muted text-decoration-none text-truncate">
-
+              className="text-muted text-decoration-none text-truncate"
+            >
               {product.name}
-
             </Link>
 
             <Link
               href={`/collections/${product.category?.slug}`}
-              className="text-decoration-none fw-medium text-truncate mb-2">
-
+              className="text-decoration-none fw-medium text-truncate mb-2"
+            >
               {product.category?.name}
-
             </Link>
 
             <div className="flex-grow-1"></div>

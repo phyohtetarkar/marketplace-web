@@ -124,7 +124,10 @@ function ProductDetail({ product }: { product: Product }) {
                   </Link>
                 </li>
                 <li className="breadcrumb-item">
-                  <Link href={`/collections/${product.category?.slug}`} className="text-light">
+                  <Link
+                    href={`/collections/${product.category?.slug}`}
+                    className="text-light"
+                  >
                     {product.category?.name}
                   </Link>
                 </li>
@@ -164,8 +167,10 @@ function ProductDetail({ product }: { product: Product }) {
                           className="rounded"
                           src={img.url ?? "/images/palceholder.jpeg"}
                           alt="Product image."
-                          layout="fill"
-                          objectFit="contain"
+                          fill
+                          style={{
+                            objectFit: "contain"
+                          }}
                         />
                       </div>
                     );
@@ -271,10 +276,9 @@ function ProductDetail({ product }: { product: Product }) {
                   <dd className="col-sm-9">
                     <Link
                       href={`/collections/${product.category?.slug}`}
-                      className="text-decoration-none fw-medium">
-
+                      className="text-decoration-none fw-medium"
+                    >
                       {product.category?.name}
-
                     </Link>
                   </dd>
                   <dt className="col-sm-3 fw-semibold">Availability</dt>
@@ -449,7 +453,9 @@ function ProductDetail({ product }: { product: Product }) {
                         height={70}
                         alt=""
                         className="rounded-circle border"
-                        objectFit="cover"
+                        style={{
+                          objectFit: "cover"
+                        }}
                       />
                     </div>
 
@@ -467,10 +473,9 @@ function ProductDetail({ product }: { product: Product }) {
                   <div className="clearfix mt-3">
                     <Link
                       href={`/shops/${product.shop?.slug}`}
-                      className="btn btn-outline-light border text-primary float-end">
-                      
-                        Visit store
-                      
+                      className="btn btn-outline-light border text-primary float-end"
+                    >
+                      Visit store
                     </Link>
                   </div>
                 </div>

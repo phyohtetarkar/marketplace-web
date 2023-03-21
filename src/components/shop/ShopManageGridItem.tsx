@@ -42,9 +42,11 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
                 className="rounded-circle"
                 src={value.logoUrl ?? "/images/placeholder.jpeg"}
                 alt="Shop image."
-                layout="fill"
-                objectFit="cover"
+                fill
                 priority
+                style={{
+                  objectFit: "cover"
+                }}
               />
             </div>
           </div>
@@ -64,11 +66,10 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
           <div className="hstack gap-2">
             <Link
               href={`/shops/${value.slug}`}
-              className="btn btn-primary flex-grow-1 hstack justify-content-center gap-2">
-
+              className="btn btn-primary flex-grow-1 hstack justify-content-center gap-2"
+            >
               {/* <ChartBarIcon width={20} /> */}
               <span>View detail</span>
-
             </Link>
           </div>
 

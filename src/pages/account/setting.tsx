@@ -145,7 +145,9 @@ function ProfileSetting() {
                             layout="fill"
                             alt="User Photo"
                             className="rounded-circle border"
-                            objectFit="cover"
+                            style={{
+                              objectFit: "cover"
+                            }}
                             priority
                           />
                           <div className="ms-auto position-absolute bottom-0 py-1 btn btn-dark opacity-75 w-100 text-light text-center">

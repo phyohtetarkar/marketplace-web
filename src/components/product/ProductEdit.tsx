@@ -844,7 +844,9 @@ function ProductEdit({
                             width={150}
                             height={150}
                             alt=""
-                            objectFit="contain"
+                            style={{
+                              objectFit: "contain"
+                            }}
                             className="rounded border"
                           />
                           <div className="hstack justify-content-center">

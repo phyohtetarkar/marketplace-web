@@ -36,8 +36,10 @@ function OrderRow() {
                     Math.random() * 100
                   )}`}
                   alt="Product image."
-                  layout="fill"
-                  objectFit="cover"
+                  fill
+                  style={{
+                    objectFit: "contain"
+                  }}
                   priority
                 />
               </span>
@@ -76,9 +78,7 @@ function OrderDetail() {
                   <ol className="breadcrumb mb-1">
                     <li className="breadcrumb-item">
                       <Link href="/profile/orders" className="text-light">
-                        
-                          Orders
-                        
+                        Orders
                       </Link>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">

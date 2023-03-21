@@ -221,10 +221,12 @@ const ShopMedia = (props: FormProps) => {
                 >
                   <Image
                     src={logo ?? "/images/placeholder.jpeg"}
-                    layout="fill"
-                    objectFit="cover"
                     className="rounded-1"
                     alt=""
+                    fill
+                    style={{
+                      objectFit: "cover"
+                    }}
                   />
                   <input
                     ref={logoRef}
@@ -254,8 +256,10 @@ const ShopMedia = (props: FormProps) => {
                   {cover && (
                     <Image
                       src={cover}
-                      layout="fill"
-                      objectFit="cover"
+                      fill
+                      style={{
+                        objectFit: "cover"
+                      }}
                       className="rounded-1"
                       alt=""
                     />
@@ -330,10 +334,12 @@ const PackageSelection = (props: FormProps) => {
         />
         <label className="form-check-label text-muted">
           By checking, you have read and agree to the&nbsp;
-          <Link href={"/"} target="_blank" className="text-decoration-none fw-medium">
-            
-              terms of service
-            
+          <Link
+            href={"/"}
+            target="_blank"
+            className="text-decoration-none fw-medium"
+          >
+            terms of service
           </Link>
           .
         </label>
@@ -429,10 +435,9 @@ function CreateShop() {
               <div className="hstack h-100">
                 <Link
                   href="/account/shops"
-                  className="btn btn-light text-dark py-2 px-3 ms-lg-auto">
-                  
-                    Back to shops
-                  
+                  className="btn btn-light text-dark py-2 px-3 ms-lg-auto"
+                >
+                  Back to shops
                 </Link>
               </div>
             </div>

@@ -7,7 +7,7 @@ import ProductGridItem from "./ProductGridItem";
 
 interface RelatedProductsProps {
   productId: number;
-  categoryId: number;
+  categoryId?: number;
 }
 
 function RelatedProducts(props: RelatedProductsProps) {
@@ -15,7 +15,7 @@ function RelatedProducts(props: RelatedProductsProps) {
 
   const { data, error, isLoading } = useSWR(
     `/products/${productId}/related`,
-    () => getRelatedProducts(productId, categoryId),
+    () => getRelatedProducts(productId),
     {
       revalidateOnFocus: false
     }

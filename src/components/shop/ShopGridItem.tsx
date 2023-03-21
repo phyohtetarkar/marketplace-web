@@ -24,9 +24,11 @@ function ShopGridItem({ value }: ShopGridItemProps) {
                 className="rounded-circle"
                 src={value.logoUrl ?? "/images/placeholder.jpeg"}
                 alt="Shop image."
-                layout="fill"
-                objectFit="cover"
+                fill
                 priority
+                style={{
+                  objectFit: "cover"
+                }}
               />
             </div>
           </div>
@@ -35,10 +37,9 @@ function ShopGridItem({ value }: ShopGridItemProps) {
             <Link
               href={`/shops/${value.slug}`}
               className="h6 mb-1 text-decoration-none link-dark"
-              style={{ fontSize: 18 }}>
-
+              style={{ fontSize: 18 }}
+            >
               {value.name}
-
             </Link>
           </div>
           <div className="small text-muted mb-5 text-truncate">

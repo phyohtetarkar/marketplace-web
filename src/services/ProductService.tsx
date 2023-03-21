@@ -141,8 +141,8 @@ export async function getProductHints(q: string) {
   return resp.json() as Promise<Product[]>;
 }
 
-export async function getRelatedProducts(id: number) {
-  const url = `${getAPIBasePath()}${basePath}/${id}/related`;
+export async function getRelatedProducts(productId: number) {
+  const url = `${getAPIBasePath()}${basePath}/${productId}/related`;
   const resp = await fetch(url);
 
   await validateResponse(resp);
