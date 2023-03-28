@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { AuthenticationContext } from "../../common/contexts";
-import MultiCategoryDropdown from "../category/MultiCategoryDropdown";
+import MultiCategoryDropdown from "./MultiCategoryDropdown";
 import { ShoppingCartView } from "../checkout";
 import Dropdown from "../Dropdown";
 import AccountDropdown from "./AccountDropdown";
@@ -21,27 +21,28 @@ interface HeaderProps {
 
 function NavLink({ href, children }: { href: string; children: ReactNode }) {
   const router = useRouter();
-  return <>
-    <Link
-      href={href}
-      className="nav-link d-flex align-items-center d-none d-lg-block">
-
-      {children}
-
-    </Link>
-    <div
-      className="nav-link d-flex align-items-center d-block d-lg-none"
-      data-bs-toggle="offcanvas"
-      data-bs-target="#offcanvasNavbar"
-      onClick={(e) => {
-        e.preventDefault();
-        router.push(href);
-      }}
-      role="button"
-    >
-      {children}
-    </div>
-  </>;
+  return (
+    <>
+      <Link
+        href={href}
+        className="nav-link d-flex align-items-center d-none d-lg-block"
+      >
+        {children}
+      </Link>
+      <div
+        className="nav-link d-flex align-items-center d-block d-lg-none"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasNavbar"
+        onClick={(e) => {
+          e.preventDefault();
+          router.push(href);
+        }}
+        role="button"
+      >
+        {children}
+      </div>
+    </>
+  );
 }
 
 function Header({ hideAuth }: HeaderProps) {
@@ -99,7 +100,6 @@ function Header({ hideAuth }: HeaderProps) {
       >
         <div className="container">
           <Link href="/" className="navbar-brand d-none d-lg-block">
-
             {/* <FontAwesomeIcon
               icon={["fas", "shopping-basket"]}
               className="d-inline-block"
@@ -123,7 +123,6 @@ function Header({ hideAuth }: HeaderProps) {
                 {process.env.NEXT_PUBLIC_APP_NAME}
               </h4>
             </div>
-
           </Link>
 
           <div className="hstack w-100">
@@ -145,17 +144,17 @@ function Header({ hideAuth }: HeaderProps) {
                     <div className="nav-item">
                       <Link
                         href="/sign-up"
-                        className="btn btn-outline-primary d-none d-lg-block text-nowrap">
-                        
-                          Register
-                        
+                        className="btn btn-outline-primary d-none d-lg-block text-nowrap"
+                      >
+                        Register
                       </Link>
                     </div>
                     <div className="nav-item">
-                      <Link href="/login" className="btn btn-primary ms-2 d-none d-lg-block">
-                        
-                          Login
-                        
+                      <Link
+                        href="/login"
+                        className="btn btn-primary ms-2 d-none d-lg-block"
+                      >
+                        Login
                       </Link>
                     </div>
                   </div>

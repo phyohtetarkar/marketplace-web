@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import { parseErrorResponse } from "../../common/utils";
 import Alert from "../../components/Alert";
-import { Input } from "../../components/forms";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
 import ShopGridItem from "../../components/shop/ShopGridItem";
@@ -58,21 +57,20 @@ function Shops() {
       return <Alert message={parseErrorResponse(error)} variant="danger" />;
     }
 
-    if (data?.contents.length === 0) {
+    if (!data || data.contents.length === 0) {
       return <Alert message="No shop found" />;
     }
 
     return (
       <>
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxxl-4 g-4">
-          {data?.contents &&
-            data.contents.map((s, i) => {
-              return (
-                <div className="col" key={i}>
-                  <ShopGridItem value={s} />
-                </div>
-              );
-            })}
+          {data.contents.map((s, i) => {
+            return (
+              <div className="col" key={i}>
+                <ShopGridItem value={s} />
+              </div>
+            );
+          })}
         </div>
 
         <div className="d-flex justify-content-end pt-3 px-3">
@@ -123,7 +121,7 @@ function Shops() {
         </div>
       </div>
       <div className="container py-4">
-        <div className="row g-3 justify-content-end mb-3">
+        {/* <div className="row g-3 justify-content-end mb-3">
           <div className="col-auto">
             <Input
               id="searchinput"
@@ -133,7 +131,7 @@ function Shops() {
               className="bg-white"
             />
           </div>
-        </div>
+        </div> */}
         <div className="row">
           <div className="col-lg-12">{content()}</div>
         </div>

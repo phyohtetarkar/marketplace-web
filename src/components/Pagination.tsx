@@ -85,7 +85,9 @@ function Pagination(props: PaginationProps) {
                 role="button"
                 className="page-link"
                 onClick={() => {
-                  onChange?.(e);
+                  if (currentPage !== e) {
+                    onChange?.(e);
+                  }
                 }}
               >
                 {e + 1}

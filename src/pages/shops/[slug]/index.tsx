@@ -21,7 +21,7 @@ import {
   ShopDashboard,
   ShopGeneralEdit,
   ShopSetting
-} from "../../../components/merchant";
+} from "../../../components/shopdetail";
 import Modal from "../../../components/Modal";
 import { ProductEdit } from "../../../components/product";
 import Rating from "../../../components/Rating";

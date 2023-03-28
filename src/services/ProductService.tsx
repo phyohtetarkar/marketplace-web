@@ -138,7 +138,7 @@ export async function getProductHints(q: string) {
 
   await validateResponse(resp);
 
-  return resp.json() as Promise<Product[]>;
+  return resp.json() as Promise<string[]>;
 }
 
 export async function getRelatedProducts(productId: number) {

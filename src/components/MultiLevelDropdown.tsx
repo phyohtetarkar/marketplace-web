@@ -1,50 +1,50 @@
 import { ReactNode, useRef, useState } from "react";
 
-export const sampleList = [
-  {
-    key: 1,
-    title: "Food And Drink",
-    children: []
-  },
-  {
-    key: 2,
-    title: "Electronics",
-    children: [
-      {
-        key: 3,
-        title: "Desktop And Computers",
-        children: [
-          {
-            key: 7,
-            title: "Monitors",
-            children: null
-          }
-        ]
-      },
-      {
-        key: 4,
-        title: "Phones And Tablets",
-        children: [
-          {
-            key: 5,
-            title: "Apple",
-            children: null
-          },
-          {
-            key: 6,
-            title: "Android",
-            children: null
-          }
-        ]
-      }
-    ]
-  },
-  {
-    key: 10,
-    title: "Health & Beauty",
-    children: []
-  }
-] as MultiMenuItem[];
+// export const sampleList = [
+//   {
+//     key: 1,
+//     title: "Food And Drink",
+//     children: []
+//   },
+//   {
+//     key: 2,
+//     title: "Electronics",
+//     children: [
+//       {
+//         key: 3,
+//         title: "Desktop And Computers",
+//         children: [
+//           {
+//             key: 7,
+//             title: "Monitors",
+//             children: null
+//           }
+//         ]
+//       },
+//       {
+//         key: 4,
+//         title: "Phones And Tablets",
+//         children: [
+//           {
+//             key: 5,
+//             title: "Apple",
+//             children: null
+//           },
+//           {
+//             key: 6,
+//             title: "Android",
+//             children: null
+//           }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     key: 10,
+//     title: "Health & Beauty",
+//     children: []
+//   }
+// ] as MultiMenuItem[];
 
 export interface MultiMenuItem {
   key: number | string;

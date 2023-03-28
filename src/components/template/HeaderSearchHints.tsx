@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Product, Shop } from "../../common/models";
 import { debounce } from "../../common/utils";
 import { getProductHints } from "../../services/ProductService";
 import { getShopHints } from "../../services/ShopService";
@@ -11,7 +10,7 @@ function HeaderSearchHints() {
   const [search, setSearch] = useState<string>();
   const [searchOption, setSearchOption] = useState("product");
   const [isLoading, setIsLoading] = useState(false);
-  const [hints, setHints] = useState<Shop[] | Product[]>();
+  const [hints, setHints] = useState<string[]>();
 
   const executeSearch = useMemo(
     () =>
@@ -94,7 +93,7 @@ function HeaderSearchHints() {
               )}
               {hints && hints.length > 0 && (
                 <div className="vstack bg-white shadow border rounded overflow-hidden">
-                  {hints.map((e, i) => {
+                  {/* {hints.map((e, i) => {
                     let imageUrl = "/images/placeholder.jpeg";
                     let href = "";
                     if ("thumbnail" in e) {
@@ -115,14 +114,6 @@ function HeaderSearchHints() {
                           setSearch("");
                           hide();
                         }}>
-
-                        {/* <Image
-                          src={imageUrl}
-                          alt=""
-                          width={40}
-                          height={40}
-                          className="flex-shrink-0 rounded-1"
-                        /> */}
                         <div className="py-2">
                           <div className="fw-medium">{e.name}</div>
                           {"headline" in e && (
@@ -136,6 +127,29 @@ function HeaderSearchHints() {
                         </div>
 
                       </Link>)
+                    );
+                  })} */}
+                  {hints.map((e, i) => {
+                    let href = "";
+                    if (searchOption === "products") {
+                      href = `/products?q=${e}`;
+                    } else if (searchOption === "shops") {
+                      href = `/shops?q=${e}`;
+                    }
+                    return (
+                      <Link
+                        key={i}
+                        href={href}
+                        className="text-decoration-none dropdown-item"
+                        onClick={() => {
+                          setSearch("");
+                          hide();
+                        }}
+                      >
+                        <div className="py-2">
+                          <span className="fw-medium">{e}</span>
+                        </div>
+                      </Link>
                     );
                   })}
                 </div>

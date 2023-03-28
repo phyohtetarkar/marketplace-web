@@ -134,7 +134,7 @@ export async function getShopHints(q: string) {
 
   await validateResponse(resp);
 
-  return resp.json() as Promise<Shop[]>;
+  return resp.json() as Promise<string[]>;
 }
 
 export async function findShops(query: ShopQuery) {
