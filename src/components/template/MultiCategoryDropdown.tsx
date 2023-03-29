@@ -19,7 +19,7 @@ function MultiCategoryDropdown() {
       getMenuLabel={(v) => v.name}
       getSubItems={(v) => v.children}
       onMenuClick={(v) => {
-        router.push(`/collections/${v.slug}`);
+        router.replace(`/collections/${v.slug}`);
       }}
     />
   );

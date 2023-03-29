@@ -75,8 +75,10 @@ function Header({ hideAuth }: HeaderProps) {
       width={28}
       height={22}
       alt=""
-      objectFit="cover"
       className="rounded-1"
+      style={{
+        objectFit: "cover"
+      }}
     />
   );
 

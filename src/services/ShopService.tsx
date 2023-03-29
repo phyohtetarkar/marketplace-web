@@ -65,6 +65,18 @@ export async function updateShopContact(value: ShopContact) {
 
   await validateResponse(resp);
 }
+export async function getShopById(id: number) {
+  const url = `${getAPIBasePath()}${basePath}/${id}`;
+  const resp = await fetch(url, {
+    headers: {
+      Authorization: await getAuthHeader()
+    }
+  });
+
+  await validateResponse(resp);
+
+  return resp.json() as Promise<Shop>;
+}
 
 export async function getShopBySlug(slug: String) {
   const url = `${getAPIBasePath()}${basePath}/${slug}`;
@@ -89,7 +101,7 @@ export async function existsShopBySlug(slug: String, excludeId: number) {
 
 export async function isShopMember(shopId: number) {
   try {
-    const url = `${getAPIBasePath()}shop-members/check?shop-id=${shopId}`;
+    const url = `${getAPIBasePath()}shop-members/${shopId}/check-member`;
 
     const authHeader = await getAuthHeader();
 

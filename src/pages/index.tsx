@@ -149,6 +149,7 @@ const Home = ({ data }: { data: HomeData }) => {
                               className="rounded-1"
                               fill
                               priority
+                              sizes="80vw"
                               style={{
                                 objectFit: "cover"
                               }}

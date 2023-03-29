@@ -1,13 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/solid";
-import { withSSRContext } from "aws-amplify";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import Swiper, { Navigation, Pagination, Zoom } from "swiper";
 import { Swiper as SwiperView, SwiperSlide } from "swiper/react";
-import { Product, ProductVariant } from "../../common/models";
+import { Category, Product, ProductVariant } from "../../common/models";
 import { formatPrice, transformDiscount } from "../../common/utils";
 import {
   AddToCartButton,
@@ -111,6 +110,50 @@ function ProductDetail({ product }: { product: Product }) {
     return (variant && variant.stockLeft === 0) || product.stockLeft === 0;
   };
 
+  const breadcrumb = () => {
+    const category = product.category;
+
+    if (!category) {
+      return (
+        <>
+          <li className="breadcrumb-item">
+            <Link href={`/`} className="text-light">
+              Home
+            </Link>
+          </li>
+          <li className="breadcrumb-item active" aria-current="page">
+            {product.name}
+          </li>
+        </>
+      );
+    }
+
+    const element: JSX.Element[] = [];
+
+    element.push(
+      <li
+        key={product.slug}
+        className="breadcrumb-item active"
+        aria-current="page"
+      >
+        {product.name}
+      </li>
+    );
+
+    for (let c: Category | undefined = category; !!c; c = c.category) {
+      const e = (
+        <li key={c.id} className="breadcrumb-item">
+          <Link href={`/collections/${c.slug}`} className="text-light">
+            {c.name}
+          </Link>
+        </li>
+      );
+      element.push(e);
+    }
+
+    return element.reverse();
+  };
+
   return (
     <div className="vstack">
       <div className="header-bar">
@@ -118,7 +161,7 @@ function ProductDetail({ product }: { product: Product }) {
           <div className="row py-4 px-2">
             <nav aria-label="breadcrumb col-12">
               <ol className="breadcrumb mb-1">
-                <li className="breadcrumb-item">
+                {/* <li className="breadcrumb-item">
                   <Link href="/" className="text-light">
                     Home
                   </Link>
@@ -133,7 +176,8 @@ function ProductDetail({ product }: { product: Product }) {
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
                   {product.name}
-                </li>
+                </li> */}
+                {breadcrumb()}
               </ol>
             </nav>
           </div>
@@ -168,6 +212,7 @@ function ProductDetail({ product }: { product: Product }) {
                           src={img.url ?? "/images/palceholder.jpeg"}
                           alt="Product image."
                           fill
+                          sizes="80vw"
                           style={{
                             objectFit: "contain"
                           }}
@@ -497,16 +542,18 @@ function ProductDetail({ product }: { product: Product }) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { slug } = context.query;
-  const { Auth } = withSSRContext(context);
+  //const { Auth } = withSSRContext(context);
 
   try {
     //const accessToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
     const product = await getProductBySlug(slug as string);
-    return {
-      props: {
-        product: product
-      } // will be passed to the page component as props
-    };
+    if (product.hidden === false && !product.disabled) {
+      return {
+        props: {
+          product: product
+        } // will be passed to the page component as props
+      };
+    }
   } catch (e) {
     console.log(e);
   }

@@ -45,7 +45,13 @@ function Review({ value }: ShopReviewProps) {
   );
 }
 
-function ShopReviewListing({ shopId }: { shopId: number }) {
+function ShopReviewListing({
+  shopId,
+  hideEdit
+}: {
+  shopId: number;
+  hideEdit?: boolean;
+}) {
   const [page, setPage] = useState(0);
   const { data, error, isLoading, mutate } = useSWR(
     ["/shop-reviews", page],
@@ -91,11 +97,13 @@ function ShopReviewListing({ shopId }: { shopId: number }) {
 
   return (
     <div>
-      <ShopReviewEdit
-        reload={() => {
-          mutate();
-        }}
-      />
+      {!hideEdit && (
+        <ShopReviewEdit
+          reload={() => {
+            mutate();
+          }}
+        />
+      )}
       <div className="card shadow-sm">
         <div className="card-body">{content()}</div>
       </div>

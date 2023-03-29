@@ -27,30 +27,36 @@ function AccountDropdown(props: AccountDropdownProps) {
         <Link
           href="/account/overview"
           className="dropdown-item text-decoration-none"
-          onClick={(e) => onNavClick?.()}>
-          
-            My profile
-          
+          onClick={(e) => onNavClick?.()}
+        >
+          My profile
         </Link>
       </li>
       <li>
         <Link
           href="/account/favorites"
           className="dropdown-item text-decoration-none"
-          onClick={(e) => onNavClick?.()}>
-          
-            My favorites
-          
+          onClick={(e) => onNavClick?.()}
+        >
+          My favorites
         </Link>
       </li>
       <li>
         <Link
           href="/account/orders"
           className="dropdown-item text-decoration-none"
-          onClick={(e) => onNavClick?.()}>
-          
-            My orders
-          
+          onClick={(e) => onNavClick?.()}
+        >
+          My orders
+        </Link>
+      </li>
+      <li>
+        <Link
+          href="/account/shops"
+          className="dropdown-item text-decoration-none"
+          onClick={(e) => onNavClick?.()}
+        >
+          My shops
         </Link>
       </li>
       {user?.role?.match("ADMIN|OWNER") && (

@@ -8,24 +8,35 @@ import {
   ProductQuery
 } from "../../services/ProductService";
 import Alert from "../Alert";
-import { Select } from "../forms";
 import Loading from "../Loading";
 import Pagination from "../Pagination";
-import { ProductGridItem, ProductManageGridItem } from "../product";
+import {
+  ProductEdit,
+  ProductGridItem,
+  ProductManageGridItem
+} from "../product";
 
 interface ShopProductListingProps {
   shop: Shop;
   isMember: boolean;
-  onProductEdit?: (id: number, query: ProductQuery) => void;
-  onProductCreate?: (query: ProductQuery) => void;
+  gridClass?: string;
+  onProductEdit?: () => void;
 }
 
 function ShopProductListing(props: ShopProductListingProps) {
+  const {
+    shop,
+    isMember,
+    gridClass = "row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4"
+  } = props;
+
+  const [pendingProductId, setPendingProductId] = useState<number>();
+
   const [query, setQuery] = useState<ProductQuery>({
     "shop-id": props.shop.id
   });
 
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     ["/products", query],
     ([url, query]) =>
       props.isMember
@@ -45,30 +56,30 @@ function ShopProductListing(props: ShopProductListingProps) {
       return <Alert message={parseErrorResponse(error)} variant="danger" />;
     }
 
-    if (data?.contents.length === 0) {
+    if (!data || data.contents.length === 0) {
       return <Alert message="No products found" />;
     }
 
     return (
       <>
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3 py-3">
-          {data?.contents &&
-            data?.contents.map((p, i) => {
-              return (
-                <div className="col" key={i}>
-                  {props.isMember ? (
-                    <ProductManageGridItem
-                      value={p}
-                      onEditClick={() =>
-                        p.id && props.onProductEdit?.(p.id, query)
-                      }
-                    />
-                  ) : (
-                    <ProductGridItem value={p} />
-                  )}
-                </div>
-              );
-            })}
+        <div className={`row ${gridClass} g-3`}>
+          {data.contents.map((p, i) => {
+            return (
+              <div className="col" key={i}>
+                {isMember ? (
+                  <ProductManageGridItem
+                    value={p}
+                    onEditClick={() => {
+                      setPendingProductId(p.id);
+                      props.onProductEdit?.();
+                    }}
+                  />
+                ) : (
+                  <ProductGridItem value={p} />
+                )}
+              </div>
+            );
+          })}
         </div>
 
         <div className="d-flex justify-content-end pt-3">
@@ -84,13 +95,28 @@ function ShopProductListing(props: ShopProductListingProps) {
     );
   };
 
+  if (pendingProductId !== undefined) {
+    return (
+      <ProductEdit
+        shop={shop}
+        productId={pendingProductId}
+        onPopBack={(reload) => {
+          setPendingProductId(undefined);
+          if (reload) {
+            mutate();
+          }
+        }}
+      />
+    );
+  }
+
   return (
     <div className="p-0">
       <div className="row g-3 mb-3">
-        <div className="col d-none d-md-block"></div>
-        {props.isMember && (
+        <div className="col"></div>
+        {isMember && (
           <>
-            <div className="col-auto">
+            {/* <div className="col-auto">
               <Select
                 onChange={(evt) => {
                   const status = !evt.target.value
@@ -104,11 +130,14 @@ function ShopProductListing(props: ShopProductListingProps) {
                 <option value="DRAFT">Draft</option>
                 <option value="DENIED">Denied</option>
               </Select>
-            </div>
+            </div> */}
             <div className="col-auto">
               <button
-                className="btn btn-primary h-100 hstack"
-                onClick={() => props.onProductCreate?.(query)}
+                className="btn btn-primary px-3 py-2"
+                onClick={() => {
+                  setPendingProductId(0);
+                  props.onProductEdit?.();
+                }}
               >
                 Create new
               </button>

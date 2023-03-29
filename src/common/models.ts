@@ -61,7 +61,10 @@ export interface Shop {
   rating?: number;
   featured?: boolean;
   createdAt?: number;
-  status?: "PENDING" | "ACTIVE" | "SUBSCRIPTION_EXPIRED" | "DENIED";
+  status?: "PENDING" | "ACTIVE";
+  expired?: boolean;
+  disabled?: boolean;
+  pendingOrderCount?: number;
   logo?: string | null;
   logoUrl?: string;
   cover?: string | null;
@@ -118,7 +121,8 @@ export interface Product {
   newArrival?: boolean;
   withVariant?: boolean;
   description?: string;
-  status?: "DRAFT" | "ARCHIVED" | "PUBLISHED" | "DENIED";
+  hidden?: boolean;
+  disabled?: boolean;
   discount?: Discount;
   category?: Category;
   shop?: Shop;

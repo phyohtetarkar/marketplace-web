@@ -131,10 +131,11 @@ function HeaderSearchHints() {
                   })} */}
                   {hints.map((e, i) => {
                     let href = "";
-                    if (searchOption === "products") {
-                      href = `/products?q=${e}`;
-                    } else if (searchOption === "shops") {
-                      href = `/shops?q=${e}`;
+                    const q = e.toLowerCase();
+                    if (searchOption === "product") {
+                      href = `/products?q=${q}`;
+                    } else if (searchOption === "shop") {
+                      href = `/shops?q=${q}`;
                     }
                     return (
                       <Link
@@ -147,7 +148,7 @@ function HeaderSearchHints() {
                         }}
                       >
                         <div className="py-2">
-                          <span className="fw-medium">{e}</span>
+                          <span className="fw-medium">{q}</span>
                         </div>
                       </Link>
                     );

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { Category } from "../../common/models";
 import { parseErrorResponse } from "../../common/utils";
+import { getBrandsByCategoryId } from "../../services/CategoryService";
 import { findProducts, ProductQuery } from "../../services/ProductService";
 import Accordion from "../Accordion";
 import Alert from "../Alert";
@@ -38,7 +39,7 @@ const Filter = (props: FilterProps) => {
     if (!categoryId) {
       return;
     }
-    //getBrandsByCategoryId(categoryId).then(setBrands).catch(console.error);
+    getBrandsByCategoryId(categoryId).then(setBrands).catch(console.error);
   }, [categoryId]);
 
   const isChecked = (b: string) => {
@@ -172,8 +173,8 @@ function ProductCatalog(props: ProductCatalogProps) {
   const router = useRouter();
 
   const { data, error, isLoading } = useSWR(
-    "/products",
-    () => findProducts(query),
+    ["/products", router],
+    ([url, router]) => (router.isReady ? findProducts(query) : undefined),
     {
       revalidateOnFocus: false
     }
@@ -189,7 +190,7 @@ function ProductCatalog(props: ProductCatalogProps) {
             </Link>
           </li>
           <li className="breadcrumb-item active" aria-current="page">
-            Search results
+            Search results for: {`"${query.q}"`}
           </li>
         </>
       );

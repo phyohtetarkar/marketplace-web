@@ -26,7 +26,6 @@ import {
   ProductQuery,
   saveProduct
 } from "../../services/ProductService";
-import Dropdown from "../Dropdown";
 import { AutocompleteSelect, Input } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import Loading from "../Loading";
@@ -44,15 +43,13 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
 
 interface ProductEditProps {
   shop: Shop;
-  productSlug?: string;
   productId?: number;
   pendingQuery?: ProductQuery;
-  onPopBack?: () => void;
+  onPopBack?: (reload?: boolean) => void;
 }
 
 function ProductEdit({
   shop,
-  productSlug,
   productId,
   pendingQuery,
   onPopBack
@@ -265,8 +262,8 @@ function ProductEdit({
 
       console.log(product);
       await saveProduct(product);
-      mutate(["/products", pendingQuery]);
-      onPopBack?.();
+      //mutate(["/products", pendingQuery]);
+      onPopBack?.(true);
       toast.success("Product successfully saved");
     } catch (error) {
       const msg = parseErrorResponse(error);
@@ -285,7 +282,7 @@ function ProductEdit({
     );
   }
 
-  const title = (!product.id ? "Create" : "Update") + " Product";
+  const title = (!product.id ? "Create" : "Update") + " product";
 
   return (
     <div>
@@ -302,56 +299,37 @@ function ProductEdit({
           }
         }}
       >
-        <div className="header-bar">
-          <div className="container py-4">
-            <div className="row g-3">
-              <div className="col-md-6">
-                <h2 className="fw-semibold mb-0 py-2h">{title}</h2>
-                {/* <nav aria-label="breadcrumb col-12">
-                  <ol className="breadcrumb mb-1">
-                    <li className="breadcrumb-item">
-                      <Link href="/shops">
-                        <a className="">Shops</a>
-                      </Link>
-                    </li>
-                    <li className="breadcrumb-item">
-                      <a
-                        href="#"
-                        className=""
-                        onClick={(evt) => {
-                          evt.preventDefault();
-                          onPopBack?.();
-                        }}
-                      >
-                        {shop.name}
-                      </a>
-                    </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                      {title}
-                    </li>
-                  </ol>
-                </nav> */}
-              </div>
-              <div className="col-md-6">
-                <div className="hstack h-100">
-                  <button
-                    type="button"
-                    className="btn btn-light px-3 py-2 ms-md-auto"
-                    onClick={() => {
-                      onPopBack?.();
-                    }}
-                  >
-                    Back
-                  </button>
-                  <Dropdown
+        <div className="hstack my-3">
+          <button
+            type="button"
+            className="btn btn-default py-2 me-2 ms-auto"
+            onClick={() => {
+              onPopBack?.(false);
+            }}
+          >
+            Go back
+          </button>
+          <ProgressButton
+            loading={isSubmitting}
+            className="py-2"
+            onClick={() => {
+              handleSubmit(async (data) => await executeSave({ ...data }))();
+            }}
+          >
+            {title}
+          </ProgressButton>
+          {/* <button
+            type="button"
+            className="btn btn-default py-2 ms-2 d-block d-md-none"
+            onClick={() => {
+              onPopBack?.(false);
+            }}
+          >
+            Go back
+          </button> */}
+          {/* <Dropdown
                     toggle={
-                      <ProgressButton
-                        loading={isSubmitting}
-                        variant="accent"
-                        className="ms-2 px-3 py-2 dropdown-toggle"
-                      >
-                        Save as
-                      </ProgressButton>
+                     
                     }
                     className="dropdown-menu-end"
                   >
@@ -359,10 +337,7 @@ function ProductEdit({
                       className="dropdown-item"
                       role="button"
                       onClick={() => {
-                        handleSubmit(
-                          async (data) =>
-                            await executeSave({ ...data, status: "DRAFT" })
-                        )();
+                        
                       }}
                     >
                       Draft
@@ -379,14 +354,10 @@ function ProductEdit({
                     >
                       Published
                     </li>
-                  </Dropdown>
-                </div>
-              </div>
-            </div>
-          </div>
+                  </Dropdown> */}
         </div>
 
-        <div className="container py-4">
+        <div className="">
           <div className="vstack gap-3">
             <div className="card shadow-sm">
               <div className="card-header bg-white py-3 px-md-4 border-bottom">
@@ -569,6 +540,23 @@ function ProductEdit({
                         className="form-check-label fw-medium"
                       >
                         New arrival
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col-auto">
+                    <div className="form-check form-switch">
+                      <input
+                        id="hiddenCheck"
+                        className="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        {...register("hidden")}
+                      ></input>
+                      <label
+                        htmlFor="hiddenCheck"
+                        className="form-check-label fw-medium"
+                      >
+                        Hidden
                       </label>
                     </div>
                   </div>
@@ -943,7 +931,7 @@ function ProductEdit({
                   onChange={handleImageChange}
                 />
               </div>
-              <div className="card-footer px-4 py-3">
+              <div className="card-footer px-md-4 py-3">
                 <span className="text-muted">
                   Product image can upload up to <strong>5</strong> images with
                   dimension constraint of at most <strong>800x800</strong>px.

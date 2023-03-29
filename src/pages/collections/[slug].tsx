@@ -163,6 +163,7 @@ function Collection({ category }: { category: Category }) {
 
   const query: ProductQuery = {
     page: typeof page === "string" ? parseInt(page) : undefined,
+    "category-id": category.id,
     brand: brand
   };
 

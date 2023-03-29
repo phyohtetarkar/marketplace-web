@@ -12,22 +12,22 @@ interface ShopManageGridItemProps {
 const _imageSize = 80;
 
 function ShopManageGridItem({ value }: ShopManageGridItemProps) {
-  const statusView = () => {
-    let color = "success text-success";
-    if (value.status === "SUBSCRIPTION_EXPIRED") {
-      color = "warning text-warning";
-    }
+  // const statusView = () => {
+  //   let color = "success text-success";
+  //   if (value.status === "SUBSCRIPTION_EXPIRED") {
+  //     color = "warning text-warning";
+  //   }
 
-    if (value.status === "DENIED") {
-      color = "danger text-danger";
-    }
+  //   if (value.status === "DENIED") {
+  //     color = "danger text-danger";
+  //   }
 
-    return (
-      <div className={`rounded small fw-medium bg-${color} bg-opacity-25 px-1`}>
-        {value.status}
-      </div>
-    );
-  };
+  //   return (
+  //     <div className={`rounded small fw-medium bg-${color} bg-opacity-25 px-1`}>
+  //       {value.status}
+  //     </div>
+  //   );
+  // };
 
   return (
     <div className="card h-100 border">
@@ -43,6 +43,7 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
                 src={value.logoUrl ?? "/images/placeholder.jpeg"}
                 alt="Shop image."
                 fill
+                sizes="33vw"
                 priority
                 style={{
                   objectFit: "cover"
@@ -51,9 +52,11 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
             </div>
           </div>
 
-          <h6 className="text-truncate mb-0" style={{ fontSize: 18 }}>
-            {value.name}
-          </h6>
+          <Link href={`/shops/${value.slug}`} className="link-dark">
+            <h6 className="text-truncate mb-1" style={{ fontSize: 16 }}>
+              {value.name}
+            </h6>
+          </Link>
           <div className="small text-muted mb-2 text-truncate">
             {value.headline}
           </div>
@@ -65,17 +68,17 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
 
           <div className="hstack gap-2">
             <Link
-              href={`/shops/${value.slug}`}
+              href={`/account/shops/${value.id}`}
               className="btn btn-primary flex-grow-1 hstack justify-content-center gap-2"
             >
               {/* <ChartBarIcon width={20} /> */}
-              <span>View detail</span>
+              <span>Manage shop</span>
             </Link>
           </div>
 
-          {value.status !== "ACTIVE" && (
+          {value.disabled && (
             <div role={"button"} className="position-absolute top-0 end-0 m-3">
-              <Tooltip title="Shop has been denied">
+              <Tooltip title="Shop has been disabled">
                 <ExclamationTriangleIcon
                   width={24}
                   className="text-danger"

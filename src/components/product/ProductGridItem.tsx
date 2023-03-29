@@ -68,6 +68,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
               src={value.thumbnail ?? "/placeholder.jpeg"}
               alt="Product image."
               fill
+              sizes="33vw"
               priority
               style={{
                 objectFit: "contain"

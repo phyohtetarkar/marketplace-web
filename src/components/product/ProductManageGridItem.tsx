@@ -14,24 +14,20 @@ function ProductManageGridItem({
   onEditClick
 }: ProductManageGridItemProps) {
   let popular;
+  let hidden;
   let outOfStock;
-  let draft;
 
   let price = <>{formatPrice(value.price ?? 0)} Ks</>;
 
-  //   if (data.images && data.images.length > 0) {
-  //     image = `${baseImagbaePath}/books%2F${data.images[0]}?alt=media`;
-  //   }
-
-  if (value.status && value.status !== "PUBLISHED") {
-    draft = (
+  if (value.hidden) {
+    hidden = (
       <div
         className="bg-danger px-2 py-1 text-light rounded-1 position-absolute top-0 end-0 m-2"
         style={{
           fontSize: 12
         }}
       >
-        {value.status}
+        Hidden
       </div>
     );
   }
@@ -92,6 +88,7 @@ function ProductManageGridItem({
               src={value.thumbnail ?? "/images/placeholder.jpeg"}
               alt="Product image."
               fill
+              sizes="33vw"
               priority
               style={{
                 objectFit: "contain"
@@ -100,7 +97,7 @@ function ProductManageGridItem({
           </div>
           {outOfStock && outOfStock}
           {popular && popular}
-          {draft && draft}
+          {hidden && hidden}
         </div>
       </Link>
       <div className="card-body">

@@ -25,6 +25,7 @@ function ShopGridItem({ value }: ShopGridItemProps) {
                 src={value.logoUrl ?? "/images/placeholder.jpeg"}
                 alt="Shop image."
                 fill
+                sizes="33vw"
                 priority
                 style={{
                   objectFit: "cover"

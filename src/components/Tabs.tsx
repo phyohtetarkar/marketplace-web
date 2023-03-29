@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, useState } from "react";
+import { ReactElement, ReactNode, useEffect, useState } from "react";
 
 type RenderTitle = (onTabChange: () => void, isActive: boolean) => ReactNode;
 
@@ -25,6 +25,10 @@ function Tab(props: TabProps) {
 
 function Tabs({ defaultTabKey, className, onTabChange, children }: TabsProps) {
   const [activeTabKey, setActiveTabKey] = useState(defaultTabKey);
+
+  useEffect(() => {
+    setActiveTabKey(defaultTabKey);
+  }, [defaultTabKey]);
 
   return (
     <>

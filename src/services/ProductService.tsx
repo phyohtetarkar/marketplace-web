@@ -16,7 +16,6 @@ export interface ProductQuery {
   "discount-id"?: number;
   "max-price"?: number;
   brand?: string | string[];
-  status?: "PUBLISHED" | "DRAFT" | "DENIED" | string;
   page?: number;
 }
 
@@ -31,8 +30,8 @@ export async function saveProduct(value: Product) {
   form.append("featured", value.featured ? "true" : "false");
   form.append("newArrival", value.newArrival ? "true" : "false");
   form.append("withVariant", value.withVariant ? "true" : "false");
+  form.append("hidden", value.hidden ? "true" : "false");
   value.description && form.append("description", value.description);
-  value.status && form.append("status", value.status);
   value.categoryId && form.append("categoryId", value.categoryId.toPrecision());
   value.shopId && form.append("shopId", value.shopId.toPrecision());
   value.discountId && form.append("discountId", value.discountId.toPrecision());
