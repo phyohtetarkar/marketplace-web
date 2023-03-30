@@ -1,4 +1,4 @@
-import { Placement } from "@popperjs/core";
+import { Placement, PositioningStrategy } from "@popperjs/core";
 import {
   ReactElement,
   ReactNode,
@@ -12,6 +12,7 @@ import { Modifier, usePopper } from "react-popper";
 interface PopoverProps {
   placement?: Placement;
   offset?: [number, number];
+  strategy?: PositioningStrategy;
   showOnHover?: boolean;
   hideOnPopper?: boolean;
   hideOnPopperClick?: boolean;
@@ -43,6 +44,7 @@ function Popover(props: PopoverProps) {
   const {
     placement,
     offset,
+    strategy,
     showOnHover,
     hideOnPopper,
     hideOnLeave,
@@ -88,7 +90,7 @@ function Popover(props: PopoverProps) {
     {
       modifiers: modifiers,
       placement: placement ?? "bottom-start",
-      strategy: "fixed"
+      strategy: strategy ?? "absolute"
     }
   );
   const [open, setOpen] = useState(false);

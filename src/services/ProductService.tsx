@@ -36,6 +36,7 @@ export async function saveProduct(value: Product) {
   value.shopId && form.append("shopId", value.shopId.toPrecision());
   value.discountId && form.append("discountId", value.discountId.toPrecision());
   value.brand && form.append("brand", value.brand);
+  value.thumbnail && form.append("thumbnail", value.thumbnail);
 
   value.images?.forEach((v, i) => {
     v.id && form.append(`images[${i}].id`, v.id.toPrecision());

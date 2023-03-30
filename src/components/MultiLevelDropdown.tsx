@@ -75,15 +75,15 @@ interface MultiDropdownProps<T> extends SubMenuProps<T> {
 function MenuItem<T>(props: MenuItemProps<T> & { item: T }) {
   const { item, getMenuLabel, getSubItems, onMenuClick } = props;
 
-  const itemRef = useRef<HTMLDivElement | null>(null);
-  const [activeNode, setActiveNode] = useState<HTMLDivElement | null>(null);
+  const itemRef = useRef<any | null>(null);
+  const [activeNode, setActiveNode] = useState<HTMLElement | null>(null);
 
   const subItems = getSubItems(item);
 
   return (
     <div
       ref={itemRef}
-      className="dropdown-item-secondary"
+      className="dropdown-item-secondary py-2"
       style={{ cursor: "default" }}
       onClick={(evt) => {
         if (itemRef.current === evt.target) {

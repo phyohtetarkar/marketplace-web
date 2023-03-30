@@ -1,10 +1,11 @@
 import { ListBulletIcon } from "@heroicons/react/24/outline";
-import router from "next/router";
+import { useRouter } from "next/router";
 import { useCategories } from "../../common/hooks";
 import { Category } from "../../common/models";
 import MultiLevelDropdown from "../MultiLevelDropdown";
 
 function MultiCategoryDropdown() {
+  const router = useRouter();
   const { categories, error, isLoading } = useCategories(false);
 
   return (
@@ -19,7 +20,7 @@ function MultiCategoryDropdown() {
       getMenuLabel={(v) => v.name}
       getSubItems={(v) => v.children}
       onMenuClick={(v) => {
-        router.replace(`/collections/${v.slug}`);
+        router.push(`/collections/${v.slug}`);
       }}
     />
   );
