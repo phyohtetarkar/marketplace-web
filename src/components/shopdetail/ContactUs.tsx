@@ -9,7 +9,7 @@ function ContactUs() {
           return null;
         }
         return (
-          <div className="card shadow-sm">
+          <div className="card">
             <div className="card-header border-bottom bg-white py-3">
               <h5 className="mb-0">Contact us</h5>
             </div>

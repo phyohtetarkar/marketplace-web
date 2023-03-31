@@ -16,7 +16,7 @@ const CollectionItem = ({ item, onClick }: CollectionItemProps) => {
   return (
     <div
       role="button"
-      className="vstack gap-1 py-2 px-1"
+      className="vstack gap-1 py-2 px-1 align-items-center"
       onClick={() => onClick?.(item)}
     >
       {item?.image ? (

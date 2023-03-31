@@ -144,7 +144,7 @@ const BasicInformation = (props: FormProps) => {
           className="btn btn-primary px-3 py-2 ms-auto"
           disabled={isSubmitting}
         >
-          Next
+          Continue
         </button>
       </div>
     </form>
@@ -299,7 +299,7 @@ const ShopMedia = (props: FormProps) => {
             props.onNext?.();
           }}
         >
-          Next
+          Continue
         </button>
       </div>
     </>
@@ -334,11 +334,7 @@ const PackageSelection = (props: FormProps) => {
         />
         <label className="form-check-label text-muted">
           By checking, you have read and agree to the&nbsp;
-          <Link
-            href={"/"}
-            target="_blank"
-            className="text-decoration-none fw-medium"
-          >
+          <Link href={"/"} target="_blank" className="link-anchor fw-medium">
             terms of service
           </Link>
           .
@@ -413,40 +409,40 @@ function CreateShop() {
 
   return (
     <div className="pb-5">
-      <div className="header-bar mb-3">
+      <div className="header-bar">
         <div className="container py-4">
           <div className="row g-3">
             <div className="col-lg-6">
-              <h3 className="text-light text-lg-start">Create Shop</h3>
+              <h3 className="text-lg-start mb-0">Create Shop</h3>
               <nav aria-label="breadcrumb col-12">
                 <ol className="breadcrumb mb-1">
                   <li className="breadcrumb-item">
-                    <Link href="/account/shops" className="text-light">
-                      Shops
+                    <Link href="/account/shops" className="">
+                      My shops
                     </Link>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
-                    Create Shop
+                    Create shop
                   </li>
                 </ol>
               </nav>
             </div>
-            <div className="col-lg-6">
+            {/* <div className="col-lg-6">
               <div className="hstack h-100">
                 <Link
                   href="/account/shops"
-                  className="btn btn-light text-dark py-2 px-3 ms-lg-auto"
+                  className="btn btn-primary text-light py-2 px-3 ms-lg-auto"
                 >
-                  Back to shops
+                  Back to my shops
                 </Link>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
 
       <div className="container">
-        <div className="row mt-3">
+        <div className="row">
           <div className="col-12">
             <div className="card shadow-sm">
               <div className="card-body px-md-4">

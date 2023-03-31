@@ -56,7 +56,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
   }
 
   return (
-    <div className="card h-100 border-0 shadow-sm">
+    <div className="card h-100">
       <Link href={`/products/${value.slug}`} className="text-decoration-none">
         <div
           className="position-relative"
@@ -71,7 +71,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
               sizes="33vw"
               priority
               style={{
-                objectFit: "contain"
+                objectFit: "cover"
               }}
             />
           </div>
@@ -84,14 +84,14 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
           {heading === "seller" ? (
             <Link
               href={`/shops/${value.shop?.slug}`}
-              className="text-decoration-none small text-truncate link-warning fw-medium"
+              className="text-decoration-none text-truncate link-success fw-medium"
             >
               {value.shop?.name}
             </Link>
           ) : (
             <Link
               href={`/categories/${value.category?.slug}`}
-              className="text-decoration-none small text-truncate link-warning fw-medium"
+              className="text-decoration-none text-truncate link-success fw-medium"
             >
               {value.category?.name}
             </Link>
@@ -104,7 +104,14 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
             {value.name}
           </Link>
 
-          <h6 className="fw-semibold mt-2 mb-3">{price}</h6>
+          <h6
+            className="fw-semibold mt-2 mb-3"
+            style={{
+              fontSize: 18
+            }}
+          >
+            {price}
+          </h6>
 
           <div className="hstack align-items-stretch gap-2">
             {value.id && !value.withVariant && (

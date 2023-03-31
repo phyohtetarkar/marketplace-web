@@ -7,7 +7,7 @@ function Footer() {
   }. All rights reserved.`;
 
   return (
-    <div className="bg-primary">
+    <div className="bg-secondary">
       <footer className="py-4 d-none d-lg-block">
         <div className="container py-3">
           <div className="row g-3">

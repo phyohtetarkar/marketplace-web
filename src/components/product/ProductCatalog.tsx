@@ -57,7 +57,7 @@ const Filter = (props: FilterProps) => {
   };
 
   return (
-    <div className="rounded shadow-sm bg-white">
+    <div className="rounded border bg-white">
       <Accordion
         open={true}
         header={(open) => {
@@ -185,7 +185,7 @@ function ProductCatalog(props: ProductCatalogProps) {
       return (
         <>
           <li className="breadcrumb-item">
-            <Link href={`/`} className="text-light">
+            <Link href={`/`} className="">
               Home
             </Link>
           </li>
@@ -211,7 +211,7 @@ function ProductCatalog(props: ProductCatalogProps) {
     for (let c = category?.category; !!c; c = c?.category) {
       const e = (
         <li key={c.id} className="breadcrumb-item">
-          <Link href={`/collections/${c.slug}`} className="text-light">
+          <Link href={`/collections/${c.slug}`} className="">
             {c.name}
           </Link>
         </li>

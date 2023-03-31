@@ -76,7 +76,7 @@ function ProductManageGridItem({
   // }
 
   return (
-    <div className="card h-100 shadow-sm">
+    <div className="card h-100">
       <Link href={`/products/${value.slug}`} className="text-decoration-none">
         <div
           className="position-relative"
@@ -91,7 +91,7 @@ function ProductManageGridItem({
               sizes="33vw"
               priority
               style={{
-                objectFit: "contain"
+                objectFit: "cover"
               }}
             />
           </div>

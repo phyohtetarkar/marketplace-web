@@ -11,7 +11,7 @@ function AboutUs() {
         return (
           <div className="row g-3">
             <div className="col-lg-8">
-              <div className="card shadow-sm">
+              <div className="card">
                 <div className="card-header border-bottom bg-white py-3">
                   <h5 className="mb-0">About us</h5>
                 </div>

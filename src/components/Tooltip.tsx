@@ -17,7 +17,8 @@ function Tooltip({ title, className, children }: TooltipProps) {
         return;
       }
       tooltip = Tooltip.getOrCreateInstance(tooltipRef.current, {
-        placement: "top"
+        placement: "top",
+        title: title
       });
     };
 
@@ -31,7 +32,6 @@ function Tooltip({ title, className, children }: TooltipProps) {
   return (
     <div
       ref={tooltipRef}
-      title={title}
       className={`d-flex align-items-center ${className ?? ""}`}
     >
       {children}

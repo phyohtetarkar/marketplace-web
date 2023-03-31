@@ -54,12 +54,12 @@ function ShopHome({ shop }: { shop: Shop }) {
               <nav aria-label="breadcrumb col-12">
                 <ol className="breadcrumb mb-1">
                   <li className="breadcrumb-item">
-                    <Link href="/" className="text-light">
+                    <Link href="/" className="">
                       Home
                     </Link>
                   </li>
                   <li className="breadcrumb-item">
-                    <Link href="/shops" className="text-light">
+                    <Link href="/shops" className="">
                       Shops
                     </Link>
                   </li>
@@ -74,13 +74,13 @@ function ShopHome({ shop }: { shop: Shop }) {
         <div className="container py-3">
           <div className="row">
             <div className="col-12">
-              <div className="shadow-sm rounded bg-white vstack overflow-hidden">
+              <div className="border rounded bg-white vstack overflow-hidden">
                 <div
                   style={{
                     width: "100%",
                     minHeight: 200
                   }}
-                  className="position-relative bg-primary"
+                  className="position-relative bg-secondary"
                 >
                   {shop.coverUrl && (
                     <Image

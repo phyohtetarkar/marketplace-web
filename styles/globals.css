@@ -75,7 +75,7 @@ body {
   padding: 63px 0 0 0;
   margin: 0;
   height: 100%;
-  background-color: #f3f4f6;
+  background-color: white;
   font-family: Inter, Noto Sans Myanmar UI, -apple-system, BlinkMacSystemFont, Roboto,
     Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
     sans-serif !important;
@@ -84,6 +84,10 @@ body {
 svg {
   display: block;
 }
+
+/* a {
+  color: #1a0dab !important;
+} */
 
 #__next {
   height: 100%;
@@ -94,12 +98,11 @@ svg {
 }
 
 .header-bar {
-  color: #fff;
-  background: var(--bs-primary);
+  background: #f5f5f5;
 }
 
 .header-bar a {
-  color: #fff;
+  color: var(--bs-anchor);
 }
 
 .btn-facebook {
@@ -194,6 +197,17 @@ svg {
   background-color: var(--bs-primary);
 }
 
+.dropdown-item-primary-light {
+  color: #444;
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+}
+
+.dropdown-item-primary-light:hover {
+  color: var(--bs-primary);
+  background-color: var(--bs-primary-light);
+}
+
 .dropdown-item-secondary {
   color: #444;
   padding: 0.5rem 1rem;
@@ -201,7 +215,7 @@ svg {
 }
 
 .dropdown-item-secondary:hover {
-  color: var(--bs-primary);
+  color: white;
   background-color: var(--bs-secondary);
 }
 
@@ -226,14 +240,14 @@ svg {
 }
 
 .my-list-item.active {
-  color: var(--bs-primary);
-  background-color: var(--bs-secondary);
+  color: var(--bs-light);
+  background-color: var(--bs-primary);
   text-decoration: none;
   border-radius: var(--border-radius);
 }
 
 .my-list-item.active svg {
-  color: var(--bs-primary);
+  color: var(--bs-light);
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

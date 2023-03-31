@@ -94,9 +94,9 @@ function Login() {
 
   return (
     <div className="container py-3">
-      <div className="row my-4">
+      <div className="row my-4 mb-5">
         <div className="col-md-6 offset-md-3 col-xxl-4 offset-xxl-4">
-          <div className="card mb-5 shadow-sm">
+          <div className="card">
             <div className="card-body p-lg-4">
               <h4 className="card-title fw-bold mt-2 mb-4">Sign In</h4>
 
@@ -109,13 +109,13 @@ function Login() {
               {error && <Alert message={error} variant="danger" />}
 
               <form
-                className="row"
+                className="row g-3"
                 onSubmit={(evt) => {
                   evt.preventDefault();
                   handleSubmit(async (data) => await processLogin(data))();
                 }}
               >
-                <div className="col-md-12 mb-3">
+                <div className="col-md-12">
                   <Input
                     label="Phone Number"
                     id="phoneInput"
@@ -126,12 +126,13 @@ function Login() {
                     // onChange={handleChange}
                     // error={errors.phone}
                     {...register("phone", {
+                      required: true,
                       pattern: /^(09)\d{7,12}$/
                     })}
                     error={errors.phone && "Please enter valid phone number"}
                   />
                 </div>
-                <div className="col-md-12 mb-2">
+                <div className="col-md-12">
                   <PasswordInput
                     label="Password"
                     placeholder=""
@@ -141,13 +142,13 @@ function Login() {
                     })}
                     error={errors.password?.message}
                   />
+                  <div className="mt-1">
+                    <Link href="/forgot-password" className="link-anchor">
+                      Forgot password?
+                    </Link>
+                  </div>
                 </div>
-                <div className="col-md-12">
-                  <Link href="/forgot-password" className="text-primary-dark">
-                    Forgot password?
-                  </Link>
-                </div>
-                <div className="col-md-12 mt-4 mb-2">
+                <div className="col-md-12 mt-4">
                   {/* <button
                     type="submit"
                     className="btn btn-primary w-100 py-2h"
@@ -219,7 +220,10 @@ function Login() {
             </div>
             <div className="text-center p-3 card-footer">
               Don&apos;t have an account?
-              <Link href="/sign-up" className="text-decoration-none fw-medium ms-1">
+              <Link
+                href="/sign-up"
+                className="text-decoration-none fw-medium link-anchor ms-1"
+              >
                 Sign Up
               </Link>
             </div>

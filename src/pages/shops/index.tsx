@@ -108,7 +108,7 @@ function Shops() {
             <nav aria-label="breadcrumb col-12">
               <ol className="breadcrumb mb-1">
                 <li className="breadcrumb-item">
-                  <Link href="/" className="text-light">
+                  <Link href="/" className="">
                     Home
                   </Link>
                 </li>
@@ -120,7 +120,7 @@ function Shops() {
           </div>
         </div>
       </div>
-      <div className="container py-4">
+      <div className="container py-3">
         {/* <div className="row g-3 justify-content-end mb-3">
           <div className="col-auto">
             <Input

@@ -12,8 +12,8 @@ interface ShopGridItemProps {
 
 function ShopGridItem({ value }: ShopGridItemProps) {
   return (
-    <div className="card shadow-sm">
-      <div className="card-body p-4 overflow-hidden">
+    <div className="card">
+      <div className="card-body overflow-hidden">
         <div className="vstack text-center">
           <div
             className="bg-light rounded-circle mb-3 align-self-center"

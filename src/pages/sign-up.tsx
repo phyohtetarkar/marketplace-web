@@ -72,9 +72,9 @@ function Register() {
 
   return (
     <div className="container py-3">
-      <div className="row my-4">
-        <div className="col-md-6 offset-md-3 col-xxl-4 offset-xxl-4">
-          <div className="card mb-5 shadow-sm">
+      <div className="row my-4 mb-5">
+        <div className=" col-lg-6 offset-lg-3">
+          <div className="card">
             <div className="card-body p-lg-4">
               <h4 className="card-title fw-bold mt-2 mb-4">Sign Up</h4>
 
@@ -87,13 +87,13 @@ function Register() {
               {error && <Alert message={error} variant="danger" />}
 
               <form
-                className="row g-2"
+                className="row g-3"
                 onSubmit={(evt) => {
                   evt.preventDefault();
                   handleSubmit(async (data) => await processSignUp(data))();
                 }}
               >
-                <div className="col-md-12 mb-2">
+                <div className="col-lg-6">
                   <Input
                     label="Full Name"
                     id="nameInput"
@@ -106,23 +106,27 @@ function Register() {
                     error={errors.fullName && "Please enter full name"}
                   />
                 </div>
-                <div className="col-md-12 mb-2">
+                <div className="col-lg-6">
                   <Input
                     label="Phone Number"
                     id="phoneInput"
                     type="tel"
                     autoComplete="username"
                     placeholder="09xxxxxxxx"
-                    {...register("phone", { pattern: /^(09)\d{7,12}$/ })}
+                    {...register("phone", {
+                      required: true,
+                      pattern: /^(09)\d{7,12}$/
+                    })}
                     error={errors.phone && "Please enter valid phone number"}
                   />
                 </div>
-                <div className="col-md-12 mb-2">
+                <div className="col-md-12">
                   <PasswordInput
                     label="Password"
                     autoComplete="new-password"
                     placeholder="Minimum 8 characters"
                     {...register("password", {
+                      required: true,
                       minLength: 8,
                       setValueAs: setEmptyOrString
                     })}
@@ -132,7 +136,7 @@ function Register() {
                     }
                   />
                 </div>
-                <div className="col-md-12 mb-2">
+                <div className="col-md-12">
                   <PasswordInput
                     label="Confirm Password"
                     autoComplete="new-password"
@@ -144,7 +148,7 @@ function Register() {
                     error={errors.confirmPassword && "Password does not match"}
                   />
                 </div>
-                <div className="col-md-12 mt-4 mb-2">
+                <div className="col-md-12 mt-4">
                   <ProgressButton
                     type="submit"
                     className="w-100 py-2h"
@@ -202,7 +206,10 @@ function Register() {
             </div>
             <div className="text-center p-3 card-footer">
               Already have an account?
-              <Link href="/login" className="text-decoration-none fw-medium ms-1">
+              <Link
+                href="/login"
+                className="text-decoration-none fw-medium link-anchor ms-1"
+              >
                 Login
               </Link>
             </div>

@@ -58,15 +58,15 @@ function MyShops() {
 
   return (
     <div>
-      <div className="bg-primary">
+      {/* <div className="header-bar">
         <div className="container">
           <div className="py-4">
-            <h1 className="text-light text-center text-lg-start">My Shops</h1>
+            <h1 className="text-center text-lg-start mb-0">My Shops</h1>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className="container py-4">
+      <div className="container py-3 mb-5">
         <div className="row g-3">
           <div className="col-lg-4 col-xl-3">
             <AccountMenu />
@@ -95,10 +95,9 @@ function MyShops() {
                     <div className="col-auto d-none d-sm-block">
                       <Link
                         href="/account/shops/create"
-                        className="ms-auto btn btn-primary h-100 hstack py-2h">
-                        
-                          Create new
-                        
+                        className="ms-auto btn btn-primary h-100 hstack py-2h"
+                      >
+                        Create new
                       </Link>
                     </div>
                   </div>

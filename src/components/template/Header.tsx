@@ -1,19 +1,18 @@
 import {
   BuildingStorefrontIcon,
-  PlusCircleIcon,
-  QuestionMarkCircleIcon
+  PlusCircleIcon
 } from "@heroicons/react/24/outline";
 import { Offcanvas } from "bootstrap";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 import { AuthenticationContext } from "../../common/contexts";
-import MultiCategoryDropdown from "./MultiCategoryDropdown";
 import { ShoppingCartView } from "../checkout";
 import Dropdown from "../Dropdown";
 import AccountDropdown from "./AccountDropdown";
 import HeaderSearchHints from "./HeaderSearchHints";
+import MultiCategoryDropdown from "./MultiCategoryDropdown";
 
 interface HeaderProps {
   hideAuth?: boolean;
@@ -121,9 +120,35 @@ function Header({ hideAuth }: HeaderProps) {
                   objectFit="contain"
                 />
               </div> */}
-              <h4 className="mb-0 fw-bold text-primary">
+              {/* <div
+                className="ratio"
+                style={
+                  { width: 160, "--bs-aspect-ratio": "30%" } as CSSProperties
+                }
+              >
+                <Image
+                  src="/images/logo-h.svg"
+                  fill
+                  alt=""
+                  priority
+                  style={{
+                    objectFit: "contain"
+                  }}
+                />
+              </div> */}
+              <Image
+                src="/images/logo-h.svg"
+                width={160}
+                height={80}
+                alt=""
+                priority
+                style={{
+                  objectFit: "contain"
+                }}
+              />
+              {/* <h4 className="mb-0 fw-bold text-secondary">
                 {process.env.NEXT_PUBLIC_APP_NAME}
-              </h4>
+              </h4> */}
             </div>
           </Link>
 
@@ -142,21 +167,21 @@ function Header({ hideAuth }: HeaderProps) {
                   return null;
                 }
                 return (
-                  <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0">
+                  <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0 d-none d-lg-flex">
                     <div className="nav-item">
                       <Link
-                        href="/sign-up"
-                        className="btn btn-outline-primary d-none d-lg-block text-nowrap"
+                        href="/login"
+                        className="text-decoration-none fw-medium nav-link"
                       >
-                        Register
+                        Sign in
                       </Link>
                     </div>
                     <div className="nav-item">
                       <Link
-                        href="/login"
-                        className="btn btn-primary ms-2 d-none d-lg-block"
+                        href="/sign-up"
+                        className="btn btn-primary text-nowrap"
                       >
-                        Login
+                        Register
                       </Link>
                     </div>
                   </div>
@@ -195,7 +220,7 @@ function Header({ hideAuth }: HeaderProps) {
             id="offcanvasNavbar"
             aria-labelledby="offcanvasNavbarLabel"
           >
-            <div className="offcanvas-header">
+            <div className="offcanvas-header border-bottom py-2h">
               <h5
                 className="offcanvas-title fw-bold text-primary mb-0 d-flex align-items-center"
                 id="offcanvasNavbarLabel"
@@ -206,7 +231,17 @@ function Header({ hideAuth }: HeaderProps) {
                 height={30}
                 alt=""
               /> */}
-                <span className="">{process.env.NEXT_PUBLIC_APP_NAME}</span>
+                <Image
+                  src="/images/logo-h.svg"
+                  width={130}
+                  height={40}
+                  alt=""
+                  priority
+                  style={{
+                    objectFit: "contain"
+                  }}
+                />
+                {/* <span className="">{process.env.NEXT_PUBLIC_APP_NAME}</span> */}
               </h5>
               <button
                 type="button"
@@ -283,7 +318,21 @@ function Header({ hideAuth }: HeaderProps) {
                       <div className="nav-item">
                         <div
                           role="button"
-                          className="btn btn-outline-primary text-nowrap"
+                          className="btn btn-outline-primary me-2"
+                          data-bs-toggle="offcanvas"
+                          data-bs-target="#offcanvasNavbar"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            router.push("/login");
+                          }}
+                        >
+                          Sign in
+                        </div>
+                      </div>
+                      <div className="nav-item">
+                        <div
+                          role="button"
+                          className="btn btn-primary text-nowrap"
                           data-bs-toggle="offcanvas"
                           data-bs-target="#offcanvasNavbar"
                           onClick={(e) => {
@@ -292,20 +341,6 @@ function Header({ hideAuth }: HeaderProps) {
                           }}
                         >
                           Register
-                        </div>
-                      </div>
-                      <div className="nav-item">
-                        <div
-                          role="button"
-                          className="btn btn-primary ms-2"
-                          data-bs-toggle="offcanvas"
-                          data-bs-target="#offcanvasNavbar"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            router.push("/login");
-                          }}
-                        >
-                          Login
                         </div>
                       </div>
                     </div>

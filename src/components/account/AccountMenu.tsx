@@ -26,23 +26,22 @@ function AccountMenu({}) {
   }) {
     const active = router.pathname === href;
     return (
-      (<Link
+      <Link
         href={href}
         className={`d-flex align-items-center p-2 my-list-item ${
           active ? "active" : ""
-        }`}>
-
+        }`}
+      >
         {icon}
         <span>{title}</span>
-
-      </Link>)
+      </Link>
     );
   }
 
   const content = (
     <>
       <div className="text-dark-gray mb-2 small px-1 uppercased d-none d-lg-block">
-        ACCOUNT SETTINGS
+        ACCOUNT
       </div>
       <div className="vstack gap-1">
         {menuLink({

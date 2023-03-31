@@ -89,7 +89,7 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
         })();
       }}
     >
-      <div className="card mb-3 shadow-sm">
+      <div className="card mb-3">
         <div className="card-header py-3">
           <h5 className="mb-0">
             {!review.id ? "Write Review" : "Your Review"}

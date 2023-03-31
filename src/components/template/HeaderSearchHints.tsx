@@ -153,7 +153,7 @@ function HeaderSearchHints() {
                         }}
                       >
                         <div className="py-2">
-                          <span className="fw-medium">{q}</span>
+                          <span className="">{q}</span>
                         </div>
                       </Link>
                     );

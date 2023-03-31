@@ -124,13 +124,13 @@ function ShoppingCart() {
 
   return (
     <div className="vstack mb-5">
-      <div className="bg-primary">
+      <div className="header-bar">
         <div className="container">
           <div className="row py-4 px-2">
             <nav aria-label="breadcrumb col-12">
               <ol className="breadcrumb mb-1">
                 <li className="breadcrumb-item">
-                  <Link href={`/`} className="text-light">
+                  <Link href={`/`} className="">
                     Home
                   </Link>
                 </li>
@@ -146,7 +146,7 @@ function ShoppingCart() {
         <div className="row g-3">
           <div className="col-lg-8">
             {group.length > 0 && (
-              <div className="card mb-3 shadow-sm">
+              <div className="card mb-3">
                 <div className="card-body py-2h">
                   <div className="hstack gap-2 flex-grow-1">
                     <div className="form-check">

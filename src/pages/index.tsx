@@ -33,7 +33,7 @@ const Home = ({ data }: { data: HomeData }) => {
     <div className="container py-3">
       <div className="row mb-4 mb-lg-5">
         <div className="col-12">
-          <div className="card shadow-sm">
+          <div className="card">
             <div className="card-body p-0 p-lg-3">
               <div className="row g-3">
                 <div className="col-lg-3 d-none d-lg-inline">
@@ -146,7 +146,7 @@ const Home = ({ data }: { data: HomeData }) => {
                             <Image
                               src={b.imageUrl}
                               alt="Cover image"
-                              className="rounded-1"
+                              className="rounded"
                               fill
                               priority
                               sizes="80vw"

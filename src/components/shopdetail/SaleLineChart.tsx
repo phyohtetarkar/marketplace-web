@@ -17,9 +17,9 @@ function SaleLineChart() {
       labels: _weekDays,
       datasets: [
         {
-          backgroundColor: "rgba(99, 102, 241, 0.1)",
-          borderColor: "rgb(99, 102, 241)",
-          pointBackgroundColor: "rgb(99, 102, 241)",
+          backgroundColor: "rgba(245, 123, 9, 0.1)",
+          borderColor: "rgb(245, 123, 9)",
+          pointBackgroundColor: "rgb(245, 123, 9)",
           data: [0, 10, 5, 2, 20, 30, 45],
           tension: 0.3,
           fill: true

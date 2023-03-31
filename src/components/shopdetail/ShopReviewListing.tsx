@@ -104,7 +104,7 @@ function ShopReviewListing({
           }}
         />
       )}
-      <div className="card shadow-sm">
+      <div className="card">
         <div className="card-body">{content()}</div>
       </div>
     </div>

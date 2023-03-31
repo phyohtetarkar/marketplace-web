@@ -14,7 +14,10 @@ function OrderCard() {
             <span className="fw-semibold h5 my-auto">Order ID: 20001</span>
           </div>
           <div className="col-auto">
-            <Link href={"/profile/orders/1"} className="btn btn-sm btn-outline-primary">
+            <Link
+              href={"/profile/orders/1"}
+              className="btn btn-sm btn-outline-primary"
+            >
               View Detail
             </Link>
           </div>
@@ -80,15 +83,15 @@ function MyOrders() {
   const list = [1, 2];
   return (
     <div>
-      <div className="bg-primary">
+      {/* <div className="bg-primary">
         <div className="container">
           <div className="py-4">
             <h1 className="text-light text-center text-lg-start">My Orders</h1>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className="container py-4">
+      <div className="container py-3 mb-5">
         <div className="row g-3">
           <div className="col-lg-4 col-xl-3">
             <AccountMenu />
@@ -113,10 +116,11 @@ function MyOrders() {
                   </Select>
                 </div>
                 <div className="col-auto d-none d-sm-block">
-                  <Link href="#" className="ms-auto btn btn-primary h-100 hstack">
-                    
-                      Search
-                    
+                  <Link
+                    href="#"
+                    className="ms-auto btn btn-primary h-100 hstack"
+                  >
+                    Search
                   </Link>
                 </div>
               </div>

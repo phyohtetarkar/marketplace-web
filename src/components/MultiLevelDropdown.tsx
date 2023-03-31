@@ -83,7 +83,7 @@ function MenuItem<T>(props: MenuItemProps<T> & { item: T }) {
   return (
     <div
       ref={itemRef}
-      className="dropdown-item-secondary py-2"
+      className="dropdown-item-primary py-2"
       style={{ cursor: "default" }}
       onClick={(evt) => {
         if (itemRef.current === evt.target) {

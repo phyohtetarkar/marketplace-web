@@ -58,7 +58,7 @@ function MyFavorites() {
 
   return (
     <div>
-      <div className="bg-primary">
+      {/* <div className="bg-primary">
         <div className="container">
           <div className="py-4">
             <h1 className="text-light text-center text-lg-start">
@@ -66,9 +66,9 @@ function MyFavorites() {
             </h1>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className="container py-4">
+      <div className="container py-3 mb-5">
         <div className="row g-3">
           <div className="col-lg-4 col-xl-3">
             <AccountMenu />

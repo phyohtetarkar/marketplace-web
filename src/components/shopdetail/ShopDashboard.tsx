@@ -16,7 +16,7 @@ function ShopDashboard() {
         <div className="col-lg-4">
           <div className="card p-3 shadow-sm">
             <div className="hstack gap-3">
-              <div className="bg-warning text-light rounded">
+              <div className="bg-secondary text-light rounded">
                 <ShoppingBagIcon
                   width={iconSize}
                   className="flex-shrink-0 p-2"

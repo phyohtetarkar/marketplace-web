@@ -69,7 +69,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <>
       <NextNProgress
-        color="#4f46e5"
+        color="#36213e"
         startPosition={0.3}
         height={2}
         showOnShallow={true}
