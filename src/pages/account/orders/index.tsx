@@ -7,7 +7,7 @@ import Pagination from "../../../components/Pagination";
 
 function OrderCard() {
   return (
-    <div className="card shadow-sm mb-3">
+    <div className="card mb-3">
       <div className="card-header border-bottom py-3 bg-white">
         <div className="row">
           <div className="col d-flex">
@@ -15,8 +15,8 @@ function OrderCard() {
           </div>
           <div className="col-auto">
             <Link
-              href={"/profile/orders/1"}
-              className="btn btn-sm btn-outline-primary"
+              href={"/account/orders/1"}
+              className="btn btn-outline-primary"
             >
               View Detail
             </Link>
@@ -97,32 +97,14 @@ function MyOrders() {
             <AccountMenu />
           </div>
           <div className="col-lg-8 col-xl-9">
-            <div className="card shadow-sm mb-3 p-3">
-              <div className="row g-3">
-                <div className="col">
-                  <Input
-                    id="searchinput"
-                    name="search"
-                    type="text"
-                    placeholder="Search your orders"
-                  />
-                </div>
-                <div className="col-auto d-none d-sm-block">
-                  <Select>
-                    <option value="">All Status</option>
-                    <option value="">Pending</option>
-                    <option value="">Suspended</option>
-                    <option value="">Deleted</option>
-                  </Select>
-                </div>
-                <div className="col-auto d-none d-sm-block">
-                  <Link
-                    href="#"
-                    className="ms-auto btn btn-primary h-100 hstack"
-                  >
-                    Search
-                  </Link>
-                </div>
+            <div className="row g-3 mb-3">
+              <div className="col-auto d-none d-sm-block">
+                <Select>
+                  <option value="">All Status</option>
+                  <option value="">Pending</option>
+                  <option value="">Suspended</option>
+                  <option value="">Deleted</option>
+                </Select>
               </div>
             </div>
             {list.map((i) => (

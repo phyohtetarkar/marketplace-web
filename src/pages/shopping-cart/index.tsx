@@ -101,7 +101,7 @@ function ShoppingCart() {
       <div className="vstack gap-3">
         {group.map((g, i) => {
           return (
-            <div key={i} className="card shadow-sm">
+            <div key={i} className="card">
               <div className="card-header bg-white py-2h border-bottom">
                 <div className="form-check">
                   <input className="form-check-input" type="checkbox"></input>

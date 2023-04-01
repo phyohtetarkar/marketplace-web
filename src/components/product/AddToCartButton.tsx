@@ -73,7 +73,7 @@ function AddToCartButton({
         ></span>
       )}
       <ShoppingCartIcon width={24} />
-      <span>Add to cart</span>
+      <span className="text-nowrap">Add to cart</span>
     </button>
   );
 }

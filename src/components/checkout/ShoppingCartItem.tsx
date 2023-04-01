@@ -86,6 +86,7 @@ function ShoppingCartItem({ item }: ShoppingCartItemProps) {
                     src={image}
                     alt="Product image."
                     fill
+                    sizes="33vw"
                     priority
                     style={{
                       objectFit: "contain"

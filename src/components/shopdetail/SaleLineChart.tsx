@@ -57,7 +57,7 @@ function SaleLineChart() {
   }, [canvas]);
 
   return (
-    <div className="card shadow-sm">
+    <div className="card">
       <div className="card-header py-3">
         <h5 className="mb-0">Weekly</h5>
       </div>

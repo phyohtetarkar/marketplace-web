@@ -12,7 +12,7 @@ function ProductFavoriteItem({ value }: ProductFavoriteProps) {
   const { id, product } = value;
 
   return (
-    <div className="card shadow-sm">
+    <div className="card">
       <div className="card-body">
         <div className="hstack gap-3">
           <div
@@ -28,6 +28,7 @@ function ProductFavoriteItem({ value }: ProductFavoriteProps) {
               src={product.thumbnail ?? "/images/placeholder.jpeg"}
               alt="Product image."
               fill
+              sizes="33vw"
               style={{
                 objectFit: "contain"
               }}
@@ -43,7 +44,7 @@ function ProductFavoriteItem({ value }: ProductFavoriteProps) {
 
             <Link
               href={`/collections/${product.category?.slug}`}
-              className="text-decoration-none fw-medium text-truncate mb-2"
+              className="text-decoration-none fw-medium link-success text-truncate mb-2"
             >
               {product.category?.name}
             </Link>

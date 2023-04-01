@@ -72,7 +72,7 @@ function MyShops() {
             <AccountMenu />
           </div>
           <div className="col-lg-8 col-xl-9">
-            <div className="card shadow-sm">
+            <div className="card">
               <div className="card-header bg-white border-bottom">
                 <div className="py-2">
                   <div className="row g-3">

@@ -30,7 +30,7 @@ function DeleteFromFavoriteButton({
   return (
     <button
       disabled={loading || disabled}
-      className={`btn btn-outline-danger h-100 position-relative ${
+      className={`btn btn-link link-danger h-100 position-relative ${
         className ?? ""
       }`}
       onClick={() => {
@@ -66,13 +66,21 @@ function DeleteFromFavoriteButton({
           ></span>
         </div>
       )}
-      <TrashIcon
+      {/* <TrashIcon
         width={20}
         strokeWidth={2}
         style={{
           visibility: loading ? "hidden" : "visible"
         }}
-      />
+      /> */}
+      <span
+        className="fw-medium"
+        style={{
+          visibility: loading ? "hidden" : "visible"
+        }}
+      >
+        Remove
+      </span>
     </button>
   );
 }

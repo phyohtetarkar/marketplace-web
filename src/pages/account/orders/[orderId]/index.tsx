@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatTimestamp } from "../../../../common/utils";
 import { withAuthentication } from "../../../../common/WithAuthentication";
+import ProgressButton from "../../../../components/ProgressButton";
 
 function OrderRow() {
   return (
@@ -66,32 +67,33 @@ function OrderDetail() {
 
   return (
     <div className="pb-5">
-      <div className="bg-primary">
+      <div className="header-bar">
         <div className="container py-4">
-          <div className="hstack">
-            <div>
-              <div className="px-2">
-                <h3 className="text-light text-lg-start">Order Detail</h3>
-              </div>
-              <div className="row px-2">
-                <nav aria-label="breadcrumb col-12">
-                  <ol className="breadcrumb mb-1">
-                    <li className="breadcrumb-item">
-                      <Link href="/profile/orders" className="text-light">
-                        Orders
-                      </Link>
-                    </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                      Order Detail
-                    </li>
-                  </ol>
-                </nav>
-              </div>
+          <div className="row g-3">
+            {/* <div className="px-2">
+                <h3 className="text-lg-start">Order Detail</h3>
+              </div> */}
+            <div className="col-md-6 hstack">
+              <nav aria-label="breadcrumb">
+                <ol className="breadcrumb mb-1">
+                  <li className="breadcrumb-item">
+                    <Link href="/account/orders" className="">
+                      My orders
+                    </Link>
+                  </li>
+                  <li className="breadcrumb-item active" aria-current="page">
+                    Order detail
+                  </li>
+                </ol>
+              </nav>
             </div>
-            <div className="ms-auto">
-              <button className="btn btn-danger border-0 py-2 px-3 ms-2 fw-medium">
-                <small>Cancel Order</small>
-              </button>
+            <div className="col-md-6 d-flex">
+              <ProgressButton
+                className="text-nowrap ms-md-auto"
+                variant="danger"
+              >
+                Cancel Order
+              </ProgressButton>
             </div>
           </div>
         </div>
@@ -100,7 +102,7 @@ function OrderDetail() {
       <div className="container py-4">
         <div className="row g-4">
           <div className="col-xl-8 col-lg-7 col-12">
-            <div className="card shadow-sm">
+            <div className="card">
               <div className="card-header py-4 bg-white">
                 <div className="row">
                   <div className="col d-flex">
@@ -194,9 +196,9 @@ function OrderDetail() {
             </div>
           </div>
           <div className="col-xl-4 col-lg-5 col-12">
-            <div className="card shadow-sm">
-              <div className="card-body p-sm-3 p-lg-4 fw-light small">
-                <h6 className="fw-medium mb-3">Contact</h6>
+            <div className="card">
+              <div className="card-body p-sm-3 p-lg-4 small">
+                <h6 className="mb-3">Contact</h6>
                 <div className="hstack mt-2">
                   <UserIcon width={18} strokeWidth={2} className="text-muted" />
                   <span className="ms-2 fw-medium">Josep William</span>
@@ -210,15 +212,15 @@ function OrderDetail() {
                   <span className="text-muted ms-2">+95911223344</span>
                 </div>
               </div>
-              <div className="card-body border-top p-sm-3 p-lg-4 fw-light small">
-                <h6 className="fw-medium mb-3">Address</h6>
-                <p className="text-muted">
+              <div className="card-body border-top p-sm-3 p-lg-4 small">
+                <h6 className=" mb-3">Address</h6>
+                <p className="text-muted mb-0">
                   No.26, Pyay Street, Hlaing Township, Yangon, Myanmar.
                 </p>
               </div>
-              <div className="card-body border-top p-sm-3 p-lg-4 fw-light small">
-                <h6 className="fw-medium mb-3">Notes</h6>
-                <p className="text-muted">
+              <div className="card-body border-top p-sm-3 p-lg-4 small">
+                <h6 className="mb-3">Notes</h6>
+                <p className="text-muted mb-0">
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry.
                 </p>

@@ -359,7 +359,7 @@ function ProductEdit({
 
         <div className="">
           <div className="vstack gap-3">
-            <div className="card shadow-sm">
+            <div className="card">
               <div className="card-header bg-white py-3 px-md-4 border-bottom">
                 <h5 className="mb-0">General</h5>
               </div>
@@ -565,7 +565,7 @@ function ProductEdit({
             </div>
 
             {withVariant && (
-              <div className="card shadow-sm">
+              <div className="card">
                 <div className="card-header bg-white py-3 px-md-4">
                   <div className="hstack justify-content-between">
                     <h5 className="mb-0">Variants</h5>
@@ -710,7 +710,7 @@ function ProductEdit({
             )}
 
             {!withVariant && (
-              <div className="card shadow-sm">
+              <div className="card">
                 <div className="card-header bg-white py-3 px-md-4 border-bottom">
                   <h5 className="mb-0">Pricing</h5>
                 </div>
@@ -811,7 +811,7 @@ function ProductEdit({
             </div>
           </div> */}
 
-            <div ref={imagesRef} className="card shadow-sm">
+            <div ref={imagesRef} className="card">
               <div className="card-header bg-white py-3 px-md-4 border-bottom">
                 <h5 className="mb-0">Images</h5>
               </div>
@@ -939,7 +939,7 @@ function ProductEdit({
               </div>
             </div>
 
-            <div className="card shadow-sm">
+            <div className="card">
               <div className="card-header bg-white py-3 px-md-4 border-bottom">
                 <h5 className="mb-0">Product video</h5>
               </div>

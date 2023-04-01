@@ -84,7 +84,7 @@ function AccountMenu({}) {
   );
 
   return (
-    <div className="rounded shadow-sm bg-white">
+    <div className="rounded border bg-white">
       <div className="d-block d-lg-none">
         <Accordion
           open={true}

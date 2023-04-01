@@ -14,50 +14,56 @@ function ShopDashboard() {
       <hr className="bg-dark-gray" /> */}
       <div className="row g-3 mb-3">
         <div className="col-lg-4">
-          <div className="card p-3 shadow-sm">
-            <div className="hstack gap-3">
-              <div className="bg-secondary text-light rounded">
-                <ShoppingBagIcon
-                  width={iconSize}
-                  className="flex-shrink-0 p-2"
-                />
-              </div>
+          <div className="card">
+            <div className="card-body">
+              <div className="hstack gap-3">
+                <div className="bg-secondary text-light rounded">
+                  <ShoppingBagIcon
+                    width={iconSize}
+                    className="flex-shrink-0 p-2"
+                  />
+                </div>
 
-              <div className="vstack gap-1 text-nowrap">
-                <h6 className="text-muted mb-auto">Total Sales</h6>
-                <span className="fw-semibold">120,200,000 Ks</span>
+                <div className="vstack gap-1 text-nowrap">
+                  <h6 className="text-muted mb-auto">Total Sales</h6>
+                  <span className="fw-semibold">120,200,000 Ks</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div className="col-lg-4">
-          <div className="card p-3 shadow-sm">
-            <div className="hstack gap-3">
-              <div className="bg-success text-light rounded">
-                <DocumentTextIcon
-                  width={iconSize}
-                  className="flex-shrink-0 p-2"
-                />
-              </div>
-              <div className="vstack gap-1 text-nowrap">
-                <h6 className="text-muted mb-auto">Total Orders</h6>
-                <span className="fw-semibold">90</span>
+          <div className="card">
+            <div className="card-body">
+              <div className="hstack gap-3">
+                <div className="bg-success text-light rounded">
+                  <DocumentTextIcon
+                    width={iconSize}
+                    className="flex-shrink-0 p-2"
+                  />
+                </div>
+                <div className="vstack gap-1 text-nowrap">
+                  <h6 className="text-muted mb-auto">Total Orders</h6>
+                  <span className="fw-semibold">90</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div className="col-lg-4">
-          <div className="card p-3 shadow-sm">
-            <div className="hstack gap-3">
-              <div className="bg-primary text-light rounded">
-                <InboxStackIcon
-                  width={iconSize}
-                  className="flex-shrink-0 p-2"
-                />
-              </div>
-              <div className="vstack gap-1 text-nowrap">
-                <h6 className="text-muted mb-auto">Total Products</h6>
-                <span className="fw-semibold">50</span>
+          <div className="card">
+            <div className="card-body">
+              <div className="hstack gap-3">
+                <div className="bg-primary text-light rounded">
+                  <InboxStackIcon
+                    width={iconSize}
+                    className="flex-shrink-0 p-2"
+                  />
+                </div>
+                <div className="vstack gap-1 text-nowrap">
+                  <h6 className="text-muted mb-auto">Total Products</h6>
+                  <span className="fw-semibold">50</span>
+                </div>
               </div>
             </div>
           </div>

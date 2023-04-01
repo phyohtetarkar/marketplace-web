@@ -185,7 +185,7 @@ function DiscountListing({ shopId }: { shopId: number }) {
   return (
     <>
       <div className="p-0">
-        <div className="card shadow-sm">
+        <div className="card">
           <div className="card-header bg-white py-2h border-bottom">
             <div className="hstack">
               <h5 className="mb-0">Discounts</h5>

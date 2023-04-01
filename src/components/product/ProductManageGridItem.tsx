@@ -1,4 +1,8 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
+import {
+  PencilIcon,
+  PencilSquareIcon,
+  TrashIcon
+} from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "../../common/models";
@@ -102,7 +106,7 @@ function ProductManageGridItem({
       </Link>
       <div className="card-body">
         <div className="vstack">
-          <div className="small text-truncate text-warning fw-medium">
+          <div className="small text-truncate text-success fw-medium">
             {value.category?.name}
           </div>
 
@@ -118,14 +122,14 @@ function ProductManageGridItem({
 
           <div className="hstack align-items-stretch gap-2">
             <button
-              className="btn btn-primary flex-grow-1"
+              className="btn btn-default flex-grow-1"
               onClick={() => onEditClick?.()}
             >
-              Edit
+              <span>Edit</span>
             </button>
             <button
               disabled={false}
-              className="btn btn-outline-danger"
+              className="btn btn-danger"
               onClick={async () => {}}
             >
               <TrashIcon width={20} />

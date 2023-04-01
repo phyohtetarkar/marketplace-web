@@ -56,7 +56,7 @@ function ProfileSetting() {
             <AccountMenu />
           </div>
           <div className="col-lg-8 col-xl-9">
-            <div className="card shadow-sm">
+            <div className="card">
               <div className="card-body p-md-4">
                 <form
                   onSubmit={(evt) => {

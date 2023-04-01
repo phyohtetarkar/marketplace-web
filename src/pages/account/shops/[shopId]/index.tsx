@@ -195,13 +195,13 @@ function ShopDetail() {
 
     return (
       <>
-        <div className="shadow-sm rounded bg-white vstack overflow-hidden mb-3">
+        <div className="border rounded bg-white vstack overflow-hidden mb-3">
           <div
             style={{
               width: "100%",
               minHeight: 200
             }}
-            className="position-relative bg-primary"
+            className="position-relative bg-secondary"
           >
             {shop?.coverUrl && (
               <Image
