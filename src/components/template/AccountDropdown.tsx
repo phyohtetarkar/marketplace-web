@@ -20,7 +20,7 @@ function AccountDropdown(props: AccountDropdownProps) {
     <Dropdown
       toggle={<span className="">Hi, {user?.name ?? ""}</span>}
       className="nav-item"
-      toggleClassName="dropdown-toggle hstack"
+      toggleClassName="dropdown-toggle nav-link hstack"
       menuClassName="dropdown-menu-end"
     >
       <li>

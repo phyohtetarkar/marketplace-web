@@ -72,39 +72,18 @@ function MyShops() {
             <AccountMenu />
           </div>
           <div className="col-lg-8 col-xl-9">
-            <div className="card">
-              <div className="card-header bg-white border-bottom">
-                <div className="py-2">
-                  <div className="row g-3">
-                    <div className="col">
-                      {/* <Input
-                        id="searchinput"
-                        name="search"
-                        type="text"
-                        placeholder="Search your shops"
-                      /> */}
-                    </div>
-                    {/* <div className="col-auto d-none d-sm-block">
-                      <Select>
-                        <option value="">All Status</option>
-                        <option value="">Pending</option>
-                        <option value="">Suspended</option>
-                        <option value="">Deleted</option>
-                      </Select>
-                    </div> */}
-                    <div className="col-auto d-none d-sm-block">
-                      <Link
-                        href="/account/shops/create"
-                        className="ms-auto btn btn-primary h-100 hstack py-2h"
-                      >
-                        Create new
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+            <div className="row g-3 mb-3">
+              <div className="col"></div>
+              <div className="col-auto">
+                <Link
+                  href="/account/shops/create"
+                  className="ms-auto btn btn-primary h-100 hstack py-2"
+                >
+                  Create new
+                </Link>
               </div>
-              <div className="card-body">{content()}</div>
             </div>
+            <div>{content()}</div>
           </div>
         </div>
       </div>

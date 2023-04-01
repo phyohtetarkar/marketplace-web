@@ -1,9 +1,9 @@
-$min-contrast-ratio: 3;
+$min-contrast-ratio: 2.5;
 
 //$primary: linear-gradient(right, #f79131 #d82435);
-$primary: #e85d33;
+$primary: #f27f32;
 
-$secondary: #36213e;
+$secondary: #232F3E;
 $light: #f3f4f6;
 $success: #00a524;
 $danger: #d50002;
@@ -80,6 +80,10 @@ $navbar-toggler-focus-width: 0;
 $navbar-light-color: rgba(0, 0, 0, 1);
 $navbar-light-hover-color: $primary;
 $navbar-light-active-color: $primary;
+
+$navbar-dark-color: rgba(255, 255, 255, 0.75);
+$navbar-dark-hover-color: #fff;
+$navbar-dark-active-color: #fff;
 
 $theme-colors: map-merge($theme-colors, $custom-colors);
 $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");

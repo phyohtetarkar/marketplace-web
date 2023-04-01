@@ -54,7 +54,7 @@ const BasicInformation = (props: FormProps) => {
         })();
       }}
     >
-      <div className="card shadow-sm mb-3">
+      <div className="card mb-3">
         <div className="card-header bg-white py-3 px-md-4 border-bottom">
           <h5 className="mb-0">Basic information</h5>
         </div>
@@ -200,7 +200,7 @@ const ShopMedia = (props: FormProps) => {
 
   return (
     <>
-      <div className="card shadow-sm mb-3">
+      <div className="card mb-3">
         <div className="card-header bg-white py-3 px-md-4 border-bottom">
           <h5 className="mb-0">Shop media</h5>
         </div>
@@ -409,7 +409,7 @@ function CreateShop() {
 
   return (
     <div className="pb-5">
-      <div className="header-bar">
+      <div className="header-bar mb-3">
         <div className="container py-4">
           <div className="row g-3">
             <div className="col-lg-6">
@@ -444,7 +444,7 @@ function CreateShop() {
       <div className="container">
         <div className="row">
           <div className="col-12">
-            <div className="card shadow-sm">
+            <div className="card">
               <div className="card-body px-md-4">
                 <div className="row gx-3">
                   {_steps.map((s, i) => {

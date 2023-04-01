@@ -48,8 +48,8 @@ function ShopGeneralEdit({ handleClose }: { handleClose?: () => void }) {
       setError(undefined);
       const shop = await updateShopGeneral(values);
       router.replace({
-        pathname: `/shops/[slug]`,
-        query: { slug: shop.slug }
+        pathname: `/account/shops/[shopId]`,
+        query: { shopId: shop.id }
       });
       handleClose?.();
     } catch (error) {

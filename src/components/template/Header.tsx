@@ -100,7 +100,7 @@ function Header({ hideAuth }: HeaderProps) {
         style={{ height: 70 }}
       >
         <div className="container">
-          <Link href="/" className="navbar-brand d-none d-lg-block">
+          <Link href="/" className="navbar-brand">
             {/* <FontAwesomeIcon
               icon={["fas", "shopping-basket"]}
               className="d-inline-block"
@@ -120,7 +120,7 @@ function Header({ hideAuth }: HeaderProps) {
                   objectFit="contain"
                 />
               </div> */}
-              {/* <div
+              <div
                 className="ratio"
                 style={
                   { width: 160, "--bs-aspect-ratio": "30%" } as CSSProperties
@@ -130,30 +130,21 @@ function Header({ hideAuth }: HeaderProps) {
                   src="/images/logo-h.svg"
                   fill
                   alt=""
+                  sizes="33vw"
                   priority
                   style={{
                     objectFit: "contain"
                   }}
                 />
-              </div> */}
-              <Image
-                src="/images/logo-h.svg"
-                width={160}
-                height={80}
-                alt=""
-                priority
-                style={{
-                  objectFit: "contain"
-                }}
-              />
+              </div>
               {/* <h4 className="mb-0 fw-bold text-secondary">
                 {process.env.NEXT_PUBLIC_APP_NAME}
               </h4> */}
             </div>
           </Link>
 
-          <div className="hstack w-100">
-            <ul className="navbar-nav align-items-lg-center gap-2">
+          <div className="hstack flex-grow-1">
+            <ul className="navbar-nav align-items-lg-center gap-2 d-none d-lg-inline">
               <li className="nav-item">
                 <HeaderSearchHints />
               </li>
@@ -211,16 +202,16 @@ function Header({ hideAuth }: HeaderProps) {
           </div>
         </div>
       </nav>
-      <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-secondary border-bottom">
         <div className="container">
           <div
             ref={offcanvasRef}
-            className="offcanvas offcanvas-end"
+            className="offcanvas offcanvas-end bg-secondary"
             tabIndex={-1}
             id="offcanvasNavbar"
             aria-labelledby="offcanvasNavbarLabel"
           >
-            <div className="offcanvas-header border-bottom py-2h">
+            <div className="offcanvas-header py-2h">
               <h5
                 className="offcanvas-title fw-bold text-primary mb-0 d-flex align-items-center"
                 id="offcanvasNavbarLabel"
@@ -232,7 +223,7 @@ function Header({ hideAuth }: HeaderProps) {
                 alt=""
               /> */}
                 <Image
-                  src="/images/logo-h.svg"
+                  src="/images/logo-h-light.svg"
                   width={130}
                   height={40}
                   alt=""
@@ -245,11 +236,14 @@ function Header({ hideAuth }: HeaderProps) {
               </h5>
               <button
                 type="button"
-                className="btn-close text-reset shadow-none"
-                data-bs-dismiss="offcanvas"
+                className="btn-close btn-close-white text-reset shadow-none"
                 aria-label="Close"
+                onClick={() => {
+                  offcanvas.current?.hide();
+                }}
               ></button>
             </div>
+            <hr className="my-0 bg-light-gray d-block d-lg-none" />
             <div className="offcanvas-body">
               <ul className="navbar-nav align-items-lg-center gap-2">
                 <li className="nav-item d-none d-lg-block">
@@ -354,7 +348,7 @@ function Header({ hideAuth }: HeaderProps) {
             <Dropdown
               toggle={localeImage}
               className="nav-item"
-              toggleClassName="dropdown-toggle hstack"
+              toggleClassName="dropdown-toggle nav-link hstack"
               menuClassName="dropdown-menu-end"
             >
               {localeItems}
@@ -364,7 +358,7 @@ function Header({ hideAuth }: HeaderProps) {
           <div className="d-block d-lg-none">
             <Dropdown
               toggle={localeImage}
-              toggleClassName="dropdown-toggle hstack"
+              toggleClassName="dropdown-toggle hstack text-light"
             >
               {localeItems}
             </Dropdown>

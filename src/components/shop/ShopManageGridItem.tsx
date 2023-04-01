@@ -69,7 +69,7 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
           <div className="hstack gap-2">
             <Link
               href={`/account/shops/${value.id}`}
-              className="btn btn-primary flex-grow-1 hstack justify-content-center gap-2"
+              className="btn btn-default flex-grow-1 hstack justify-content-center gap-2"
             >
               {/* <ChartBarIcon width={20} /> */}
               <span>Manage shop</span>
