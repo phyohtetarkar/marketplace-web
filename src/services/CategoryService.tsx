@@ -1,18 +1,17 @@
+import makeApiRequest from "../common/makeApiRequest";
 import { Category } from "../common/models";
-import {
-  buildQueryParams,
-  getAPIBasePath,
-  validateResponse
-} from "../common/utils";
+import { buildQueryParams, validateResponse } from "../common/utils";
 
 const basePath = "categories";
 
-export async function getAllCategories(flat: boolean) {
+export async function getAllCategories(tree: boolean) {
   const query = buildQueryParams({
-    flat: flat
+    tree: tree
   });
-  const url = `${getAPIBasePath()}${basePath}/structural${query}`;
-  const resp = await fetch(url);
+  const url = `${basePath}${query}`;
+  //const resp = await fetch(url);
+
+  const resp = await makeApiRequest(url);
 
   await validateResponse(resp);
 
@@ -20,8 +19,10 @@ export async function getAllCategories(flat: boolean) {
 }
 
 export async function getCategory(slug: string) {
-  const url = `${getAPIBasePath()}${basePath}/${slug}`;
-  const resp = await fetch(url);
+  const url = `${basePath}/${slug}`;
+  //const resp = await fetch(url);
+
+  const resp = await makeApiRequest(url);
 
   await validateResponse(resp);
 
@@ -29,8 +30,10 @@ export async function getCategory(slug: string) {
 }
 
 export async function getBrandsByCategory(slug: string) {
-  const url = `${getAPIBasePath()}${basePath}/${slug}/brands`;
-  const resp = await fetch(url);
+  const url = `${basePath}/${slug}/brands`;
+  //const resp = await fetch(url);
+
+  const resp = await makeApiRequest(url);
 
   await validateResponse(resp);
 
@@ -38,22 +41,24 @@ export async function getBrandsByCategory(slug: string) {
 }
 
 export async function getBrandsByCategoryId(id: number) {
-  const url = `${getAPIBasePath()}${basePath}/${id}/brands`;
-  const resp = await fetch(url);
+  const url = `${basePath}/${id}/brands`;
+  //const resp = await fetch(url);
+
+  const resp = await makeApiRequest(url);
 
   await validateResponse(resp);
 
   return resp.json() as Promise<string[]>;
 }
 
-export async function existsCateogryBySlug(slug: String, excludeId: number) {
-  const query = buildQueryParams({
-    exclude: excludeId
-  });
-  const url = `${getAPIBasePath()}${basePath}/${slug}/exists${query}`;
-  const resp = await fetch(url);
+// export async function existsCateogryBySlug(slug: String, excludeId: number) {
+//   const query = buildQueryParams({
+//     exclude: excludeId
+//   });
+//   const url = `${getAPIBasePath()}/${basePath}/${slug}/exists${query}`;
+//   const resp = await fetch(url);
 
-  await validateResponse(resp);
+//   await validateResponse(resp);
 
-  return resp.json() as Promise<boolean>;
-}
+//   return resp.json() as Promise<boolean>;
+// }

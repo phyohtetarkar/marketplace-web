@@ -1,8 +1,8 @@
-import { HubCapsule } from "@aws-amplify/core";
-import { Auth, Hub } from "aws-amplify";
-import { ReactNode, useEffect, useState } from "react";
-import { AuthenticationContext, StateContext } from "./contexts";
-import { AuthUser } from "./models";
+import { ReactNode, useCallback, useEffect, useState } from "react";
+import { getLoginUser } from "../services/UserService";
+import { AuthenticationContext, StateContext, Status } from "./contexts";
+import { User } from "./models";
+import { parseErrorResponse } from "./utils";
 
 export const AuthenticationContextProvider = ({
   children
@@ -19,77 +19,109 @@ export const AuthenticationContextProvider = ({
   //   }
   // );
 
-  const [authUser, setAuthUser] = useState<StateContext<AuthUser>>({
+  const updateAuthState = useCallback(
+    (status: Status, payload: User | undefined) => {
+      setAuthUser((old) => {
+        return { ...old, status, payload };
+      });
+    },
+    []
+  );
+
+  const [authUser, setAuthUser] = useState<StateContext<User>>({
     payload: undefined,
-    status: "loading"
+    status: "loading",
+    update: updateAuthState
   });
 
   useEffect(() => {
-    Auth.currentAuthenticatedUser()
-      .then((user) => {
-        console.log(user);
-        const attributes = user.attributes;
+    const loadUser = async () => {
+      try {
+        const data = await getLoginUser();
         setAuthUser({
           status: "success",
-          payload: {
-            id: attributes.sub,
-            name: attributes.name,
-            phone: attributes.phone_number
-          }
+          payload: data,
+          update: updateAuthState
         });
-      })
-      .catch((error) => {
-        console.log(error);
+      } catch (error) {
+        console.log(parseErrorResponse(error, true));
         setAuthUser({
+          status: "failure",
           payload: undefined,
-          status: "failure"
+          update: updateAuthState
         });
-      });
-  }, []);
-
-  useEffect(() => {
-    const applyUser = (attributes: any) => {
-      setAuthUser({
-        status: "success",
-        payload: {
-          id: attributes.sub,
-          name: attributes.name,
-          phone: attributes.phone_number
-        }
-      });
-    };
-    const listener = (data: HubCapsule) => {
-      switch (data.payload.event) {
-        case "signIn": {
-          //console.log("signed in");
-          //console.log(data.payload.data);
-          const attributes = data.payload.data.attributes;
-          applyUser(attributes);
-          break;
-        }
-        case "autoSignIn": {
-          console.log("auto signed in");
-          //console.log(data.payload.data);
-          const attributes = data.payload.data.attributes;
-          applyUser(attributes);
-          break;
-        }
-        case "signOut":
-          // console.log("sign out");
-          setAuthUser({
-            payload: undefined,
-            status: "failure"
-          });
-          break;
       }
     };
 
-    const cancelAuth = Hub.listen("auth", listener);
+    loadUser();
+  }, [updateAuthState]);
 
-    return () => {
-      cancelAuth();
-    };
-  }, []);
+  // useEffect(() => {
+  //   Auth.currentAuthenticatedUser()
+  //     .then((user) => {
+  //       console.log(user);
+  //       const attributes = user.attributes;
+  //       setAuthUser({
+  //         status: "success",
+  //         payload: {
+  //           id: attributes.sub,
+  //           name: attributes.name,
+  //           phone: attributes.phone_number
+  //         }
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       setAuthUser({
+  //         payload: undefined,
+  //         status: "failure"
+  //       });
+  //     });
+  // }, []);
+
+  // useEffect(() => {
+  //   const applyUser = (attributes: any) => {
+  //     setAuthUser({
+  //       status: "success",
+  //       payload: {
+  //         id: attributes.sub,
+  //         name: attributes.name,
+  //         phone: attributes.phone_number
+  //       }
+  //     });
+  //   };
+  //   const listener = (data: HubCapsule) => {
+  //     switch (data.payload.event) {
+  //       case "signIn": {
+  //         //console.log("signed in");
+  //         //console.log(data.payload.data);
+  //         const attributes = data.payload.data.attributes;
+  //         applyUser(attributes);
+  //         break;
+  //       }
+  //       case "autoSignIn": {
+  //         console.log("auto signed in");
+  //         //console.log(data.payload.data);
+  //         const attributes = data.payload.data.attributes;
+  //         applyUser(attributes);
+  //         break;
+  //       }
+  //       case "signOut":
+  //         // console.log("sign out");
+  //         setAuthUser({
+  //           payload: undefined,
+  //           status: "failure"
+  //         });
+  //         break;
+  //     }
+  //   };
+
+  //   const cancelAuth = Hub.listen("auth", listener);
+
+  //   return () => {
+  //     cancelAuth();
+  //   };
+  // }, []);
 
   return (
     <AuthenticationContext.Provider value={authUser}>

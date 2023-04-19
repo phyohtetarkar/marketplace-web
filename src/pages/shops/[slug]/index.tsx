@@ -82,9 +82,9 @@ function ShopHome({ shop }: { shop: Shop }) {
                   }}
                   className="position-relative bg-secondary"
                 >
-                  {shop.coverUrl && (
+                  {shop.cover && (
                     <Image
-                      src={shop.coverUrl}
+                      src={shop.cover}
                       alt=""
                       fill
                       priority
@@ -100,7 +100,7 @@ function ShopHome({ shop }: { shop: Shop }) {
                       <div className="flex-shrink-0 mt-n6">
                         <div className="bg-white p-1 pb-0 rounded position-relative">
                           <Image
-                            src={shop.logoUrl ?? "/images/placeholder.jpeg"}
+                            src={shop.logo ?? "/images/placeholder.jpeg"}
                             width={100}
                             height={100}
                             alt=""

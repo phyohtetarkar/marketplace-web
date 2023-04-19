@@ -1,19 +1,22 @@
 import Image from "next/image";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
-import { useLoginUser } from "../../common/hooks";
+import { AuthenticationContext } from "../../common/contexts";
 import { User } from "../../common/models";
 import { parseErrorResponse, setEmptyOrString } from "../../common/utils";
 import { withAuthentication } from "../../common/WithAuthentication";
 import AccountMenu from "../../components/account/AccountMenu";
 import { Input } from "../../components/forms";
-import Loading from "../../components/Loading";
 import ProgressButton from "../../components/ProgressButton";
-import { updateProfile } from "../../services/UserService";
+import { getLoginUser, updateProfile } from "../../services/UserService";
 
 function ProfileSetting() {
   const { mutate } = useSWRConfig();
-  const { user, error, isLoading } = useLoginUser();
+  const authContext = useContext(AuthenticationContext);
+
+  const user = authContext.payload;
 
   const {
     register,
@@ -24,17 +27,16 @@ function ProfileSetting() {
   const save = async (values: User) => {
     try {
       await updateProfile(values);
-      mutate("/login-user");
+      // mutate("/login-user");
+      const user = await getLoginUser();
+      authContext.update("success", user);
     } catch (error) {
       const msg = parseErrorResponse(error);
+      toast.error(msg);
     }
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (error) {
+  if (authContext.status !== "success") {
     return null;
   }
 

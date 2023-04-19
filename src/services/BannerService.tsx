@@ -1,9 +1,12 @@
+import makeApiRequest from "../common/makeApiRequest";
 import { Banner } from "../common/models";
-import { getAPIBasePath, validateResponse } from "../common/utils";
+import { validateResponse } from "../common/utils";
 
 export async function getAllBanners() {
-  const url = getAPIBasePath() + "banners";
-  const resp = await fetch(url);
+  const url = "banners";
+  //const resp = await fetch(url);
+
+  const resp = await makeApiRequest(url);
 
   await validateResponse(resp);
 

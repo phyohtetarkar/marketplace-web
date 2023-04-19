@@ -5,21 +5,19 @@ import {
 } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import { useLoginUser } from "../../common/hooks";
+import { useContext } from "react";
+import { AuthenticationContext } from "../../common/contexts";
 import { withAuthentication } from "../../common/WithAuthentication";
 import AccountMenu from "../../components/account/AccountMenu";
-import Loading from "../../components/Loading";
 
 function ProfileOverview() {
-  const { user, error, isLoading } = useLoginUser();
+  const authContext = useContext(AuthenticationContext);
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (error) {
+  if (authContext.status !== "success") {
     return null;
   }
+
+  const user = authContext.payload;
 
   return (
     <div>

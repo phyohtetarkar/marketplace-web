@@ -27,22 +27,22 @@ import {
 } from "chart.js";
 import { LocalizationContextProvider } from "../common/localization";
 
-Amplify.configure({
-  ...awsconfig,
-  ssr: true,
-  Auth: {
-    ...awsconfig,
-    ssr: true,
-    cookieStorage: {
-      domain:
-        process.env.NEXT_PUBLIC_PROFILE === "dev" ? "localhost" : "localhost",
-      path: "/",
-      expires: 365,
-      sameSite: "strict",
-      secure: process.env.NEXT_PUBLIC_PROFILE !== "dev"
-    }
-  }
-});
+// Amplify.configure({
+//   ...awsconfig,
+//   ssr: true,
+//   Auth: {
+//     ...awsconfig,
+//     ssr: true,
+//     cookieStorage: {
+//       domain:
+//         process.env.NEXT_PUBLIC_PROFILE === "dev" ? "localhost" : "localhost",
+//       path: "/",
+//       expires: 365,
+//       sameSite: "strict",
+//       secure: process.env.NEXT_PUBLIC_PROFILE !== "dev"
+//     }
+//   }
+// });
 
 Chart.register(
   LineController,

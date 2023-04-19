@@ -118,14 +118,23 @@ export function getAPIBasePath() {
   //return location.origin + ":8080/api/v1/";
 }
 
-export async function getAuthHeader() {
-  try {
-    const accessToken = (await Auth.currentSession())
-      .getAccessToken()
-      .getJwtToken();
-    return "Bearer " + accessToken;
-  } catch (error) {}
-  return "";
+export function getAuthHeader() {
+  // try {
+  //   const accessToken = (await Auth.currentSession())
+  //     .getAccessToken()
+  //     .getJwtToken();
+  //   return "Bearer " + accessToken;
+  // } catch (error) {}
+
+  const token = sessionStorage.getItem("accessToken");
+  // const accessToken = (await Auth.currentSession())
+  //   .getAccessToken()
+  //   .getJwtToken();
+  if (!token) {
+    return "";
+  }
+
+  return "Bearer " + token;
 }
 
 export async function validateResponse(resp: Response) {
@@ -141,28 +150,39 @@ export async function validateResponse(resp: Response) {
 }
 
 export function parseErrorResponse(error: any, skipAuth?: boolean) {
-  if (error instanceof UnauthorizeError && !skipAuth) {
-    Auth.signOut()
-      .catch(console.error)
-      .finally(() => {
-        const href = process.env.NEXT_PUBLIC_LOGIN_URL ?? "";
-        window.location.href = href;
-      });
+  if (error instanceof UnauthorizeError) {
+    sessionStorage?.clear();
+    // Auth.signOut()
+    //   .catch(console.error)
+    //   .finally(() => {
+    //     const href = process.env.NEXT_PUBLIC_LOGIN_URL ?? "";
+    //     window.location.href = href;
+    //   });
+    if (!skipAuth) {
+      const href = process.env.NEXT_PUBLIC_LOGIN_URL ?? "";
+      window.location.href = href;
+    }
+
     return "Unauthorized";
   }
   if (error instanceof APIError) {
+    if (error.message === "permission-denied") {
+      return "Permission denied";
+    }
+
     if (error.message === "server-error") {
       return "Something went wrong, please try again";
     }
+
+    if (error?.message === "username-exists") {
+      return "Phone number already in use";
+    }
+
+    if (error?.message === "bad-credentials") {
+      return "Phone number or password incorrect";
+    }
+
     return error.message;
-  }
-
-  if (error?.code === "UsernameExistsException") {
-    return "Phone number already in use";
-  }
-
-  if (error?.code === "NotAuthorizedException") {
-    return "Phone number or password incorrect";
   }
 
   console.log(error);

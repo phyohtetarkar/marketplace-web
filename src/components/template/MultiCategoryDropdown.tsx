@@ -6,7 +6,7 @@ import MultiLevelDropdown from "../MultiLevelDropdown";
 
 function MultiCategoryDropdown() {
   const router = useRouter();
-  const { categories, error, isLoading } = useCategories(false);
+  const { categories, error, isLoading } = useCategories(true);
 
   return (
     <MultiLevelDropdown<Category>

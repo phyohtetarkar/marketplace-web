@@ -1,3 +1,4 @@
+import makeApiRequest from "../common/makeApiRequest";
 import { Discount, PageData } from "../common/models";
 import {
   buildQueryParams,
@@ -9,64 +10,106 @@ import {
 const basePath = "discounts";
 
 export async function saveDiscount(value: Discount) {
-  const url = `${getAPIBasePath()}${basePath}`;
-  const resp = await fetch(url, {
-    method: !value.id ? "POST" : "PUT",
-    body: JSON.stringify(value),
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: await getAuthHeader()
-    }
-  });
+  const url = `${basePath}`;
+  // const resp = await fetch(url, {
+  //   method: !value.id ? "POST" : "PUT",
+  //   body: JSON.stringify(value),
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Authorization: await getAuthHeader()
+  //   }
+  // });
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: !value.id ? "POST" : "PUT",
+      body: JSON.stringify(value),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    },
+    true
+  );
 
   await validateResponse(resp);
 }
 
 export async function deleteDiscount(id: number) {
-  const url = `${getAPIBasePath()}${basePath}/${id}`;
-  const resp = await fetch(url, {
-    method: "DELETE",
-    headers: {
-      Authorization: await getAuthHeader()
-    }
-  });
+  const url = `${basePath}/${id}`;
+  // const resp = await fetch(url, {
+  //   method: "DELETE",
+  //   headers: {
+  //     Authorization: await getAuthHeader()
+  //   }
+  // });
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "DELETE"
+    },
+    true
+  );
 
   await validateResponse(resp);
 }
 
 export async function applyDiscount(discountId: number, productIds: [number]) {
-  const url = `${getAPIBasePath()}${basePath}/${discountId}/apply`;
-  const resp = await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(productIds),
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: await getAuthHeader()
-    }
-  });
+  const url = `${basePath}/${discountId}/apply`;
+  // const resp = await fetch(url, {
+  //   method: "POST",
+  //   body: JSON.stringify(productIds),
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Authorization: await getAuthHeader()
+  //   }
+  // });
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "POST",
+      body: JSON.stringify(productIds),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    },
+    true
+  );
 
   await validateResponse(resp);
 }
 
 export async function removeDiscount(discountId: number, productId: number) {
-  const url = `${getAPIBasePath()}${basePath}/${discountId}/remove?product-id=${productId}`;
-  const resp = await fetch(url, {
-    method: "POST",
-    headers: {
-      Authorization: await getAuthHeader()
-    }
-  });
+  const url = `${basePath}/${discountId}/remove?product-id=${productId}`;
+  // const resp = await fetch(url, {
+  //   method: "POST",
+  //   headers: {
+  //     Authorization: await getAuthHeader()
+  //   }
+  // });
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "POST"
+    },
+    true
+  );
 
   await validateResponse(resp);
 }
 
 export async function getDiscountById(id: number) {
-  const url = `${getAPIBasePath()}${basePath}/${id}`;
-  const resp = await fetch(url, {
-    headers: {
-      Authorization: await getAuthHeader()
-    }
-  });
+  const url = `${basePath}/${id}`;
+  // const resp = await fetch(url, {
+  //   headers: {
+  //     Authorization: await getAuthHeader()
+  //   }
+  // });
+
+  const resp = await makeApiRequest(url, {}, true);
 
   await validateResponse(resp);
 
@@ -79,12 +122,14 @@ export async function findDiscounts(shopId: number, page?: number) {
     page: page
   });
 
-  const url = `${getAPIBasePath()}${basePath}${query}`;
-  const resp = await fetch(url, {
-    headers: {
-      Authorization: await getAuthHeader()
-    }
-  });
+  const url = `${basePath}${query}`;
+  // const resp = await fetch(url, {
+  //   headers: {
+  //     Authorization: await getAuthHeader()
+  //   }
+  // });
+
+  const resp = await makeApiRequest(url, {}, true);
 
   await validateResponse(resp);
 

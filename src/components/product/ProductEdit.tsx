@@ -71,7 +71,7 @@ function ProductEdit({
   const fileRef = useRef<HTMLInputElement | null>(null);
   const imagesRef = useRef<HTMLDivElement | null>(null);
 
-  const { categories } = useCategories(false);
+  const { categories } = useCategories(true);
 
   const {
     control,

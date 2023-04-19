@@ -1,7 +1,6 @@
 import useSWR from "swr";
 import {
   getAllCategories,
-  getBrandsByCategory,
   getBrandsByCategoryId,
   getCategory
 } from "../services/CategoryService";
@@ -23,10 +22,10 @@ export function useCategory(slug?: string) {
   };
 }
 
-export function useCategories(flat: boolean) {
+export function useCategories(tree: boolean) {
   const { data, error, isLoading } = useSWR(
-    ["/categories/structural", flat],
-    ([url, f]) => getAllCategories(f),
+    `/categories?tree=${tree}`,
+    () => getAllCategories(tree),
     {
       revalidateOnFocus: false
     }

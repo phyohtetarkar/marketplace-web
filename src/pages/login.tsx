@@ -76,10 +76,12 @@ function Login() {
       setError(undefined);
       const phone = `+95${values.phone!.substring(1)}`;
 
-      const user = await login({
+      const result = await login({
         username: phone,
         password: values.password!
       });
+      sessionStorage.setItem("accessToken", result.accessToken);
+      authContext.update("success", result.user);
     } catch (error: any) {
       console.log("error signing in:", error.code);
       setError(parseErrorResponse(error));

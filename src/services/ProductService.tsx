@@ -1,10 +1,6 @@
+import makeApiRequest from "../common/makeApiRequest";
 import { PageData, Product } from "../common/models";
-import {
-  buildQueryParams,
-  getAPIBasePath,
-  getAuthHeader,
-  validateResponse
-} from "../common/utils";
+import { buildQueryParams, validateResponse } from "../common/utils";
 
 const basePath = "products";
 
@@ -75,26 +71,37 @@ export async function saveProduct(value: Product) {
     });
   });
 
-  const url = `${getAPIBasePath()}${basePath}`;
+  const url = `${basePath}`;
 
-  const resp = await fetch(url, {
-    method: !value.id ? "POST" : "PUT",
-    body: form,
-    headers: {
-      Authorization: await getAuthHeader()
-    }
-  });
+  // const resp = await fetch(url, {
+  //   method: !value.id ? "POST" : "PUT",
+  //   body: form,
+  //   headers: {
+  //     Authorization: await getAuthHeader()
+  //   }
+  // });
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: !value.id ? "POST" : "PUT",
+      body: form
+    },
+    true
+  );
 
   await validateResponse(resp);
 }
 
 export async function getProductById(productId: number) {
-  const url = `${getAPIBasePath()}${basePath}/${productId}`;
-  const resp = await fetch(url, {
-    headers: {
-      Authorization: await getAuthHeader()
-    }
-  });
+  const url = `${basePath}/${productId}`;
+  // const resp = await fetch(url, {
+  //   headers: {
+  //     Authorization: await getAuthHeader()
+  //   }
+  // });
+
+  const resp = await makeApiRequest(url, {}, true);
 
   await validateResponse(resp);
 
@@ -102,8 +109,10 @@ export async function getProductById(productId: number) {
 }
 
 export async function getProductBySlug(slug: String) {
-  const url = `${getAPIBasePath()}${basePath}/${slug}`;
-  const resp = await fetch(url);
+  const url = `${basePath}/${slug}`;
+  //const resp = await fetch(url);
+
+  const resp = await makeApiRequest(url);
 
   await validateResponse(resp);
 
@@ -111,8 +120,10 @@ export async function getProductBySlug(slug: String) {
 }
 
 export async function existsProductBySlug(slug: String) {
-  const url = `${getAPIBasePath()}${basePath}/${slug}/exists`;
-  const resp = await fetch(url);
+  const url = `${basePath}/${slug}/exists`;
+  //const resp = await fetch(url);
+
+  const resp = await makeApiRequest(url);
 
   await validateResponse(resp);
 
@@ -120,21 +131,25 @@ export async function existsProductBySlug(slug: String) {
 }
 
 export async function deleteProduct(id: number) {
-  const url = `${getAPIBasePath()}${basePath}/${id}`;
-  const resp = await fetch(url, {
-    method: "DELETE",
-    headers: {
-      Authorization: await getAuthHeader()
-    }
-  });
+  const url = `${basePath}/${id}`;
+  // const resp = await fetch(url, {
+  //   method: "DELETE",
+  //   headers: {
+  //     Authorization: await getAuthHeader()
+  //   }
+  // });
+
+  const resp = await makeApiRequest(url, { method: "DELETE" }, true);
 
   await validateResponse(resp);
 }
 
 export async function getProductHints(q: string) {
   const query = buildQueryParams({ q: q });
-  const url = `${getAPIBasePath()}search/product-hints${query}`;
-  const resp = await fetch(url);
+  const url = `search/product-hints${query}`;
+  //const resp = await fetch(url);
+
+  const resp = await makeApiRequest(url);
 
   await validateResponse(resp);
 
@@ -142,8 +157,10 @@ export async function getProductHints(q: string) {
 }
 
 export async function getRelatedProducts(productId: number) {
-  const url = `${getAPIBasePath()}${basePath}/${productId}/related`;
-  const resp = await fetch(url);
+  const url = `${basePath}/${productId}/related`;
+  //const resp = await fetch(url);
+
+  const resp = await makeApiRequest(url);
 
   await validateResponse(resp);
 
@@ -153,8 +170,10 @@ export async function getRelatedProducts(productId: number) {
 export async function findProducts(value: ProductQuery) {
   const query = buildQueryParams(value);
 
-  const url = `${getAPIBasePath()}${basePath}${query}`;
-  const resp = await fetch(url);
+  const url = `${basePath}${query}`;
+  //const resp = await fetch(url);
+
+  const resp = await makeApiRequest(url);
 
   await validateResponse(resp);
 
@@ -164,12 +183,14 @@ export async function findProducts(value: ProductQuery) {
 export async function findShopProducts(shopId: number, value: ProductQuery) {
   const query = buildQueryParams(value);
 
-  const url = `${getAPIBasePath()}shops/${shopId}/products${query}`;
-  const resp = await fetch(url, {
-    headers: {
-      Authorization: await getAuthHeader()
-    }
-  });
+  const url = `shops/${shopId}/products${query}`;
+  // const resp = await fetch(url, {
+  //   headers: {
+  //     Authorization: await getAuthHeader()
+  //   }
+  // });
+
+  const resp = await makeApiRequest(url, {}, true);
 
   await validateResponse(resp);
 

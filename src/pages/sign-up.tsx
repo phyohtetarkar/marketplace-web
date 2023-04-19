@@ -7,8 +7,7 @@ import { parseErrorResponse, setEmptyOrString } from "../common/utils";
 import Alert from "../components/Alert";
 import { Input, PasswordInput } from "../components/forms";
 import ProgressButton from "../components/ProgressButton";
-import { login, signUp } from "../services/AuthService";
-import { createUser } from "../services/UserService";
+import { signUp } from "../services/AuthService";
 
 interface SignUpInputs {
   fullName?: string;
@@ -42,23 +41,27 @@ function Register() {
     try {
       setError(undefined);
       const phone = `+95${values.phone!.substring(1)}`;
-      const { user, userSub } = await signUp({
+      const result = await signUp({
+        otp: "",
         name: values.fullName!,
         phone: phone,
         password: values.password!
       });
 
-      if (process.env.NEXT_PUBLIC_PROFILE === "dev") {
-        await createUser({
-          id: userSub,
-          name: values.fullName,
-          phone: phone
-        });
-        await login({
-          username: phone,
-          password: values.password!
-        });
-      }
+      sessionStorage.setItem("accessToken", result.accessToken);
+      authContext.update("success", result.user);
+
+      // if (process.env.NEXT_PUBLIC_PROFILE === "dev") {
+      //   await createUser({
+      //     id: userSub,
+      //     name: values.fullName,
+      //     phone: phone
+      //   });
+      //   await login({
+      //     username: phone,
+      //     password: values.password!
+      //   });
+      // }
     } catch (error) {
       console.log("error signing up:", error);
       setError(parseErrorResponse(error));

@@ -144,7 +144,7 @@ const Home = ({ data }: { data: HomeData }) => {
                             className="ratio ratio-21x9 overflow-hidden"
                           >
                             <Image
-                              src={b.imageUrl}
+                              src={b.image}
                               alt="Cover image"
                               className="rounded"
                               fill
@@ -355,7 +355,7 @@ const Home = ({ data }: { data: HomeData }) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    const url = getAPIBasePath() + "home";
+    const url = getAPIBasePath() + "/home";
     const resp = await fetch(url);
 
     if (resp.ok) {

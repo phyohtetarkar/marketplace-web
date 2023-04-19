@@ -40,7 +40,7 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
             <div className="ratio ratio-1x1" style={{ width: _imageSize }}>
               <Image
                 className="rounded-circle"
-                src={value.logoUrl ?? "/images/placeholder.jpeg"}
+                src={value.logo ?? "/images/placeholder.jpeg"}
                 alt="Shop image."
                 fill
                 sizes="33vw"

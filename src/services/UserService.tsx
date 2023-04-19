@@ -1,9 +1,6 @@
+import makeApiRequest from "../common/makeApiRequest";
 import { User } from "../common/models";
-import {
-  getAPIBasePath,
-  getAuthHeader,
-  validateResponse
-} from "../common/utils";
+import { getAPIBasePath, validateResponse } from "../common/utils";
 
 const basePath = "profile";
 
@@ -23,26 +20,40 @@ export async function createUser(value: User) {
 }
 
 export async function updateProfile(value: User) {
-  const url = `${getAPIBasePath()}${basePath}`;
-  const resp = await fetch(url, {
-    method: "PUT",
-    body: JSON.stringify(value),
-    headers: {
-      "Content-Type": "application/json",
-      Authrization: await getAuthHeader()
-    }
-  });
+  const url = `${basePath}`;
+  // const resp = await fetch(url, {
+  //   method: "PUT",
+  //   body: JSON.stringify(value),
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Authrization: await getAuthHeader()
+  //   }
+  // });
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "PUT",
+      body: JSON.stringify(value),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    },
+    true
+  );
 
   await validateResponse(resp);
 }
 
 export async function getLoginUser() {
-  const url = `${getAPIBasePath()}${basePath}`;
-  const resp = await fetch(url, {
-    headers: {
-      Authorization: await getAuthHeader()
-    }
-  });
+  const url = `${basePath}`;
+  // const resp = await fetch(url, {
+  //   headers: {
+  //     Authorization: await getAuthHeader()
+  //   }
+  // });
+
+  const resp = await makeApiRequest(url, {}, true);
 
   await validateResponse(resp);
 

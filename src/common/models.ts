@@ -6,6 +6,12 @@ export interface PageData<T> {
   totalElements: number;
 }
 
+export interface AuthResult {
+  accessToken: string;
+  refreshToken: string;
+  user?: User;
+}
+
 export interface AuthUser {
   id: string;
   name: string;
@@ -14,7 +20,7 @@ export interface AuthUser {
 }
 
 export interface User {
-  id?: string;
+  id?: number;
   name?: string;
   phone?: string;
   role?: string;
@@ -33,7 +39,6 @@ export interface Banner {
   id: number;
   link: string;
   image: string;
-  imageUrl: string;
   position: number;
 }
 
@@ -48,7 +53,8 @@ export interface Category {
 }
 
 export interface ShopMember {
-  id: number;
+  userId: number;
+  shopId: number;
   role: string;
   member: User;
 }
@@ -66,9 +72,7 @@ export interface Shop {
   disabled?: boolean;
   pendingOrderCount?: number;
   logo?: string | null;
-  logoUrl?: string;
   cover?: string | null;
-  coverUrl?: string;
   about?: string;
   contact?: ShopContact;
   logoImage?: File;
@@ -76,7 +80,6 @@ export interface Shop {
 }
 
 export interface ShopContact {
-  id?: number;
   shopId?: number;
   address?: string;
   phones?: string[];
@@ -93,8 +96,8 @@ export interface ShopGeneral {
 }
 
 export interface ShopReview {
-  id?: number;
   shopId?: number;
+  userId?: number;
   rating?: number;
   description?: string;
   reviewer?: User;
@@ -103,7 +106,7 @@ export interface ShopReview {
 }
 
 export interface FavoriteProduct {
-  id: number;
+  productId: number;
   product: Product;
 }
 
@@ -152,6 +155,7 @@ export interface ProductOption {
 
 export interface ProductVariant {
   id?: number;
+  productId?: number;
   title?: string;
   sku?: string;
   price?: number;
@@ -175,8 +179,8 @@ export interface Discount {
 }
 
 export interface CartItem {
-  id?: number;
-  productId: number;
+  userId?: number;
+  productId?: number;
   variantId?: number;
   quantity: number;
   product?: Product;

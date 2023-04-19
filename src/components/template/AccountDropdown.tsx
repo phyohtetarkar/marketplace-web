@@ -1,6 +1,9 @@
-import { Auth } from "aws-amplify";
 import Link from "next/link";
-import { useLoginUser } from "../../common/hooks";
+import { useContext } from "react";
+import { toast } from "react-toastify";
+import { AuthenticationContext } from "../../common/contexts";
+import { parseErrorResponse } from "../../common/utils";
+import { signOut } from "../../services/AuthService";
 import Dropdown from "../Dropdown";
 
 interface AccountDropdownProps {
@@ -10,15 +13,17 @@ interface AccountDropdownProps {
 function AccountDropdown(props: AccountDropdownProps) {
   const { onNavClick } = props;
 
-  const { user, error, isLoading } = useLoginUser();
+  const authContext = useContext(AuthenticationContext);
 
-  if (isLoading || error) {
+  if (authContext.status !== "success") {
     return null;
   }
 
+  const { name, role } = authContext.payload ?? {};
+
   return (
     <Dropdown
-      toggle={<span className="">Hi, {user?.name ?? ""}</span>}
+      toggle={<span className="">Hi, {name ?? ""}</span>}
       className="nav-item"
       toggleClassName="dropdown-toggle nav-link hstack"
       menuClassName="dropdown-menu-end"
@@ -59,7 +64,7 @@ function AccountDropdown(props: AccountDropdownProps) {
           My shops
         </Link>
       </li>
-      {user?.role?.match("ADMIN|OWNER") && (
+      {role?.match("ADMIN|OWNER") && (
         <>
           <div className="dropdown-divider"></div>
           <li>
@@ -70,7 +75,7 @@ function AccountDropdown(props: AccountDropdownProps) {
               className="dropdown-item text-decoration-none"
               onClick={(e) => onNavClick?.()}
             >
-              Site manage
+              Admin protal
             </a>
           </li>
         </>
@@ -81,7 +86,14 @@ function AccountDropdown(props: AccountDropdownProps) {
           role="button"
           onClick={() => {
             onNavClick?.();
-            Auth.signOut().catch(console.error);
+            //Auth.signOut().catch(console.error);
+            signOut()
+              .then(() => {
+                authContext.update("failure", undefined);
+              })
+              .catch((error) => {
+                toast.error(parseErrorResponse(error));
+              });
           }}
         >
           Logout
