@@ -55,7 +55,7 @@ function ProfileOverview() {
                   <div className="ms-3">
                     <h6 className="mb-0">{user?.name ?? ""}</h6>
                     <span className="text-muted small">
-                      Phone: {user?.phone ?? ""}
+                      Phone: {user?.phone?.replace("+95", "0") ?? ""}
                     </span>
                   </div>
                   <div className="ms-auto">

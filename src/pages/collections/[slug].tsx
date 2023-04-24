@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Category } from "../../common/models";
 import Accordion from "../../components/Accordion";
+import Alert from "../../components/Alert";
 import ProductCatalog from "../../components/product/ProductCatalog";
 import {
   getBrandsByCategoryId,
@@ -152,7 +153,7 @@ const Filter = ({ categoryId }: FilterProps) => {
   );
 };
 
-function Collection({ category }: { category: Category }) {
+function Collection({ category }: { category: Category | null }) {
   const router = useRouter();
 
   if (!router.isReady) {
@@ -163,9 +164,17 @@ function Collection({ category }: { category: Category }) {
 
   const query: ProductQuery = {
     page: typeof page === "string" ? parseInt(page) : undefined,
-    "category-id": category.id,
+    "category-id": category?.id,
     brand: brand
   };
+
+  if (!category) {
+    return (
+      <div className="container py-3">
+        <Alert message="No products found" />
+      </div>
+    );
+  }
 
   return (
     <ProductCatalog

@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { ShopDetailContext } from "../../../common/contexts";
 import { Shop } from "../../../common/models";
+import Alert from "../../../components/Alert";
 import Rating from "../../../components/Rating";
 import {
   AboutUs,
@@ -16,7 +17,7 @@ import { getShopBySlug } from "../../../services/ShopService";
 
 type PageTab = "products" | "reviews" | "about-us";
 
-function ShopHome({ shop }: { shop: Shop }) {
+function ShopHome({ shop }: { shop: Shop | null }) {
   const router = useRouter();
 
   const { tab } = router.query;
@@ -26,6 +27,9 @@ function ShopHome({ shop }: { shop: Shop }) {
   );
 
   const activeContent = () => {
+    if (!shop) {
+      return null;
+    }
     switch (activeTab) {
       case "products":
         return <ShopProductListing shop={shop} isMember={false} />;
@@ -37,6 +41,14 @@ function ShopHome({ shop }: { shop: Shop }) {
 
     return null;
   };
+
+  if (!shop) {
+    return (
+      <div className="container py-3">
+        <Alert message="Shop not found" />
+      </div>
+    );
+  }
 
   const heading = (
     <>
@@ -189,11 +201,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     //const isMember = await checkShopMember(shop.id ?? 0, Auth);
 
-    if (!shop.disabled) {
+    if (shop?.status === "ACTIVE") {
       return {
         props: {
           shop: shop
-        } // will be passed to the page component as props
+        }
+      };
+    } else {
+      return {
+        props: {
+          shop: null
+        }
       };
     }
   } catch (e) {

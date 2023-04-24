@@ -105,7 +105,9 @@ function ProfileSetting() {
                               name="phone"
                               type="text"
                               disabled
-                              defaultValue={user?.phone ?? ""}
+                              defaultValue={
+                                user?.phone?.replace("+95", "0") ?? ""
+                              }
                             />
                           </div>
                           <div className="col-lg-12">

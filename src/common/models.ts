@@ -67,9 +67,7 @@ export interface Shop {
   rating?: number;
   featured?: boolean;
   createdAt?: number;
-  status?: "PENDING" | "ACTIVE";
-  expired?: boolean;
-  disabled?: boolean;
+  status?: "PENDING" | "ACTIVE" | "EXPIRED" | "DISABLED";
   pendingOrderCount?: number;
   logo?: string | null;
   cover?: string | null;

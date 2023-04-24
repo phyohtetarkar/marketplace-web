@@ -186,7 +186,7 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
   }
 
   console.log(error);
-  return "Something went wrong, please try again";
+  return error ?? "Something went wrong, please try again";
 }
 
 export async function checkShopMember(shopId: number, auth: any) {

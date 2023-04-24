@@ -12,7 +12,6 @@ import { ShopDetailContext } from "../../../../common/contexts";
 import { Shop } from "../../../../common/models";
 import { parseErrorResponse } from "../../../../common/utils";
 import { withAuthentication } from "../../../../common/WithAuthentication";
-import AccountMenu from "../../../../components/account/AccountMenu";
 import Alert from "../../../../components/Alert";
 import Dropdown from "../../../../components/Dropdown";
 import Loading from "../../../../components/Loading";
@@ -30,7 +29,11 @@ import {
 } from "../../../../components/shopdetail";
 import ContactUs from "../../../../components/shopdetail/ContactUs";
 import Tabs from "../../../../components/Tabs";
-import { getShopById, isShopMember } from "../../../../services/ShopService";
+import {
+  getShopById,
+  getShopBySlug,
+  isShopMember
+} from "../../../../services/ShopService";
 
 type PageTab =
   | "products"
@@ -56,7 +59,7 @@ function ShopDetail() {
 
   const [shop, setShop] = useState<Shop>();
 
-  const [productEdit, setProductEdit] = useState(false);
+  const [isMember, setIsMember] = useState(false);
 
   const iconSize = 20;
 
@@ -64,26 +67,25 @@ function ShopDetail() {
     if (!router.isReady) {
       return;
     }
-    const { shopId } = router.query;
+    const { slug } = router.query;
 
-    if (typeof shopId === "string") {
-      isShopMember(parseInt(shopId))
-        .then((isMember) => {
-          if (isMember) {
-            loadShop(parseInt(shopId));
-          } else {
-            router.back();
-          }
-        })
-        .catch((error) => {
-          router.back();
-        });
+    if (typeof slug === "string") {
+      loadShop(slug);
     }
   }, [router]);
 
-  const loadShop = async (shopId: number) => {
+  const loadShop = async (slug: string) => {
     try {
-      var shop = await getShopById(shopId);
+      var shop = await getShopBySlug(slug);
+      if (!shop) {
+        throw "Shop not found";
+      }
+
+      var isMember = await isShopMember(shop.id ?? 0);
+      if (!isMember) {
+        throw "FORBIDDEN";
+      }
+      setIsMember(isMember);
       setShop(shop);
     } catch (error) {
       setError(parseErrorResponse(error));
@@ -182,6 +184,10 @@ function ShopDetail() {
 
     if (!shop) {
       return <Loading />;
+    }
+
+    if (!isMember) {
+      return null;
     }
 
     const heading = (
@@ -297,7 +303,7 @@ function ShopDetail() {
                 setActiveTab(key as PageTab);
               }}
             >
-              <Tabs.Tab tabKey="insights" title="Insights">
+              <Tabs.Tab tabKey="insights" title="Dashboard">
                 <div></div>
               </Tabs.Tab>
               <Tabs.Tab tabKey="products" title="Products">

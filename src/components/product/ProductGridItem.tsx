@@ -105,7 +105,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
           </Link>
 
           <h6
-            className="fw-semibold mt-2 mb-3"
+            className="fw-semibold mt-2"
             style={{
               fontSize: 18
             }}
@@ -113,7 +113,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
             {price}
           </h6>
 
-          <div className="hstack align-items-stretch gap-2">
+          <div className="mt-3 hstack align-items-stretch gap-2 d-none d-sm-flex">
             {value.id && !value.withVariant && (
               <AddToCartButton
                 productId={value.id}

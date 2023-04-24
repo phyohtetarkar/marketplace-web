@@ -118,9 +118,9 @@ function ProductManageGridItem({
             {value.name}
           </Link>
 
-          <h6 className="fw-semibold mt-2 mb-3">{price}</h6>
+          <h6 className="fw-semibold mt-2">{price}</h6>
 
-          <div className="hstack align-items-stretch gap-2">
+          <div className="mt-3 hstack align-items-stretch gap-2">
             <button
               className="btn btn-default flex-grow-1"
               onClick={() => onEditClick?.()}

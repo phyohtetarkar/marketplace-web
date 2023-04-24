@@ -30,6 +30,7 @@ export async function login({
   const resp = await makeApiRequest(url, {
     method: "POST",
     body: JSON.stringify(body),
+    credentials: "include",
     headers: {
       "Content-Type": "application/json"
     }
@@ -77,6 +78,7 @@ export async function signUp({
   const resp = await makeApiRequest(url, {
     method: "POST",
     body: JSON.stringify(body),
+    credentials: "include",
     headers: {
       "Content-Type": "application/json"
     }
@@ -88,9 +90,15 @@ export async function signUp({
 }
 
 export async function signOut() {
-  const url = `/${basePath}/sign-out`;
+  const url = `${basePath}/sign-out`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "POST"
+    },
+    true
+  );
 
   await validateResponse(resp);
 }

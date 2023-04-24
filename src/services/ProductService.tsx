@@ -105,7 +105,10 @@ export async function getProductById(productId: number) {
 
   await validateResponse(resp);
 
-  return resp.json() as Promise<Product>;
+  return resp
+    .json()
+    .then((json) => json as Product)
+    .catch((e) => null);
 }
 
 export async function getProductBySlug(slug: String) {
@@ -116,7 +119,10 @@ export async function getProductBySlug(slug: String) {
 
   await validateResponse(resp);
 
-  return resp.json() as Promise<Product>;
+  return resp
+    .json()
+    .then((json) => json as Product)
+    .catch((e) => null);
 }
 
 export async function existsProductBySlug(slug: String) {

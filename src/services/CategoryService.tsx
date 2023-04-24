@@ -26,7 +26,10 @@ export async function getCategory(slug: string) {
 
   await validateResponse(resp);
 
-  return resp.json() as Promise<Category>;
+  return resp
+    .json()
+    .then((json) => json as Category)
+    .catch((e) => null);
 }
 
 export async function getBrandsByCategory(slug: string) {

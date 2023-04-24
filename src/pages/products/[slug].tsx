@@ -9,6 +9,7 @@ import Swiper, { Navigation, Pagination, Zoom } from "swiper";
 import { Swiper as SwiperView, SwiperSlide } from "swiper/react";
 import { Category, Product, ProductVariant } from "../../common/models";
 import { formatPrice, transformDiscount } from "../../common/utils";
+import Alert from "../../components/Alert";
 import {
   AddToCartButton,
   AddToFavoriteButton,
@@ -18,7 +19,7 @@ import Rating from "../../components/Rating";
 import Tabs from "../../components/Tabs";
 import { getProductBySlug } from "../../services/ProductService";
 
-function ProductDetail({ product }: { product: Product }) {
+function ProductDetail({ product }: { product: Product | null }) {
   const [selectedOptions, setSelectedOptions] = useState<Map<string, string>>();
 
   const [variant, setVariant] = useState<ProductVariant>();
@@ -30,7 +31,7 @@ function ProductDetail({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
 
   const options = useMemo(() => {
-    if (product.variants) {
+    if (product?.variants) {
       const map = new Map<string, string[]>();
       product.variants
         .flatMap((v) => v.options)
@@ -74,13 +75,21 @@ function ProductDetail({ product }: { product: Product }) {
 
     const sop = selectedOptions;
 
-    const selection = product.variants?.find((v) => {
+    const selection = product?.variants?.find((v) => {
       return v.options.every((op) => op.value === sop.get(op.option));
     });
 
     setVariant(selection);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOptions]);
+
+  if (!product) {
+    return (
+      <div className="container py-3">
+        <Alert message="Product not found" />
+      </div>
+    );
+  }
 
   const unitPrice = variant?.price ?? product.price ?? 0;
 
@@ -499,9 +508,7 @@ function ProductDetail({ product }: { product: Product }) {
                         onContextMenu={(evt) => evt.preventDefault()}
                       >
                         <Image
-                          src={
-                            product.shop?.logoUrl ?? "/images/placeholder.jpeg"
-                          }
+                          src={product.shop?.logo ?? "/images/placeholder.jpeg"}
                           width={70}
                           height={70}
                           alt=""
@@ -556,10 +563,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     //const accessToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
     const product = await getProductBySlug(slug as string);
-    if (product.hidden === false && !product.disabled) {
+    if (product?.hidden === false && !product?.disabled) {
       return {
         props: {
           product: product
+        } // will be passed to the page component as props
+      };
+    } else {
+      return {
+        props: {
+          product: null
         } // will be passed to the page component as props
       };
     }

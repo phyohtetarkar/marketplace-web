@@ -110,7 +110,10 @@ export async function getShopById(id: number) {
 
   await validateResponse(resp);
 
-  return resp.json() as Promise<Shop>;
+  return resp
+    .json()
+    .then((json) => json as Shop)
+    .catch((e) => null);
 }
 
 export async function getShopBySlug(slug: String) {
@@ -121,7 +124,10 @@ export async function getShopBySlug(slug: String) {
 
   await validateResponse(resp);
 
-  return resp.json() as Promise<Shop>;
+  return resp
+    .json()
+    .then((json) => json as Shop)
+    .catch((e) => null);
 }
 
 export async function existsShopBySlug(slug: String, excludeId: number) {

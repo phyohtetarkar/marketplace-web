@@ -237,7 +237,7 @@ function ProductCatalog(props: ProductCatalogProps) {
 
     return (
       <>
-        <div className="row row-cols-1 row-cols-md-2 row-cols-xxl-3 g-3">
+        <div className="row row-cols-2 row-cols-md-2 row-cols-xxl-3 g-3">
           {data.contents.map((p, i) => {
             return (
               <div className="col" key={p.id}>

@@ -25,7 +25,8 @@ async function makeApiRequest(
   if (response.status === 401) {
     // access token has expired, try to refresh it
     const refreshResponse = await fetch(`${getAPIBasePath()}/auth/refresh`, {
-      method: "POST"
+      method: "POST",
+      credentials: "include"
     });
     if (refreshResponse.ok) {
       const { accessToken } = await refreshResponse.json();
