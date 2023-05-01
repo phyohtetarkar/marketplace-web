@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState } from "react";
 import { ShopDetailContext } from "../../common/contexts";
 import { Discount, Product } from "../../common/models";
-import { formatPrice, parseErrorResponse } from "../../common/utils";
+import { formatNumber, parseErrorResponse } from "../../common/utils";
 import { applyDiscount, removeDiscount } from "../../services/DiscountService";
 import { findProducts, ProductQuery } from "../../services/ProductService";
 import Alert from "../Alert";
@@ -199,7 +199,7 @@ function DiscountApply({
                     <div className="vstack">
                       <h6 className="mb-1 text-truncate">{p.name}</h6>
                       <small className="text-muted">
-                        {formatPrice(p.price ?? 0)} Ks
+                        {formatNumber(p.price ?? 0)} Ks
                       </small>
                     </div>
                   </div>

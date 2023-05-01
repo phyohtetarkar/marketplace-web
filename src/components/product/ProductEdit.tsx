@@ -137,6 +137,9 @@ function ProductEdit({
 
     getProductById(productId)
       .then((p) => {
+        if (!p) {
+          throw "Product not found";
+        }
         setProduct({
           ...p,
           shopId: p.shop?.id,
@@ -160,6 +163,11 @@ function ProductEdit({
     if (files && files.length > 0) {
       let file = files[0];
       const fileSize = file.size / (1024 * 1024);
+
+      if (fileSize > 0.512) {
+        event.target.value = "";
+        return;
+      }
 
       var reader = new FileReader();
       reader.onload = function (e) {
@@ -186,9 +194,7 @@ function ProductEdit({
       reader.readAsDataURL(file);
     }
 
-    if (fileRef.current) {
-      fileRef.current.value = "";
-    }
+    event.target.value = "";
   }
 
   function generateVariant(
@@ -299,7 +305,7 @@ function ProductEdit({
           }
         }}
       >
-        <div className="hstack my-3">
+        <div className="hstack mb-3">
           <button
             type="button"
             className="btn btn-default py-2 me-2 ms-auto"
@@ -398,8 +404,73 @@ function ProductEdit({
                     />
                   </div>
                 </div>
-                <div className="row g-4">
-                  <div className="col-lg-6 order-2 order-lg-1 vstack">
+                <div className="row g-4 mb-4">
+                  <div className="col-12">
+                    <div className="">
+                      <label className="form-label">Category *</label>
+                      <Controller
+                        name="category"
+                        control={control}
+                        rules={{
+                          validate: (v) => !!v || "Please select category"
+                        }}
+                        render={({ field, fieldState: { error } }) => {
+                          return (
+                            <AutocompleteSelect<Category, number>
+                              options={categories ?? []}
+                              defaultValue={field.value}
+                              getOptionLabel={(v) => v.name}
+                              getOptionKey={(v) => v.id}
+                              getNestedData={(v) => v.children}
+                              canSelect={(v) =>
+                                !v.children || v.children?.length === 0
+                              }
+                              onChange={(v) => {
+                                if (!v) {
+                                  return;
+                                }
+                                setValue("category", v, {
+                                  shouldValidate: !!error?.message
+                                });
+                                setValue("categoryId", v.id);
+                              }}
+                              error={error?.message}
+                            />
+                          );
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-6">
+                    <Input
+                      label="Brand name"
+                      id="brandInput"
+                      type="text"
+                      placeholder="Enter brand name"
+                      {...register("brand", {
+                        setValueAs: setEmptyOrString
+                      })}
+                    />
+                  </div>
+                  <div className="col-lg-6">
+                    <label className="form-label">Country of origin</label>
+                    <AutocompleteSelect<string, string>
+                      options={[
+                        "Myanmar",
+                        "China",
+                        "UK",
+                        "India",
+                        "Japan",
+                        "Korea"
+                      ].sort()}
+                      getOptionLabel={(v) => v}
+                      getOptionKey={(v) => v}
+                    />
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-12">
                     <label className="form-label">Description</label>
                     <div
                       className="flex-grow-1"
@@ -424,71 +495,6 @@ function ProductEdit({
                             />
                           );
                         }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col-lg-6 order-1 order-lg-2">
-                    <div className="vstack">
-                      <div className="mb-3">
-                        <label className="form-label">Category *</label>
-                        <Controller
-                          name="category"
-                          control={control}
-                          rules={{
-                            validate: (v) => !!v || "Please select category"
-                          }}
-                          render={({ field, fieldState: { error } }) => {
-                            return (
-                              <AutocompleteSelect<Category, number>
-                                options={categories ?? []}
-                                defaultValue={field.value}
-                                getOptionLabel={(v) => v.name}
-                                getOptionKey={(v) => v.id}
-                                getNestedData={(v) => v.children}
-                                canSelect={(v) =>
-                                  !v.children || v.children?.length === 0
-                                }
-                                onChange={(v) => {
-                                  if (!v) {
-                                    return;
-                                  }
-                                  setValue("category", v, {
-                                    shouldValidate: !!error?.message
-                                  });
-                                  setValue("categoryId", v.id);
-                                }}
-                                error={error?.message}
-                              />
-                            );
-                          }}
-                        />
-                      </div>
-
-                      <Input
-                        label="Brand name"
-                        id="brandInput"
-                        type="text"
-                        placeholder="Enter brand name"
-                        {...register("brand", {
-                          setValueAs: setEmptyOrString
-                        })}
-                      />
-
-                      <label className="form-label mt-3">
-                        Country of origin
-                      </label>
-                      <AutocompleteSelect<string, string>
-                        options={[
-                          "Myanmar",
-                          "China",
-                          "UK",
-                          "India",
-                          "Japan",
-                          "Korea"
-                        ].sort()}
-                        getOptionLabel={(v) => v}
-                        getOptionKey={(v) => v}
                       />
                     </div>
                   </div>
@@ -934,7 +940,7 @@ function ProductEdit({
               <div className="card-footer px-md-4 py-3">
                 <span className="text-muted">
                   Product image can upload up to <strong>5</strong> images with
-                  dimension constraint of at most <strong>800x800</strong>px.
+                  size constraint of at most <strong>512KB</strong> each.
                 </span>
               </div>
             </div>

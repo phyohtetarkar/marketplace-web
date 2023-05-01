@@ -146,7 +146,7 @@ function ProfileSetting() {
                         >
                           <Image
                             src={user?.image ?? "/images/profile.png"}
-                            layout="fill"
+                            fill
                             alt="User Photo"
                             className="rounded-circle border"
                             style={{

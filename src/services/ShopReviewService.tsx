@@ -1,15 +1,11 @@
 import makeApiRequest from "../common/makeApiRequest";
 import { PageData, ShopReview } from "../common/models";
-import {
-  buildQueryParams,
-  getAPIBasePath,
-  validateResponse
-} from "../common/utils";
+import { buildQueryParams, validateResponse } from "../common/utils";
 
-const basePath = "shop-reviews";
+const basePath = "shops";
 
 export async function writeReview(value: ShopReview) {
-  const url = `${getAPIBasePath()}${basePath}`;
+  const url = `${basePath}/${value.shopId}/reviews`;
   // const resp = await fetch(url, {
   //   method: "POST",
   //   body: JSON.stringify(value),
@@ -34,32 +30,8 @@ export async function writeReview(value: ShopReview) {
   await validateResponse(resp);
 }
 
-export async function deleteReview(value: ShopReview) {
-  const url = `${basePath}`;
-  // const resp = await fetch(url, {
-  //   method: "DELETE",
-  //   headers: {
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
-
-  const resp = await makeApiRequest(
-    url,
-    {
-      method: "DELETE",
-      body: JSON.stringify(value),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    },
-    true
-  );
-
-  await validateResponse(resp);
-}
-
 export async function getUserReview(shopId: number) {
-  const url = `${basePath}/${shopId}/me`;
+  const url = `${basePath}/${shopId}/my-review`;
   // const resp = await fetch(url, {
   //   headers: {
   //     Authorization: await getAuthHeader()
@@ -82,7 +54,7 @@ export async function getReviews(
     direction: direction,
     page: page
   });
-  const url = `${basePath}/${shopId}${query}`;
+  const url = `${basePath}/${shopId}/reviews${query}`;
   //const resp = await fetch(url);
 
   const resp = await makeApiRequest(url);

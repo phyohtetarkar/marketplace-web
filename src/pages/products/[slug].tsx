@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import Swiper, { Navigation, Pagination, Zoom } from "swiper";
 import { Swiper as SwiperView, SwiperSlide } from "swiper/react";
 import { Category, Product, ProductVariant } from "../../common/models";
-import { formatPrice, transformDiscount } from "../../common/utils";
+import { formatNumber, transformDiscount } from "../../common/utils";
 import Alert from "../../components/Alert";
 import {
   AddToCartButton,
@@ -100,7 +100,7 @@ function ProductDetail({ product }: { product: Product | null }) {
   // )}`;
   let price = (
     <>
-      {formatPrice(unitPrice * quantity)}
+      {formatNumber(unitPrice * quantity)}
       &nbsp;Ks
     </>
   );
@@ -109,7 +109,7 @@ function ProductDetail({ product }: { product: Product | null }) {
     price = (
       <>
         <del className="text-muted small fw-normal me-1">
-          {formatPrice(unitPrice * quantity)}&nbsp;Ks
+          {formatNumber(unitPrice * quantity)}&nbsp;Ks
         </del>
         {transformDiscount(product.discount, unitPrice, quantity)}&nbsp;Ks
       </>

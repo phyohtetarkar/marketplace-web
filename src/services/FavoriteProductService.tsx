@@ -1,14 +1,11 @@
 import makeApiRequest from "../common/makeApiRequest";
-import { FavoriteProduct, PageData } from "../common/models";
+import { PageData, Product } from "../common/models";
 import { buildQueryParams, validateResponse } from "../common/utils";
 
 const basePath = "favorite-products";
 
 export async function addToFavoriteProduct(productId: number) {
-  const query = buildQueryParams({
-    "product-id": productId
-  });
-  const url = `${basePath}${query}`;
+  const url = `${basePath}/${productId}`;
   // const resp = await fetch(url, {
   //   method: "POST",
   //   headers: {
@@ -27,8 +24,8 @@ export async function addToFavoriteProduct(productId: number) {
   await validateResponse(resp);
 }
 
-export async function deleteFavoriteProduct(id: number) {
-  const url = `${basePath}/${id}`;
+export async function deleteFavoriteProduct(productId: number) {
+  const url = `${basePath}/${productId}`;
   // const resp = await fetch(url, {
   //   method: "DELETE",
   //   headers: {
@@ -51,7 +48,7 @@ export async function checkFavorite(productId: number) {
   const query = buildQueryParams({
     "product-id": productId
   });
-  const url = `${basePath}/check${query}`;
+  const url = `${basePath}/${productId}/check`;
   // const resp = await fetch(url, {
   //   headers: {
   //     Authorization: await getAuthHeader()
@@ -80,5 +77,5 @@ export async function getFavoriteProducts(page?: number) {
 
   await validateResponse(resp);
 
-  return resp.json() as Promise<PageData<FavoriteProduct>>;
+  return resp.json() as Promise<PageData<Product>>;
 }

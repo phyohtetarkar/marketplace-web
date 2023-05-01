@@ -1,3 +1,7 @@
+type OrderStatus = "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED";
+
+type PaymentMethod = "COD" | "BANK_TRANSFER";
+
 export interface PageData<T> {
   contents: T[];
   currentPage: number;
@@ -72,6 +76,7 @@ export interface Shop {
   logo?: string | null;
   cover?: string | null;
   about?: string;
+  deliveryNote?: string;
   contact?: ShopContact;
   logoImage?: File;
   coverImage?: File;
@@ -91,6 +96,21 @@ export interface ShopGeneral {
   slug?: string;
   headline?: string;
   about?: string;
+  deliveryNote?: string;
+}
+
+export interface ShopSetting {
+  shopId: number;
+  cashOnDelivery: boolean;
+  bankTransfer: boolean;
+}
+
+export interface ShopStatistic {
+  shopId: number;
+  pendingOrder: number;
+  totalOrder: number;
+  totalProduct: number;
+  totalSale: number;
 }
 
 export interface ShopReview {
@@ -103,9 +123,33 @@ export interface ShopReview {
   updatedAt?: number;
 }
 
-export interface FavoriteProduct {
-  productId: number;
-  product: Product;
+export interface ShopAcceptedPayment {
+  id?: number;
+  accountType?: string;
+  accountNumber?: string;
+}
+
+export interface ShopCreateForm {
+  name?: string;
+  slug?: string;
+  headline?: string;
+  address?: string;
+  about?: string;
+  deliveryNote?: string;
+  cashOnDelivery?: boolean;
+  bankTransfer?: boolean;
+  acceptedPayments?: ShopAcceptedPayment[];
+  logo?: string;
+  cover?: string;
+  subscriptionPlanId?: number;
+  logoImage?: File;
+  coverImage?: File;
+}
+
+export interface SaleHistory {
+  year: number;
+  month: number;
+  totalSale: number;
 }
 
 export interface Product {
@@ -188,4 +232,57 @@ export interface CartItem {
 export interface Location {
   latitude: number;
   longitude: number;
+}
+
+export interface Order {
+  id: number;
+  orderCode: string;
+  subTotalPrice: number;
+  totalPrice: number;
+  discount: number;
+  quantity: number;
+  note?: string;
+  status: OrderStatus;
+  paymentMethod: PaymentMethod;
+  delivery: DeliveryDetail;
+  payment: PaymentDetail;
+  items: [OrderItem];
+  user?: User;
+  shop?: Shop;
+  createdAt: number;
+}
+
+export interface OrderItem {
+  id: number;
+  productId: number;
+  productName: string;
+  productSlug: string;
+  productImage: string;
+  variant?: string;
+  unitPrice: number;
+  discount: number;
+  quantity: number;
+  removed: boolean;
+}
+
+export interface DeliveryDetail {
+  name: string;
+  phone: string;
+  city: string;
+  address: string;
+}
+
+export interface PaymentDetail {
+  accountType?: string;
+  paySlipImage?: string;
+  file?: File;
+}
+
+export interface OrderCreateForm {
+  shopId: number;
+  note?: string;
+  paymentMethod: PaymentMethod;
+  cartItems?: [CartItem];
+  delivery?: DeliveryDetail;
+  payment?: PaymentDetail;
 }

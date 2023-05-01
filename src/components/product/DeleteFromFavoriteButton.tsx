@@ -1,4 +1,3 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";

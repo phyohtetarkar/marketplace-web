@@ -7,7 +7,7 @@ import { useSWRConfig } from "swr";
 import { AuthenticationContext } from "../../common/contexts";
 import { CartItem } from "../../common/models";
 import {
-  formatPrice,
+  formatNumber,
   parseErrorResponse,
   transformDiscount
 } from "../../common/utils";
@@ -32,13 +32,13 @@ function ShoppingCartItem({ item }: ShoppingCartItemProps) {
 
   const image = item.product?.thumbnail ?? "/images/placeholder.jpeg";
 
-  let price = <>{formatPrice(item.product?.price ?? 0)} Ks</>;
+  let price = <>{formatNumber(item.product?.price ?? 0)} Ks</>;
 
   if (item.product?.discount) {
     price = (
       <>
         <del className="text-muted small fw-normal me-1">
-          {formatPrice(item.product?.price ?? 0)}&nbsp;Ks
+          {formatNumber(item.product?.price ?? 0)}&nbsp;Ks
         </del>
         {transformDiscount(item.product.discount, item.product.price, quantity)}
         &nbsp;Ks

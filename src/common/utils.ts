@@ -12,7 +12,7 @@ export function formatTimestamp(timestamp: number | string, withTime = false) {
   return date.format("MMM DD, YYYY");
 }
 
-export function formatPrice(value: number) {
+export function formatNumber(value: number) {
   if (isNaN(value) || `${value}`.trim().length === 0) {
     return "";
   }
@@ -22,12 +22,12 @@ export function formatPrice(value: number) {
 
 export function transformDiscount(discount: Discount, price = 0, qty = 1) {
   if (discount.type === "FIXED_AMOUNT") {
-    return formatPrice((price - (discount.value ?? 0)) * qty);
+    return formatNumber((price - (discount.value ?? 0)) * qty);
   }
 
   const percent = discount.value ?? 0;
   const discountPrice = (percent * price) / 100;
-  return formatPrice((price - discountPrice) * qty);
+  return formatNumber((price - discountPrice) * qty);
 }
 
 export function wordPerMinute(wordCount: number) {

@@ -20,7 +20,6 @@ function ShopContactEdit({ handleClose }: { handleClose?: () => void }) {
     setValue
   } = useForm<ShopContact>({
     values: {
-      id: shopContext?.contact?.id ?? 0,
       shopId: shopContext?.id,
       phones: shopContext?.contact?.phones,
       address: shopContext?.contact?.address,

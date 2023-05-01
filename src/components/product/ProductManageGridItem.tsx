@@ -6,7 +6,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "../../common/models";
-import { formatPrice, transformDiscount } from "../../common/utils";
+import { formatNumber, transformDiscount } from "../../common/utils";
 
 interface ProductManageGridItemProps {
   value: Product;
@@ -21,7 +21,7 @@ function ProductManageGridItem({
   let hidden;
   let outOfStock;
 
-  let price = <>{formatPrice(value.price ?? 0)} Ks</>;
+  let price = <>{formatNumber(value.price ?? 0)} Ks</>;
 
   if (value.hidden) {
     hidden = (
@@ -51,7 +51,7 @@ function ProductManageGridItem({
     price = (
       <>
         <del className="text-muted small fw-normal me-1">
-          {formatPrice(value.price ?? 0)}&nbsp;Ks
+          {formatNumber(value.price ?? 0)}&nbsp;Ks
         </del>
         {transformDiscount(value.discount, value.price)}&nbsp;Ks
       </>

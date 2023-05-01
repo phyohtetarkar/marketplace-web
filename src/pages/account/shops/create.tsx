@@ -1,25 +1,30 @@
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEvent, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Shop } from "../../../common/models";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { ShopCreateForm } from "../../../common/models";
 import {
   parseErrorResponse,
   setEmptyOrString,
   setStringToSlug
 } from "../../../common/utils";
 import { withAuthentication } from "../../../common/WithAuthentication";
-import { Input } from "../../../components/forms";
+import { Input, Textarea } from "../../../components/forms";
 import { RichTextEditorInputProps } from "../../../components/forms/RichTextEditor";
+import Modal from "../../../components/Modal";
+import { AcceptedPaymentEdit } from "../../../components/shopdetail";
 import StepView from "../../../components/StepView";
+import Tooltip from "../../../components/Tooltip";
 import { createShop } from "../../../services/ShopService";
 
 const _steps = [
   { step: 1, title: "Basic information" },
   { step: 2, title: "Shop media" },
-  { step: 3, title: "Select package", end: true }
+  { step: 3, title: "Setting" },
+  { step: 4, title: "Select package", end: true }
 ];
 
 const DynamicEditor = dynamic<RichTextEditorInputProps>(
@@ -30,8 +35,8 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
 );
 
 interface FormProps {
-  values: Shop;
-  onSubmit?: (values: Shop) => void;
+  values: ShopCreateForm;
+  onSubmit?: (values: ShopCreateForm) => void;
   onPrev?: () => void;
   onNext?: () => void;
 }
@@ -43,7 +48,7 @@ const BasicInformation = (props: FormProps) => {
     setValue,
     handleSubmit,
     control
-  } = useForm<Shop>({ defaultValues: props.values });
+  } = useForm<ShopCreateForm>({ defaultValues: props.values });
   return (
     <form
       onSubmit={(evt) => {
@@ -51,6 +56,10 @@ const BasicInformation = (props: FormProps) => {
         handleSubmit((data) => {
           props.onSubmit?.(data);
           props.onNext?.();
+          window?.scrollTo({
+            behavior: "smooth",
+            top: 0
+          });
         })();
       }}
     >
@@ -130,8 +139,16 @@ const BasicInformation = (props: FormProps) => {
                   label="Address"
                   id="addressInput"
                   type="text"
+                  className="mb-3"
                   placeholder="Enter shop address"
-                  {...register("contact.address")}
+                  {...register("address")}
+                />
+                <Textarea
+                  label="Delivery note"
+                  id="deliveryNoteInput"
+                  type="text"
+                  placeholder="Enter delivery note (e.g, We ship to all myanmar cities)"
+                  {...register("deliveryNote")}
                 />
               </div>
             </div>
@@ -155,9 +172,9 @@ const ShopMedia = (props: FormProps) => {
   const logoRef = useRef<HTMLInputElement>(null);
   const coverRef = useRef<HTMLInputElement>(null);
 
-  const [logo, setLogo] = useState<string | undefined>(props.values.logoUrl);
+  const [logo, setLogo] = useState<string | undefined>(props.values.logo);
   const [logoImage, setLogoImage] = useState(props.values.logoImage);
-  const [cover, setCover] = useState<string | undefined>(props.values.coverUrl);
+  const [cover, setCover] = useState<string | undefined>(props.values.cover);
   const [coverImage, setCoverImage] = useState(props.values.coverImage);
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
@@ -166,36 +183,38 @@ const ShopMedia = (props: FormProps) => {
     if (files && files.length > 0) {
       let file = files[0];
       const fileSize = file.size / (1024 * 1024);
-      //props.setFieldValue?.(`${name}Image`, file);
 
-      if (fileSize <= 0.8) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          //props.setFieldValue?.(name, e.target?.result);
-          const result = e.target?.result;
-          if (!result) {
-            return;
-          }
-
-          if (name === "logo" && logoRef.current) {
-            setLogo(result as string);
-          } else if (name === "cover" && coverRef.current) {
-            setCover(result as string);
-          }
-        };
-        reader.readAsDataURL(file);
-
-        if (name === "logo" && logoRef.current) {
-          setLogoImage(file);
-          //logoRef.current.value = "";
-        } else if (name === "cover" && coverRef.current) {
-          setCoverImage(file);
-          //coverRef.current.value = "";
-        }
+      if (fileSize >= 0.512) {
+        event.target.value;
+        return;
       }
 
-      event.target.value = "";
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        //props.setFieldValue?.(name, e.target?.result);
+        const result = e.target?.result;
+        if (!result) {
+          return;
+        }
+
+        if (name === "logo" && logoRef.current) {
+          setLogo(result as string);
+        } else if (name === "cover" && coverRef.current) {
+          setCover(result as string);
+        }
+      };
+      reader.readAsDataURL(file);
+
+      if (name === "logo" && logoRef.current) {
+        setLogoImage(file);
+        //logoRef.current.value = "";
+      } else if (name === "cover" && coverRef.current) {
+        setCoverImage(file);
+        //coverRef.current.value = "";
+      }
     }
+
+    event.target.value = "";
   }
 
   return (
@@ -281,7 +300,13 @@ const ShopMedia = (props: FormProps) => {
       <div className="hstack gap-2">
         <button
           className="btn btn-default px-3 py-2"
-          onClick={() => props.onPrev?.()}
+          onClick={() => {
+            props.onPrev?.();
+            window?.scrollTo({
+              behavior: "smooth",
+              top: 0
+            });
+          }}
         >
           Previous
         </button>
@@ -291,12 +316,16 @@ const ShopMedia = (props: FormProps) => {
           onClick={() => {
             props.onSubmit?.({
               ...props.values,
-              logoUrl: logo,
-              coverUrl: cover,
+              logo: logo,
+              cover: cover,
               logoImage: logoImage,
               coverImage: coverImage
             });
             props.onNext?.();
+            window?.scrollTo({
+              behavior: "smooth",
+              top: 0
+            });
           }}
         >
           Continue
@@ -306,11 +335,177 @@ const ShopMedia = (props: FormProps) => {
   );
 };
 
+const Setting = (props: FormProps) => {
+  const [showAcceptedPaymentEdit, setShowAcceptedPaymentEdit] = useState(false);
+  const {
+    register,
+    formState: { errors, isSubmitting },
+    setValue,
+    handleSubmit,
+    control
+  } = useForm<ShopCreateForm>({ defaultValues: props.values });
+
+  const acceptedPaymentsField = useFieldArray({
+    control,
+    name: "acceptedPayments",
+    keyName: "vId",
+    rules: {
+      validate: (v, fv) => {
+        if (!fv.bankTransfer) {
+          return true;
+        }
+        return (v?.length ?? 0) > 0 || "At least one accepted payment required";
+      }
+    }
+  });
+
+  return (
+    <>
+      <div className="card mb-3">
+        <div className="card-header bg-white py-3 px-md-4 border-bottom">
+          <h5 className="mb-0">Setting</h5>
+        </div>
+        <div className="card-body px-md-4">
+          <div className="vstack">
+            <h6 className="fw-semibold border-bottom pb-2">Payment</h6>
+            <div className="row mb-4 g-3">
+              <div className="col-md-6">
+                <div className="form-check form-switch">
+                  <input
+                    id="codCheck"
+                    className="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    {...register("cashOnDelivery")}
+                  ></input>
+                  <label
+                    htmlFor="codCheck"
+                    className="form-check-label fw-medium"
+                  >
+                    Cash on delivery
+                  </label>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-check form-switch">
+                  <input
+                    id="bankTransferCheck"
+                    className="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    {...register("bankTransfer", {
+                      onChange: () => setValue("acceptedPayments", undefined)
+                    })}
+                  ></input>
+                  <label
+                    htmlFor="bankTransferCheck"
+                    className="form-check-label fw-medium"
+                  >
+                    Bank transfer
+                  </label>
+                </div>
+              </div>
+            </div>
+            <Controller
+              control={control}
+              name="bankTransfer"
+              render={({ field }) => {
+                if (!field.value) {
+                  return <></>;
+                }
+                return (
+                  <>
+                    <div className="hstack border-bottom pb-2 gap-2 mb-3">
+                      <h6 className="fw-semibold mb-0">Accepted payments</h6>
+                      <Tooltip title="Add new">
+                        <div
+                          role="button"
+                          className="link-anchor"
+                          onClick={() => setShowAcceptedPaymentEdit(true)}
+                        >
+                          <PlusCircleIcon width={20} strokeWidth={2} />
+                        </div>
+                      </Tooltip>
+                    </div>
+                    <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 mb-4 g-3">
+                      {acceptedPaymentsField.fields.map((p, i) => {
+                        return (
+                          <div key={i} className="col">
+                            <div className="card bg-light border-0">
+                              <div className="card-body">
+                                <h6>{p.accountType}</h6>
+                                <div className="text-muted">
+                                  {p.accountNumber}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                );
+              }}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="hstack gap-2">
+        <button
+          className="btn btn-default px-3 py-2"
+          onClick={() => {
+            props.onPrev?.();
+            window?.scrollTo({
+              behavior: "smooth",
+              top: 0
+            });
+          }}
+        >
+          Previous
+        </button>
+
+        <button
+          className="btn btn-primary px-3 py-2 ms-auto"
+          onClick={() => {
+            handleSubmit((data) => {
+              props.onSubmit?.(data);
+              props.onNext?.();
+              window?.scrollTo({
+                behavior: "smooth",
+                top: 0
+              });
+            })();
+          }}
+        >
+          Continue
+        </button>
+      </div>
+      <Modal id="addAcceptedPaymentModal" show={showAcceptedPaymentEdit}>
+        {(isShown) =>
+          isShown ? (
+            <AcceptedPaymentEdit
+              submit={async (value) => {
+                acceptedPaymentsField.append(value);
+                setShowAcceptedPaymentEdit(false);
+              }}
+              handleClose={() => {
+                setShowAcceptedPaymentEdit(false);
+              }}
+            />
+          ) : (
+            <></>
+          )
+        }
+      </Modal>
+    </>
+  );
+};
+
 const PackageSelection = (props: FormProps) => {
   const router = useRouter();
   const [isSubmitting, setSubmitting] = useState(false);
 
-  const executeCreate = async (shop: Shop) => {
+  const executeCreate = async (shop: ShopCreateForm) => {
     try {
       setSubmitting(true);
 
@@ -373,7 +568,7 @@ function CreateShop() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
 
-  const [shop, setShop] = useState<Shop>({ contact: {} });
+  const [shop, setShop] = useState<ShopCreateForm>({ cashOnDelivery: true });
 
   const getBodyView = () => {
     switch (currentStep) {
@@ -396,6 +591,16 @@ function CreateShop() {
         );
 
       case 3:
+        return (
+          <Setting
+            values={shop}
+            onSubmit={setShop}
+            onPrev={() => setCurrentStep((s) => s - 1)}
+            onNext={() => setCurrentStep((s) => s + 1)}
+          />
+        );
+
+      case 4:
         return (
           <PackageSelection
             values={shop}

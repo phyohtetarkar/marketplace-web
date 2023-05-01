@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { formatPrice } from "../../common/utils";
+import { formatNumber } from "../../common/utils";
 
 function PricingCard() {
   return (
@@ -12,11 +12,11 @@ function PricingCard() {
           </div>
           <div className="d-flex justify-content-between">
             <span>Subtotal</span>
-            <span>{formatPrice(0)}</span>
+            <span>{formatNumber(0)}</span>
           </div>
           <div className="d-flex justify-content-between">
             <span>Discount</span>
-            <span className="text-danger">-{formatPrice(0)}</span>
+            <span className="text-danger">-{formatNumber(0)}</span>
           </div>
           {/* {showDelivery && (
             <div className="d-flex justify-content-between">
@@ -28,14 +28,14 @@ function PricingCard() {
           )} */}
           <div className="d-flex justify-content-between">
             <span>Delivery Fee</span>
-            <span className="text-success">+{formatPrice(0)}</span>
+            <span className="text-success">+{formatNumber(0)}</span>
           </div>
 
           <hr className="text-muted" />
 
           <div className="d-flex justify-content-between">
             <span className="h5 fw-bold">Total Price</span>
-            <span className="fw-bold h5 mb-0">{formatPrice(0)}</span>
+            <span className="fw-bold h5 mb-0">{formatNumber(0)}</span>
           </div>
 
           {/* {!pricingOnly && (

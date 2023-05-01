@@ -37,10 +37,10 @@ function MyFavorites() {
       <>
         <div className="row row-cols-1 row-cols-md-2 g-3">
           {data?.contents &&
-            data.contents.map((f, i) => {
+            data.contents.map((p, i) => {
               return (
-                <div className="col" key={f.id}>
-                  <ProductFavoriteItem value={f} />
+                <div className="col" key={p.id}>
+                  <ProductFavoriteItem product={p} />
                 </div>
               );
             })}

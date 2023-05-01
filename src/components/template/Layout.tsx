@@ -18,7 +18,7 @@ function Layout({ hideAuth, hideFooter, background, children }: LayoutProps) {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="theme-color" content="#ffffff" />
         <link rel="icon" href="/favicon.ico" />
-        <title>Shopping Center</title>
+        <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
       </Head>
       <div
         className="d-flex flex-column h-100"

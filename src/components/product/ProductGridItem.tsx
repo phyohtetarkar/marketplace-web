@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../../common/contexts";
 import { Product } from "../../common/models";
-import { formatPrice, transformDiscount } from "../../common/utils";
+import { formatNumber, transformDiscount } from "../../common/utils";
 import AddToCartButton from "./AddToCartButton";
 import AddToFavoriteButton from "./AddToFavoriteButton";
 
@@ -19,7 +19,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
   let popular;
   let outOfStock;
   // let image = product.images![0]!;
-  let price = <>{formatPrice(value.price ?? 0)} Ks</>;
+  let price = <>{formatNumber(value.price ?? 0)} Ks</>;
 
   //   if (data.images && data.images.length > 0) {
   //     image = `${baseImagbaePath}/books%2F${data.images[0]}?alt=media`;
@@ -48,7 +48,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
     price = (
       <>
         <del className="text-muted small fw-normal me-1">
-          {formatPrice(value.price ?? 0)}&nbsp;Ks
+          {formatNumber(value.price ?? 0)}&nbsp;Ks
         </del>
         {transformDiscount(value.discount, value.price)}&nbsp;Ks
       </>

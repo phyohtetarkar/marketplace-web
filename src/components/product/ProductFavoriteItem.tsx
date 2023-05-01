@@ -1,16 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FavoriteProduct } from "../../common/models";
+import { Product } from "../../common/models";
 import AddToCartButton from "./AddToCartButton";
 import DeleteFromFavoriteButton from "./DeleteFromFavoriteButton";
 
 interface ProductFavoriteProps {
-  value: FavoriteProduct;
+  product: Product;
 }
 
-function ProductFavoriteItem({ value }: ProductFavoriteProps) {
-  const { id, product } = value;
-
+function ProductFavoriteItem({ product }: ProductFavoriteProps) {
   return (
     <div className="card">
       <div className="card-body">
@@ -53,7 +51,7 @@ function ProductFavoriteItem({ value }: ProductFavoriteProps) {
 
             <div className="hstack align-items-stretch gap-2">
               <AddToCartButton productId={product.id ?? 0} />
-              <DeleteFromFavoriteButton productId={id} />
+              <DeleteFromFavoriteButton productId={product.id ?? 0} />
             </div>
           </div>
         </div>

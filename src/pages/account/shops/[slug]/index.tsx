@@ -1,10 +1,11 @@
 import {
   AdjustmentsHorizontalIcon,
-  CubeIcon,
-  InformationCircleIcon,
-  StarIcon
+  Cog6ToothIcon,
+  ComputerDesktopIcon,
+  DocumentTextIcon,
+  InboxStackIcon,
+  ReceiptPercentIcon
 } from "@heroicons/react/24/outline";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useState } from "react";
@@ -12,48 +13,26 @@ import { ShopDetailContext } from "../../../../common/contexts";
 import { Shop } from "../../../../common/models";
 import { parseErrorResponse } from "../../../../common/utils";
 import { withAuthentication } from "../../../../common/WithAuthentication";
+import Accordion from "../../../../components/Accordion";
 import Alert from "../../../../components/Alert";
 import Dropdown from "../../../../components/Dropdown";
 import Loading from "../../../../components/Loading";
-import Modal from "../../../../components/Modal";
-import Rating from "../../../../components/Rating";
 import {
-  AboutUs,
   DiscountListing,
-  ShopContactEdit,
   ShopDashboard,
-  ShopGeneralEdit,
+  ShopHeading,
   ShopProductListing,
   ShopReviewListing,
   ShopSetting
 } from "../../../../components/shopdetail";
-import ContactUs from "../../../../components/shopdetail/ContactUs";
-import Tabs from "../../../../components/Tabs";
-import {
-  getShopById,
-  getShopBySlug,
-  isShopMember
-} from "../../../../services/ShopService";
+import { getShopBySlug, isShopMember } from "../../../../services/ShopService";
 
-type PageTab =
-  | "products"
-  | "reviews"
-  | "about-us"
-  | "contact-us"
-  | "orders"
-  | "settings"
-  | "insights"
-  | "discounts"
-  | "more";
-
-type EditTab = "general" | "contact";
+const tabs = ["dashboard", "products", "discounts", "orders", "setting"];
 
 function ShopDetail() {
   const router = useRouter();
 
-  const [editTab, setEditTab] = useState<EditTab>();
-
-  const [activeTab, setActiveTab] = useState<PageTab | undefined>("insights");
+  const [activeTab, setActiveTab] = useState<string | undefined>("dashboard");
 
   const [error, setError] = useState<string>();
 
@@ -67,7 +46,16 @@ function ShopDetail() {
     if (!router.isReady) {
       return;
     }
-    const { slug } = router.query;
+    const { slug, tab } = router.query;
+
+    if (typeof tab === "string") {
+      if (tabs.includes(tab)) {
+        setActiveTab(tab);
+      } else {
+        router.replace({ pathname: router.basePath, query: { slug: slug } });
+        return;
+      }
+    }
 
     if (typeof slug === "string") {
       loadShop(slug);
@@ -93,19 +81,25 @@ function ShopDetail() {
   };
 
   function menuLink({
-    href,
+    tab,
     title,
     active,
-    icon
+    icon,
+    suffix
   }: {
-    href: string;
+    tab: string;
     title: string;
     active: boolean;
     icon: ReactNode;
+    suffix?: ReactNode;
   }) {
+    const path = router.basePath;
     return (
       <Link
-        href={href}
+        href={{
+          pathname: path,
+          query: { ...router.query, tab: tab }
+        }}
         replace
         className={`d-flex align-items-center p-2 my-list-item ${
           active ? "active" : ""
@@ -116,6 +110,8 @@ function ShopDetail() {
       >
         {icon}
         <span>{title}</span>
+        <div className="flex-grow-1"></div>
+        {suffix}
       </Link>
     );
   }
@@ -124,27 +120,60 @@ function ShopDetail() {
     <>
       <div className="vstack gap-1">
         {menuLink({
-          href: "/shops/id#products",
-          title: "Products",
-          active: activeTab === "products",
-          icon: <CubeIcon className="me-2" strokeWidth={2} width={iconSize} />
-        })}
-        {menuLink({
-          href: "/shops/id#reviews",
-          title: "Reviews",
-          active: activeTab === "reviews",
-          icon: <StarIcon className="me-2" strokeWidth={2} width={iconSize} />
-        })}
-        {menuLink({
-          href: "/shops/id#about-us",
-          title: "About us",
-          active: activeTab === "about-us",
+          tab: "dashboard",
+          title: "Dashboard",
+          active: activeTab === "dashboard",
           icon: (
-            <InformationCircleIcon
+            <ComputerDesktopIcon
               className="me-2"
               strokeWidth={2}
               width={iconSize}
             />
+          )
+        })}
+        {menuLink({
+          tab: "products",
+          title: "Products",
+          active: activeTab === "products",
+          icon: (
+            <InboxStackIcon className="me-2" strokeWidth={2} width={iconSize} />
+          )
+        })}
+        {menuLink({
+          tab: "discounts",
+          title: "Discount",
+          active: activeTab === "discounts",
+          icon: (
+            <ReceiptPercentIcon
+              className="me-2"
+              strokeWidth={2}
+              width={iconSize}
+            />
+          )
+        })}
+        {menuLink({
+          tab: "orders",
+          title: "Orders",
+          active: activeTab === "orders",
+          icon: (
+            <DocumentTextIcon
+              className="me-2"
+              strokeWidth={2}
+              width={iconSize}
+            />
+          ),
+          suffix: (
+            <small className="bg-danger rounded-pill px-2 text-light ms-2">
+              {shop?.pendingOrderCount ?? 0}
+            </small>
+          )
+        })}
+        {menuLink({
+          tab: "setting",
+          title: "Setting",
+          active: activeTab === "setting",
+          icon: (
+            <Cog6ToothIcon className="me-2" strokeWidth={2} width={iconSize} />
           )
         })}
       </div>
@@ -160,21 +189,15 @@ function ShopDetail() {
         return <ShopProductListing shop={shop} isMember={true} />;
       case "reviews":
         return <ShopReviewListing shopId={shop.id!} hideEdit />;
-      case "about-us":
-        return <AboutUs />;
-      case "contact-us":
-        return <ContactUs />;
       case "orders":
         return null;
-      case "insights":
-        return <ShopDashboard />;
       case "discounts":
         return <DiscountListing shopId={shop.id!} />;
-      case "settings":
-        return <ShopSetting />;
+      case "setting":
+        return <ShopSetting shopId={shop.id!} />;
     }
 
-    return null;
+    return <ShopDashboard shopId={shop.id!} />;
   };
 
   const content = () => {
@@ -190,204 +213,46 @@ function ShopDetail() {
       return null;
     }
 
-    const heading = (
-      <>
-        <h5 className="mb-0">{shop.name}</h5>
-        <div className="text-muted small mb-1 text-truncate">
-          {shop.headline}
-        </div>
-      </>
+    const menu = (
+      <div className="rounded border bg-white">
+        <Accordion
+          open={true}
+          header={(open) => {
+            return <span className="fw-bold">Menu</span>;
+          }}
+          headerClassName="px-3 py-2h border-bottom d-flex d-lg-none"
+          bodyClassName=""
+          iconType="plus-minus"
+        >
+          <div className="p-3">{menus}</div>
+        </Accordion>
+      </div>
     );
 
     return (
       <>
-        <div className="border rounded bg-white vstack overflow-hidden mb-3">
-          <div
-            style={{
-              width: "100%",
-              minHeight: 200
-            }}
-            className="position-relative bg-secondary"
+        <div className="position-relative border rounded bg-white vstack overflow-hidden mb-3">
+          <ShopHeading shop={shop} />
+
+          <Dropdown
+            toggle={<AdjustmentsHorizontalIcon width={24} strokeWidth={1.5} />}
+            className="position-absolute top-0 end-0 m-3"
+            toggleClassName="btn btn-light shadow-sm"
+            menuClassName="shadow"
           >
-            {shop?.cover && (
-              <Image
-                src={shop.cover}
-                alt=""
-                fill
-                priority
-                style={{
-                  objectFit: "cover"
-                }}
-              />
-            )}
-            <Dropdown
-              toggle={
-                <AdjustmentsHorizontalIcon width={24} strokeWidth={1.5} />
-              }
-              className="position-absolute top-0 end-0 m-3"
-              toggleClassName="btn btn-light shadow-sm"
-              menuClassName="shadow"
-            >
-              <li
-                role="button"
-                className="dropdown-item-primary"
-                onClick={() => setEditTab("general")}
-              >
-                Update info
-              </li>
-              <li
-                role="button"
-                className="dropdown-item-primary"
-                onClick={() => setEditTab("contact")}
-              >
-                Update contact
-              </li>
-              <div className="dropdown-divider"></div>
-              <li role="button" className="dropdown-item-primary">
-                Upload Logo
-              </li>
-              <li role="button" className="dropdown-item-primary">
-                Upload Cover
-              </li>
-            </Dropdown>
-          </div>
-          <div className="row p-3 py-sm-4" style={{ zIndex: 999 }}>
-            <div className="col">
-              <div className="hstack">
-                <div className="flex-shrink-0 mt-n6">
-                  <div className="bg-white p-1 pb-0 rounded position-relative">
-                    <Image
-                      src={shop?.logo ?? "/images/placeholder.jpeg"}
-                      width={100}
-                      height={100}
-                      alt=""
-                      className="rounded-1"
-                      style={{
-                        objectFit: "cover"
-                      }}
-                    />
-                    {/* {isMember && (
-                        <div
-                          role="button"
-                          className="position-absolute bg-dark rounded-bottom py-1 text-center bg-opacity-50 bottom-0 start-0 end-0"
-                        >
-                          <span className="small text-light">Edit</span>
-                        </div>
-                      )} */}
-                  </div>
-                </div>
-                <div className="ms-3 flex-column mt-n2 mt-sm-n3 d-none d-md-flex">
-                  {heading}
-                </div>
-              </div>
-            </div>
-            <div className="col-12 mt-2 d-block d-md-none">
-              <div className="vstack">{heading}</div>
-            </div>
-            <div className="col-sm-auto">
-              <div className="mt-sm-0 gap-1 hstack" style={{ zIndex: 999 }}>
-                <div className="flex-grow-1 d-none d-md-block"></div>
-                <div className="hstack gap-1">
-                  <Rating rating={shop?.rating ?? 0} />
-                  <span className="text-dark-gray">
-                    {shop?.rating?.toFixed(1)}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="border-top">
-            <Tabs
-              defaultTabKey={"insights"}
-              onTabChange={(key) => {
-                setActiveTab(key as PageTab);
-              }}
-            >
-              <Tabs.Tab tabKey="insights" title="Dashboard">
-                <div></div>
-              </Tabs.Tab>
-              <Tabs.Tab tabKey="products" title="Products">
-                <div></div>
-              </Tabs.Tab>
-              <Tabs.Tab tabKey="reviews" title="Reviews">
-                <div></div>
-              </Tabs.Tab>
-              {/* <Tabs.Tab
-                tabKey="about-us"
-                title="About us"
-                tabClassName="text-nowrap"
-              >
-                <div></div>
-              </Tabs.Tab> */}
-              <Tabs.Tab
-                tabKey="orders"
-                title={
-                  <div className="hstack gap-2">
-                    Orders
-                    <small className="bg-danger rounded px-1 text-light">
-                      {shop?.pendingOrderCount ?? 0}
-                    </small>
-                  </div>
-                }
-                tabClassName="text-nowrap"
-              >
-                <div></div>
-              </Tabs.Tab>
-              <Tabs.Tab
-                tabKey="discounts"
-                title="Discounts"
-                tabClassName="text-nowrap"
-              >
-                <div></div>
-              </Tabs.Tab>
-              {/* <Tabs.Tab
-                tabKey="more"
-                title={(onTabChange, isActive) => {
-                  return (
-                    <div>
-                      <Dropdown
-                        toggle="More"
-                        toggleClassName={`dropdown-toggle nav-link py-3 ${
-                          isActive ? "active" : ""
-                        }`}
-                        popperConfig={{
-                          strategy: "fixed"
-                        }}
-                        menuClassName="shadow border-0"
-                      >
-                        <li
-                          role="button"
-                          className="dropdown-item"
-                          onClick={() => {
-                            onTabChange();
-                            setActiveTab("insights");
-                          }}
-                        >
-                          Insights
-                        </li>
-                        <li
-                          role="button"
-                          className="dropdown-item"
-                          onClick={() => {
-                            onTabChange();
-                            setActiveTab("discounts");
-                          }}
-                        >
-                          Discounts
-                        </li>
-                      </Dropdown>
-                    </div>
-                  );
-                }}
-                tabClassName="text-nowrap"
-              >
-                <div></div>
-              </Tabs.Tab> */}
-            </Tabs>
-          </div>
+            <li role="button" className="dropdown-item-primary">
+              Upload Logo
+            </li>
+            <li role="button" className="dropdown-item-primary">
+              Upload Cover
+            </li>
+          </Dropdown>
         </div>
 
-        {activeContent()}
+        <div className="row g-3">
+          <div className="col-12 col-lg-3">{menu}</div>
+          <div className="col-12 col-lg-9">{activeContent()}</div>
+        </div>
       </>
     );
   };
@@ -399,6 +264,9 @@ function ShopDetail() {
           <div className="container py-4">
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb mb-0">
+                <li className="breadcrumb-item">
+                  <Link href="/account/overview">My profile</Link>
+                </li>
                 <li className="breadcrumb-item">
                   <Link href="/account/shops">My shops</Link>
                 </li>
@@ -412,13 +280,10 @@ function ShopDetail() {
       )}
       <div className="container py-3">
         <div className="row g-4 mb-5">
-          {/* <div className="col-lg-4 col-xl-3">
-            <AccountMenu />
-          </div> */}
           <div className="col-12">{content()}</div>
         </div>
       </div>
-      <Modal id="generalEdit" show={editTab === "general"} variant="large">
+      {/* <Modal id="generalEdit" show={editTab === "general"} variant="large">
         {(isShown) => {
           return (
             isShown && (
@@ -435,7 +300,7 @@ function ShopDetail() {
             )
           );
         }}
-      </Modal>
+      </Modal> */}
     </ShopDetailContext.Provider>
   );
 }
