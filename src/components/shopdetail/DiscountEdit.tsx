@@ -82,7 +82,7 @@ function DiscountEdit(props: DiscountEditProps) {
                     if (!v) {
                       return "Please enter discount amount";
                     }
-                    const floatRegex = "^([0-9]*[.])?[0-9]+$";
+                    const floatRegex = "^[0-9]{1,8}$";
 
                     if (
                       fv.type === "FIXED_AMOUNT" &&
@@ -92,14 +92,14 @@ function DiscountEdit(props: DiscountEditProps) {
                     }
 
                     if (fv.type === "PERCENTAGE") {
-                      const numRegex = "^[0-9]+$";
+                      const numRegex = "^[0-9]{1,3}$";
 
                       if (!`${v}`.match(numRegex)) {
                         return "Invalid value";
                       }
 
                       if (v > 100) {
-                        return "Percent amount must not exceeds 100";
+                        return "Invalid value";
                       }
                     }
                     return true;

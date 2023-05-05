@@ -31,7 +31,6 @@ export async function createShop(value: ShopCreateForm) {
   value.headline && formData.append("headline", value.headline);
   value.about && formData.append("about", value.about);
   value.address && formData.append("address", value.address);
-  value.deliveryNote && formData.append("deliveryNote", value.deliveryNote);
   formData.append("cashOnDelivery", value.cashOnDelivery ? "true" : "false");
   formData.append("bankTransfer", value.bankTransfer ? "true" : "false");
   value.logoImage && formData.append("logo", value.logoImage);
@@ -43,6 +42,11 @@ export async function createShop(value: ShopCreateForm) {
       formData.append(`acceptedPayments[${i}].accountType`, v.accountType);
     v.accountNumber &&
       formData.append(`acceptedPayments[${i}].accountNumber`, v.accountNumber);
+  });
+
+  value.deliveryCities?.forEach((v, i) => {
+    formData.append(`deliveryCities[${i}].id`, v.id.toString());
+    formData.append(`deliveryCities[${i}].name`, v.name);
   });
 
   const resp = await makeApiRequest(
@@ -133,6 +137,22 @@ export async function saveShopAcceptedPayment(
       headers: {
         "Content-Type": "application/json"
       }
+    },
+    true
+  );
+
+  await validateResponse(resp);
+}
+
+export async function deleteShopAcceptedPayment(
+  shopId: number,
+  paymentId: number
+) {
+  const url = `${basePath}/${shopId}/accepted-payments/${paymentId}`;
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "DELETE"
     },
     true
   );

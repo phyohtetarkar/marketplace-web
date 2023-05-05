@@ -32,7 +32,7 @@ function ShoppingCart() {
 
     const shops = new Set(
       data
-        .filter((item) => item.product?.shop?.status === "ACTIVE")
+        .filter((item) => !item.product?.shop?.disabled)
         .map((item) => item.product?.shop?.id!)
     );
 

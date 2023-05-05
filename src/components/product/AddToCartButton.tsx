@@ -51,7 +51,7 @@ function AddToCartButton({
           })
             .then((resp) => {
               toast.success("Product added to cart");
-              mutate(["/cart-items/count", authContext.payload?.id]);
+              mutate(["/profile/cart-count", authContext.payload?.id]);
             })
             .catch((error) => {
               const msg = parseErrorResponse(error);

@@ -33,8 +33,9 @@ function PricingCard() {
 
           <hr className="text-muted" />
 
-          <div className="d-flex justify-content-between">
-            <span className="h5 fw-bold">Total Price</span>
+          <div className="hstack gap-2">
+            <span className="h5 fw-bold">Total price</span>
+            <div className="flex-grow-1"></div>
             <span className="fw-bold h5 mb-0">{formatNumber(0)}</span>
           </div>
 
@@ -54,7 +55,7 @@ function PricingCard() {
             <Link href={"/checkout"} className="btn btn-primary py-2">
               Checkout
             </Link>
-            <Link href={"/"} className="btn btn-outline-primary py-2">
+            <Link href={"/"} className="btn btn-secondary py-2">
               Contine Shopping
             </Link>
           </div>

@@ -136,7 +136,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     //const isMember = await checkShopMember(shop.id ?? 0, Auth);
 
-    if (shop?.status === "ACTIVE") {
+    if (shop?.activated && !shop.disabled && !shop.expired) {
       return {
         props: {
           shop: shop

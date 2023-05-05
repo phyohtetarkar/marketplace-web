@@ -5,6 +5,7 @@ interface ProgressButtonProps {
   variant?: "primary" | "secondary" | "accent" | "warning" | "danger" | "dark";
   loading?: boolean;
   className?: string;
+  disabled?: boolean;
   onClick?: () => void;
   children: ReactNode;
 }
@@ -16,6 +17,7 @@ function ProgressButton(props: ProgressButtonProps) {
     loading,
     className = "",
     onClick,
+    disabled,
     children
   } = props;
 
@@ -23,7 +25,7 @@ function ProgressButton(props: ProgressButtonProps) {
     <button
       type={type}
       className={`btn btn-${variant} hstack justify-content-center ${className}`}
-      disabled={loading}
+      disabled={loading || disabled}
       onClick={onClick}
     >
       {loading && (

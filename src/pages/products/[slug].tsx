@@ -7,7 +7,12 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import Swiper, { Navigation, Pagination, Zoom } from "swiper";
 import { Swiper as SwiperView, SwiperSlide } from "swiper/react";
-import { Category, Product, ProductVariant } from "../../common/models";
+import {
+  Category,
+  Product,
+  ProductVariant,
+  ProductVariantAttribute
+} from "../../common/models";
 import { formatNumber, transformDiscount } from "../../common/utils";
 import Alert from "../../components/Alert";
 import {
@@ -20,8 +25,6 @@ import Tabs from "../../components/Tabs";
 import { getProductBySlug } from "../../services/ProductService";
 
 function ProductDetail({ product }: { product: Product | null }) {
-  const [selectedOptions, setSelectedOptions] = useState<Map<string, string>>();
-
   const [variant, setVariant] = useState<ProductVariant>();
 
   const [imageIndex, setImageIndex] = useState(0);
@@ -30,58 +33,77 @@ function ProductDetail({ product }: { product: Product | null }) {
 
   const [quantity, setQuantity] = useState(1);
 
-  const options = useMemo(() => {
-    if (product?.variants) {
-      const map = new Map<string, string[]>();
-      product.variants
-        .flatMap((v) => v.options)
-        .forEach((op) => {
-          const old = map.get(op.option);
-          !old?.find((v) => v === op.value) &&
-            map.set(op.option, old ? [...old, op.value] : [op.value]);
-        });
-
-      return map;
+  const attributeValues = useMemo(() => {
+    if (!product?.withVariant) {
+      return new Map<number, ProductVariantAttribute[]>();
     }
-    return null;
+
+    const variantAttributes = product.variants?.flatMap((v) => v.attributes);
+
+    if (!variantAttributes || variantAttributes.length === 0) {
+      return new Map<number, ProductVariantAttribute[]>();
+    }
+
+    const map = new Map<number, ProductVariantAttribute[]>();
+
+    for (const va of variantAttributes) {
+      if (map.has(va.attributeId)) {
+        const list = map.get(va.attributeId) ?? [];
+        if (
+          list.find(
+            (v) => v.attributeId === va.attributeId && v.value === va.value
+          )
+        ) {
+          continue;
+        }
+        map.set(va.attributeId, [...list, va]);
+      } else {
+        map.set(va.attributeId, [va]);
+      }
+    }
+
+    return map;
   }, [product]);
 
-  useEffect(() => {
-    if (!product) {
-      return;
+  const [selectedAttributes, setSelectedAttributes] = useState(() => {
+    if (!product?.withVariant) {
+      return new Map<number, string>();
     }
 
-    if (!product.variants || product.variants.length === 0) {
-      return;
+    if (!product?.attributes || product.attributes.length === 0) {
+      return new Map<number, string>();
     }
 
-    const v = product.variants?.reduce((p, c) =>
-      (p.price ?? 0) <= (c.price ?? 0) ? p : c
+    const variantAttributes = product.variants?.flatMap((v) => v.attributes);
+
+    if (!variantAttributes || variantAttributes.length === 0) {
+      return new Map<number, string>();
+    }
+
+    return new Map(
+      product.attributes.map((a) => [
+        a.id ?? 0,
+        variantAttributes.find((va) => va.attributeId === a.id)?.value ?? ""
+      ])
     );
-
-    const map = new Map<string, string>();
-
-    v?.options.forEach((op) => {
-      map.set(op.option, op.value);
-    });
-
-    setSelectedOptions(map);
-  }, [product]);
+  });
 
   useEffect(() => {
-    if (!selectedOptions) {
+    if (!product?.variants || product.variants.length === 0) {
       return;
     }
 
-    const sop = selectedOptions;
+    const variants = product.variants;
 
-    const selection = product?.variants?.find((v) => {
-      return v.options.every((op) => op.value === sop.get(op.option));
+    const selection = variants.find((v) => {
+      return v.attributes.every((a) => {
+        return selectedAttributes.get(a.attributeId) === a.value;
+      });
     });
 
     setVariant(selection);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedOptions]);
+  }, [selectedAttributes]);
 
   if (!product) {
     return (
@@ -117,7 +139,17 @@ function ProductDetail({ product }: { product: Product | null }) {
   }
 
   const noStock = () => {
-    return (variant && variant.stockLeft === 0) || product.stockLeft === 0;
+    if (product.withVariant) {
+      return !variant || variant.stockLeft === 0;
+    }
+    return product.stockLeft === 0;
+  };
+
+  const stockLeft = () => {
+    if (product.withVariant) {
+      return variant?.stockLeft ?? 0;
+    }
+    return product.stockLeft ?? 0;
   };
 
   const breadcrumb = () => {
@@ -223,7 +255,7 @@ function ProductDetail({ product }: { product: Product | null }) {
                         >
                           <Image
                             className="rounded"
-                            src={img.url ?? "/images/palceholder.jpeg"}
+                            src={img.url ?? "/images/placeholder.jpeg"}
                             alt="Product image."
                             fill
                             sizes="80vw"
@@ -326,14 +358,10 @@ function ProductDetail({ product }: { product: Product | null }) {
                   <hr className="bg-dark-gray" />
 
                   <dl className="row mb-0">
-                    <dt className="col-sm-3 fw-semibold">SKU</dt>
+                    {/* <dt className="col-sm-3 fw-semibold">SKU</dt>
                     <dd className="col-sm-9">
                       {!product.sku ? <>&nbsp;</> : product.sku}
-                    </dd>
-                    <dt className="col-sm-3 fw-semibold">Brand</dt>
-                    <dd className="col-sm-9">
-                      {!product.brand ? <>&nbsp;</> : product.brand}
-                    </dd>
+                    </dd> */}
                     <dt className="col-sm-3 fw-semibold">Category</dt>
                     <dd className="col-sm-9">
                       <Link
@@ -343,15 +371,19 @@ function ProductDetail({ product }: { product: Product | null }) {
                         {product.category?.name}
                       </Link>
                     </dd>
+                    <dt className="col-sm-3 fw-semibold">Brand</dt>
+                    <dd className="col-sm-9">
+                      {!product.brand ? <>&nbsp;</> : product.brand}
+                    </dd>
                     <dt className="col-sm-3 fw-semibold">Availability</dt>
                     <dd className="col-sm-9">
-                      {(product.stockLeft ?? 0) > 1 ? (
+                      {stockLeft() > 0 ? (
                         <span className="text-success">
-                          {product.stockLeft} items left
+                          {stockLeft()} items left
                         </span>
                       ) : (
                         <span className="text-danger">
-                          {product.stockLeft} item left
+                          {stockLeft()} item left
                         </span>
                       )}
                     </dd>
@@ -362,43 +394,48 @@ function ProductDetail({ product }: { product: Product | null }) {
                   )}
 
                   <div className="row g-2 mb-4 mb-lg-3">
-                    {product.options?.map((op, i) => {
-                      return (
-                        <div key={i} className="col-12">
-                          <h6 className="text-muted">{op.name}</h6>
-                          <div className="d-flex flex-wrap gap-2">
-                            {options?.get(op.name ?? "")?.map((v, j) => {
-                              const selected =
-                                selectedOptions?.get(op.name ?? "") === v
-                                  ? "border-secondary"
-                                  : "";
-                              return (
-                                <div
-                                  key={j}
-                                  role="button"
-                                  className={`bg-light border border-2 rounded px-2h py-1 ${selected}`}
-                                  onClick={() => {
-                                    if (selected) {
-                                      return;
-                                    }
+                    {product.attributes
+                      ?.sort((f, s) => f.sort - s.sort)
+                      .map((a, i) => {
+                        return (
+                          <div key={i} className="col-12">
+                            <h6 className="text-muted text-uppercase small">
+                              {a.name}
+                            </h6>
+                            <div className="d-flex flex-wrap gap-2">
+                              {attributeValues.get(a.id ?? 0)?.map((v, j) => {
+                                const selected =
+                                  selectedAttributes.get(a.id ?? 0) === v.value
+                                    ? "border-secondary"
+                                    : "";
+                                return (
+                                  <div
+                                    key={j}
+                                    role="button"
+                                    className={`bg-light border border-2 rounded px-2h py-1 ${selected}`}
+                                    onClick={() => {
+                                      if (selected) {
+                                        return;
+                                      }
 
-                                    setSelectedOptions((map) => {
-                                      const newMap = new Map(map);
-                                      op.name && newMap.set(op.name, v);
-                                      return newMap;
-                                    });
+                                      setSelectedAttributes((map) => {
+                                        const newMap = new Map(map);
+                                        v.value &&
+                                          newMap.set(a.id ?? 0, v.value);
+                                        return newMap;
+                                      });
 
-                                    setQuantity(1);
-                                  }}
-                                >
-                                  {v}
-                                </div>
-                              );
-                            })}
+                                      setQuantity(1);
+                                    }}
+                                  >
+                                    {v.value}
+                                  </div>
+                                );
+                              })}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
                   </div>
 
                   <div className="flex-grow-1"></div>

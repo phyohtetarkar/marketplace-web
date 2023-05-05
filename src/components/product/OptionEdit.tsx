@@ -1,21 +1,16 @@
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { ProductAttribute, ProductAttributeValue } from "../../common/models";
 import { setEmptyOrString } from "../../common/utils";
 import { Input, TagInput } from "../forms";
 
-export interface Option {
-  name: string;
-  position: number;
-  values: string[];
-}
-
 interface OptionEditProps {
-  data: Option[];
-  handleClose: (list?: Option[]) => void;
+  attributes: ProductAttribute[];
+  handleClose: (attributes?: ProductAttribute[]) => void;
 }
 
 function OptionEdit(props: OptionEditProps) {
-  const { data, handleClose } = props;
+  const { attributes, handleClose } = props;
 
   const {
     control,
@@ -25,11 +20,11 @@ function OptionEdit(props: OptionEditProps) {
     handleSubmit
   } = useForm({
     defaultValues: {
-      options: data
+      attributes: attributes
     }
   });
   const { fields, append, prepend, remove, swap, move, insert, update } =
-    useFieldArray({ control, name: "options", keyName: "vId" });
+    useFieldArray({ control, name: "attributes", keyName: "vId" });
 
   return (
     <>
@@ -45,14 +40,14 @@ function OptionEdit(props: OptionEditProps) {
                 <div className="col-auto">
                   <Input
                     placeholder="Name"
-                    {...register(`options.${index}.name`, {
+                    {...register(`attributes.${index}.name`, {
                       setValueAs: setEmptyOrString,
                       validate: (v, fv) => {
                         if (!v) {
                           return "Enter option name";
                         }
                         if (
-                          fv.options.find(
+                          fv.attributes.find(
                             (e, j) =>
                               j !== index &&
                               e.name?.toLowerCase()?.trim() ===
@@ -64,29 +59,41 @@ function OptionEdit(props: OptionEditProps) {
                         return true;
                       }
                     })}
-                    error={errors.options?.[index]?.name?.message}
+                    error={errors.attributes?.[index]?.name?.message}
                   />
                 </div>
                 <div className="col-12 col-md">
                   <div className="hstack gap-2 align-items-start">
                     <div className="flex-grow-1">
                       <Controller
-                        name={`options.${index}.values`}
+                        name={`attributes.${index}.values`}
                         control={control}
                         rules={{
                           validate: (v) =>
-                            v.length > 0 || "Option values must not empty"
+                            (v?.length ?? 0) > 0 ||
+                            "Option values must not empty"
                         }}
                         render={({ field, fieldState: { error } }) => {
                           return (
                             <TagInput
-                              data={field.value ?? []}
+                              data={
+                                field.value
+                                  ?.sort((f, s) => f.sort - s.sort)
+                                  .map((v) => v.value) ?? []
+                              }
                               placeholder="Add value"
                               onTagsChange={(tags) => {
                                 if (tags.length === 0) {
                                   return;
                                 }
-                                setValue(`options.${index}.values`, tags, {
+
+                                const values = tags.map((t, i) => {
+                                  return {
+                                    value: t,
+                                    sort: i
+                                  } as ProductAttributeValue;
+                                });
+                                setValue(`attributes.${index}.values`, values, {
                                   shouldValidate: true
                                 });
                               }}
@@ -167,8 +174,8 @@ function OptionEdit(props: OptionEditProps) {
 
                 append({
                   name: "",
-                  values: [],
-                  position: 0
+                  sort: 0,
+                  values: []
                 });
               }}
             >
@@ -194,7 +201,7 @@ function OptionEdit(props: OptionEditProps) {
           onClick={() => {
             //formik.handleSubmit();
             handleSubmit((data) => {
-              handleClose?.(data.options);
+              handleClose?.(data.attributes.map((a, i) => ({ ...a, sort: i })));
             })();
           }}
         >

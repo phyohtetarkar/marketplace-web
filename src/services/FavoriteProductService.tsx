@@ -6,13 +6,6 @@ const basePath = "favorite-products";
 
 export async function addToFavoriteProduct(productId: number) {
   const url = `${basePath}/${productId}`;
-  // const resp = await fetch(url, {
-  //   method: "POST",
-  //   headers: {
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
-
   const resp = await makeApiRequest(
     url,
     {
@@ -26,13 +19,6 @@ export async function addToFavoriteProduct(productId: number) {
 
 export async function deleteFavoriteProduct(productId: number) {
   const url = `${basePath}/${productId}`;
-  // const resp = await fetch(url, {
-  //   method: "DELETE",
-  //   headers: {
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
-
   const resp = await makeApiRequest(
     url,
     {
@@ -49,11 +35,6 @@ export async function checkFavorite(productId: number) {
     "product-id": productId
   });
   const url = `${basePath}/${productId}/check`;
-  // const resp = await fetch(url, {
-  //   headers: {
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
 
   const resp = await makeApiRequest(url, {}, true);
 
@@ -67,11 +48,6 @@ export async function getFavoriteProducts(page?: number) {
     page: page
   });
   const url = `profile/${basePath}${query}`;
-  // const resp = await fetch(url, {
-  //   headers: {
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
 
   const resp = await makeApiRequest(url, {}, true);
 

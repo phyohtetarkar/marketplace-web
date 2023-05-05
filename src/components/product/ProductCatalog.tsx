@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { Category } from "../../common/models";
 import { parseErrorResponse } from "../../common/utils";
-import { getBrandsByCategoryId } from "../../services/CategoryService";
+import { getBrandsByCategory } from "../../services/CategoryService";
 import { findProducts, ProductQuery } from "../../services/ProductService";
 import Accordion from "../Accordion";
 import Alert from "../Alert";
@@ -39,7 +39,7 @@ const Filter = (props: FilterProps) => {
     if (!categoryId) {
       return;
     }
-    getBrandsByCategoryId(categoryId).then(setBrands).catch(console.error);
+    getBrandsByCategory(categoryId).then(setBrands).catch(console.error);
   }, [categoryId]);
 
   const isChecked = (b: string) => {

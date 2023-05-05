@@ -37,7 +37,7 @@ function ShopDashboard({ shopId }: { shopId: number }) {
                 <div className="vstack gap-1 text-nowrap">
                   <h6 className="text-muted mb-auto">Total Sales</h6>
                   <span className="fw-semibold">
-                    {formatNumber(data?.totalSale ?? 0)} Ks
+                    {formatNumber(data?.totalSale ?? 0)}
                   </span>
                 </div>
               </div>

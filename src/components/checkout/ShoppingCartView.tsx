@@ -8,15 +8,14 @@ import { countCartItemsByUser } from "../../services/ShoppingCartService";
 function ShoppingCartView() {
   const authContext = useContext(AuthenticationContext);
   const { data, error, isLoading } = useSWR(
-    [`/cart-items/count`, authContext.payload?.id],
+    [`/profile/cart-count`, authContext.payload?.id],
     ([url, id]) => (!id ? 0 : countCartItemsByUser()),
     {
       revalidateOnFocus: false
     }
   );
   return (
-    (<Link href="/shopping-cart" className="nav-link">
-
+    <Link href="/shopping-cart" className="nav-link">
       <div className="position-relative hstack">
         <ShoppingCartIcon width={24} strokeWidth={1.5} />
         <div
@@ -29,8 +28,7 @@ function ShoppingCartView() {
           {data ?? 0}
         </div>
       </div>
-
-    </Link>)
+    </Link>
   );
 }
 

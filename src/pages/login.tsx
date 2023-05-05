@@ -85,8 +85,6 @@ function Login() {
     } catch (error: any) {
       console.log("error signing in:", error.code);
       setError(parseErrorResponse(error));
-    } finally {
-      //setSubmitting(false);
     }
   };
 
@@ -101,12 +99,6 @@ function Login() {
           <div className="card">
             <div className="card-body p-lg-4">
               <h4 className="card-title fw-bold mt-2 mb-4">Sign In</h4>
-
-              {/* {loginState.error && (
-                <div className="alert alert-danger" role="alert">
-                  {parseError(loginState.error)}
-                </div>
-              )} */}
 
               {error && <Alert message={error} variant="danger" />}
 
@@ -124,9 +116,6 @@ function Login() {
                     type="tel"
                     autoComplete="username"
                     placeholder="09xxxxxxxx"
-                    // value={values.phone}
-                    // onChange={handleChange}
-                    // error={errors.phone}
                     {...register("phone", {
                       required: true,
                       pattern: /^(09)\d{7,12}$/
@@ -151,20 +140,6 @@ function Login() {
                   </div>
                 </div>
                 <div className="col-md-12 mt-4">
-                  {/* <button
-                    type="submit"
-                    className="btn btn-primary w-100 py-2h"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting && (
-                      <span
-                        className="spinner-border spinner-border-sm me-2"
-                        role="status"
-                        aria-hidden="true"
-                      ></span>
-                    )}
-                    Login
-                  </button> */}
                   <ProgressButton
                     type="submit"
                     className="w-100 py-2h"

@@ -4,11 +4,13 @@ import {
   TrashIcon
 } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import useSWR from "swr";
 import { ShopDetailContext } from "../../common/contexts";
 import {
-  Shop,
   ShopAcceptedPayment,
   ShopContact,
   ShopGeneral,
@@ -20,12 +22,12 @@ import {
   setEmptyOrString,
   setStringToSlug
 } from "../../common/utils";
-import { Input, TagInput, Textarea } from "../forms";
-import { RichTextEditorInputProps } from "../forms/RichTextEditor";
-import ProgressButton from "../ProgressButton";
-import Tooltip from "../Tooltip";
-import useSWR from "swr";
 import {
+  getShopDeliveryCities,
+  saveShopDeliveryCities
+} from "../../services/CityService";
+import {
+  deleteShopAcceptedPayment,
   getShopAcceptedPayments,
   getShopSetting,
   saveShopAcceptedPayment,
@@ -33,10 +35,15 @@ import {
   updateShopGeneral,
   updateShopSetting
 } from "../../services/ShopService";
-import { toast } from "react-toastify";
-import { useRouter } from "next/router";
+import Alert from "../Alert";
+import ConfirmModal from "../ConfirmModal";
+import { Input, TagInput } from "../forms";
+import { RichTextEditorInputProps } from "../forms/RichTextEditor";
+import Loading from "../Loading";
 import Modal from "../Modal";
-import AcceptedPaymentEdit from "./AcceptedPaymentEdit";
+import ProgressButton from "../ProgressButton";
+import { AcceptedPaymentEdit, DeliveryCityChoice } from "../shop";
+import Tooltip from "../Tooltip";
 
 const DynamicEditor = dynamic<RichTextEditorInputProps>(
   () => import("../../components/forms").then((f) => f.RichTextEditor),
@@ -64,8 +71,7 @@ const ShopGeneralForm = () => {
       name: shopContext?.name,
       slug: shopContext?.slug,
       about: shopContext?.about,
-      headline: shopContext?.headline,
-      deliveryNote: shopContext?.deliveryNote
+      headline: shopContext?.headline
     }
   });
 
@@ -127,15 +133,6 @@ const ShopGeneralForm = () => {
               type="text"
               placeholder="Enter shop headline"
               {...register("headline")}
-            />
-          </div>
-          <div className="col-12">
-            <Textarea
-              label="Delivery note"
-              id="deliveryNoteInput"
-              type="text"
-              placeholder="Enter delivery note"
-              {...register("deliveryNote")}
             />
           </div>
           <div className="col-12">
@@ -296,10 +293,100 @@ const ShopContactForm = () => {
   );
 };
 
+const ShopDeliveryCitiesForm = (props: ShopSettingProps) => {
+  const { shopId } = props;
+
+  const [showSelect, setShowSelect] = useState(false);
+
+  const { data, error, isLoading, mutate } = useSWR(
+    `/delivery-cities/${shopId}`,
+    () => getShopDeliveryCities(shopId),
+    {
+      revalidateOnFocus: false
+    }
+  );
+
+  const content = () => {
+    if (isLoading) {
+      return <Loading />;
+    }
+
+    if (error) {
+      return <Alert message={parseErrorResponse(error)} variant="danger" />;
+    }
+
+    if (!data || data.length === 0) {
+      return <div className="text-muted">No cities selected</div>;
+    }
+
+    return (
+      <div className="row row-cols-1 row-cols-md-2 g-3">
+        {data?.map((c) => {
+          return (
+            <div key={c.id} className="col">
+              <div className="fw-semibold">{c.name}</div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  return (
+    <div className="card">
+      <div className="card-header py-3">
+        <div className="hstack gap-2">
+          <h5 className="mb-0">Delivery cities</h5>
+          <div className="flex-grow-1"></div>
+          <div
+            role="button"
+            className="btn btn-primary"
+            onClick={() => {
+              if (!isLoading && !error) {
+                setShowSelect(true);
+              }
+            }}
+          >
+            Select
+          </div>
+        </div>
+      </div>
+      <div className="card-body">{content()}</div>
+
+      <Modal id="deliveryCityChoice" show={showSelect}>
+        {(isShown) => {
+          return isShown ? (
+            <DeliveryCityChoice
+              cities={data ?? []}
+              close={() => setShowSelect(false)}
+              handleChoose={async (cities) => {
+                try {
+                  await saveShopDeliveryCities(shopId, cities);
+                  mutate();
+                  setShowSelect(false);
+                } catch (error) {
+                  const msg = parseErrorResponse(error);
+                  toast.error(msg);
+                }
+              }}
+            />
+          ) : (
+            <></>
+          );
+        }}
+      </Modal>
+    </div>
+  );
+};
+
 const ShopPaymentForm = (props: ShopSettingProps) => {
   const { shopId } = props;
 
   const [acceptedPayment, setAcceptedPayment] = useState<ShopAcceptedPayment>();
+
+  const [showEdit, setShowEdit] = useState(false);
+
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
 
   const settingState = useSWR(
     `/shops/${shopId}/setting`,
@@ -353,6 +440,7 @@ const ShopPaymentForm = (props: ShopSettingProps) => {
     try {
       await saveShopAcceptedPayment(shopId, value);
       setAcceptedPayment(undefined);
+      setShowEdit(false);
       acceptedPaymentsState.mutate();
     } catch (error) {
       const msg = parseErrorResponse(error);
@@ -421,6 +509,7 @@ const ShopPaymentForm = (props: ShopSettingProps) => {
                 className="link-anchor"
                 onClick={() => {
                   setAcceptedPayment({});
+                  setShowEdit(true);
                 }}
               >
                 <PlusCircleIcon width={20} strokeWidth={2} />
@@ -428,6 +517,9 @@ const ShopPaymentForm = (props: ShopSettingProps) => {
             </Tooltip>
           </div>
           <div className="row row-cols-1 row-cols-md-2 rol-cols-lg-3 g-3">
+            {(acceptedPaymentsState.data?.length ?? 0) === 0 && (
+              <div className="text-muted">No payment added</div>
+            )}
             {acceptedPaymentsState.data?.map((p, i) => {
               return (
                 <div key={i} className="col">
@@ -442,11 +534,18 @@ const ShopPaymentForm = (props: ShopSettingProps) => {
                         className="btn btn-sm btn-outline-anchor"
                         onClick={() => {
                           setAcceptedPayment(p);
+                          setShowEdit(true);
                         }}
                       >
                         <PencilSquareIcon width={18} />
                       </button>
-                      <button className="btn btn-sm btn-danger">
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={() => {
+                          setAcceptedPayment(p);
+                          setDeleteConfirm(true);
+                        }}
+                      >
                         <TrashIcon width={18} />
                       </button>
                     </div>
@@ -458,7 +557,7 @@ const ShopPaymentForm = (props: ShopSettingProps) => {
         </div>
       </div>
 
-      <Modal id="editAcceptedPaymentModal" show={!!acceptedPayment}>
+      <Modal id="editAcceptedPaymentModal" show={showEdit}>
         {(isShown) =>
           isShown ? (
             <AcceptedPaymentEdit
@@ -468,6 +567,7 @@ const ShopPaymentForm = (props: ShopSettingProps) => {
               }}
               handleClose={() => {
                 setAcceptedPayment(undefined);
+                setShowEdit(false);
               }}
             />
           ) : (
@@ -475,6 +575,27 @@ const ShopPaymentForm = (props: ShopSettingProps) => {
           )
         }
       </Modal>
+
+      <ConfirmModal
+        message="Are you sure to delete?"
+        show={deleteConfirm}
+        close={() => {
+          setAcceptedPayment(undefined);
+          setDeleteConfirm(false);
+        }}
+        onConfirm={async () => {
+          try {
+            acceptedPayment?.id &&
+              (await deleteShopAcceptedPayment(shopId, acceptedPayment.id));
+            acceptedPaymentsState.mutate();
+            setAcceptedPayment(undefined);
+            setDeleteConfirm(false);
+          } catch (error) {
+            const msg = parseErrorResponse(error);
+            toast.error(msg);
+          }
+        }}
+      />
     </div>
   );
 };
@@ -490,6 +611,9 @@ function ShopSetting(props: ShopSettingProps) {
       </div>
       <div className="col-12">
         <ShopPaymentForm {...props} />
+      </div>
+      <div className="col-12">
+        <ShopDeliveryCitiesForm {...props} />
       </div>
     </div>
   );

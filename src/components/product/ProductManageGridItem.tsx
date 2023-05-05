@@ -11,11 +11,13 @@ import { formatNumber, transformDiscount } from "../../common/utils";
 interface ProductManageGridItemProps {
   value: Product;
   onEditClick?: () => void;
+  onDeleteClick?: () => void;
 }
 
 function ProductManageGridItem({
   value,
-  onEditClick
+  onEditClick,
+  onDeleteClick
 }: ProductManageGridItemProps) {
   let popular;
   let hidden;
@@ -106,9 +108,9 @@ function ProductManageGridItem({
       </Link>
       <div className="card-body">
         <div className="vstack">
-          <div className="small text-truncate text-success fw-medium">
+          {/* <div className="small text-truncate text-success fw-medium">
             {value.category?.name}
-          </div>
+          </div> */}
 
           <Link
             href={`/products/${value.slug}`}
@@ -122,15 +124,14 @@ function ProductManageGridItem({
 
           <div className="mt-3 hstack align-items-stretch gap-2">
             <button
-              className="btn btn-default flex-grow-1"
+              className="btn btn-secondary flex-grow-1"
               onClick={() => onEditClick?.()}
             >
               <span>Edit</span>
             </button>
             <button
-              disabled={false}
               className="btn btn-danger"
-              onClick={async () => {}}
+              onClick={() => onDeleteClick?.()}
             >
               <TrashIcon width={20} />
             </button>

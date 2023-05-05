@@ -186,7 +186,13 @@ function ShopDetail() {
     }
     switch (activeTab) {
       case "products":
-        return <ShopProductListing shop={shop} isMember={true} />;
+        return (
+          <ShopProductListing
+            shop={shop}
+            isMember={true}
+            gridClass="row-cols-1 row-cols-md-2 row-cols-lg-3"
+          />
+        );
       case "reviews":
         return <ShopReviewListing shopId={shop.id!} hideEdit />;
       case "orders":
@@ -268,7 +274,7 @@ function ShopDetail() {
                   <Link href="/account/overview">My profile</Link>
                 </li>
                 <li className="breadcrumb-item">
-                  <Link href="/account/shops">My shops</Link>
+                  <Link href="/account/shops">shops</Link>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
                   {shop.name}

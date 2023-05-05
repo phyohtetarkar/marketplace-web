@@ -9,7 +9,6 @@ export async function getAllCategories(tree: boolean) {
     tree: tree
   });
   const url = `${basePath}${query}`;
-  //const resp = await fetch(url);
 
   const resp = await makeApiRequest(url);
 
@@ -32,20 +31,8 @@ export async function getCategory(slug: string) {
     .catch((e) => null);
 }
 
-export async function getBrandsByCategory(slug: string) {
-  const url = `${basePath}/${slug}/brands`;
-  //const resp = await fetch(url);
-
-  const resp = await makeApiRequest(url);
-
-  await validateResponse(resp);
-
-  return resp.json() as Promise<string[]>;
-}
-
-export async function getBrandsByCategoryId(id: number) {
+export async function getBrandsByCategory(id: number) {
   const url = `${basePath}/${id}/brands`;
-  //const resp = await fetch(url);
 
   const resp = await makeApiRequest(url);
 

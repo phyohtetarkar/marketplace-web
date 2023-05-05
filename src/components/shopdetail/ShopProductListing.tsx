@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 import useSWR from "swr";
 import { Shop } from "../../common/models";
 import { parseErrorResponse } from "../../common/utils";
@@ -8,6 +9,7 @@ import {
   ProductQuery
 } from "../../services/ProductService";
 import Alert from "../Alert";
+import ConfirmModal from "../ConfirmModal";
 import Loading from "../Loading";
 import Pagination from "../Pagination";
 import {
@@ -20,7 +22,6 @@ interface ShopProductListingProps {
   shop: Shop;
   isMember: boolean;
   gridClass?: string;
-  onProductEdit?: () => void;
 }
 
 function ShopProductListing(props: ShopProductListingProps) {
@@ -31,6 +32,8 @@ function ShopProductListing(props: ShopProductListingProps) {
   } = props;
 
   const [pendingProductId, setPendingProductId] = useState<number>();
+
+  const [pendingDeleteId, setPendingDeleteId] = useState<number>();
 
   const [query, setQuery] = useState<ProductQuery>({
     "shop-id": props.shop.id
@@ -71,7 +74,9 @@ function ShopProductListing(props: ShopProductListingProps) {
                     value={p}
                     onEditClick={() => {
                       setPendingProductId(p.id);
-                      props.onProductEdit?.();
+                    }}
+                    onDeleteClick={() => {
+                      setPendingDeleteId(p.id);
                     }}
                   />
                 ) : (
@@ -136,7 +141,6 @@ function ShopProductListing(props: ShopProductListingProps) {
                 className="btn btn-primary px-3 py-2"
                 onClick={() => {
                   setPendingProductId(0);
-                  props.onProductEdit?.();
                 }}
               >
                 Create new
@@ -152,6 +156,20 @@ function ShopProductListing(props: ShopProductListingProps) {
       </div>
 
       {content()}
+
+      <ConfirmModal
+        message="Are you sure to delete?"
+        show={!!pendingDeleteId}
+        close={() => setPendingDeleteId(undefined)}
+        onConfirm={async () => {
+          try {
+            setPendingDeleteId(undefined);
+          } catch (error) {
+            const msg = parseErrorResponse(error);
+            toast.error(msg);
+          }
+        }}
+      />
     </div>
   );
 }

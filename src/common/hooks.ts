@@ -4,6 +4,7 @@ import {
   getBrandsByCategoryId,
   getCategory
 } from "../services/CategoryService";
+import { getAllCities } from "../services/CityService";
 import { getLoginUser } from "../services/UserService";
 
 export function useCategory(slug?: string) {
@@ -33,6 +34,18 @@ export function useCategories(tree: boolean) {
 
   return {
     categories: data,
+    error: error,
+    isLoading: isLoading
+  };
+}
+
+export function useCities() {
+  const { data, error, isLoading } = useSWR(`/cities`, () => getAllCities(), {
+    revalidateOnFocus: false
+  });
+
+  return {
+    cities: data,
     error: error,
     isLoading: isLoading
   };

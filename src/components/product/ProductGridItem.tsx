@@ -81,7 +81,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
       </Link>
       <div className="card-body">
         <div className="vstack">
-          {heading === "seller" ? (
+          {/* {heading === "seller" ? (
             <Link
               href={`/shops/${value.shop?.slug}`}
               className="text-decoration-none text-truncate link-success fw-medium"
@@ -95,7 +95,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
             >
               {value.category?.name}
             </Link>
-          )}
+          )} */}
 
           <Link
             href={`/products/${value.slug}`}

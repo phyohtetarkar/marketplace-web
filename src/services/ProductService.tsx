@@ -6,7 +6,6 @@ const basePath = "products";
 
 export interface ProductQuery {
   q?: String;
-  "category-slug"?: string | string[];
   "category-id"?: number;
   "shop-id"?: number;
   "discount-id"?: number;
@@ -37,49 +36,40 @@ export async function saveProduct(value: Product) {
   value.images?.forEach((v, i) => {
     v.id && form.append(`images[${i}].id`, v.id.toPrecision());
     v.name && form.append(`images[${i}].name`, v.name);
-    // if (v.id && v.id > 0) {
-    //   const imageName = v.name?.split("/").pop();
-    //   imageName && form.append(`images[${i}].name`, imageName);
-    // } else {
-    //   v.name && form.append(`images[${i}].name`, v.name);
-    // }
-    //!v.id && v.name && form.append(`images[${i}].name`, v.name);
     form.append(`images[${i}].thumbnail`, v.thumbnail ? "true" : "false");
     form.append(`images[${i}].deleted`, v.deleted ? "true" : "false");
     v.file && form.append(`images[${i}].file`, v.file);
   });
 
-  value.options?.forEach((v, i) => {
-    v.id && form.append(`options[${i}].id`, v.id.toPrecision());
-    v.name && form.append(`options[${i}].name`, v.name);
-    v.position &&
-      form.append(`options[${i}].position`, v.position.toPrecision());
+  value.attributes?.forEach((a, i) => {
+    a.id && form.append(`attributes[${i}].id`, a.id.toPrecision());
+    a.name && form.append(`attributes[${i}].name`, a.name);
+    a.sort && form.append(`attributes[${i}].sort`, a.sort.toString());
   });
 
   value.variants?.forEach((v, i) => {
     v.id && form.append(`variants[${i}].id`, v.id.toPrecision());
-    v.title && form.append(`variants[${i}].title`, v.title);
+    // v.title && form.append(`variants[${i}].title`, v.title);
     v.price && form.append(`variants[${i}].price`, v.price.toPrecision());
     v.sku && form.append(`variants[${i}].sku`, v.sku);
     v.stockLeft &&
       form.append(`variants[${i}].stockLeft`, v.stockLeft.toPrecision());
     form.append(`variants[${i}].deleted`, v.deleted ? "true" : "false");
-    v.options?.forEach((op, j) => {
-      op.option &&
-        form.append(`variants[${i}].options[${j}].option`, op.option);
-      op.value && form.append(`variants[${i}].options[${j}].value`, op.value);
+    v.attributes?.forEach((a, j) => {
+      a.attributeId &&
+        form.append(
+          `variants[${i}].attributes[${j}].attributeId`,
+          a.attributeId.toString()
+        );
+      a.attribute &&
+        form.append(`variants[${i}].attributes[${j}].attribute`, a.attribute);
+      a.value && form.append(`variants[${i}].attributes[${j}].value`, a.value);
+      a.sort &&
+        form.append(`variants[${i}].attributes[${j}].sort`, a.sort.toString());
     });
   });
 
   const url = `${basePath}`;
-
-  // const resp = await fetch(url, {
-  //   method: !value.id ? "POST" : "PUT",
-  //   body: form,
-  //   headers: {
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
 
   const resp = await makeApiRequest(
     url,

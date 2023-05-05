@@ -4,6 +4,7 @@ interface ModalProps {
   id?: string;
   show?: boolean;
   variant?: "default" | "full" | "large";
+  backdrop?: boolean;
   onHidden?: () => void;
   children?: (isShown: boolean) => ReactNode;
 }
@@ -12,6 +13,7 @@ function Modal({
   id,
   show,
   variant = "default",
+  backdrop,
   onHidden,
   children
 }: ModalProps) {
@@ -52,7 +54,7 @@ function Modal({
 
       modalInstance.current = Modal.getOrCreateInstance(element, {
         keyboard: false,
-        backdrop: "static"
+        backdrop: backdrop ?? "static"
       });
 
       element.addEventListener("show.bs.modal", handleShown);

@@ -4,15 +4,14 @@ import { default as NextImage } from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useSWRConfig } from "swr";
 import { useCategories } from "../../common/hooks";
 import {
   Category,
   Product,
+  ProductAttribute,
   ProductImage,
-  ProductOption,
   ProductVariant,
-  ProductVariantOption,
+  ProductVariantAttribute,
   Shop
 } from "../../common/models";
 import {
@@ -21,17 +20,13 @@ import {
   setEmptyOrString,
   setStringToSlug
 } from "../../common/utils";
-import {
-  getProductById,
-  ProductQuery,
-  saveProduct
-} from "../../services/ProductService";
+import { getProductById, saveProduct } from "../../services/ProductService";
 import { AutocompleteSelect, Input } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import Loading from "../Loading";
 import Modal from "../Modal";
 import ProgressButton from "../ProgressButton";
-import OptionEdit, { Option } from "./OptionEdit";
+import OptionEdit from "./OptionEdit";
 import VaraintEdit from "./VariantEdit";
 
 const DynamicEditor = dynamic<RichTextEditorInputProps>(
@@ -44,18 +39,10 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
 interface ProductEditProps {
   shop: Shop;
   productId?: number;
-  pendingQuery?: ProductQuery;
   onPopBack?: (reload?: boolean) => void;
 }
 
-function ProductEdit({
-  shop,
-  productId,
-  pendingQuery,
-  onPopBack
-}: ProductEditProps) {
-  const { mutate } = useSWRConfig();
-
+function ProductEdit({ shop, productId, onPopBack }: ProductEditProps) {
   const [fetching, setFetching] = useState((productId ?? 0) > 0);
   const [product, setProduct] = useState<Product>({
     shopId: shop.id,
@@ -64,7 +51,7 @@ function ProductEdit({
 
   const [showOptionModal, setShowOptionModal] = useState(false);
   const [showVariantModal, setShowVariantModal] = useState(false);
-  const [options, setOptions] = useState<Option[]>([]);
+  // const [options, setOptions] = useState<ProductAttribute[]>([]);
   //const [variants, setVariants] = useState<ProductVariant[]>([]);
   const [withVariant, setWithVariant] = useState<boolean>();
 
@@ -79,6 +66,7 @@ function ProductEdit({
     formState: { errors, isSubmitting },
     handleSubmit,
     setValue,
+    getValues,
     clearErrors
   } = useForm<Product>({ values: product });
 
@@ -198,61 +186,61 @@ function ProductEdit({
   }
 
   function generateVariant(
-    list: Option[],
+    attributes: ProductAttribute[],
     index: number,
-    key: string,
-    variantOptions?: ProductVariantOption[]
+    variantAttributes?: ProductVariantAttribute[]
   ) {
-    const result: ProductVariant[] = [];
-    const option = list[index];
+    const variants: ProductVariant[] = [];
+    const attribute = attributes[index];
 
-    for (const value of option.values) {
-      if (index < list.length - 1) {
-        const options = variantOptions ? variantOptions : [];
-        options.push({
-          option: option.name.trim(),
-          value: value.trim()
+    const attributeValues = attribute.values ?? [];
+
+    for (const value of attributeValues) {
+      if (index < attributes.length - 1) {
+        const values = variantAttributes ? [...variantAttributes] : [];
+        values.push({
+          value: value.value.trim(),
+          sort: values.length,
+          attributeId: attribute.id ?? 0,
+          attribute: attribute.name ?? ""
         });
-        result.push(
-          ...generateVariant(
-            list,
-            index + 1,
-            `${index > 0 ? key + " / " + value : value}`,
-            options
-          )
-        );
+        variants.push(...generateVariant(attributes, index + 1, values));
       } else {
-        const options = variantOptions ? variantOptions : [];
-        result.push({
-          title: `${index > 0 ? key + " / " + value : value}`,
-          options: [
-            ...options,
-            { option: option.name.trim(), value: value.trim() }
+        const values = variantAttributes ? variantAttributes : [];
+        variants.push({
+          attributes: [
+            ...values,
+            {
+              value: value.value.trim(),
+              sort: values.length,
+              attributeId: attribute.id ?? 0,
+              attribute: attribute.name ?? ""
+            }
           ]
         });
       }
     }
 
-    return result;
+    return variants;
   }
 
   const executeSave = async (values: Product) => {
     try {
       const product = { ...values };
       if (product.variants && product.variants.length > 0) {
-        let totalStock = 0;
+        //let totalStock = 0;
         product.variants = product.variants.map((v) => {
           const vp = parseFloat(`${v.price}`);
-          if (!v.deleted) {
-            totalStock += v.stockLeft ?? 0;
-          }
+          // if (!v.deleted) {
+          //   totalStock += v.stockLeft ?? 0;
+          // }
           return {
             ...v,
             price: isNaN(vp) ? undefined : vp
           };
         });
 
-        product.stockLeft = totalStock;
+        //product.stockLeft = totalStock;
       }
 
       if (product.price) {
@@ -260,23 +248,14 @@ function ProductEdit({
         product.price = isNaN(pp) ? undefined : pp;
       }
 
-      if (!product.id) {
-        product.options = options.map((op, i) => {
-          return { name: op.name.trim(), position: i } as ProductOption;
-        });
-      }
-
       console.log(product);
       await saveProduct(product);
-      //mutate(["/products", pendingQuery]);
       onPopBack?.(true);
       toast.success("Product successfully saved");
     } catch (error) {
       const msg = parseErrorResponse(error);
       console.log(msg);
       toast.error(msg);
-    } finally {
-      //formik.setSubmitting(false);
     }
   };
 
@@ -512,8 +491,8 @@ function ProductEdit({
                           {...register("withVariant", {
                             onChange: (evt) => {
                               if (!evt.target.checked) {
-                                setValue("variants", undefined);
-                                setOptions([]);
+                                varaintsField.remove();
+                                setValue("attributes", undefined);
                               } else {
                                 setValue("price", undefined);
                                 setValue("sku", undefined);
@@ -629,10 +608,13 @@ function ProductEdit({
                             return null;
                           }
                           return (
-                            <tr key={i}>
+                            <tr key={variant.vId}>
                               <td className="ps-3 ps-md-4 w-100">
                                 <span className="text-nowrap me-3">
-                                  {variant.title}
+                                  {variant.attributes
+                                    .sort((f, s) => f.sort - s.sort)
+                                    .map((a) => a.value)
+                                    .join(" / ")}
                                 </span>
                               </td>
                               <td className="align-top">
@@ -641,8 +623,11 @@ function ProductEdit({
                                   placeholder="Enter variant price"
                                   height={40}
                                   {...register(`variants.${i}.price`, {
+                                    setValueAs: setEmptyOrNumber,
                                     validate: (v) => {
-                                      const floatRegex = "^([0-9]*[.])?[0-9]+$";
+                                      //const floatRegex = "^([0-9]*[.])?[0-9]+$";
+                                      const floatRegex =
+                                        "^[0-9]{1,10}([.][0-9]{1,2})?$";
                                       if (!`${v}`.match(floatRegex)) {
                                         return "Invalid price input";
                                       }
@@ -682,22 +667,25 @@ function ProductEdit({
                                 />
                               </td>
                               <td>
-                                <div
-                                  role="button"
-                                  className="link-danger"
-                                  onClick={() => {
-                                    if ((variant.id ?? 0) > 0) {
-                                      varaintsField.update(i, {
-                                        ...variant,
-                                        deleted: true
-                                      });
-                                    } else {
-                                      varaintsField.remove(i);
-                                    }
-                                  }}
-                                >
-                                  <TrashIcon width={20} />
-                                </div>
+                                {varaintsField.fields.filter((v) => !v.deleted)
+                                  .length > 1 && (
+                                  <div
+                                    role="button"
+                                    className="link-danger"
+                                    onClick={() => {
+                                      if ((variant.id ?? 0) > 0) {
+                                        varaintsField.update(i, {
+                                          ...variant,
+                                          deleted: true
+                                        });
+                                      } else {
+                                        varaintsField.remove(i);
+                                      }
+                                    }}
+                                  >
+                                    <TrashIcon width={20} />
+                                  </div>
+                                )}
                               </td>
                             </tr>
                           );
@@ -730,8 +718,10 @@ function ProductEdit({
                         placeholder="Enter price"
                         error={errors.price?.message}
                         {...register("price", {
+                          setValueAs: setEmptyOrNumber,
                           validate: (v, fv) => {
-                            const floatRegex = "^([0-9]*[.])?[0-9]+$";
+                            //const floatRegex = "^([0-9]*[.])?[0-9]+$";
+                            const floatRegex = "^[0-9]{1,10}([.][0-9]{1,2})?$";
                             if (!fv.withVariant && !`${v}`.match(floatRegex)) {
                               return "Invalid price input";
                             }
@@ -798,24 +788,6 @@ function ProductEdit({
                 </div>
               </div>
             )}
-
-            {/* <div className="card">
-            <div className="card-header bg-white py-3 px-md-4">
-              <h5 className="mb-0">Promotion</h5>
-            </div>
-            <div className="card-body p-md-4">
-              <div className="row g-4">
-                <div className="col-lg-6">
-                  <label className="form-label">Discount</label>
-                  <AutocompleteSelect<string, string>
-                    placeholder="Choose discount"
-                    getOptionLabel={(v) => v}
-                    getOptionValue={(v) => v}
-                  />
-                </div>
-              </div>
-            </div>
-          </div> */}
 
             <div ref={imagesRef} className="card">
               <div className="card-header bg-white py-3 px-md-4 border-bottom">
@@ -965,45 +937,69 @@ function ProductEdit({
       </form>
 
       <Modal id="optionEditModal" show={showOptionModal} variant="large">
-        {(isShown) =>
-          isShown && options ? (
+        {(isShown) => {
+          if (!isShown) {
+            return <></>;
+          }
+
+          const attributes = [...(getValues("attributes") ?? [])];
+
+          attributes.forEach((a) => {
+            a.values = varaintsField.fields
+              .flatMap((v) => v.attributes)
+              .filter((va) => va.attribute === a.name)
+              .sort((f, s) => f.sort - s.sort)
+              .map((va) => va.value)
+              .filter((v, i, array) => array.indexOf(v) === i)
+              .map((v, i) => ({ value: v, sort: i }));
+          });
+
+          return (
             <OptionEdit
-              data={[...options]}
+              attributes={attributes}
               handleClose={(list) => {
                 if (list) {
-                  setOptions(list);
-                  varaintsField.replace(
-                    list.length > 0 ? generateVariant(list, 0, "") : []
-                  );
+                  setValue("attributes", list);
+
+                  // setValue(
+                  //   "variants",
+                  //   list.length > 0 ? generateVariant(list, 0) : [],
+                  //   {
+                  //     shouldDirty: true
+                  //   }
+                  // );
+                  const variants =
+                    list.length > 0 ? generateVariant(list, 0) : [];
+                  varaintsField.replace(variants);
                   clearErrors("variants");
                 }
 
                 setShowOptionModal(false);
               }}
             />
-          ) : (
-            <></>
-          )
-        }
+          );
+        }}
       </Modal>
 
       <Modal id="varientEditModal" show={showVariantModal} variant="large">
-        {(isShown) =>
-          isShown && product.id ? (
-            <VaraintEdit
-              product={product}
-              handleClose={(value) => {
-                if (value) {
-                  varaintsField.append(value);
-                }
+        {(isShown) => {
+          if (!isShown || !product.id) {
+            return <></>;
+          }
 
+          const p = { ...getValues() };
+
+          return (
+            <VaraintEdit
+              product={p}
+              handleSave={(variant) => {
+                varaintsField.append(variant);
                 setShowVariantModal(false);
               }}
+              close={() => setShowVariantModal(false)}
             />
-          ) : (
-            <></>
-          )
-        }
+          );
+        }}
       </Modal>
     </div>
   );

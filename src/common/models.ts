@@ -1,6 +1,10 @@
-type OrderStatus = "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED";
+export type OrderStatus = "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED";
 
-type PaymentMethod = "COD" | "BANK_TRANSFER";
+export type PaymentMethod = "COD" | "BANK_TRANSFER";
+
+//export type ShopStatus = "PENDING" | "ACTIVE" | "EXPIRED" | "DISABLED";
+
+export type DiscountType = "PERCENTAGE" | "FIXED_AMOUNT";
 
 export interface PageData<T> {
   contents: T[];
@@ -56,6 +60,11 @@ export interface Category {
   children?: Category[];
 }
 
+export interface City {
+  id: number;
+  name: string;
+}
+
 export interface ShopMember {
   userId: number;
   shopId: number;
@@ -70,13 +79,14 @@ export interface Shop {
   headline?: string;
   rating?: number;
   featured?: boolean;
+  activated?: boolean;
+  expired?: boolean;
+  disabled?: boolean;
   createdAt?: number;
-  status?: "PENDING" | "ACTIVE" | "EXPIRED" | "DISABLED";
   pendingOrderCount?: number;
   logo?: string | null;
   cover?: string | null;
   about?: string;
-  deliveryNote?: string;
   contact?: ShopContact;
   logoImage?: File;
   coverImage?: File;
@@ -96,7 +106,6 @@ export interface ShopGeneral {
   slug?: string;
   headline?: string;
   about?: string;
-  deliveryNote?: string;
 }
 
 export interface ShopSetting {
@@ -135,10 +144,10 @@ export interface ShopCreateForm {
   headline?: string;
   address?: string;
   about?: string;
-  deliveryNote?: string;
   cashOnDelivery?: boolean;
   bankTransfer?: boolean;
   acceptedPayments?: ShopAcceptedPayment[];
+  deliveryCities?: City[];
   logo?: string;
   cover?: string;
   subscriptionPlanId?: number;
@@ -172,7 +181,7 @@ export interface Product {
   category?: Category;
   shop?: Shop;
   images?: ProductImage[];
-  options?: ProductOption[];
+  attributes?: ProductAttribute[];
   variants?: ProductVariant[];
   categoryId?: number;
   shopId?: number;
@@ -189,26 +198,32 @@ export interface ProductImage {
   deleted?: boolean;
 }
 
-export interface ProductOption {
+export interface ProductAttribute {
   id?: number;
   name?: string;
-  position?: number;
+  sort: number;
+  values?: ProductAttributeValue[];
+}
+
+export interface ProductAttributeValue {
+  value: string;
+  sort: number;
 }
 
 export interface ProductVariant {
   id?: number;
-  productId?: number;
-  title?: string;
   sku?: string;
   price?: number;
   stockLeft?: number;
-  options: ProductVariantOption[];
+  attributes: ProductVariantAttribute[];
   deleted?: boolean;
 }
 
-export interface ProductVariantOption {
-  option: string;
+export interface ProductVariantAttribute {
+  attributeId: number;
+  attribute: string;
   value: string;
+  sort: number;
 }
 
 export interface Discount {
@@ -216,17 +231,21 @@ export interface Discount {
   shopId?: number;
   title?: string;
   value?: number;
-  type?: "PERCENTAGE" | "FIXED_AMOUNT";
+  type?: DiscountType;
   createdAt?: number;
 }
 
 export interface CartItem {
-  userId?: number;
-  productId?: number;
+  id: number;
+  quantity: number;
+  product: Product;
+  variant?: ProductVariant;
+}
+
+export interface AddToCartForm {
+  productId: number;
   variantId?: number;
   quantity: number;
-  product?: Product;
-  variant?: ProductVariant;
 }
 
 export interface Location {
