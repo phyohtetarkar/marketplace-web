@@ -58,11 +58,9 @@ export async function updateQuantity(value: CartItem) {
   );
 
   await validateResponse(resp);
-
-  return resp.json() as Promise<CartItem>;
 }
 
-export async function removeFromCart(items: [CartItem]) {
+export async function removeFromCart(items: [number]) {
   const url = basePath;
 
   const resp = await makeApiRequest(

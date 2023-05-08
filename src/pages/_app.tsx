@@ -26,6 +26,7 @@ import {
   Tooltip
 } from "chart.js";
 import { LocalizationContextProvider } from "../common/localization";
+import ProgressContextProvider from "../common/ProgressContextProvider";
 
 // Amplify.configure({
 //   ...awsconfig,
@@ -86,7 +87,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       />
       <AuthenticationContextProvider>
         <LocalizationContextProvider>
-          {getLayout(<Component {...pageProps} />)}
+          <ProgressContextProvider>
+            {getLayout(<Component {...pageProps} />)}
+          </ProgressContextProvider>
         </LocalizationContextProvider>
       </AuthenticationContextProvider>
     </>

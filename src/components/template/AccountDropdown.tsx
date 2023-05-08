@@ -89,7 +89,7 @@ function AccountDropdown(props: AccountDropdownProps) {
             //Auth.signOut().catch(console.error);
             signOut()
               .then(() => {
-                authContext.update("failure", undefined);
+                authContext.update(undefined, undefined);
               })
               .catch((error) => {
                 toast.error(parseErrorResponse(error));

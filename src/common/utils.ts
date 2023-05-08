@@ -22,12 +22,12 @@ export function formatNumber(value: number) {
 
 export function transformDiscount(discount: Discount, price = 0, qty = 1) {
   if (discount.type === "FIXED_AMOUNT") {
-    return formatNumber((price - (discount.value ?? 0)) * qty);
+    return (price - (discount.value ?? 0)) * qty;
   }
 
   const percent = discount.value ?? 0;
   const discountPrice = (percent * price) / 100;
-  return formatNumber((price - discountPrice) * qty);
+  return (price - discountPrice) * qty;
 }
 
 export function wordPerMinute(wordCount: number) {
@@ -36,7 +36,10 @@ export function wordPerMinute(wordCount: number) {
   return Math.round(wpm / 60);
 }
 
-export function debounce(callback: (...args: any[]) => void, timeout = 2000) {
+export function debounce(
+  callback: (...args: any[]) => void | Promise<any>,
+  timeout = 2000
+) {
   if (typeof window === "undefined") {
     return () => {};
   }
@@ -186,7 +189,7 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
   }
 
   console.log(error);
-  return error ?? "Something went wrong, please try again";
+  return error?.message ?? "Something went wrong, please try again";
 }
 
 export async function checkShopMember(shopId: number, auth: any) {

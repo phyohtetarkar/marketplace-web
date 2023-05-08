@@ -5,18 +5,22 @@ interface ModalProps {
   show?: boolean;
   variant?: "default" | "full" | "large";
   backdrop?: boolean;
+  center?: boolean;
   onHidden?: () => void;
   children?: (isShown: boolean) => ReactNode;
 }
 
-function Modal({
-  id,
-  show,
-  variant = "default",
-  backdrop,
-  onHidden,
-  children
-}: ModalProps) {
+function Modal(props: ModalProps) {
+  const {
+    id,
+    show,
+    variant = "default",
+    backdrop,
+    center,
+    onHidden,
+    children
+  } = props;
+
   const modalRef = useRef<HTMLDivElement | null>(null);
   const modalInstance = useRef<any>();
   const [isShown, setIsShown] = useState(false);
@@ -102,7 +106,11 @@ function Modal({
       tabIndex={-1}
       aria-hidden="true"
     >
-      <div className={`modal-dialog modal-dialog-scrollable ${size}`}>
+      <div
+        className={`modal-dialog ${
+          center ? "modal-dialog-centered" : ""
+        } modal-dialog-scrollable ${size}`}
+      >
         <div className="modal-content">{children && children(isShown)}</div>
       </div>
     </div>

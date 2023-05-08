@@ -165,6 +165,7 @@ function ProfileSetting() {
                       <ProgressButton
                         type="submit"
                         className="flex-grow-1 flex-md-grow-0 px-3 py-2"
+                        variant="secondary"
                         loading={isSubmitting}
                       >
                         Update profile
@@ -179,7 +180,7 @@ function ProfileSetting() {
                       <div className="card-body">
                         <button
                           type="button"
-                          className="btn btn-outline-primary bg-white btn-sm border border-light-gray float-end"
+                          className="btn btn-outline-secondary bg-white btn-sm border border-light-gray float-end"
                         >
                           Change
                         </button>

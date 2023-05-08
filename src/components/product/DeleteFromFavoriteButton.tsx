@@ -5,6 +5,7 @@ import { useSWRConfig } from "swr";
 import { AuthenticationContext } from "../../common/contexts";
 import { parseErrorResponse } from "../../common/utils";
 import { deleteFavoriteProduct } from "../../services/FavoriteProductService";
+import ProgressButton from "../ProgressButton";
 
 interface DeleteFromFavoriteButtonProps {
   productId: number;
@@ -27,16 +28,11 @@ function DeleteFromFavoriteButton({
   // }
 
   return (
-    <button
-      disabled={loading || disabled}
-      className={`btn btn-link link-danger h-100 position-relative ${
-        className ?? ""
-      }`}
+    <ProgressButton
+      loading={loading || disabled}
+      variant="danger"
+      className={`h-100 position-relative ${className ?? ""}`}
       onClick={() => {
-        // setAdding(true);
-        // setTimeout(() => {
-        //   setAdding(false);
-        // }, 2000);
         if (authContext.status === "success") {
           setLoading(true);
           deleteFavoriteProduct(productId)
@@ -56,31 +52,8 @@ function DeleteFromFavoriteButton({
         }
       }}
     >
-      {loading && (
-        <div className="position-absolute top-50 start-50 translate-middle">
-          <span
-            className="spinner-border spinner-border-sm "
-            role="status"
-            aria-hidden={!loading}
-          ></span>
-        </div>
-      )}
-      {/* <TrashIcon
-        width={20}
-        strokeWidth={2}
-        style={{
-          visibility: loading ? "hidden" : "visible"
-        }}
-      /> */}
-      <span
-        className="fw-medium"
-        style={{
-          visibility: loading ? "hidden" : "visible"
-        }}
-      >
-        Remove
-      </span>
-    </button>
+      Remove
+    </ProgressButton>
   );
 }
 

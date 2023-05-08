@@ -1,34 +1,114 @@
 import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
-import { AuthenticationContext } from "../../common/contexts";
+import { AuthenticationContext, ProgressContext } from "../../common/contexts";
 import { CartItem } from "../../common/models";
 import {
+  debounce,
   formatNumber,
   parseErrorResponse,
   transformDiscount
 } from "../../common/utils";
-import { removeFromCart } from "../../services/ShoppingCartService";
+import {
+  removeFromCart,
+  updateQuantity
+} from "../../services/ShoppingCartService";
 
 interface ShoppingCartItemProps {
   item: CartItem;
-  reload?: (item: CartItem) => void;
+  handleCheck: (checked: boolean) => void;
+  checked: boolean;
+  enableCheck: boolean;
 }
 
-function ShoppingCartItem({ item }: ShoppingCartItemProps) {
+function ShoppingCartItem(props: ShoppingCartItemProps) {
   // let image = `https://source.unsplash.com/random/200x240?random=${Math.floor(
   //   Math.random() * 100
   // )}`;
+  const { item, handleCheck, enableCheck, checked } = props;
   const authContext = useContext(AuthenticationContext);
+
+  const progressContext = useContext(ProgressContext);
 
   const { mutate } = useSWRConfig();
 
   const [removing, setRemoving] = useState(false);
 
   const [quantity, setQuantity] = useState(item.quantity);
+
+  const updateQty = async (value: CartItem) => {
+    try {
+      progressContext.update(true);
+      await updateQuantity(value);
+      mutate("/cart-items");
+    } catch (error) {
+      setQuantity(item.quantity);
+      const msg = parseErrorResponse(error);
+      toast.error(msg);
+    } finally {
+      progressContext.update(false);
+    }
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const processUpdateQty = useMemo(() => debounce(updateQty, 500), []);
+
+  const getQtyInput = () => {
+    return (
+      <div className="input-group">
+        <button
+          className="btn btn-outline text-muted border border-end-0"
+          onClick={() => {
+            if (quantity > 1) {
+              const qty = quantity - 1;
+              setQuantity(qty);
+
+              processUpdateQty({
+                ...item,
+                quantity: qty
+              });
+            }
+          }}
+        >
+          <MinusIcon width={20} />
+        </button>
+        <div
+          className="bg-light align-items-center justify-content-center d-flex border"
+          style={{ minWidth: 44 }}
+        >
+          {quantity}
+        </div>
+        <button
+          className="btn btn-outline text-muted border border-start-0"
+          onClick={() => {
+            const qty = quantity + 1;
+            if (item.variant?.stockLeft) {
+              if (item.variant.stockLeft >= qty) {
+                setQuantity(qty);
+                processUpdateQty({
+                  ...item,
+                  quantity: qty
+                });
+              }
+            } else if (item.product.stockLeft) {
+              if (item.product.stockLeft >= qty) {
+                setQuantity(qty);
+                processUpdateQty({
+                  ...item,
+                  quantity: qty
+                });
+              }
+            }
+          }}
+        >
+          <PlusIcon width={20} />
+        </button>
+      </div>
+    );
+  };
 
   const image = item.product?.thumbnail ?? "/images/placeholder.jpeg";
 
@@ -46,31 +126,20 @@ function ShoppingCartItem({ item }: ShoppingCartItemProps) {
     );
   }
 
-  const getQtyInput = () => {
-    return (
-      <div className="input-group">
-        <button className="btn btn-outline text-muted border border-end-0">
-          <MinusIcon width={20} />
-        </button>
-        <div
-          className="bg-light align-items-center justify-content-center d-flex border"
-          style={{ minWidth: 44 }}
-        >
-          {item.quantity}
-        </div>
-        <button className="btn btn-outline text-muted border border-start-0">
-          <PlusIcon width={20} />
-        </button>
-      </div>
-    );
-  };
-
   return (
     <div className="hstack">
       <div className="row flex-grow-1 gap-3">
         <div className="col-12 col-lg">
           <div className="hstack gap-2">
-            <input className="form-check-input" type="checkbox"></input>
+            {enableCheck && (
+              <input
+                className="form-check-input"
+                type="checkbox"
+                disabled={!enableCheck}
+                checked={checked}
+                onChange={(evt) => handleCheck(evt.target.checked)}
+              ></input>
+            )}
             <div className="flex-shink-0">
               <Link
                 href={`/products/${item.product?.slug}`}
@@ -106,7 +175,12 @@ function ShoppingCartItem({ item }: ShoppingCartItemProps) {
               </h6>
               {item.variant && (
                 <div className="d-flex flex-wrap gap-1">
-                  <small className="text-muted">{item.variant.title}</small>
+                  <small className="text-muted">
+                    {item.variant.attributes
+                      .sort((f, s) => f.sort - s.sort)
+                      .map((va) => va.value)
+                      .join(", ")}
+                  </small>
                   {/* {item.variant.options.map((op, j) => {
                     return (
                       <small key={j} className="text-muted">
@@ -135,8 +209,9 @@ function ShoppingCartItem({ item }: ShoppingCartItemProps) {
                 removeFromCart([item.id ?? 0])
                   .then((resp) => {
                     toast.success("Cart item removed");
+                    handleCheck(false);
                     mutate("/cart-items");
-                    mutate(["/cart-items/count", authContext.payload?.id]);
+                    mutate(["/profile/cart-count", authContext.payload?.id]);
                   })
                   .catch((error) => {
                     const msg = parseErrorResponse(error);

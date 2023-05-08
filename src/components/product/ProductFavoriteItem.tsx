@@ -35,22 +35,14 @@ function ProductFavoriteItem({ product }: ProductFavoriteProps) {
           <div className="vstack overflow-hidden">
             <Link
               href={`/products/${product.slug}`}
-              className="text-muted text-decoration-none text-truncate"
+              className="text-dark fw-medium text-decoration-none text-truncate"
             >
               {product.name}
-            </Link>
-
-            <Link
-              href={`/collections/${product.category?.slug}`}
-              className="text-decoration-none fw-medium link-success text-truncate mb-2"
-            >
-              {product.category?.name}
             </Link>
 
             <div className="flex-grow-1"></div>
 
             <div className="hstack align-items-stretch gap-2">
-              <AddToCartButton productId={product.id ?? 0} />
               <DeleteFromFavoriteButton productId={product.id ?? 0} />
             </div>
           </div>

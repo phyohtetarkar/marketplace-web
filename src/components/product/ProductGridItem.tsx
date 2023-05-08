@@ -50,7 +50,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
         <del className="text-muted small fw-normal me-1">
           {formatNumber(value.price ?? 0)}&nbsp;Ks
         </del>
-        {transformDiscount(value.discount, value.price)}&nbsp;Ks
+        {formatNumber(transformDiscount(value.discount, value.price))}&nbsp;Ks
       </>
     );
   }
@@ -105,7 +105,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
           </Link>
 
           <h6
-            className="fw-semibold mt-2"
+            className="fw-semibold mt-2 mb-0"
             style={{
               fontSize: 18
             }}
@@ -124,7 +124,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
             {value.id && value.withVariant && (
               <Link
                 href={`/products/${value.slug}`}
-                className="btn btn-primary flex-grow-1"
+                className="btn btn-secondary flex-grow-1"
               >
                 Select options
               </Link>

@@ -1,8 +1,4 @@
-import {
-  PencilIcon,
-  PencilSquareIcon,
-  TrashIcon
-} from "@heroicons/react/24/outline";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "../../common/models";
@@ -55,7 +51,7 @@ function ProductManageGridItem({
         <del className="text-muted small fw-normal me-1">
           {formatNumber(value.price ?? 0)}&nbsp;Ks
         </del>
-        {transformDiscount(value.discount, value.price)}&nbsp;Ks
+        {formatNumber(transformDiscount(value.discount, value.price))}&nbsp;Ks
       </>
     );
   }
@@ -120,7 +116,7 @@ function ProductManageGridItem({
             {value.name}
           </Link>
 
-          <h6 className="fw-semibold mt-2">{price}</h6>
+          <h6 className="fw-semibold mt-2 mb-0">{price}</h6>
 
           <div className="mt-3 hstack align-items-stretch gap-2">
             <button

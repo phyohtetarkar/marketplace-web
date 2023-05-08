@@ -298,10 +298,10 @@ export interface PaymentDetail {
 }
 
 export interface OrderCreateForm {
-  shopId: number;
+  shopId?: number;
   note?: string;
-  paymentMethod: PaymentMethod;
-  cartItems?: [CartItem];
+  paymentMethod?: PaymentMethod;
+  cartItems?: CartItem[];
   delivery?: DeliveryDetail;
   payment?: PaymentDetail;
 }

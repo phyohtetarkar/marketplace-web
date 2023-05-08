@@ -28,7 +28,7 @@ function ShopProductListing(props: ShopProductListingProps) {
   const {
     shop,
     isMember,
-    gridClass = "row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4"
+    gridClass = "row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4"
   } = props;
 
   const [pendingProductId, setPendingProductId] = useState<number>();

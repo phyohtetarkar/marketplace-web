@@ -30,6 +30,11 @@ export const withAuthentication = (Component: React.ComponentType<any>) => {
       handleAuthState() {
         const { payload, status } = this.context;
 
+        if (!status) {
+          this.props.router.push("/");
+          return;
+        }
+
         if (status === "loading") {
           return;
         }

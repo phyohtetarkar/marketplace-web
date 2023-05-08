@@ -19,14 +19,11 @@ export const AuthenticationContextProvider = ({
   //   }
   // );
 
-  const updateAuthState = useCallback(
-    (status: Status, payload: User | undefined) => {
-      setAuthUser((old) => {
-        return { ...old, status, payload };
-      });
-    },
-    []
-  );
+  const updateAuthState = useCallback((status?: Status, payload?: User) => {
+    setAuthUser((old) => {
+      return { ...old, status, payload };
+    });
+  }, []);
 
   const [authUser, setAuthUser] = useState<StateContext<User>>({
     payload: undefined,

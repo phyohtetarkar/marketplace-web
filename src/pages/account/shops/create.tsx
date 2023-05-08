@@ -804,7 +804,7 @@ function CreateShop() {
       <div className="container">
         <div className="row g-4 mb-5">
           <div className="col-lg-8 mb-4">
-            <h4 className="fw-semibole border-bottom pb-3">
+            <h4 className="fw-semibold border-bottom pb-3">
               Basic information
             </h4>
             <div className="row g-3 mb-5">
@@ -881,7 +881,7 @@ function CreateShop() {
               </div>
             </div>
 
-            <h4 className="fw-semibole border-bottom pb-3">Shop media</h4>
+            <h4 className="fw-semibold border-bottom pb-3">Shop media</h4>
             <div className="mb-5">
               <div className="row g-3">
                 <div className="col-12">
@@ -972,7 +972,7 @@ function CreateShop() {
               </div>
             </div>
 
-            <h4 className="fw-semibole border-bottom pb-3">Payment setting</h4>
+            <h4 className="fw-semibold border-bottom pb-3">Payment setting</h4>
             <div className="row mb-5 g-3">
               <div className="col-md-6">
                 <div className="form-check form-switch">
@@ -1135,7 +1135,9 @@ function CreateShop() {
                     loading={isSubmitting}
                     onClick={() => {
                       handleSubmit(
-                        async () => {},
+                        async (data) => {
+                          await executeCreate(data);
+                        },
                         (errors) => {
                           const errorList = (
                             <ul className="mb-0">

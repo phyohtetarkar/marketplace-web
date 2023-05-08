@@ -241,7 +241,7 @@ svg {
 
 .my-list-item.active {
   color: var(--bs-light);
-  background-color: var(--bs-primary);
+  background-color: var(--bs-secondary);
   text-decoration: none;
   border-radius: var(--border-radius);
 }
@@ -289,11 +289,11 @@ svg {
   height: 100%;
   width: 100%;
   position: fixed; /* Stay in place */
-  z-index: 999; /* Sit on top */
+  z-index: 9999; /* Sit on top */
   left: 0;
   top: 0;
   background-color: rgb(1, 0, 0); /* Black fallback color */
-  background-color: rgb(1, 0, 0, 0.5); /* Black w/opacity */
+  background-color: rgb(1, 0, 0, 0.4); /* Black w/opacity */
   overflow-x: hidden; /* Disable horizontal scroll */
 }
 

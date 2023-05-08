@@ -1,5 +1,7 @@
 import Head from "next/head";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useContext } from "react";
+import { ProgressContext } from "../../common/contexts";
+import ProgressModal from "../ProgressModal";
 import Footer from "./Footer";
 import Header from "./Header";
 
@@ -11,6 +13,7 @@ interface LayoutProps {
 }
 
 function Layout({ hideAuth, hideFooter, background, children }: LayoutProps) {
+  const progressContext = useContext(ProgressContext);
   return (
     <>
       <Head>
@@ -69,6 +72,7 @@ function Layout({ hideAuth, hideFooter, background, children }: LayoutProps) {
           }
         }}
       </LoadingContext.Consumer> */}
+      <ProgressModal show={progressContext.show} />
     </>
   );
 }

@@ -1,12 +1,13 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
+import { ProgressContext } from "../../common/contexts";
 import { CartItem, Shop } from "../../common/models";
-import Loading from "../../components/Loading";
+import { parseErrorResponse } from "../../common/utils";
+import Alert from "../../components/Alert";
 import PricingCard from "../../components/checkout/PricingCard";
 import ShoppingCartItem from "../../components/checkout/ShoppingCartItem";
-import Tooltip from "../../components/Tooltip";
+import Loading from "../../components/Loading";
 import { getCartItemsByUser } from "../../services/ShoppingCartService";
 
 interface CartGroupItem {
@@ -15,13 +16,24 @@ interface CartGroupItem {
 }
 
 function ShoppingCart() {
-  const { data, error, isLoading } = useSWR<CartItem[], Error>(
+  const { data, error, isLoading, mutate } = useSWR<CartItem[], Error>(
     "/cart-items",
     getCartItemsByUser,
     {
       revalidateOnFocus: false
     }
   );
+
+  const progressContext = useContext(ProgressContext);
+
+  const [selectedShopId, setSelectedShopId] = useState<number>();
+
+  const [selectedItems, setSelectedItems] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    sessionStorage.removeItem("shopId");
+    sessionStorage.removeItem("cartItems");
+  }, []);
 
   const group = useMemo<CartGroupItem[]>(() => {
     const items = [] as CartGroupItem[];
@@ -36,8 +48,12 @@ function ShoppingCart() {
         .map((item) => item.product?.shop?.id!)
     );
 
-    shops.forEach((id, i) => {
-      const shopItems = data.filter((item) => item.product?.shop?.id === id);
+    const array = Array.from(shops);
+
+    for (const shopId of array) {
+      const shopItems = data.filter((item) => {
+        return item.product?.shop?.id === shopId;
+      });
       const shop = shopItems[0].product?.shop;
       if (shop && shopItems.length > 0) {
         items.push({
@@ -45,10 +61,31 @@ function ShoppingCart() {
           items: shopItems
         });
       }
-    });
+    }
 
     return items;
   }, [data]);
+
+  useEffect(() => {
+    setSelectedItems((old) => {
+      const currentSelection = [...old];
+      if (currentSelection.length > 0 && group.length > 0) {
+        const shopId = currentSelection[0].product.shop?.id;
+        group
+          .filter((g) => g.shop.id === shopId)
+          .flatMap((g) => g.items)
+          .forEach((item) => {
+            const index = currentSelection.findIndex((v) => v.id === item.id);
+            if (index >= 0) {
+              currentSelection[index] = item;
+            }
+          });
+
+        return currentSelection;
+      }
+      return old;
+    });
+  }, [group]);
 
   // const list = [
   //   [1, 2],
@@ -91,6 +128,10 @@ function ShoppingCart() {
       return <Loading />;
     }
 
+    if (error) {
+      return <Alert message={parseErrorResponse(error)} variant="danger" />;
+    }
+
     if (group.length === 0) {
       return (
         <div className="text-center text-muted p-3">No products in cart.</div>
@@ -104,14 +145,50 @@ function ShoppingCart() {
             <div key={i} className="card">
               <div className="card-header bg-white py-2h border-bottom">
                 <div className="form-check">
-                  <input className="form-check-input" type="checkbox"></input>
-                  <label className="form-check-label">{g.shop.name}</label>
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    checked={g.shop.id === selectedShopId}
+                    onChange={(evt) => {
+                      if (g.shop.id !== selectedShopId) {
+                        setSelectedShopId(g.shop.id);
+                        setSelectedItems([...g.items]);
+                      }
+                    }}
+                  ></input>
+                  <label className="form-check-label fw-medium">
+                    {g.shop.name}
+                  </label>
                 </div>
               </div>
               <div className="card-body">
                 <div className="vstack gap-3">
                   {g.items.map((item, i) => {
-                    return <ShoppingCartItem key={i} item={item} />;
+                    return (
+                      <ShoppingCartItem
+                        key={i}
+                        item={item}
+                        enableCheck={g.shop.id === selectedShopId}
+                        checked={
+                          selectedItems.findIndex((v) => v.id === item.id) >= 0
+                        }
+                        handleCheck={(checked) => {
+                          if (checked) {
+                            setSelectedItems((old) => [...old, item]);
+                          } else {
+                            setSelectedItems((old) => {
+                              old.splice(
+                                selectedItems.findIndex(
+                                  (v) => v.id === item.id
+                                ),
+                                1
+                              );
+                              return [...old];
+                            });
+                          }
+                        }}
+                      />
+                    );
                   })}
                 </div>
               </div>
@@ -145,7 +222,7 @@ function ShoppingCart() {
       <div className="container py-3">
         <div className="row g-3">
           <div className="col-lg-8">
-            {group.length > 0 && (
+            {/* {group.length > 0 && (
               <div className="card mb-3">
                 <div className="card-body py-2h">
                   <div className="hstack gap-2 flex-grow-1">
@@ -167,11 +244,11 @@ function ShoppingCart() {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
             {content()}
           </div>
           <div className="col-lg-4 ">
-            <PricingCard />
+            <PricingCard items={selectedItems} />
           </div>
         </div>
       </div>

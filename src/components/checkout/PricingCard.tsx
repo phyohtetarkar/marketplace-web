@@ -1,22 +1,59 @@
 import Link from "next/link";
-import { formatNumber } from "../../common/utils";
+import { useRouter } from "next/router";
+import { useMemo } from "react";
+import { CartItem } from "../../common/models";
+import { formatNumber, transformDiscount } from "../../common/utils";
 
-function PricingCard() {
+interface PricingCardProps {
+  items: CartItem[];
+}
+
+function PricingCard(props: PricingCardProps) {
+  const { items } = props;
+
+  const router = useRouter();
+
+  const summary = useMemo(() => {
+    let quantity = 0;
+    let subTotalPrice = 0;
+    let totalPrice = 0;
+    let discount = 0;
+    for (const item of items) {
+      quantity += item.quantity;
+
+      const price = item.variant?.price ?? item.product.price ?? 0;
+      subTotalPrice += price * item.quantity;
+
+      if (item.product.discount) {
+        discount += transformDiscount(
+          item.product.discount,
+          price,
+          item.quantity
+        );
+      }
+    }
+
+    totalPrice = subTotalPrice - discount;
+
+    return { quantity, subTotalPrice, totalPrice, discount };
+  }, [items]);
   return (
     <div className="card">
       <div className="card-body">
         <div className="vstack gap-2">
           <div className="d-flex justify-content-between">
             <span>Total Products</span>
-            <span>0</span>
+            <span>{summary.quantity}</span>
           </div>
           <div className="d-flex justify-content-between">
             <span>Subtotal</span>
-            <span>{formatNumber(0)}</span>
+            <span>{formatNumber(summary.subTotalPrice)}</span>
           </div>
           <div className="d-flex justify-content-between">
             <span>Discount</span>
-            <span className="text-danger">-{formatNumber(0)}</span>
+            <span className="text-danger">
+              -{formatNumber(summary.discount)}
+            </span>
           </div>
           {/* {showDelivery && (
             <div className="d-flex justify-content-between">
@@ -28,7 +65,7 @@ function PricingCard() {
           )} */}
           <div className="d-flex justify-content-between">
             <span>Delivery Fee</span>
-            <span className="text-success">+{formatNumber(0)}</span>
+            <span className="text-success">Depend on location</span>
           </div>
 
           <hr className="text-muted" />
@@ -36,25 +73,32 @@ function PricingCard() {
           <div className="hstack gap-2">
             <span className="h5 fw-bold">Total price</span>
             <div className="flex-grow-1"></div>
-            <span className="fw-bold h5 mb-0">{formatNumber(0)}</span>
+            <span className="fw-bold h5 mb-0">
+              {formatNumber(summary.totalPrice)}
+            </span>
           </div>
-
-          {/* {!pricingOnly && (
-            <div className="d-grid gap-2 mt-3">
-              <Link href="/contact-info">
-                <a className="btn btn-primary">Checkout</a>
-              </Link>
-              <Link href="/products">
-                <a className="btn btn-outline-primary">Continue Shopping</a>
-              </Link>
-            </div>
-          )}
-          {children} */}
           <div className="d-grid gap-2 mt-3">
             {/* <button className="btn btn-primary py-2">Checkout</button> */}
-            <Link href={"/checkout"} className="btn btn-primary py-2">
+            <button
+              className="btn btn-primary py-2"
+              disabled={items.length === 0}
+              onClick={(evt) => {
+                try {
+                  if (items.length > 0) {
+                    sessionStorage.setItem(
+                      "shopId",
+                      `${items[0].product.shop?.id ?? 0}`
+                    );
+                    sessionStorage.setItem("cartItems", JSON.stringify(items));
+                    router.push("/checkout");
+                  }
+                } catch (error) {
+                  console.log(error);
+                }
+              }}
+            >
               Checkout
-            </Link>
+            </button>
             <Link href={"/"} className="btn btn-secondary py-2">
               Contine Shopping
             </Link>

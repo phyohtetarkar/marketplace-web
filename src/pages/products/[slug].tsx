@@ -133,7 +133,8 @@ function ProductDetail({ product }: { product: Product | null }) {
         <del className="text-muted small fw-normal me-1">
           {formatNumber(unitPrice * quantity)}&nbsp;Ks
         </del>
-        {transformDiscount(product.discount, unitPrice, quantity)}&nbsp;Ks
+        {formatNumber(transformDiscount(product.discount, unitPrice, quantity))}
+        &nbsp;Ks
       </>
     );
   }
@@ -570,7 +571,7 @@ function ProductDetail({ product }: { product: Product | null }) {
                     <div className="clearfix mt-3">
                       <Link
                         href={`/shops/${product.shop?.slug}`}
-                        className="btn btn-outline-light border text-primary float-end"
+                        className="btn btn-outline-light border text-secondary float-end"
                       >
                         Visit store
                       </Link>
