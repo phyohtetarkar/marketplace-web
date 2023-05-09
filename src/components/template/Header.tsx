@@ -202,11 +202,11 @@ function Header({ hideAuth }: HeaderProps) {
           </div>
         </div>
       </nav>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-secondary border-bottom">
+      <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom">
         <div className="container">
           <div
             ref={offcanvasRef}
-            className="offcanvas offcanvas-end bg-secondary"
+            className="offcanvas offcanvas-end bg-white"
             tabIndex={-1}
             id="offcanvasNavbar"
             aria-labelledby="offcanvasNavbarLabel"
@@ -223,7 +223,7 @@ function Header({ hideAuth }: HeaderProps) {
                 alt=""
               /> */}
                 <Image
-                  src="/images/logo-h-light.svg"
+                  src="/images/logo-h.svg"
                   width={130}
                   height={40}
                   alt=""
@@ -236,7 +236,7 @@ function Header({ hideAuth }: HeaderProps) {
               </h5>
               <button
                 type="button"
-                className="btn-close btn-close-white text-reset shadow-none"
+                className="btn-close btn-close text-reset shadow-none"
                 aria-label="Close"
                 onClick={() => {
                   offcanvas.current?.hide();
@@ -365,7 +365,7 @@ function Header({ hideAuth }: HeaderProps) {
           </div>
 
           <button
-            className="navbar-toggler ms-auto"
+            className="navbar-toggler ms-auto border-0"
             type="button"
             data-bs-toggle="offcanvas"
             data-bs-target="#offcanvasNavbar"

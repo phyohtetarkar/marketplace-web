@@ -120,7 +120,7 @@ function ProductManageGridItem({
 
           <div className="mt-3 hstack align-items-stretch gap-2">
             <button
-              className="btn btn-secondary flex-grow-1"
+              className="btn btn-default flex-grow-1"
               onClick={() => onEditClick?.()}
             >
               <span>Edit</span>

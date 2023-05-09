@@ -400,20 +400,18 @@ function ProductDetail({ product }: { product: Product | null }) {
                       .map((a, i) => {
                         return (
                           <div key={i} className="col-12">
-                            <h6 className="text-muted text-uppercase small">
-                              {a.name}
-                            </h6>
+                            <h6 className="text-uppercase small">{a.name}</h6>
                             <div className="d-flex flex-wrap gap-2">
                               {attributeValues.get(a.id ?? 0)?.map((v, j) => {
                                 const selected =
                                   selectedAttributes.get(a.id ?? 0) === v.value
-                                    ? "border-secondary"
+                                    ? "border-primary"
                                     : "";
                                 return (
                                   <div
                                     key={j}
                                     role="button"
-                                    className={`bg-light border border-2 rounded px-2h py-1 ${selected}`}
+                                    className={`bg-light border rounded px-2h py-1 text-muted ${selected}`}
                                     onClick={() => {
                                       if (selected) {
                                         return;

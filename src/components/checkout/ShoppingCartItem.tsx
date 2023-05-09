@@ -178,7 +178,7 @@ function ShoppingCartItem(props: ShoppingCartItemProps) {
                   <small className="text-muted">
                     {item.variant.attributes
                       .sort((f, s) => f.sort - s.sort)
-                      .map((va) => va.value)
+                      .map((va) => `${va.attribute}: ${va.value}`)
                       .join(", ")}
                   </small>
                   {/* {item.variant.options.map((op, j) => {

@@ -124,7 +124,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
             {value.id && value.withVariant && (
               <Link
                 href={`/products/${value.slug}`}
-                className="btn btn-secondary flex-grow-1"
+                className="btn btn-primary flex-grow-1"
               >
                 Select options
               </Link>

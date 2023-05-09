@@ -60,9 +60,7 @@ function ProfileOverview() {
                   </div>
                   <div className="ms-auto">
                     <div className="d-flex d-none d-lg-block">
-                      <button className="btn btn-outline-secondary">
-                        Edit
-                      </button>
+                      <button className="btn btn-outline-primary">Edit</button>
                     </div>
                   </div>
                   <div className="d-flex d-block d-lg-none ms-2">
@@ -121,7 +119,7 @@ function ProfileOverview() {
                     </div>
                   </div>
                 </div>
-                <a className="btn btn-outline-secondary">
+                <a className="btn btn-outline-primary">
                   <div className="hstack">
                     <PlusIcon className="me-2" width={20} />
                     Add new address

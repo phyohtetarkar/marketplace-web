@@ -1,9 +1,9 @@
 $min-contrast-ratio: 2.5;
 
 //$primary: linear-gradient(right, #f79131 #d82435);
-$primary: #f27f32;
+$primary: #E15B51;
 
-$secondary: #232F3E;
+$secondary: #2b3445;
 $light: #f3f4f6;
 $success: #00a524;
 $danger: #d50002;
@@ -13,7 +13,7 @@ $warning: #ff9017;
 
 $box-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 
-$border-radius: 0.25rem;
+$border-radius: 0.35rem;
 
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/variables";
@@ -24,8 +24,8 @@ $custom-colors: (
   "default": #c9c9c9,
   "dark-gray": #aaaaaa,
   "light-gray": #dddddd,
-  "primary-light": #FEEFE1,
-  "primary-dark": #36213E,
+  "primary-light": #FBE7E6,
+  "primary-dark": #DB372B,
   "gray-900": #1f2937,
   "anchor": #2110D6,
 );
@@ -127,8 +127,8 @@ $btn-active-box-shadow: none;
 $btn-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
   border-color 0.15s ease-in-out;
 
-//$dropdown-link-hover-color: $primary;
-//$dropdown-link-hover-bg: $secondary;
+$dropdown-link-hover-color: $light;
+$dropdown-link-hover-bg: $primary;
 
 $accordion-icon-color: #444;
 $accordion-button-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$accordion-icon-color}'><path fill-rule='evenodd' d='M3.333 8.667h4v4c0 0.368 0.299 0.667 0.667 0.667s0.667-0.299 0.667-0.667v-4h4c0.368 0 0.667-0.299 0.667-0.667s-0.299-0.667-0.667-0.667h-4v-4c0-0.368-0.299-0.667-0.667-0.667s-0.667 0.299-0.667 0.667v4h-4c-0.368 0-0.667 0.299-0.667 0.667s0.299 0.667 0.667 0.667z'/></svg>");

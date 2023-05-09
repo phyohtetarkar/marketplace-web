@@ -1,3 +1,4 @@
+import { TrashIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
@@ -30,7 +31,7 @@ function DeleteFromFavoriteButton({
   return (
     <ProgressButton
       loading={loading || disabled}
-      variant="danger"
+      theme="outline"
       className={`h-100 position-relative ${className ?? ""}`}
       onClick={() => {
         if (authContext.status === "success") {
@@ -52,6 +53,7 @@ function DeleteFromFavoriteButton({
         }
       }}
     >
+      <TrashIcon width={18} className="me-2" />
       Remove
     </ProgressButton>
   );

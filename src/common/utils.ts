@@ -189,6 +189,11 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
   }
 
   console.log(error);
+
+  if (typeof error === "string" && error.length > 0) {
+    return error;
+  }
+
   return error?.message ?? "Something went wrong, please try again";
 }
 

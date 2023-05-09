@@ -9,7 +9,7 @@ interface ShopManageGridItemProps {
   value: Shop;
 }
 
-const _imageSize = 80;
+const _imageSize = 100;
 
 function ShopManageGridItem({ value }: ShopManageGridItemProps) {
   // const statusView = () => {
@@ -39,7 +39,7 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
           >
             <div className="ratio ratio-1x1" style={{ width: _imageSize }}>
               <Image
-                className="rounded-circle"
+                className="rounded-circle border"
                 src={value.logo ?? "/images/placeholder.jpeg"}
                 alt="Shop image."
                 fill
@@ -69,7 +69,7 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
           <div className="hstack gap-2">
             <Link
               href={`/account/shops/${value.slug}`}
-              className="btn btn-secondary flex-grow-1 hstack justify-content-center gap-2"
+              className="btn btn-primary flex-grow-1 hstack justify-content-center gap-2"
             >
               {/* <ChartBarIcon width={20} /> */}
               <span>Manage shop</span>

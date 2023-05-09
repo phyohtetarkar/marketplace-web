@@ -159,9 +159,7 @@ const Filter = (props: FilterProps) => {
             </div>
           </div>
           <div className="p-3">
-            <button className="btn btn-secondary w-100 py-2">
-              Apply filter
-            </button>
+            <button className="btn btn-primary w-100 py-2">Apply filter</button>
           </div>
         </div>
       </Accordion>

@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import {
   AuthenticationContext,
   ShopDetailContext
@@ -24,9 +25,7 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
   const shopContext = useContext(ShopDetailContext);
   const authContext = useContext(AuthenticationContext);
   const router = useRouter();
-  const [review, setReview] = useState<ShopReview>({
-    shopId: shopContext?.id
-  });
+  const [review, setReview] = useState<ShopReview>();
 
   const loadUserReview = useCallback(async (shopId: number) => {
     try {
@@ -45,18 +44,6 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
     values: review
   });
 
-  // const formik = useFormik<ShopReview>({
-  //   initialValues: {
-  //     shopId: shopContext?.id
-  //   },
-  //   enableReinitialize: true,
-  //   validateOnBlur: false,
-  //   validateOnChange: false,
-  //   onSubmit: (values) => {
-  //     postReview(values);
-  //   }
-  // });
-
   useEffect(() => {
     if (authContext.status !== "success") {
       return;
@@ -71,12 +58,12 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
         router.push("/login");
         return;
       }
-      await writeReview(values);
+      await writeReview({ ...values, shopId: shopContext?.id });
       reload?.();
       await loadUserReview(values.shopId ?? 0);
     } catch (error) {
       const msg = parseErrorResponse(error);
-    } finally {
+      toast.error(msg);
     }
   };
 
@@ -91,9 +78,7 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
     >
       <div className="card mb-3">
         <div className="card-header py-3">
-          <h5 className="mb-0">
-            {!review.id ? "Write Review" : "Your Review"}
-          </h5>
+          <h5 className="mb-0">{!review ? "Write Review" : "Your Review"}</h5>
         </div>
         <div className="card-body">
           <div className="row gap-3">
@@ -184,7 +169,7 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
               className="ms-auto px-3 py-2"
               loading={isSubmitting}
             >
-              {!review.id ? "Post review" : "Update review"}
+              {!review ? "Post review" : "Update review"}
             </ProgressButton>
           </div>
         </div>

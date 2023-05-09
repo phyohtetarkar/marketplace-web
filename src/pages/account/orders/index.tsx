@@ -1,9 +1,20 @@
 import Link from "next/link";
-import { formatTimestamp } from "../../../common/utils";
+import { useContext, useState } from "react";
+import useSWR from "swr";
+import { AuthenticationContext } from "../../../common/contexts";
+import { OrderStatus } from "../../../common/models";
+import {
+  formatNumber,
+  formatTimestamp,
+  parseErrorResponse
+} from "../../../common/utils";
 import { withAuthentication } from "../../../common/WithAuthentication";
 import AccountMenu from "../../../components/account/AccountMenu";
-import { Input, Select } from "../../../components/forms";
+import Alert from "../../../components/Alert";
+import { Select } from "../../../components/forms";
+import Loading from "../../../components/Loading";
 import Pagination from "../../../components/Pagination";
+import { getMyOrders, OrderQuery } from "../../../services/OrderService";
 
 function OrderCard() {
   return (
@@ -80,17 +91,84 @@ function OrderCard() {
 }
 
 function MyOrders() {
-  const list = [1, 2];
+  const authContext = useContext(AuthenticationContext);
+
+  const [query, setQuery] = useState<OrderQuery>({});
+
+  const { data, error, isLoading } = useSWR(
+    [`/profile/${authContext.payload?.id}/orders`, query],
+    ([url, q]) => getMyOrders(q),
+    {
+      revalidateOnFocus: false
+    }
+  );
+
+  const content = () => {
+    if (isLoading) {
+      return <Loading />;
+    }
+
+    if (error) {
+      return <Alert message={parseErrorResponse(error)} variant="danger" />;
+    }
+
+    if (!data || data.contents.length === 0) {
+      return <Alert message={"No order found"} />;
+    }
+
+    return (
+      <>
+        <div className="table-responsive">
+          <table className="table align-middle">
+            <thead className="text-nowrap">
+              <tr>
+                <th scope="col" style={{ minWidth: 200 }}>
+                  Order #
+                </th>
+                <th className="fw-medium" style={{ minWidth: 120 }}>
+                  Date Purchased
+                </th>
+                <th className="fw-medium" style={{ minWidth: 150 }}>
+                  Status
+                </th>
+                <th className="fw-medium" style={{ minWidth: 150 }}>
+                  Total
+                </th>
+              </tr>
+            </thead>
+            <tbody className="">
+              {data.contents.map((o, i) => {
+                return (
+                  <tr key={i}>
+                    <th scope="row" className="py-2h">
+                      <Link
+                        href={`/account/orders/${o.orderCode}`}
+                        className="nav-link text-decoration-underline p-0"
+                      >
+                        {o.orderCode}
+                      </Link>
+                    </th>
+                    <td>{formatTimestamp(o.createdAt)}</td>
+                    <td className="fw-semibold">{o.status}</td>
+                    <td>{formatNumber(o.totalPrice)} Ks</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-4 d-flex justify-content-end">
+          <Pagination
+            currentPage={data.currentPage}
+            totalPage={data.totalPage}
+          />
+        </div>
+      </>
+    );
+  };
+
   return (
     <div>
-      {/* <div className="bg-primary">
-        <div className="container">
-          <div className="py-4">
-            <h1 className="text-light text-center text-lg-start">My Orders</h1>
-          </div>
-        </div>
-      </div> */}
-
       <div className="container py-3 mb-5">
         <div className="row g-3">
           <div className="col-lg-4 col-xl-3">
@@ -98,21 +176,25 @@ function MyOrders() {
           </div>
           <div className="col-lg-8 col-xl-9">
             <div className="row g-3 mb-3">
-              <div className="col-auto d-none d-sm-block">
-                <Select>
+              <div className="col-auto">
+                <Select
+                  value={query.status ?? ""}
+                  onChange={(evt) => {
+                    setQuery((old) => ({
+                      ...old,
+                      status: evt.target.value as OrderStatus
+                    }));
+                  }}
+                >
                   <option value="">All Status</option>
-                  <option value="">Pending</option>
-                  <option value="">Suspended</option>
-                  <option value="">Deleted</option>
+                  <option value="PENDING">Pending</option>
+                  <option value="CONFIRMED">Confirmed</option>
+                  <option value="COMPLETED">Completed</option>
+                  <option value="CANCELLED">Cancelled</option>
                 </Select>
               </div>
             </div>
-            {list.map((i) => (
-              <OrderCard key={i} />
-            ))}
-            <div className="d-flex justify-content-end">
-              <Pagination />
-            </div>
+            {content()}
           </div>
         </div>
       </div>

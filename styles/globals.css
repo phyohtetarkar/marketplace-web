@@ -1,5 +1,5 @@
 :root {
-  --border-radius: 0.25rem;
+  --border-radius: 0.35rem;
 }
 
 @font-face {
@@ -230,24 +230,22 @@ svg {
 }
 
 .my-list-item:hover svg {
-  color: black;
+  color: var(--bs-primary);
 }
 
 .my-list-item:hover {
   border-radius: var(--border-radius);
-  color: black;
-  background-color: #f2f2f2;
+  color: var(--bs-primary);
 }
 
 .my-list-item.active {
-  color: var(--bs-light);
-  background-color: var(--bs-secondary);
+  color: var(--bs-primary);
   text-decoration: none;
   border-radius: var(--border-radius);
 }
 
 .my-list-item.active svg {
-  color: var(--bs-light);
+  color: var(--bs-primary);
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

@@ -1,9 +1,11 @@
 import { PhoneIcon, UserIcon } from "@heroicons/react/24/outline";
+import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { formatTimestamp } from "../../../../common/utils";
-import { withAuthentication } from "../../../../common/WithAuthentication";
-import ProgressButton from "../../../../components/ProgressButton";
+import { Order } from "../../../common/models";
+import { formatTimestamp } from "../../../common/utils";
+import { withAuthentication } from "../../../common/WithAuthentication";
+import ProgressButton from "../../../components/ProgressButton";
 
 function OrderRow() {
   return (
@@ -62,7 +64,7 @@ function OrderRow() {
   );
 }
 
-function OrderDetail() {
+function OrderDetail({ order }: { order: Order | null }) {
   const list = [1, 2, 3, 4];
 
   return (
@@ -77,8 +79,13 @@ function OrderDetail() {
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb mb-1">
                   <li className="breadcrumb-item">
+                    <Link href="/account/overview" className="">
+                      My profile
+                    </Link>
+                  </li>
+                  <li className="breadcrumb-item">
                     <Link href="/account/orders" className="">
-                      My orders
+                      orders
                     </Link>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
@@ -232,5 +239,23 @@ function OrderDetail() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { code } = context.query;
+
+  try {
+    return {
+      props: {
+        order: null
+      }
+    };
+  } catch (e) {
+    console.log(e);
+  }
+
+  return {
+    notFound: true
+  };
+};
 
 export default withAuthentication(OrderDetail);

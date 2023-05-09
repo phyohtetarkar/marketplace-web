@@ -62,111 +62,85 @@ function DiscountListing({ shopId }: { shopId: number }) {
     return (
       <>
         <div className="table-responsive">
-          <table className="table bg-white align-middle">
-            <thead className="table-light text-nowrap align-middle">
-              <tr style={{ height: 50 }}>
-                <th
-                  className="ps-3 ps-lg-4 fw-medium"
-                  style={{ minWidth: 200 }}
-                >
+          <table className="table align-middle">
+            <thead className="text-nowrap">
+              <tr>
+                <th scope="col" style={{ minWidth: 200 }}>
                   NAME
                 </th>
-                <th className="fw-medium" style={{ minWidth: 120 }}>
+                <th scope="col" style={{ minWidth: 120 }}>
                   VALUE
                 </th>
-                <th className="fw-medium" style={{ minWidth: 150 }}>
+                <th scope="col" style={{ minWidth: 150 }}>
                   TYPE
                 </th>
-                <th className="fw-medium" style={{ minWidth: 50 }}></th>
+                <th scope="col" style={{ minWidth: 50 }}></th>
               </tr>
             </thead>
-            <tbody className="border-top-0">
-              {data?.contents &&
-                data?.contents.map((d, i) => {
-                  return (
-                    <tr key={d.id}>
-                      <td className="ps-3 ps-lg-4 w-100 py-2h">
-                        <span>{d.title}</span>
-                      </td>
-                      <td>
-                        <span className="text-nowrap">{d.value}</span>
-                      </td>
-                      <td>
-                        <span className="text-nowrap">{type(d.type)}</span>
-                      </td>
-                      <td>
-                        <div className="hstack align-items-center">
-                          <Dropdown
-                            toggle={
-                              <div role="button" className="text-muted">
-                                <MoreVertical width={20} />
-                              </div>
-                            }
-                            popperConfig={{
-                              placement: "left",
-                              strategy: "fixed"
-                            }}
-                            menuClassName="border-0 shadow-lg"
-                          >
-                            <li
-                              role="button"
-                              className="dropdown-item"
-                              onClick={() => {
-                                setDiscount(d);
-                                setShowEdit(true);
-                              }}
-                            >
-                              Edit
-                            </li>
-                            <li
-                              role="button"
-                              className="dropdown-item"
-                              onClick={() => {
-                                setDiscount(d);
-                                setShowApply(true);
-                              }}
-                            >
-                              Apply
-                            </li>
-                            <div className="dropdown-divider"></div>
-                            <li
-                              role="button"
-                              className="text-danger dropdown-item"
-                              onClick={() => {
-                                setDiscount(d);
-                                setShowConfirm(true);
-                              }}
-                            >
-                              Delete
-                            </li>
-                          </Dropdown>
-                          {/* <button
-                            className="btn btn-primary"
-                            onClick={() => {}}
-                          >
-                            <DocumentCheckIcon width={20} />
-                          </button>
-                          <button
-                            className="btn btn-primary"
+            <tbody className="text-nowrap">
+              {data?.contents.map((d, i) => {
+                return (
+                  <tr key={d.id}>
+                    <td className="w-100 py-2h">
+                      <span>{d.title}</span>
+                    </td>
+                    <td>
+                      <span className="text-nowrap">{d.value}</span>
+                    </td>
+                    <td>
+                      <span className="text-nowrap">{type(d.type)}</span>
+                    </td>
+                    <td>
+                      <div className="hstack align-items-center">
+                        <Dropdown
+                          toggle={
+                            <div role="button" className="text-muted">
+                              <MoreVertical width={20} />
+                            </div>
+                          }
+                          popperConfig={{
+                            placement: "left",
+                            strategy: "fixed"
+                          }}
+                          menuClassName="border-0 shadow-lg"
+                        >
+                          <li
+                            role="button"
+                            className="dropdown-item"
                             onClick={() => {
                               setDiscount(d);
                               setShowEdit(true);
                             }}
                           >
-                            <PencilSquareIcon width={20} />
-                          </button>
-                          <button
-                            disabled={false}
-                            className="btn btn-danger"
-                            onClick={async () => {}}
+                            Edit
+                          </li>
+                          <li
+                            role="button"
+                            className="dropdown-item"
+                            onClick={() => {
+                              setDiscount(d);
+                              setShowApply(true);
+                            }}
                           >
-                            <TrashIcon width={20} />
-                          </button> */}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+                            Apply
+                          </li>
+                          <div className="dropdown-divider"></div>
+                          <li
+                            role="button"
+                            className="text-danger dropdown-item"
+                            onClick={() => {
+                              setDiscount(d);
+                              setShowConfirm(true);
+                            }}
+                          >
+                            Delete
+                          </li>
+                        </Dropdown>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -185,24 +159,19 @@ function DiscountListing({ shopId }: { shopId: number }) {
   return (
     <>
       <div className="p-0">
-        <div className="card">
-          <div className="card-header bg-white py-2h border-bottom">
-            <div className="hstack">
-              <h5 className="mb-0">Discounts</h5>
-              <div className="flex-grow-1"></div>
-              <button
-                className="btn btn-primary py-2"
-                onClick={() => {
-                  setDiscount({ type: "PERCENTAGE" });
-                  setShowEdit(true);
-                }}
-              >
-                Create new
-              </button>
-            </div>
-          </div>
-          <div className="card-body p-0">{content()}</div>
+        <div className="hstack mb-3">
+          <div className="flex-grow-1"></div>
+          <button
+            className="btn btn-primary py-2"
+            onClick={() => {
+              setDiscount({ type: "PERCENTAGE" });
+              setShowEdit(true);
+            }}
+          >
+            Create new
+          </button>
         </div>
+        {content()}
       </div>
 
       <Modal
@@ -226,6 +195,7 @@ function DiscountListing({ shopId }: { shopId: number }) {
           );
         }}
       </Modal>
+
       <Modal
         id="applyDiscountModal"
         show={showApply}
@@ -247,6 +217,7 @@ function DiscountListing({ shopId }: { shopId: number }) {
           );
         }}
       </Modal>
+
       <ConfirmModal
         show={showConfirm}
         message="Are you sure to delete?"

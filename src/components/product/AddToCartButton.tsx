@@ -34,7 +34,7 @@ function AddToCartButton({
   return (
     <button
       disabled={adding || disabled}
-      className={`btn btn-secondary hstack gap-2 justify-content-center ${
+      className={`btn btn-primary hstack gap-2 justify-content-center ${
         className ?? ""
       }`}
       onClick={() => {

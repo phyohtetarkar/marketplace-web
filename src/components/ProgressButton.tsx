@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 interface ProgressButtonProps {
   type?: "button" | "submit";
   variant?: "primary" | "secondary" | "accent" | "warning" | "danger" | "dark";
+  theme?: "fill" | "outline";
   loading?: boolean;
   className?: string;
   disabled?: boolean;
@@ -14,6 +15,7 @@ function ProgressButton(props: ProgressButtonProps) {
   const {
     type = "button",
     variant = "primary",
+    theme = "fill",
     loading,
     className = "",
     onClick,
@@ -24,7 +26,9 @@ function ProgressButton(props: ProgressButtonProps) {
   return (
     <button
       type={type}
-      className={`btn btn-${variant} hstack justify-content-center ${className}`}
+      className={`btn btn-${
+        theme === "outline" ? "outline-" : ""
+      }${variant} hstack justify-content-center ${className}`}
       disabled={loading || disabled}
       onClick={onClick}
     >

@@ -50,9 +50,13 @@ function AddToFavoriteButton({
     <Tooltip title={favorite ? "Remove from favorite" : "Add to favorite"}>
       <button
         disabled={loading || disabled}
-        className={`btn btn-outline-light text-primary border h-100 position-relative ${
+        className={`btn btn-light text-muted rounded-circle position-relative p-0 ${
           className ?? ""
         }`}
+        style={{
+          width: "2.5rem",
+          minHeight: "2.5rem"
+        }}
         onClick={() => {
           // setAdding(true);
           // setTimeout(() => {
@@ -95,15 +99,17 @@ function AddToFavoriteButton({
         )}
         {favorite ? (
           <HeartIcon
-            width={24}
+            width={20}
+            className="position-absolute top-50 start-50 translate-middle text-primary"
             style={{
               visibility: loading ? "hidden" : "visible"
             }}
           />
         ) : (
           <HeartIconOutline
-            width={24}
+            width={20}
             strokeWidth={2}
+            className="position-absolute top-50 start-50 translate-middle"
             style={{
               visibility: loading ? "hidden" : "visible"
             }}

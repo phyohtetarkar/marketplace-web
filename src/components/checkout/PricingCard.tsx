@@ -42,7 +42,7 @@ function PricingCard(props: PricingCardProps) {
       <div className="card-body">
         <div className="vstack gap-2">
           <div className="d-flex justify-content-between">
-            <span>Total Products</span>
+            <span>Total products</span>
             <span>{summary.quantity}</span>
           </div>
           <div className="d-flex justify-content-between">
@@ -99,7 +99,7 @@ function PricingCard(props: PricingCardProps) {
             >
               Checkout
             </button>
-            <Link href={"/"} className="btn btn-secondary py-2">
+            <Link href={"/"} className="btn btn-default py-2">
               Contine Shopping
             </Link>
           </div>

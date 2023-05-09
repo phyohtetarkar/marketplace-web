@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "../../common/models";
+import { formatNumber, transformDiscount } from "../../common/utils";
 import AddToCartButton from "./AddToCartButton";
 import DeleteFromFavoriteButton from "./DeleteFromFavoriteButton";
 
@@ -9,6 +10,20 @@ interface ProductFavoriteProps {
 }
 
 function ProductFavoriteItem({ product }: ProductFavoriteProps) {
+  let price = <>{formatNumber(product.price ?? 0)} Ks</>;
+
+  if (product.discount) {
+    price = (
+      <>
+        <del className="text-muted small fw-normal me-1">
+          {formatNumber(product.price ?? 0)}&nbsp;Ks
+        </del>
+        {formatNumber(transformDiscount(product.discount, product.price))}
+        &nbsp;Ks
+      </>
+    );
+  }
+
   return (
     <div className="card">
       <div className="card-body">
@@ -22,7 +37,7 @@ function ProductFavoriteItem({ product }: ProductFavoriteProps) {
             }}
           >
             <Image
-              className="rounded border"
+              className="rounded"
               src={product.thumbnail ?? "/images/placeholder.jpeg"}
               alt="Product image."
               fill
@@ -35,10 +50,12 @@ function ProductFavoriteItem({ product }: ProductFavoriteProps) {
           <div className="vstack overflow-hidden">
             <Link
               href={`/products/${product.slug}`}
-              className="text-dark fw-medium text-decoration-none text-truncate"
+              className="text-muted fw-medium text-decoration-none text-truncate"
             >
               {product.name}
             </Link>
+
+            <div>{price}</div>
 
             <div className="flex-grow-1"></div>
 
