@@ -1,11 +1,18 @@
-import { PhoneIcon, UserIcon } from "@heroicons/react/24/outline";
-import { GetServerSideProps } from "next";
+import { MapPinIcon, PhoneIcon, UserIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import { Order } from "../../../common/models";
-import { formatTimestamp } from "../../../common/utils";
+import { useRouter } from "next/router";
+import useSWR from "swr";
+import {
+  formatNumber,
+  formatTimestamp,
+  parseErrorResponse
+} from "../../../common/utils";
 import { withAuthentication } from "../../../common/WithAuthentication";
+import Alert from "../../../components/Alert";
+import Loading from "../../../components/Loading";
 import ProgressButton from "../../../components/ProgressButton";
+import { getOrderByCode } from "../../../services/OrderService";
 
 function OrderRow() {
   return (
@@ -64,198 +71,216 @@ function OrderRow() {
   );
 }
 
-function OrderDetail({ order }: { order: Order | null }) {
+function OrderDetail() {
   const list = [1, 2, 3, 4];
 
+  const router = useRouter();
+
+  const { code } = router.query;
+
+  const { data, error, isLoading } = useSWR(
+    [`/orders`, code],
+    ([url, code]) =>
+      typeof code === "string" ? getOrderByCode(code) : undefined,
+    {
+      revalidateOnFocus: false
+    }
+  );
+
+  const content = () => {
+    if (isLoading) {
+      return <Loading />;
+    }
+
+    if (error) {
+      return <Alert message={parseErrorResponse(error)} variant="danger" />;
+    }
+
+    if (!data) {
+      return <Alert message="Order not found" />;
+    }
+
+    return (
+      <div className="row">
+        <div className="col-12 col-lg-7 col-xl-8 mb-3">
+          <div className="card">
+            <div className="card-body">
+              <h4 className="fw-semibold mb-3">Products</h4>
+              <div className="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-3">
+                {data.items.map((item, i) => {
+                  return (
+                    <div key={i} className="col">
+                      <div className="d-flex gap-3">
+                        <div
+                          className="position-relative bg-light rounded"
+                          onContextMenu={(e) => e.preventDefault()}
+                          style={{
+                            minWidth: 90,
+                            height: 90
+                          }}
+                        >
+                          <Image
+                            className="rounded border"
+                            src={
+                              item.product?.thumbnail ??
+                              "/images/placeholder.jpeg"
+                            }
+                            alt="Product image."
+                            fill
+                            sizes="33vw"
+                            style={{
+                              objectFit: "contain"
+                            }}
+                          />
+                        </div>
+                        <div className="vstack">
+                          <Link
+                            href={`/products/${item.productSlug}`}
+                            className="fw-semibold text-decoration-none text-dark"
+                          >
+                            {item.productName}
+                          </Link>
+                          {item.attributes && (
+                            <div
+                              className="text-muted small"
+                              style={{
+                                fontSize: "0.8rem"
+                              }}
+                            >
+                              {item.attributes
+                                .sort((f, s) => f.sort - s.sort)
+                                .map((va) => `${va.attribute}: ${va.value}`)
+                                .join(", ")}
+                            </div>
+                          )}
+                          <div className="flex-grow-1"></div>
+                          <div className="mt-3">
+                            <span>{formatNumber(item.unitPrice)}</span>
+                            <span className="text-muted ms-1">
+                              &times; {item.quantity}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <hr className="text-muted" />
+
+              <div className="row g-3">
+                <div className="col-12 col-lg-6">
+                  <h5 className="fw-semibold">Contact</h5>
+                  <div className="d-flex small">
+                    <span className="fw-medium">Name:</span>
+                    <span className="ms-2 text-muted">
+                      {data.delivery.name}
+                    </span>
+                  </div>
+                  <div className="d-flex small">
+                    <span className="fw-medium">Phone:</span>
+                    <span className="text-muted ms-2">
+                      {data.delivery.phone}
+                    </span>
+                  </div>
+
+                  <div className="d-flex small">
+                    <span className="fw-medium">Address:</span>
+                    <p className="text-muted mb-0 ms-2">
+                      {data.delivery.address},&nbsp;{data.delivery.city}.
+                    </p>
+                  </div>
+                </div>
+                <div className="col-12 col-lg-6">
+                  <h5 className="fw-semibold">Note</h5>
+                  <p className="text-muted mb-0 small">{data.note}</p>
+                </div>
+              </div>
+            </div>
+            <div className="card-footer">
+              <span className="text-muted small">
+                Order date: {formatTimestamp(data.createdAt)}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="col-12 col-lg-5 col-xl-4">
+          <div className="card">
+            <div className="card-body">
+              <div className="hstack justify-content-between mb-2">
+                <div className="text-muted">Status:</div>
+                <div className="ms-2 fw-semibold">
+                  {data.status.toUpperCase()}
+                </div>
+              </div>
+              <div className="hstack justify-content-between mb-2">
+                <div className="text-muted">Quantity:</div>
+                <div className="ms-2">{data.quantity}</div>
+              </div>
+              <div className="hstack justify-content-between mb-2">
+                <div className="text-muted">Subtotal:</div>
+                <div className="ms-2">
+                  {formatNumber(data.subTotalPrice)} Ks
+                </div>
+              </div>
+              <div className="hstack justify-content-between">
+                <div className="text-muted">Discount:</div>
+                <div className="ms-2 text-danger">
+                  -{formatNumber(data.discount)} Ks
+                </div>
+              </div>
+              <hr className="text-muted" />
+              <div className="hstack justify-content-between">
+                <div className="fw-semibold">Total Price:</div>
+                <div className="ms-2 fw-semibold">
+                  {formatNumber(data.totalPrice)} Ks
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="pb-5">
+    <>
       <div className="header-bar">
         <div className="container py-4">
           <div className="row g-3">
-            {/* <div className="px-2">
-                <h3 className="text-lg-start">Order Detail</h3>
-              </div> */}
             <div className="col-md-6 hstack">
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb mb-1">
                   <li className="breadcrumb-item">
-                    <Link href="/account/overview" className="">
-                      My profile
-                    </Link>
+                    <Link href="/account/overview">My profile</Link>
                   </li>
                   <li className="breadcrumb-item">
-                    <Link href="/account/orders" className="">
-                      orders
-                    </Link>
+                    <Link href="/account/orders">orders</Link>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
-                    Order detail
+                    {typeof code === "string" ? code : ""}
                   </li>
                 </ol>
               </nav>
             </div>
             <div className="col-md-6 d-flex">
-              <ProgressButton
-                className="text-nowrap ms-md-auto"
-                variant="danger"
-              >
-                Cancel Order
-              </ProgressButton>
+              {data?.status === "PENDING" && (
+                <ProgressButton
+                  className="text-nowrap ms-md-auto"
+                  variant="danger"
+                >
+                  Cancel Order
+                </ProgressButton>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container py-4">
-        <div className="row g-4">
-          <div className="col-xl-8 col-lg-7 col-12">
-            <div className="card">
-              <div className="card-header py-4 bg-white">
-                <div className="row">
-                  <div className="col d-flex">
-                    <span className="fw-semibold h5 my-auto">
-                      Order ID: 20001
-                    </span>
-                  </div>
-                  <div className="col-auto">
-                    <div>
-                      <span className="fw-semibold">Status:</span>
-                      <small className="ms-2 fw-semibold text-success">
-                        DELIVERED
-                      </small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="table-responsive">
-                <table className="table text-nowrap">
-                  <thead
-                    className="text-nowrap align-middle"
-                    style={{ backgroundColor: "#f9f9f9" }}
-                  >
-                    <tr style={{ height: 50 }}>
-                      <th
-                        className="ps-3 ps-lg-4 fw-normal"
-                        style={{ minWidth: 200 }}
-                      >
-                        Products
-                      </th>
-                      <th className="fw-normal" style={{ minWidth: 150 }}>
-                        Items
-                      </th>
-                      <th className="fw-normal" style={{ minWidth: 150 }}>
-                        Amounts
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="border-top-0">
-                    {list.map((i) => (
-                      <OrderRow key={i} />
-                    ))}
-                    <tr className="small">
-                      <td className="border-bottom-0 pt-3"></td>
-                      <td
-                        colSpan={1}
-                        className="text-muted border-bottom-0 pt-3"
-                      >
-                        Total Products :
-                      </td>
-                      <td className="fw-medium text-end border-bottom-0 pt-3 pe-3 pe-lg-4">
-                        5
-                      </td>
-                    </tr>
-                    <tr className="small">
-                      <td className="border-bottom-0"></td>
-                      <td colSpan={1} className="border-bottom-0 text-muted">
-                        Sub Total :
-                      </td>
-                      <td className="fw-medium text-end border-bottom-0 pe-3 pe-lg-4">
-                        600,000ks
-                      </td>
-                    </tr>
-                    <tr className="small">
-                      <td className="border-bottom-0"></td>
-                      <td colSpan={1} className="text-muted">
-                        Discount :
-                      </td>
-                      <td className="fw-medium text-end text-danger pe-3 pe-lg-4">
-                        -0ks
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="border-bottom-0"></td>
-                      <td
-                        colSpan={1}
-                        className="text-uppercase text-muted border-bottom-0"
-                      >
-                        Total Price
-                      </td>
-                      <td className="fw-medium text-end border-bottom-0 pe-3 pe-lg-4">
-                        3000,000ks
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="card-footer small border-0 py-3 text-muted">
-                {formatTimestamp(Date.now(), true)}
-              </div>
-            </div>
-          </div>
-          <div className="col-xl-4 col-lg-5 col-12">
-            <div className="card">
-              <div className="card-body p-sm-3 p-lg-4 small">
-                <h6 className="mb-3">Contact</h6>
-                <div className="hstack mt-2">
-                  <UserIcon width={18} strokeWidth={2} className="text-muted" />
-                  <span className="ms-2 fw-medium">Josep William</span>
-                </div>
-                <div className="hstack mt-2">
-                  <PhoneIcon
-                    width={18}
-                    strokeWidth={2}
-                    className="text-muted"
-                  />
-                  <span className="text-muted ms-2">+95911223344</span>
-                </div>
-              </div>
-              <div className="card-body border-top p-sm-3 p-lg-4 small">
-                <h6 className=" mb-3">Address</h6>
-                <p className="text-muted mb-0">
-                  No.26, Pyay Street, Hlaing Township, Yangon, Myanmar.
-                </p>
-              </div>
-              <div className="card-body border-top p-sm-3 p-lg-4 small">
-                <h6 className="mb-3">Notes</h6>
-                <p className="text-muted mb-0">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      <div className="container py-3 mb-5">{content()}</div>
+    </>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { code } = context.query;
-
-  try {
-    return {
-      props: {
-        order: null
-      }
-    };
-  } catch (e) {
-    console.log(e);
-  }
-
-  return {
-    notFound: true
-  };
-};
 
 export default withAuthentication(OrderDetail);

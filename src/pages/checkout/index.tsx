@@ -22,10 +22,13 @@ import {
 import { withAuthentication } from "../../common/WithAuthentication";
 import ConfirmModal from "../../components/ConfirmModal";
 import Dropdown from "../../components/Dropdown";
-import { AutocompleteSelect, Input } from "../../components/forms";
+import { AutocompleteSelect, Input, Textarea } from "../../components/forms";
 import { getShopDeliveryCities } from "../../services/CityService";
 import { createOrder } from "../../services/OrderService";
-import { getShopAcceptedPayments } from "../../services/ShopService";
+import {
+  getShopAcceptedPayments,
+  getShopSetting
+} from "../../services/ShopService";
 
 function Checkout() {
   const router = useRouter();
@@ -47,19 +50,25 @@ function Checkout() {
   const slipFileRef = useRef<HTMLInputElement | null>(null);
 
   const deliveryCitiesState = useSWR(
-    [`/delivery-cities/${shopId}`, shopId],
-    ([url, id]) => (id > 0 ? getShopDeliveryCities(shopId) : []),
+    `/shops/${shopId}/delivery-cities`,
+    () => (shopId > 0 ? getShopDeliveryCities(shopId) : []),
     {
       revalidateOnFocus: false
     }
   );
 
   const acceptedPaymentsState = useSWR(
-    [`/shops/${shopId}/accepted-payments`, shopId],
-    ([url, id]) => (id > 0 ? getShopAcceptedPayments(id) : []),
+    `/shops/${shopId}/accepted-payments`,
+    () => (shopId > 0 ? getShopAcceptedPayments(shopId) : []),
     {
       revalidateOnFocus: false
     }
+  );
+
+  const shopSettingState = useSWR(
+    `/shops/${shopId}/setting`,
+    () => (shopId > 0 ? getShopSetting(shopId) : undefined),
+    { revalidateOnFocus: false }
   );
 
   const {
@@ -91,7 +100,7 @@ function Checkout() {
       subTotalPrice += price * item.quantity;
 
       if (item.product.discount) {
-        discount += transformDiscount(
+        totalPrice += transformDiscount(
           item.product.discount,
           price,
           item.quantity
@@ -99,7 +108,7 @@ function Checkout() {
       }
     }
 
-    totalPrice = subTotalPrice - discount;
+    discount = subTotalPrice - totalPrice;
 
     return { quantity, subTotalPrice, totalPrice, discount };
   }, [cartItems]);
@@ -255,6 +264,18 @@ function Checkout() {
                 error={errors.delivery?.address?.message}
               />
             </div>
+
+            <div className="col-12">
+              <Textarea
+                label="Note"
+                id="noteInput"
+                type="text"
+                placeholder="Your order note..."
+                {...register("note", {
+                  setValueAs: setEmptyOrString
+                })}
+              />
+            </div>
           </div>
           <h4 className="fw-semibold border-bottom pb-3 mb-3">
             Payment option
@@ -273,6 +294,9 @@ function Checkout() {
                             id={`codCheck`}
                             className="form-check-input"
                             type="radio"
+                            disabled={
+                              shopSettingState.data?.cashOnDelivery !== true
+                            }
                             checked={field.value === "COD"}
                             onChange={(evt) => {
                               evt.target.checked &&
@@ -296,6 +320,9 @@ function Checkout() {
                             id={`bankTransferCheck`}
                             className="form-check-input"
                             type="radio"
+                            disabled={
+                              shopSettingState.data?.bankTransfer !== true
+                            }
                             checked={field.value === "BANK_TRANSFER"}
                             onChange={(evt) => {
                               evt.target.checked &&

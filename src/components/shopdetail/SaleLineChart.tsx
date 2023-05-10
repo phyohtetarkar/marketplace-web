@@ -1,5 +1,5 @@
 import { Chart, ChartConfiguration, ChartData } from "chart.js";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 import { getMonthlySale } from "../../services/ShopService";
 import { Select } from "../forms";
@@ -30,6 +30,17 @@ function SaleLineChart({ shopId }: { shopId: number }) {
       revalidateOnFocus: false
     }
   );
+
+  const years = useMemo(() => {
+    const start = 2023;
+    const now = new Date().getFullYear();
+    const diff = now - start;
+    const array: number[] = [];
+    for (let i = diff; i >= 0; i--) {
+      array.push(start + i);
+    }
+    return array;
+  }, []);
 
   useEffect(() => {
     let chart: Chart | undefined = undefined;
@@ -94,7 +105,13 @@ function SaleLineChart({ shopId }: { shopId: number }) {
           <div>
             <Select height={36}>
               <option disabled>Year</option>
-              <option>2023</option>
+              {years.map((y, i) => {
+                return (
+                  <option key={i} value={y}>
+                    {y}
+                  </option>
+                );
+              })}
             </Select>
           </div>
         </div>

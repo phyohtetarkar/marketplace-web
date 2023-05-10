@@ -299,7 +299,7 @@ const ShopDeliveryCitiesForm = (props: ShopSettingProps) => {
   const [showSelect, setShowSelect] = useState(false);
 
   const { data, error, isLoading, mutate } = useSWR(
-    `/delivery-cities/${shopId}`,
+    `/shops/${shopId}/delivery-cities`,
     () => getShopDeliveryCities(shopId),
     {
       revalidateOnFocus: false

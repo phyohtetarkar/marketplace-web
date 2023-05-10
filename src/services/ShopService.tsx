@@ -304,7 +304,7 @@ export async function getPendingOrderCount(shopId: number) {
 
   await validateResponse(resp);
 
-  return resp.json() as Promise<number>;
+  return resp.text() as Promise<string>;
 }
 
 export async function getMonthlySale(shopId: number, year: number) {

@@ -276,12 +276,12 @@ export interface OrderItem {
   productId: number;
   productName: string;
   productSlug: string;
-  productImage: string;
-  variant?: string;
   unitPrice: number;
   discount: number;
   quantity: number;
   removed: boolean;
+  product?: Product;
+  attributes?: ProductVariantAttribute[];
 }
 
 export interface DeliveryDetail {

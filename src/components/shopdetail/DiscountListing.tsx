@@ -44,19 +44,11 @@ function DiscountListing({ shopId }: { shopId: number }) {
     }
 
     if (error) {
-      return (
-        <div className="p-3">
-          <Alert message={parseErrorResponse(error)} variant="danger" />
-        </div>
-      );
+      return <Alert message={parseErrorResponse(error)} variant="danger" />;
     }
 
     if ((data?.contents.length ?? 0) === 0) {
-      return (
-        <div className="p-3">
-          <Alert message="No discounts found" />
-        </div>
-      );
+      return <Alert message="No discounts found" />;
     }
 
     return (
@@ -158,27 +150,24 @@ function DiscountListing({ shopId }: { shopId: number }) {
 
   return (
     <>
-      <div className="p-0">
-        <div className="hstack mb-3">
-          <div className="flex-grow-1"></div>
-          <button
-            className="btn btn-primary py-2"
-            onClick={() => {
-              setDiscount({ type: "PERCENTAGE" });
-              setShowEdit(true);
-            }}
-          >
-            Create new
-          </button>
-        </div>
-        {content()}
+      <div className="hstack mb-3">
+        <div className="flex-grow-1"></div>
+        <button
+          className="btn btn-primary py-2"
+          onClick={() => {
+            setDiscount({ type: "PERCENTAGE" });
+            setShowEdit(true);
+          }}
+        >
+          Create new
+        </button>
       </div>
+      {content()}
 
       <Modal
         id="discountEditModal"
         show={showEdit}
         onHidden={() => setDiscount(undefined)}
-        variant="large"
       >
         {(isShown) => {
           return isShown && discount ? (

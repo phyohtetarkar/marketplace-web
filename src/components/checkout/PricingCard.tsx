@@ -25,7 +25,7 @@ function PricingCard(props: PricingCardProps) {
       subTotalPrice += price * item.quantity;
 
       if (item.product.discount) {
-        discount += transformDiscount(
+        totalPrice += transformDiscount(
           item.product.discount,
           price,
           item.quantity
@@ -33,7 +33,7 @@ function PricingCard(props: PricingCardProps) {
       }
     }
 
-    totalPrice = subTotalPrice - discount;
+    discount = subTotalPrice - totalPrice;
 
     return { quantity, subTotalPrice, totalPrice, discount };
   }, [items]);

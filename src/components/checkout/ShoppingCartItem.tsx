@@ -120,7 +120,7 @@ function ShoppingCartItem(props: ShoppingCartItemProps) {
         <del className="text-muted small fw-normal me-1">
           {formatNumber(item.product?.price ?? 0)}&nbsp;Ks
         </del>
-        {transformDiscount(item.product.discount, item.product.price, quantity)}
+        {transformDiscount(item.product.discount, item.product.price, 1)}
         &nbsp;Ks
       </>
     );

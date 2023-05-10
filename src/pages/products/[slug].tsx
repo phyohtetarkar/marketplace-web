@@ -404,14 +404,15 @@ function ProductDetail({ product }: { product: Product | null }) {
                             <div className="d-flex flex-wrap gap-2">
                               {attributeValues.get(a.id ?? 0)?.map((v, j) => {
                                 const selected =
-                                  selectedAttributes.get(a.id ?? 0) === v.value
-                                    ? "border-primary"
-                                    : "";
+                                  selectedAttributes.get(a.id ?? 0) === v.value;
+                                const clazz = selected
+                                  ? "border-primary text-primary"
+                                  : "text-muted";
                                 return (
                                   <div
                                     key={j}
                                     role="button"
-                                    className={`bg-light border rounded px-2h py-1 text-muted ${selected}`}
+                                    className={`bg-light border rounded px-2h py-1 ${clazz}`}
                                     onClick={() => {
                                       if (selected) {
                                         return;

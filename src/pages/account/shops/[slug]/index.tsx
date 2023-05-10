@@ -17,6 +17,8 @@ import Accordion from "../../../../components/Accordion";
 import Alert from "../../../../components/Alert";
 import Dropdown from "../../../../components/Dropdown";
 import Loading from "../../../../components/Loading";
+import { PendingOrderCountView } from "../../../../components/shop";
+import ShopOrderListing from "../../../../components/shop/ShopOrderListing";
 import {
   DiscountListing,
   ShopDashboard,
@@ -162,11 +164,7 @@ function ShopDetail() {
               width={iconSize}
             />
           ),
-          suffix: (
-            <small className="bg-danger rounded-pill px-2 text-light ms-2">
-              {shop?.pendingOrderCount ?? 0}
-            </small>
-          )
+          suffix: <>{shop && <PendingOrderCountView shopId={shop.id ?? 0} />}</>
         })}
         {menuLink({
           tab: "setting",
@@ -196,7 +194,7 @@ function ShopDetail() {
       case "reviews":
         return <ShopReviewListing shopId={shop.id!} hideEdit />;
       case "orders":
-        return null;
+        return <ShopOrderListing shopId={shop.id!} />;
       case "discounts":
         return <DiscountListing shopId={shop.id!} />;
       case "setting":
