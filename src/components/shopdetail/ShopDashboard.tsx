@@ -20,8 +20,6 @@ function ShopDashboard({ shopId }: { shopId: number }) {
 
   return (
     <div>
-      {/* <h3 className="fw-semibold">Insights</h3>
-      <hr className="bg-dark-gray" /> */}
       <div className="row g-3 mb-3">
         <div className="col-lg-4">
           <div className="card">

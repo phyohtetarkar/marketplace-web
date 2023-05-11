@@ -75,7 +75,7 @@ body {
   padding: 63px 0 0 0;
   margin: 0;
   height: 100%;
-  background-color: white;
+  background-color: var(--bs-light);
   font-family: Inter, Noto Sans Myanmar UI, -apple-system, BlinkMacSystemFont, Roboto,
     Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
     sans-serif !important;
@@ -98,11 +98,11 @@ svg {
 }
 
 .header-bar {
-  background: #f5f5f5;
+  background: var(--bs-secondary);
 }
 
 .header-bar a {
-  color: var(--bs-anchor);
+  color: var(--bs-light);
 }
 
 .btn-facebook {

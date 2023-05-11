@@ -1,6 +1,7 @@
+import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
-import { OrderStatus } from "../../common/models";
+import { OrderStatus, Shop } from "../../common/models";
 import {
   formatNumber,
   formatTimestamp,
@@ -12,10 +13,14 @@ import { Select } from "../forms";
 import Loading from "../Loading";
 import Pagination from "../Pagination";
 
-function ShopOrderListing({ shopId }: { shopId: number }) {
+function ShopOrderListing({ shop }: { shop: Shop }) {
   const [query, setQuery] = useState<OrderQuery>({});
 
-  const { data, error, isLoading } = useSWR(
+  const [orderCode, setOrderCode] = useState<string>();
+
+  const shopId = shop.id ?? 0;
+
+  const { data, error, isLoading, mutate } = useSWR(
     [`/shops/${shopId}/orders`, query],
     ([url, q]) => getShopOrders(shopId, q),
     {
@@ -58,15 +63,36 @@ function ShopOrderListing({ shopId }: { shopId: number }) {
             </thead>
             <tbody className="">
               {data.contents.map((o, i) => {
+                let statusColor = "bg-warning";
+
+                switch (o.status) {
+                  case "CANCELLED":
+                    statusColor = "bg-danger";
+                    break;
+                  case "COMPLETED":
+                    statusColor = "bg-success";
+                    break;
+                }
                 return (
                   <tr key={i}>
                     <th scope="row" className="py-2h">
-                      <div role="button" className="text-decoration-underline">
+                      <Link
+                        href={`/account/shops/${shop.slug}/orders/${o.orderCode}`}
+                        className="nav-link text-decoration-underline p-0"
+                      >
                         {o.orderCode}
-                      </div>
+                      </Link>
                     </th>
                     <td>{formatTimestamp(o.createdAt)}</td>
-                    <td className="fw-semibold">{o.status}</td>
+                    <td>
+                      <div className="d-flex">
+                        <div
+                          className={`rounded px-2 py-1 small text-light ${statusColor}`}
+                        >
+                          {o.status}
+                        </div>
+                      </div>
+                    </td>
                     <td>{formatNumber(o.totalPrice)} Ks</td>
                   </tr>
                 );

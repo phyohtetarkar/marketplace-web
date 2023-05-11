@@ -138,6 +138,16 @@ function MyOrders() {
             </thead>
             <tbody className="">
               {data.contents.map((o, i) => {
+                let statusColor = "bg-warning";
+
+                switch (o.status) {
+                  case "CANCELLED":
+                    statusColor = "bg-danger";
+                    break;
+                  case "COMPLETED":
+                    statusColor = "bg-success";
+                    break;
+                }
                 return (
                   <tr key={i}>
                     <th scope="row" className="py-2h">
@@ -149,7 +159,15 @@ function MyOrders() {
                       </Link>
                     </th>
                     <td>{formatTimestamp(o.createdAt)}</td>
-                    <td className="fw-semibold">{o.status}</td>
+                    <td>
+                      <div className="d-flex">
+                        <div
+                          className={`rounded px-2 py-1 small text-light ${statusColor}`}
+                        >
+                          {o.status}
+                        </div>
+                      </div>
+                    </td>
                     <td>{formatNumber(o.totalPrice)} Ks</td>
                   </tr>
                 );

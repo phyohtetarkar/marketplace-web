@@ -11,8 +11,7 @@ import {
   ProductAttribute,
   ProductImage,
   ProductVariant,
-  ProductVariantAttribute,
-  Shop
+  ProductVariantAttribute
 } from "../../common/models";
 import {
   parseErrorResponse,
@@ -37,15 +36,15 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
 );
 
 interface ProductEditProps {
-  shop: Shop;
+  shopId: number;
   productId?: number;
   onPopBack?: (reload?: boolean) => void;
 }
 
-function ProductEdit({ shop, productId, onPopBack }: ProductEditProps) {
+function ProductEdit({ shopId, productId, onPopBack }: ProductEditProps) {
   const [fetching, setFetching] = useState((productId ?? 0) > 0);
   const [product, setProduct] = useState<Product>({
-    shopId: shop.id,
+    shopId: shopId,
     images: []
   });
 

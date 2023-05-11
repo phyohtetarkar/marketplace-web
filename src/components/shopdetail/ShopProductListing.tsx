@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
-import { Shop } from "../../common/models";
 import { parseErrorResponse } from "../../common/utils";
 import {
   findProducts,
@@ -19,14 +18,14 @@ import {
 } from "../product";
 
 interface ShopProductListingProps {
-  shop: Shop;
+  shopId: number;
   isMember: boolean;
   gridClass?: string;
 }
 
 function ShopProductListing(props: ShopProductListingProps) {
   const {
-    shop,
+    shopId,
     isMember,
     gridClass = "row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4"
   } = props;
@@ -36,15 +35,13 @@ function ShopProductListing(props: ShopProductListingProps) {
   const [pendingDeleteId, setPendingDeleteId] = useState<number>();
 
   const [query, setQuery] = useState<ProductQuery>({
-    "shop-id": props.shop.id
+    "shop-id": shopId
   });
 
   const { data, error, isLoading, mutate } = useSWR(
     ["/products", query],
     ([url, query]) =>
-      props.isMember
-        ? findShopProducts(props.shop.id!, query)
-        : findProducts(query),
+      props.isMember ? findShopProducts(shopId, query) : findProducts(query),
     {
       revalidateOnFocus: false
     }
@@ -103,7 +100,7 @@ function ShopProductListing(props: ShopProductListingProps) {
   if (pendingProductId !== undefined) {
     return (
       <ProductEdit
-        shop={shop}
+        shopId={shopId}
         productId={pendingProductId}
         onPopBack={(reload) => {
           setPendingProductId(undefined);
@@ -121,21 +118,6 @@ function ShopProductListing(props: ShopProductListingProps) {
         <div className="col"></div>
         {isMember && (
           <>
-            {/* <div className="col-auto">
-              <Select
-                onChange={(evt) => {
-                  const status = !evt.target.value
-                    ? undefined
-                    : evt.target.value;
-                  setQuery({ "shop-id": props.shop.id, status: status });
-                }}
-              >
-                <option value="">All Status</option>
-                <option value="PUBLISHED">Published</option>
-                <option value="DRAFT">Draft</option>
-                <option value="DENIED">Denied</option>
-              </Select>
-            </div> */}
             <div className="col-auto">
               <button
                 className="btn btn-primary px-3 py-2"
@@ -148,11 +130,6 @@ function ShopProductListing(props: ShopProductListingProps) {
             </div>
           </>
         )}
-        {/* <div className="col-auto">
-          <button className="btn btn-outline-primary">
-            <AdjustmentsHorizontalIcon width={24} />
-          </button>
-        </div> */}
       </div>
 
       {content()}

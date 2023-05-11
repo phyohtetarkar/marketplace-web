@@ -1,23 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { toast } from "react-toastify";
 import useSWR from "swr";
+import { Shop } from "../../common/models";
 import {
   formatNumber,
   formatTimestamp,
   parseErrorResponse
-} from "../../../common/utils";
-import { withAuthentication } from "../../../common/WithAuthentication";
-import Alert from "../../../components/Alert";
-import ConfirmModal from "../../../components/ConfirmModal";
-import Loading from "../../../components/Loading";
-import { cancelOrder, getOrderByCode } from "../../../services/OrderService";
+} from "../../common/utils";
+import { getOrderByCode } from "../../services/OrderService";
+import Alert from "../Alert";
+import Dropdown from "../Dropdown";
+import Loading from "../Loading";
 
-function OrderDetail() {
-  const [confirmCancel, setConfirmCancel] = useState(false);
-
+function ShopOrderDetail({ shop }: { shop: Shop }) {
   const router = useRouter();
 
   const { code } = router.query;
@@ -43,24 +39,26 @@ function OrderDetail() {
       return <Alert message="Order not found" />;
     }
 
-    let statusColor = "bg-warning";
+    let statusColor = "text-warning";
 
     switch (data.status) {
       case "CANCELLED":
-        statusColor = "bg-danger";
+        statusColor = "text-danger";
         break;
       case "COMPLETED":
-        statusColor = "bg-success";
+        statusColor = "text-success";
         break;
     }
 
     return (
-      <div className="row">
-        <div className="col-12 col-lg-7 col-xl-8 order-2 order-lg-1">
+      <div className="row g-3">
+        <div className="col-12 col-lg-7 order-2 order-lg-1">
           <div className="card mb-3">
+            <div className="card-header py-3">
+              <h5 className="mb-0 fw-semibold">Products</h5>
+            </div>
             <div className="card-body">
-              <h4 className="fw-semibold mb-3">Products</h4>
-              <div className="row row-cols-1 row-cols-lg-2 row-cols-xxxl-3 g-3">
+              <div className="row row-cols-1 g-3">
                 {data.items.map((item, i) => {
                   return (
                     <div key={i} className="col">
@@ -127,7 +125,6 @@ function OrderDetail() {
               </span>
             </div>
           </div>
-
           <div className="card">
             <div className="card-header py-3">
               <h5 className="mb-0 fw-semibold">Note</h5>
@@ -137,45 +134,53 @@ function OrderDetail() {
             </div>
           </div>
         </div>
-        <div className="col-12 col-lg-5 col-xl-4 order-1 order-lg-2 mb-3">
+        <div className="col-12 col-lg-5 order-1 order-lg-2">
           <div className="card mb-3">
-            <div className="card-header bg-white py-2h">
-              <div className="hstack justify-content-between">
-                <div className="fw-semibold">Status:</div>
-                <div
-                  className={`ms-2 small text-light ${statusColor} px-2 py-1 rounded`}
-                >
-                  {data.status.toUpperCase()}
-                </div>
-              </div>
+            <div className="card-header py-3">
+              <h5 className="mb-0 fw-semibold">Order summary</h5>
             </div>
             <div className="card-body">
-              <div className="hstack justify-content-between mb-2h">
-                <div className="text-muted">Quantity:</div>
-                <div className="ms-2">{data.quantity}</div>
-              </div>
-              <div className="hstack justify-content-between mb-2h">
-                <div className="text-muted">Subtotal:</div>
-                <div className="ms-2">
+              <dl className="row mb-0">
+                <dt className="col-sm-4 fw-semibold">Status:</dt>
+                <dd
+                  className={`col-sm-8 ${statusColor} text-sm-end mb-2 fw-semibold`}
+                >
+                  {data.status}
+                </dd>
+
+                <dt className="col-sm-4 fw-semibold">Payment:</dt>
+                <dd className="col-sm-8 text-muted text-sm-end mb-2">
+                  {data.paymentMethod === "BANK_TRANSFER"
+                    ? "Bank Transfer"
+                    : "Cash On Delivery"}
+                </dd>
+
+                <dt className="col-sm-4  fw-semibold">Quantity:</dt>
+                <dd className="col-sm-8 text-muted text-sm-end mb-2">
+                  {data.quantity}
+                </dd>
+
+                <dt className="col-sm-4  fw-semibold">Subtotal:</dt>
+                <dd className="col-sm-8 text-muted text-sm-end mb-2">
                   {formatNumber(data.subTotalPrice)} Ks
-                </div>
-              </div>
-              <div className="hstack justify-content-between">
-                <div className="text-muted">Discount:</div>
-                <div className="ms-2 text-danger">
+                </dd>
+
+                <dt className="col-sm-4  fw-semibold">Discount:</dt>
+                <dd className="col-sm-8 text-sm-end text-danger">
                   -{formatNumber(data.discount)} Ks
+                </dd>
+
+                <div className="col-12">
+                  <hr className="text-muted" />
                 </div>
-              </div>
-              <hr className="text-muted" />
-              <div className="hstack justify-content-between">
-                <div className="fw-semibold">Total Price:</div>
-                <div className="ms-2 fw-semibold">
+
+                <dt className="col-sm-4  fw-semibold">Total Price:</dt>
+                <dd className="col-sm-8 text-sm-end mb-0">
                   {formatNumber(data.totalPrice)} Ks
-                </div>
-              </div>
+                </dd>
+              </dl>
             </div>
           </div>
-
           <div className="card">
             <div className="card-header py-3">
               <h5 className="mb-0 fw-semibold">Delivery info</h5>
@@ -203,59 +208,42 @@ function OrderDetail() {
 
   return (
     <>
-      <div className="header-bar">
-        <div className="container py-4">
-          <div className="row g-3">
-            <div className="col-md-6 hstack">
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb mb-1">
-                  <li className="breadcrumb-item">
-                    <Link href="/account/overview">Profile</Link>
-                  </li>
-                  <li className="breadcrumb-item">
-                    <Link href="/account/orders">Orders</Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    {typeof code === "string" ? code : ""}
-                  </li>
-                </ol>
-              </nav>
-            </div>
-            <div className="col-md-6 d-flex">
-              {data?.status === "PENDING" && (
-                <button
-                  className="text-nowrap ms-md-auto btn btn-danger"
-                  onClick={() => setConfirmCancel(true)}
-                >
-                  Cancel Order
-                </button>
-              )}
+      <div className="row mb-3 g-3">
+        <div className="col-lg-6">
+          <h4 className="mb-1 fw-semibold">Order Detail</h4>
+          <div className="d-flex flex-wrap gap-2">
+            <Link href={`/account/shops/${shop.slug}/dashboard`}>
+              Dashboard
+            </Link>
+            <span className="text-muted">/</span>
+            <Link href={`/account/shops/${shop.slug}/orders`}>Orders</Link>
+            <span className="text-muted">/</span>
+            <div className="text-muted" aria-current="page">
+              {typeof code === "string" ? code : ""}
             </div>
           </div>
         </div>
+        <div className="col-lg-6">
+          <div className="hstack h-100">
+            <div className="flex-grow-1 d-none d-lg-flex"></div>
+            <Dropdown
+              toggle={<div>Update status</div>}
+              menuClassName="dropdown-menu-end"
+              toggleClassName="btn btn-primary dropdown-toggle hstack"
+            >
+              <li className="dropdown-item" role="button">
+                Cancel
+              </li>
+              <li className="dropdown-item" role="button">
+                Confirm
+              </li>
+            </Dropdown>
+          </div>
+        </div>
       </div>
-
-      <div className="container py-3 mb-5">{content()}</div>
-
-      <ConfirmModal
-        message="Are you sure to cancel order?"
-        show={confirmCancel}
-        close={() => setConfirmCancel(false)}
-        onConfirm={async () => {
-          try {
-            if (!data?.id) {
-              throw "Something went wrong. Please try again";
-            }
-            await cancelOrder(data.id);
-            mutate();
-          } catch (error) {
-            const msg = parseErrorResponse(error);
-            toast.error(msg);
-          }
-        }}
-      />
+      <div className="mb-5">{content()}</div>
     </>
   );
 }
 
-export default withAuthentication(OrderDetail);
+export default ShopOrderDetail;

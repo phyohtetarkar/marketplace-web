@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import {
   getAllCategories,
-  getBrandsByCategoryId,
+  getBrandsByCategory,
   getCategory
 } from "../services/CategoryService";
 import { getAllCities } from "../services/CityService";
@@ -54,7 +54,7 @@ export function useCities() {
 export function useBrands(categoryId?: number) {
   const { data, error, isLoading } = useSWR(
     "/brands",
-    () => (categoryId ? getBrandsByCategoryId(categoryId) : undefined),
+    () => (categoryId ? getBrandsByCategory(categoryId) : undefined),
     {
       revalidateOnFocus: false
     }

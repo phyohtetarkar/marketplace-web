@@ -778,7 +778,7 @@ function CreateShop() {
         <div className="container py-3">
           <div className="row g-3">
             <div className="col-lg-6">
-              <h3 className="text-lg-start mb-0">Create Shop</h3>
+              <h3 className="text-lg-start text-light mb-1">Create Shop</h3>
               <nav aria-label="breadcrumb col-12">
                 <ol className="breadcrumb mb-1">
                   <li className="breadcrumb-item">

@@ -68,6 +68,62 @@ export async function getOrderByCode(orderCode: string) {
     .catch((e) => null);
 }
 
+export async function cancelOrder(orderId: number) {
+  const url = `${basePath}/${orderId}/cancel`;
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "PUT"
+    },
+    true
+  );
+
+  await validateResponse(resp);
+}
+
+export async function confirmOrder(orderId: number) {
+  const url = `${basePath}/${orderId}/confirm`;
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "PUT"
+    },
+    true
+  );
+
+  await validateResponse(resp);
+}
+
+export async function completeOrder(orderId: number) {
+  const url = `${basePath}/${orderId}/complete`;
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "PUT"
+    },
+    true
+  );
+
+  await validateResponse(resp);
+}
+
+export async function markRemoveOrderItem(orderId: number, itemId: number) {
+  const url = `${basePath}/${orderId}/items/${itemId}/remove`;
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "PUT"
+    },
+    true
+  );
+
+  await validateResponse(resp);
+}
+
 export async function getMyOrders(query: OrderQuery) {
   const params = buildQueryParams({
     ...query,

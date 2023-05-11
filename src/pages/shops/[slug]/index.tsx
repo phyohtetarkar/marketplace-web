@@ -1,12 +1,10 @@
 import { GetServerSideProps } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { ShopDetailContext } from "../../../common/contexts";
 import { Shop } from "../../../common/models";
 import Alert from "../../../components/Alert";
-import Rating from "../../../components/Rating";
 import {
   AboutUs,
   ShopHeading,
@@ -33,7 +31,7 @@ function ShopHome({ shop }: { shop: Shop | null }) {
     }
     switch (activeTab) {
       case "products":
-        return <ShopProductListing shop={shop} isMember={false} />;
+        return <ShopProductListing shopId={shop.id ?? 0} isMember={false} />;
       case "reviews":
         return <ShopReviewListing shopId={shop.id!} />;
       case "about-us":

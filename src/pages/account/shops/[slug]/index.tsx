@@ -186,7 +186,7 @@ function ShopDetail() {
       case "products":
         return (
           <ShopProductListing
-            shop={shop}
+            shopId={shop.id!}
             isMember={true}
             gridClass="row-cols-1 row-cols-md-2 row-cols-lg-3"
           />
@@ -194,7 +194,7 @@ function ShopDetail() {
       case "reviews":
         return <ShopReviewListing shopId={shop.id!} hideEdit />;
       case "orders":
-        return <ShopOrderListing shopId={shop.id!} />;
+        return <ShopOrderListing shop={shop} />;
       case "discounts":
         return <DiscountListing shopId={shop.id!} />;
       case "setting":
