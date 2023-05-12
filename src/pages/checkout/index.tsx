@@ -105,6 +105,8 @@ function Checkout() {
           price,
           item.quantity
         );
+      } else {
+        totalPrice += price * item.quantity;
       }
     }
 
@@ -327,6 +329,7 @@ function Checkout() {
                             onChange={(evt) => {
                               evt.target.checked &&
                                 setValue("paymentMethod", "BANK_TRANSFER");
+                              acceptedPaymentsState.mutate();
                             }}
                           ></input>
                           <label

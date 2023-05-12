@@ -1,20 +1,39 @@
+import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import useSWR from "swr";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import useSWR, { useSWRConfig } from "swr";
 import { Shop } from "../../common/models";
 import {
   formatNumber,
   formatTimestamp,
   parseErrorResponse
 } from "../../common/utils";
-import { getOrderByCode } from "../../services/OrderService";
+import {
+  cancelOrder,
+  completeOrder,
+  confirmOrder,
+  getOrderByCode,
+  markRemoveOrderItem
+} from "../../services/OrderService";
 import Alert from "../Alert";
+import ConfirmModal from "../ConfirmModal";
 import Dropdown from "../Dropdown";
 import Loading from "../Loading";
+import Tooltip from "../Tooltip";
 
 function ShopOrderDetail({ shop }: { shop: Shop }) {
   const router = useRouter();
+
+  const swrConfig = useSWRConfig();
+
+  const [updateStatus, setUpdateStatus] = useState<
+    "confirm" | "complete" | "cancel"
+  >();
+
+  const [removeItemId, setRemoveItemId] = useState<number>();
 
   const { code } = router.query;
 
@@ -52,7 +71,7 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
 
     return (
       <div className="row g-3">
-        <div className="col-12 col-lg-7 order-2 order-lg-1">
+        <div className="col-12 col-lg-7 col-xxxl-8">
           <div className="card mb-3">
             <div className="card-header py-3">
               <h5 className="mb-0 fw-semibold">Products</h5>
@@ -86,12 +105,33 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
                           />
                         </div>
                         <div className="vstack">
-                          <Link
-                            href={`/products/${item.productSlug}`}
-                            className="fw-semibold text-decoration-none text-dark"
-                          >
-                            {item.productName}
-                          </Link>
+                          <div className="d-flex flex-wrap align-items-center">
+                            <Link
+                              href={`/products/${item.productSlug}`}
+                              className={`fw-semibold text-decoration-none text-dark`}
+                            >
+                              {item.removed ? (
+                                <del>{item.productName}</del>
+                              ) : (
+                                item.productName
+                              )}
+                            </Link>
+                            {data.status !== "COMPLETED" &&
+                              !item.removed &&
+                              data.items.length > 1 && (
+                                <Tooltip title="Mark as removed">
+                                  <div
+                                    className="small text-danger ms-1"
+                                    role="button"
+                                    onClick={() => {
+                                      setRemoveItemId(item.id);
+                                    }}
+                                  >
+                                    <TrashIcon width={18} />
+                                  </div>
+                                </Tooltip>
+                              )}
+                          </div>
                           {item.attributes && (
                             <div
                               className="text-muted small"
@@ -134,7 +174,7 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
             </div>
           </div>
         </div>
-        <div className="col-12 col-lg-5 order-1 order-lg-2">
+        <div className="col-12 col-lg-5 col-xxxl-4">
           <div className="card mb-3">
             <div className="card-header py-3">
               <h5 className="mb-0 fw-semibold">Order summary</h5>
@@ -181,7 +221,7 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
               </dl>
             </div>
           </div>
-          <div className="card">
+          <div className="card mb-3">
             <div className="card-header py-3">
               <h5 className="mb-0 fw-semibold">Delivery info</h5>
             </div>
@@ -199,6 +239,35 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
                 <dt className="col-12 fw-semibold">Address</dt>
                 <dd className="col-12 text-muted">{data.delivery.address}</dd>
               </dl>
+            </div>
+          </div>
+          <div className="card">
+            <div className="card-header py-3">
+              <h5 className="mb-0 fw-semibold">Customer</h5>
+            </div>
+            <div className="card-body">
+              <div className="hstack">
+                <div className="position-relative flex-shrink-0">
+                  <Image
+                    src={data.user?.image ?? "/images/profile.png"}
+                    width={50}
+                    height={50}
+                    alt=""
+                    className="rounded-circle"
+                    style={{
+                      objectFit: "cover"
+                    }}
+                  />
+                </div>
+                <div className="ms-3">
+                  <h6 className="mb-0">{data.user?.name ?? "Deleted"}</h6>
+                  {data.user?.phone && (
+                    <span className="text-muted small">
+                      Phone: {data.user.phone.replace("+95", "0") ?? ""}
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -226,22 +295,99 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
         <div className="col-lg-6">
           <div className="hstack h-100">
             <div className="flex-grow-1 d-none d-lg-flex"></div>
-            <Dropdown
-              toggle={<div>Update status</div>}
-              menuClassName="dropdown-menu-end"
-              toggleClassName="btn btn-primary dropdown-toggle hstack"
-            >
-              <li className="dropdown-item" role="button">
-                Cancel
-              </li>
-              <li className="dropdown-item" role="button">
-                Confirm
-              </li>
-            </Dropdown>
+            {data?.status !== "COMPLETED" && (
+              <Dropdown
+                toggle={<div>Update status</div>}
+                menuClassName="dropdown-menu-end"
+                toggleClassName="btn btn-primary dropdown-toggle hstack"
+              >
+                {data?.status == "PENDING" && (
+                  <li
+                    className="dropdown-item"
+                    role="button"
+                    onClick={() => {
+                      setUpdateStatus("confirm");
+                    }}
+                  >
+                    Confirm
+                  </li>
+                )}
+                {data?.status !== "CANCELLED" && (
+                  <li
+                    className="dropdown-item"
+                    role="button"
+                    onClick={() => {
+                      setUpdateStatus("complete");
+                    }}
+                  >
+                    Complete
+                  </li>
+                )}
+                <div className="dropdown-divider"></div>
+                <li
+                  className="dropdown-item text-danger"
+                  role="button"
+                  onClick={() => {
+                    setUpdateStatus("cancel");
+                  }}
+                >
+                  Cancel
+                </li>
+              </Dropdown>
+            )}
           </div>
         </div>
       </div>
       <div className="mb-5">{content()}</div>
+
+      <ConfirmModal
+        show={!!updateStatus}
+        message={`Are you sure to ${updateStatus ?? ""} order?`}
+        close={() => setUpdateStatus(undefined)}
+        onConfirm={async () => {
+          try {
+            if (!updateStatus || !data?.id) {
+              throw "Something went wrong. Please try again";
+            }
+            switch (updateStatus) {
+              case "cancel":
+                await cancelOrder(data.id);
+                break;
+              case "confirm":
+                await confirmOrder(data.id);
+                break;
+              case "complete":
+                await completeOrder(data.id);
+                break;
+            }
+            mutate();
+            swrConfig.mutate(`/shops/${shop.id ?? 0}/pending-order-count`);
+            toast.success("Update order status successfully");
+          } catch (error) {
+            const msg = parseErrorResponse(error);
+            toast.error(msg);
+          }
+        }}
+      />
+
+      <ConfirmModal
+        show={typeof removeItemId === "number" && removeItemId > 0}
+        message="Are you sure to remove item?"
+        close={() => setRemoveItemId(undefined)}
+        onConfirm={async () => {
+          try {
+            if (!removeItemId || removeItemId <= 0 || !data?.id) {
+              throw "Something went wrong. Please try again";
+            }
+            await markRemoveOrderItem(data.id, removeItemId);
+            mutate();
+            toast.success("Item removed successfully");
+          } catch (error) {
+            const msg = parseErrorResponse(error);
+            toast.error(msg);
+          }
+        }}
+      />
     </>
   );
 }

@@ -5,6 +5,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
+import Link from "next/link";
 import { useContext } from "react";
 import { AuthenticationContext } from "../../common/contexts";
 import { withAuthentication } from "../../common/WithAuthentication";
@@ -21,16 +22,6 @@ function ProfileOverview() {
 
   return (
     <div>
-      {/* <div className="bg-primary">
-        <div className="container">
-          <div className="py-4">
-            <h1 className="text-light text-center text-lg-start">
-              Profile Overview
-            </h1>
-          </div>
-        </div>
-      </div> */}
-
       <div className="container py-3 mb-5">
         <div className="row g-3">
           <div className="col-lg-4 col-xl-3">
@@ -60,7 +51,12 @@ function ProfileOverview() {
                   </div>
                   <div className="ms-auto">
                     <div className="d-flex d-none d-lg-block">
-                      <button className="btn btn-outline-primary">Edit</button>
+                      <Link
+                        href={`/account/setting`}
+                        className="btn btn-outline-primary"
+                      >
+                        Edit
+                      </Link>
                     </div>
                   </div>
                   <div className="d-flex d-block d-lg-none ms-2">
@@ -81,23 +77,17 @@ function ProfileOverview() {
                   <div className="card border bg-light">
                     <div className="p-3">
                       <h4 className="title">5</h4>
-                      <span>Wishlist</span>
+                      <span>Favorites</span>
                     </div>
                   </div>
                   <div className="card border bg-light">
                     <div className="p-3">
-                      <h4 className="title">12</h4>
-                      <span>Awaiting delivery</span>
-                    </div>
-                  </div>
-                  <div className="card border bg-light">
-                    <div className="p-3">
-                      <h4 className="title">50</h4>
-                      <span>Delivered items</span>
+                      <h4 className="title">1</h4>
+                      <span>Shops</span>
                     </div>
                   </div>
                 </div>
-                <hr className="bg-dark-gray" />
+                {/* <hr className="bg-dark-gray" />
                 <div className="text-muted mb-3">Addresses</div>
                 <div className="row row-cols-1 row-cols-lg-2 g-2 mb-3">
                   <div className="col">
@@ -124,7 +114,7 @@ function ProfileOverview() {
                     <PlusIcon className="me-2" width={20} />
                     Add new address
                   </div>
-                </a>
+                </a> */}
               </div>
             </div>
           </div>

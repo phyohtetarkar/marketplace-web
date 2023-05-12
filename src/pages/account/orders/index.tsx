@@ -179,6 +179,9 @@ function MyOrders() {
           <Pagination
             currentPage={data.currentPage}
             totalPage={data.totalPage}
+            onChange={(p) => {
+              setQuery((old) => ({ ...old, page: p }));
+            }}
           />
         </div>
       </>

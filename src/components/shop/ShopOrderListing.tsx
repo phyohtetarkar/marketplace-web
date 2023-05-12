@@ -104,6 +104,9 @@ function ShopOrderListing({ shop }: { shop: Shop }) {
           <Pagination
             currentPage={data.currentPage}
             totalPage={data.totalPage}
+            onChange={(p) => {
+              setQuery((old) => ({ ...old, page: p }));
+            }}
           />
         </div>
       </>

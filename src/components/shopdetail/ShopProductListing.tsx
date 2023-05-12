@@ -1,34 +1,26 @@
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
-import { parseErrorResponse } from "../../common/utils";
 import {
-  findProducts,
-  findShopProducts,
-  ProductQuery
-} from "../../services/ProductService";
+  formatNumber,
+  formatTimestamp,
+  parseErrorResponse
+} from "../../common/utils";
+import { findShopProducts, ProductQuery } from "../../services/ProductService";
 import Alert from "../Alert";
 import ConfirmModal from "../ConfirmModal";
 import Loading from "../Loading";
 import Pagination from "../Pagination";
-import {
-  ProductEdit,
-  ProductGridItem,
-  ProductManageGridItem
-} from "../product";
+import { ProductEdit } from "../product";
 
 interface ShopProductListingProps {
   shopId: number;
-  isMember: boolean;
-  gridClass?: string;
 }
 
 function ShopProductListing(props: ShopProductListingProps) {
-  const {
-    shopId,
-    isMember,
-    gridClass = "row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4"
-  } = props;
+  const { shopId } = props;
 
   const [pendingProductId, setPendingProductId] = useState<number>();
 
@@ -40,8 +32,7 @@ function ShopProductListing(props: ShopProductListingProps) {
 
   const { data, error, isLoading, mutate } = useSWR(
     ["/products", query],
-    ([url, query]) =>
-      props.isMember ? findShopProducts(shopId, query) : findProducts(query),
+    ([url, query]) => findShopProducts(shopId, query),
     {
       revalidateOnFocus: false
     }
@@ -62,26 +53,64 @@ function ShopProductListing(props: ShopProductListingProps) {
 
     return (
       <>
-        <div className={`row ${gridClass} g-3`}>
-          {data.contents.map((p, i) => {
-            return (
-              <div className="col" key={i}>
-                {isMember ? (
-                  <ProductManageGridItem
-                    value={p}
-                    onEditClick={() => {
-                      setPendingProductId(p.id);
-                    }}
-                    onDeleteClick={() => {
-                      setPendingDeleteId(p.id);
-                    }}
-                  />
-                ) : (
-                  <ProductGridItem value={p} />
-                )}
-              </div>
-            );
-          })}
+        <div className="table-responsive">
+          <table className="table align-middle">
+            <thead className="text-nowrap">
+              <tr>
+                <th scope="col" style={{ minWidth: 120 }}>
+                  Image
+                </th>
+                <th scope="col" style={{ minWidth: 250 }}>
+                  Name
+                </th>
+                <th scope="col" style={{ minWidth: 150 }}>
+                  Price
+                </th>
+                <th scope="col" style={{ minWidth: 150 }}>
+                  Created At
+                </th>
+                <th scope="col" style={{ minWidth: 150 }}></th>
+              </tr>
+            </thead>
+            <tbody className="text-nowrap">
+              {data?.contents.map((p, i) => {
+                return (
+                  <tr key={p.id}>
+                    <td className="py-2h">
+                      <div className="ratio ratio-1x1" style={{ width: 80 }}>
+                        <Image
+                          src={p.thumbnail ?? "/images/placeholder.jpeg"}
+                          className="rounded"
+                          fill
+                          sizes="33vw"
+                          style={{
+                            objectFit: "contain"
+                          }}
+                          alt=""
+                        />
+                      </div>
+                    </td>
+                    <td className="w-100">
+                      <span className="text-wrap">{p.name}</span>
+                    </td>
+                    <td>{formatNumber(p.price ?? 0)}</td>
+                    <td>{formatTimestamp(p.createdAt ?? 0)}</td>
+                    <td>
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => setPendingProductId(p.id)}
+                      >
+                        <PencilSquareIcon width={20} />
+                      </button>
+                      <button className="btn btn-danger ms-2">
+                        <TrashIcon width={20} />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
 
         <div className="d-flex justify-content-end pt-3">
@@ -113,23 +142,19 @@ function ShopProductListing(props: ShopProductListingProps) {
   }
 
   return (
-    <div className="p-0">
+    <>
       <div className="row g-3 mb-3">
         <div className="col"></div>
-        {isMember && (
-          <>
-            <div className="col-auto">
-              <button
-                className="btn btn-primary px-3 py-2"
-                onClick={() => {
-                  setPendingProductId(0);
-                }}
-              >
-                Create new
-              </button>
-            </div>
-          </>
-        )}
+        <div className="col-auto">
+          <button
+            className="btn btn-primary px-3 py-2"
+            onClick={() => {
+              setPendingProductId(0);
+            }}
+          >
+            Create new
+          </button>
+        </div>
       </div>
 
       {content()}
@@ -147,7 +172,7 @@ function ShopProductListing(props: ShopProductListingProps) {
           }
         }}
       />
-    </div>
+    </>
   );
 }
 

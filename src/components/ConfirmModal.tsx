@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import Modal from "./Modal";
 import ProgressButton from "./ProgressButton";
 
 interface ConfirmModalProps {
   show: boolean;
-  message: string;
+  message: ReactNode;
   onConfirm?: () => Promise<void>;
   close?: () => void;
 }

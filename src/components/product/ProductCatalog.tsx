@@ -237,7 +237,7 @@ function ProductCatalog(props: ProductCatalogProps) {
 
     return (
       <>
-        <div className="row row-cols-2 row-cols-md-2 row-cols-xxl-3 g-3">
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
           {data.contents.map((p, i) => {
             return (
               <div className="col" key={p.id}>
@@ -293,8 +293,8 @@ function ProductCatalog(props: ProductCatalogProps) {
           <div className="col-lg-4 col-xl-3">
             <Filter basePath={basePath} categoryId={category?.id} />
           </div>
-          <div className="col-lg-8 col-xl-9 mt-3 mt-lg-0">
-            <div className="d-flex mb-3">
+          <div className="col-lg-8 col-xl-9">
+            <div className="d-flex">
               {/* <div className="btn-group ms-auto d-none d-md-block">
                 <button className="btn py-2 btn-outline-primary">
                   <ListBulletIcon width={24} />

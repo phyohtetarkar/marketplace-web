@@ -30,6 +30,8 @@ function PricingCard(props: PricingCardProps) {
           price,
           item.quantity
         );
+      } else {
+        totalPrice += price * item.quantity;
       }
     }
 

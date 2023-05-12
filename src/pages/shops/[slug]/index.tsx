@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ShopDetailContext } from "../../../common/contexts";
 import { Shop } from "../../../common/models";
 import Alert from "../../../components/Alert";
+import ProductListing from "../../../components/product/ProductListing";
 import {
   AboutUs,
   ShopHeading,
@@ -31,7 +32,7 @@ function ShopHome({ shop }: { shop: Shop | null }) {
     }
     switch (activeTab) {
       case "products":
-        return <ShopProductListing shopId={shop.id ?? 0} isMember={false} />;
+        return <ProductListing shopId={shop.id!} />;
       case "reviews":
         return <ShopReviewListing shopId={shop.id!} />;
       case "about-us":

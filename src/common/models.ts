@@ -183,6 +183,7 @@ export interface Product {
   images?: ProductImage[];
   attributes?: ProductAttribute[];
   variants?: ProductVariant[];
+  createdAt?: number;
   categoryId?: number;
   shopId?: number;
   discountId?: number;
@@ -273,7 +274,6 @@ export interface Order {
 
 export interface OrderItem {
   id: number;
-  productId: number;
   productName: string;
   productSlug: string;
   unitPrice: number;

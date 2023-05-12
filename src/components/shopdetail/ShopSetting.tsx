@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import useSWR from "swr";
 import { ShopDetailContext } from "../../common/contexts";
 import {
+  Shop,
   ShopAcceptedPayment,
   ShopContact,
   ShopGeneral,
@@ -53,10 +54,11 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
 );
 
 interface ShopSettingProps {
-  shopId: number;
+  shop: Shop;
 }
 
-const ShopGeneralForm = () => {
+const ShopGeneralForm = (props: ShopSettingProps) => {
+  const { shop } = props;
   const router = useRouter();
   const shopContext = useContext(ShopDetailContext);
   const {
@@ -67,11 +69,11 @@ const ShopGeneralForm = () => {
     setValue
   } = useForm<ShopGeneral>({
     values: {
-      shopId: shopContext?.id,
-      name: shopContext?.name,
-      slug: shopContext?.slug,
-      about: shopContext?.about,
-      headline: shopContext?.headline
+      shopId: shop?.id,
+      name: shop?.name,
+      slug: shop?.slug,
+      about: shop?.about,
+      headline: shop?.headline
     }
   });
 
@@ -173,7 +175,8 @@ const ShopGeneralForm = () => {
   );
 };
 
-const ShopContactForm = () => {
+const ShopContactForm = (props: ShopSettingProps) => {
+  const { shop } = props;
   const router = useRouter();
   const shopContext = useContext(ShopDetailContext);
   const {
@@ -184,11 +187,11 @@ const ShopContactForm = () => {
     setValue
   } = useForm<ShopContact>({
     values: {
-      shopId: shopContext?.id,
-      phones: shopContext?.contact?.phones,
-      address: shopContext?.contact?.address,
-      latitude: shopContext?.contact?.latitude,
-      longitude: shopContext?.contact?.longitude
+      shopId: shop?.id,
+      phones: shop?.contact?.phones,
+      address: shop?.contact?.address,
+      latitude: shop?.contact?.latitude,
+      longitude: shop?.contact?.longitude
     }
   });
 
@@ -294,7 +297,9 @@ const ShopContactForm = () => {
 };
 
 const ShopDeliveryCitiesForm = (props: ShopSettingProps) => {
-  const { shopId } = props;
+  const { shop } = props;
+
+  const shopId = shop.id ?? 0;
 
   const [showSelect, setShowSelect] = useState(false);
 
@@ -380,7 +385,9 @@ const ShopDeliveryCitiesForm = (props: ShopSettingProps) => {
 };
 
 const ShopPaymentForm = (props: ShopSettingProps) => {
-  const { shopId } = props;
+  const { shop } = props;
+
+  const shopId = shop.id ?? 0;
 
   const [acceptedPayment, setAcceptedPayment] = useState<ShopAcceptedPayment>();
 
@@ -604,10 +611,10 @@ function ShopSetting(props: ShopSettingProps) {
   return (
     <div className="row g-3">
       <div className="col-12">
-        <ShopGeneralForm />
+        <ShopGeneralForm {...props} />
       </div>
       <div className="col-12">
-        <ShopContactForm />
+        <ShopContactForm {...props} />
       </div>
       <div className="col-12">
         <ShopPaymentForm {...props} />

@@ -516,7 +516,7 @@ function ProductDetail({ product }: { product: Product | null }) {
         <div className="container">
           <div className="row mb-12 g-3">
             <div className="col-lg-8">
-              <div className="rounded border h-100">
+              <div className="rounded border bg-white h-100">
                 <Tabs defaultTabKey="description" className="border-bottom">
                   <Tabs.Tab tabKey="description" title="Description">
                     <div

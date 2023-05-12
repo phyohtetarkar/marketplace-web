@@ -2,6 +2,7 @@ import {
   AdjustmentsHorizontalIcon,
   Cog6ToothIcon,
   ComputerDesktopIcon,
+  CurrencyDollarIcon,
   DocumentTextIcon,
   InboxStackIcon,
   ReceiptPercentIcon
@@ -20,7 +21,13 @@ import { ShopHeading } from "../shopdetail";
 import PendingOrderCountView from "./PendingOrderCountView";
 
 interface ShopManageProps {
-  activeTab?: "dashboard" | "products" | "discounts" | "orders" | "setting";
+  activeTab?:
+    | "dashboard"
+    | "products"
+    | "discounts"
+    | "orders"
+    | "subscriptions"
+    | "setting";
   children: (shop: Shop) => ReactNode;
 }
 
@@ -156,6 +163,18 @@ function ShopManage(props: ShopManageProps) {
           suffix: <>{shop && <PendingOrderCountView shopId={shop.id ?? 0} />}</>
         })}
         {menuLink({
+          path: `subscriptions`,
+          title: "Subscriptions",
+          active: activeTab === "subscriptions",
+          icon: (
+            <CurrencyDollarIcon
+              className="me-2"
+              strokeWidth={2}
+              width={iconSize}
+            />
+          )
+        })}
+        {menuLink({
           path: `setting`,
           title: "Setting",
           active: activeTab === "setting",
@@ -240,7 +259,15 @@ function ShopManage(props: ShopManageProps) {
               </Accordion>
             </div>
           </div>
-          <div className="col-12 col-lg-9">{children(shop)}</div>
+          <div className="col-12 col-lg-9">
+            {!shop.expired || activeTab === "subscriptions" ? (
+              children(shop)
+            ) : (
+              <div>
+                <Alert message="Shop subscription expired." variant="warning" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

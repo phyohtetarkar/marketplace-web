@@ -56,7 +56,7 @@ function OrderDetail() {
 
     return (
       <div className="row">
-        <div className="col-12 col-lg-7 col-xl-8 order-2 order-lg-1">
+        <div className="col-12 col-lg-7 col-xl-8">
           <div className="card mb-3">
             <div className="card-body">
               <h4 className="fw-semibold mb-3">Products</h4>
@@ -92,7 +92,11 @@ function OrderDetail() {
                             href={`/products/${item.productSlug}`}
                             className="fw-semibold text-decoration-none text-dark"
                           >
-                            {item.productName}
+                            {item.removed ? (
+                              <del>{item.productName}</del>
+                            ) : (
+                              item.productName
+                            )}
                           </Link>
                           {item.attributes && (
                             <div
@@ -137,7 +141,7 @@ function OrderDetail() {
             </div>
           </div>
         </div>
-        <div className="col-12 col-lg-5 col-xl-4 order-1 order-lg-2 mb-3">
+        <div className="col-12 col-lg-5 col-xl-4">
           <div className="card mb-3">
             <div className="card-header bg-white py-2h">
               <div className="hstack justify-content-between">
@@ -176,7 +180,7 @@ function OrderDetail() {
             </div>
           </div>
 
-          <div className="card">
+          <div className="card mb-3">
             <div className="card-header py-3">
               <h5 className="mb-0 fw-semibold">Delivery info</h5>
             </div>
@@ -194,6 +198,47 @@ function OrderDetail() {
                 <dt className="col-12 fw-semibold">Address</dt>
                 <dd className="col-12 text-muted">{data.delivery.address}</dd>
               </dl>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-header py-3">
+              <h5 className="mb-0 fw-semibold">Seller</h5>
+            </div>
+            <div className="card-body">
+              <div className="hstack">
+                <div className="position-relative flex-shrink-0">
+                  <Image
+                    src={data.shop?.logo ?? "/images/placeholder.jpeg"}
+                    width={50}
+                    height={50}
+                    alt=""
+                    className="rounded-circle"
+                    style={{
+                      objectFit: "cover"
+                    }}
+                  />
+                </div>
+                <div className="ms-3">
+                  {data.shop ? (
+                    <>
+                      <Link
+                        href={`/shops/${data.shop?.slug}`}
+                        className="link-dark"
+                      >
+                        <div className="fw-semibold">
+                          {data.shop?.name ?? ""}
+                        </div>
+                      </Link>
+                      <span className="text-muted small">
+                        {data.shop?.headline}
+                      </span>
+                    </>
+                  ) : (
+                    <div className="fw-semibold">Deleted</div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>

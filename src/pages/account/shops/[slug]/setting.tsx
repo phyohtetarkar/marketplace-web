@@ -4,7 +4,7 @@ import { ShopSetting } from "../../../../components/shopdetail";
 function Setting() {
   return (
     <ShopManage activeTab="setting">
-      {(shop) => shop.id && <ShopSetting shopId={shop.id} />}
+      {(shop) => shop && <ShopSetting shop={shop} />}
     </ShopManage>
   );
 }
