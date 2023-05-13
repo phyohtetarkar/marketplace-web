@@ -124,6 +124,24 @@ export async function markRemoveOrderItem(orderId: number, itemId: number) {
   await validateResponse(resp);
 }
 
+export async function uploadPayslip(orderId: number, file: File) {
+  const url = `${basePath}/${orderId}/upload-receipt`;
+
+  const form = new FormData();
+  form.append("file", file);
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "PUT",
+      body: form
+    },
+    true
+  );
+
+  await validateResponse(resp);
+}
+
 export async function getMyOrders(query: OrderQuery) {
   const params = buildQueryParams({
     ...query,

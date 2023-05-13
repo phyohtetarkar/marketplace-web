@@ -184,13 +184,7 @@ function ShopDetail() {
     }
     switch (activeTab) {
       case "products":
-        return (
-          <ShopProductListing
-            shopId={shop.id!}
-            isMember={true}
-            gridClass="row-cols-1 row-cols-md-2 row-cols-lg-3"
-          />
-        );
+        return <ShopProductListing shopId={shop.id!} />;
       case "reviews":
         return <ShopReviewListing shopId={shop.id!} hideEdit />;
       case "orders":
@@ -198,7 +192,7 @@ function ShopDetail() {
       case "discounts":
         return <DiscountListing shopId={shop.id!} />;
       case "setting":
-        return <ShopSetting shopId={shop.id!} />;
+        return <ShopSetting shop={shop} />;
     }
 
     return <ShopDashboard shopId={shop.id!} />;

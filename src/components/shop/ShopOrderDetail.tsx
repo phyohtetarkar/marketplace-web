@@ -22,6 +22,7 @@ import Alert from "../Alert";
 import ConfirmModal from "../ConfirmModal";
 import Dropdown from "../Dropdown";
 import Loading from "../Loading";
+import Modal from "../Modal";
 import Tooltip from "../Tooltip";
 
 function ShopOrderDetail({ shop }: { shop: Shop }) {
@@ -32,6 +33,8 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
   const [updateStatus, setUpdateStatus] = useState<
     "confirm" | "complete" | "cancel"
   >();
+
+  const [showReceipt, setShowReceipt] = useState(false);
 
   const [removeItemId, setRemoveItemId] = useState<number>();
 
@@ -71,7 +74,7 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
 
     return (
       <div className="row g-3">
-        <div className="col-12 col-lg-7 col-xxxl-8">
+        <div className="col-12 col-xl-7 col-xxxl-8">
           <div className="card mb-3">
             <div className="card-header py-3">
               <h5 className="mb-0 fw-semibold">Products</h5>
@@ -165,16 +168,38 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
               </span>
             </div>
           </div>
+
           <div className="card">
             <div className="card-header py-3">
-              <h5 className="mb-0 fw-semibold">Note</h5>
+              <h5 className="mb-0 fw-semibold">Delivery info</h5>
             </div>
             <div className="card-body">
-              <p className="mb-0">{data.note}</p>
+              <div className="row g-3">
+                <div className="col-lg-6">
+                  <h6 className="fw-semibold mb-1">Name</h6>
+                  <div className="text-muted">{data.delivery.name}</div>
+                </div>
+                <div className="col-lg-6">
+                  <h6 className="fw-semibold mb-1">Phone</h6>
+                  <div className="text-muted">{data.delivery.phone}</div>
+                </div>
+                <div className="col-12">
+                  <h6 className="fw-semibold mb-1">City</h6>
+                  <div className="text-muted">{data.delivery.city}</div>
+                </div>
+                <div className="col-12">
+                  <h6 className="fw-semibold mb-1">Address</h6>
+                  <div className="text-muted">{data.delivery.address}</div>
+                </div>
+                <div className="col-12">
+                  <h6 className="fw-semibold mb-1">Note</h6>
+                  <div className="text-muted">{data.note}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div className="col-12 col-lg-5 col-xxxl-4">
+        <div className="col-12 col-xl-5 col-xxxl-4">
           <div className="card mb-3">
             <div className="card-header py-3">
               <h5 className="mb-0 fw-semibold">Order summary</h5>
@@ -186,13 +211,6 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
                   className={`col-sm-8 ${statusColor} text-sm-end mb-2 fw-semibold`}
                 >
                   {data.status}
-                </dd>
-
-                <dt className="col-sm-4 fw-semibold">Payment:</dt>
-                <dd className="col-sm-8 text-muted text-sm-end mb-2">
-                  {data.paymentMethod === "BANK_TRANSFER"
-                    ? "Bank Transfer"
-                    : "Cash On Delivery"}
                 </dd>
 
                 <dt className="col-sm-4  fw-semibold">Quantity:</dt>
@@ -221,26 +239,32 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
               </dl>
             </div>
           </div>
+
           <div className="card mb-3">
             <div className="card-header py-3">
-              <h5 className="mb-0 fw-semibold">Delivery info</h5>
+              <h5 className="mb-0 fw-semibold">Payment</h5>
             </div>
             <div className="card-body">
               <dl className="row mb-0">
-                <dt className="col-12 fw-semibold">Name</dt>
-                <dd className="col-12 text-muted">{data.delivery.name}</dd>
+                <dt className="col-12 fw-semibold">Payment method</dt>
+                <dd className="col-12 text-muted mb-2">
+                  {data.paymentMethod === "BANK_TRANSFER"
+                    ? "Bank Transfer"
+                    : "Cash On Delivery"}
+                </dd>
 
-                <dt className="col-12 fw-semibold">Phone</dt>
-                <dd className="col-12 text-muted">{data.delivery.phone}</dd>
-
-                <dt className="col-12 fw-semibold">City</dt>
-                <dd className="col-12 text-muted">{data.delivery.city}</dd>
-
-                <dt className="col-12 fw-semibold">Address</dt>
-                <dd className="col-12 text-muted">{data.delivery.address}</dd>
+                {data.paymentMethod === "BANK_TRANSFER" && (
+                  <>
+                    <dt className="col-12 fw-semibold">Account type</dt>
+                    <dd className="col-12 text-muted mb-0">
+                      {data.payment.accountType}
+                    </dd>
+                  </>
+                )}
               </dl>
             </div>
           </div>
+
           <div className="card">
             <div className="card-header py-3">
               <h5 className="mb-0 fw-semibold">Customer</h5>
@@ -293,8 +317,16 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
           </div>
         </div>
         <div className="col-lg-6">
-          <div className="hstack h-100">
+          <div className="hstack flex-wrap gap-2 h-100">
             <div className="flex-grow-1 d-none d-lg-flex"></div>
+            {data?.paymentMethod === "BANK_TRANSFER" && (
+              <button
+                className="btn btn-default text-nowrap"
+                onClick={() => setShowReceipt(true)}
+              >
+                View receipt
+              </button>
+            )}
             {data?.status !== "COMPLETED" && (
               <Dropdown
                 toggle={<div>Update status</div>}
@@ -388,6 +420,42 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
           }
         }}
       />
+
+      <Modal show={showReceipt}>
+        {(isShown) => {
+          return (
+            <>
+              <div className="modal-header">
+                <h4 className="modal-title">Receipt</h4>
+                <button
+                  type="button"
+                  className="btn-close shadow-none"
+                  aria-label="Close"
+                  onClick={() => setShowReceipt(false)}
+                ></button>
+              </div>
+              <div className="modal-body p-0">
+                {data?.payment.receiptImage ? (
+                  <Image
+                    src={data.payment.receiptImage}
+                    alt=""
+                    sizes="100vw"
+                    width={0}
+                    height={0}
+                    style={{
+                      objectFit: "contain",
+                      width: "100%",
+                      height: "auto"
+                    }}
+                  />
+                ) : (
+                  <div className="p-3 text-muted">No image uploaded</div>
+                )}
+              </div>
+            </>
+          );
+        }}
+      </Modal>
     </>
   );
 }

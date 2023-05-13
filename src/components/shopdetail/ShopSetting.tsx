@@ -532,7 +532,8 @@ const ShopPaymentForm = (props: ShopSettingProps) => {
                 <div key={i} className="col">
                   <div className="card bg-light border-0 position-relative">
                     <div className="card-body">
-                      <h6>{p.accountType}</h6>
+                      <h6 className="fw-bold">{p.accountType}</h6>
+                      <div>{p.accountName}</div>
                       <div className="text-muted">{p.accountNumber}</div>
                     </div>
 

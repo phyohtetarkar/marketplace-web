@@ -1,5 +1,6 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
@@ -13,7 +14,6 @@ import Alert from "../Alert";
 import ConfirmModal from "../ConfirmModal";
 import Loading from "../Loading";
 import Pagination from "../Pagination";
-import { ProductEdit } from "../product";
 
 interface ShopProductListingProps {
   shopId: number;
@@ -21,6 +21,8 @@ interface ShopProductListingProps {
 
 function ShopProductListing(props: ShopProductListingProps) {
   const { shopId } = props;
+
+  const router = useRouter();
 
   const [pendingProductId, setPendingProductId] = useState<number>();
 
@@ -98,7 +100,9 @@ function ShopProductListing(props: ShopProductListingProps) {
                     <td>
                       <button
                         className="btn btn-secondary"
-                        onClick={() => setPendingProductId(p.id)}
+                        onClick={() => {
+                          router.push(`${router.asPath}/${p.slug}`);
+                        }}
                       >
                         <PencilSquareIcon width={20} />
                       </button>
@@ -126,20 +130,20 @@ function ShopProductListing(props: ShopProductListingProps) {
     );
   };
 
-  if (pendingProductId !== undefined) {
-    return (
-      <ProductEdit
-        shopId={shopId}
-        productId={pendingProductId}
-        onPopBack={(reload) => {
-          setPendingProductId(undefined);
-          if (reload) {
-            mutate();
-          }
-        }}
-      />
-    );
-  }
+  // if (pendingProductId !== undefined) {
+  //   return (
+  //     <ProductEdit
+  //       shopId={shopId}
+  //       productId={pendingProductId}
+  //       onPopBack={(reload) => {
+  //         setPendingProductId(undefined);
+  //         if (reload) {
+  //           mutate();
+  //         }
+  //       }}
+  //     />
+  //   );
+  // }
 
   return (
     <>
@@ -149,7 +153,7 @@ function ShopProductListing(props: ShopProductListingProps) {
           <button
             className="btn btn-primary px-3 py-2"
             onClick={() => {
-              setPendingProductId(0);
+              router.push(`${router.asPath}/create`);
             }}
           >
             Create new

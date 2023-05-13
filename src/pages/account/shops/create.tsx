@@ -1027,9 +1027,10 @@ function CreateShop() {
               {acceptedPaymentsField.fields.map((p, i) => {
                 return (
                   <div key={p.vId} className="col">
-                    <div className="card bg-light border-0 position-relative">
+                    <div className="card position-relative">
                       <div className="card-body">
-                        <h6 className="fw-semibold">{p.accountType}</h6>
+                        <h6 className="fw-bold">{p.accountType}</h6>
+                        <div>{p.accountName}</div>
                         <div className="text-muted">{p.accountNumber}</div>
                       </div>
 

@@ -1,6 +1,8 @@
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import { default as NextImage } from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -11,7 +13,8 @@ import {
   ProductAttribute,
   ProductImage,
   ProductVariant,
-  ProductVariantAttribute
+  ProductVariantAttribute,
+  Shop
 } from "../../common/models";
 import {
   parseErrorResponse,
@@ -19,7 +22,12 @@ import {
   setEmptyOrString,
   setStringToSlug
 } from "../../common/utils";
-import { getProductById, saveProduct } from "../../services/ProductService";
+import {
+  getProductById,
+  getProductBySlug,
+  saveProduct
+} from "../../services/ProductService";
+import Alert from "../Alert";
 import { AutocompleteSelect, Input } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import Loading from "../Loading";
@@ -36,15 +44,18 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
 );
 
 interface ProductEditProps {
-  shopId: number;
-  productId?: number;
-  onPopBack?: (reload?: boolean) => void;
+  shop: Shop;
+  slug?: string;
 }
 
-function ProductEdit({ shopId, productId, onPopBack }: ProductEditProps) {
-  const [fetching, setFetching] = useState((productId ?? 0) > 0);
+function ProductEdit(props: ProductEditProps) {
+  const { shop, slug } = props;
+
+  const router = useRouter();
+
+  const [fetching, setFetching] = useState(!!slug);
   const [product, setProduct] = useState<Product>({
-    shopId: shopId,
+    shopId: shop.id,
     images: []
   });
 
@@ -53,6 +64,8 @@ function ProductEdit({ shopId, productId, onPopBack }: ProductEditProps) {
   // const [options, setOptions] = useState<ProductAttribute[]>([]);
   //const [variants, setVariants] = useState<ProductVariant[]>([]);
   const [withVariant, setWithVariant] = useState<boolean>();
+
+  const [error, setError] = useState<string>();
 
   const fileRef = useRef<HTMLInputElement | null>(null);
   const imagesRef = useRef<HTMLDivElement | null>(null);
@@ -106,15 +119,7 @@ function ProductEdit({ shopId, productId, onPopBack }: ProductEditProps) {
   });
 
   useEffect(() => {
-    // if (
-    //   !productSlug ||
-    //   productSlug.trim().length === 0 ||
-    //   productSlug === "new"
-    // ) {
-    //   return;
-    // }
-
-    if (!productId) {
+    if (!slug) {
       return;
     }
 
@@ -122,7 +127,7 @@ function ProductEdit({ shopId, productId, onPopBack }: ProductEditProps) {
       return;
     }
 
-    getProductById(productId)
+    getProductBySlug(slug)
       .then((p) => {
         if (!p) {
           throw "Product not found";
@@ -137,6 +142,7 @@ function ProductEdit({ shopId, productId, onPopBack }: ProductEditProps) {
       })
       .catch((error) => {
         const msg = parseErrorResponse(error);
+        setError(msg);
       })
       .finally(() => {
         setFetching(false);
@@ -247,23 +253,22 @@ function ProductEdit({ shopId, productId, onPopBack }: ProductEditProps) {
         product.price = isNaN(pp) ? undefined : pp;
       }
 
-      console.log(product);
+      //console.log(product);
       await saveProduct(product);
-      onPopBack?.(true);
       toast.success("Product successfully saved");
+      router.back();
     } catch (error) {
       const msg = parseErrorResponse(error);
-      console.log(msg);
       toast.error(msg);
     }
   };
 
   if (fetching) {
-    return (
-      <div className="py-3">
-        <Loading />
-      </div>
-    );
+    return <Loading />;
+  }
+
+  if (error) {
+    return <Alert message={error} />;
   }
 
   const title = (!product.id ? "Create" : "Update") + " product";
@@ -283,62 +288,41 @@ function ProductEdit({ shopId, productId, onPopBack }: ProductEditProps) {
           }
         }}
       >
-        <div className="hstack mb-3">
-          <button
-            type="button"
-            className="btn btn-default py-2 me-2 ms-auto"
-            onClick={() => {
-              onPopBack?.(false);
-            }}
-          >
-            Go back
-          </button>
-          <ProgressButton
-            loading={isSubmitting}
-            className="py-2"
-            onClick={() => {
-              handleSubmit(async (data) => await executeSave({ ...data }))();
-            }}
-          >
-            {title}
-          </ProgressButton>
-          {/* <button
-            type="button"
-            className="btn btn-default py-2 ms-2 d-block d-md-none"
-            onClick={() => {
-              onPopBack?.(false);
-            }}
-          >
-            Go back
-          </button> */}
-          {/* <Dropdown
-                    toggle={
-                     
-                    }
-                    className="dropdown-menu-end"
-                  >
-                    <li
-                      className="dropdown-item"
-                      role="button"
-                      onClick={() => {
-                        
-                      }}
-                    >
-                      Draft
-                    </li>
-                    <li
-                      className="dropdown-item"
-                      role="button"
-                      onClick={() => {
-                        handleSubmit(
-                          async (data) =>
-                            await executeSave({ ...data, status: "PUBLISHED" })
-                        )();
-                      }}
-                    >
-                      Published
-                    </li>
-                  </Dropdown> */}
+        <div className="row mb-3 g-3">
+          <div className="col-lg-6">
+            <h4 className="mb-1 fw-semibold">{title}</h4>
+            <div className="d-flex flex-wrap gap-2">
+              <Link href={`/account/shops/${shop.slug}/dashboard`}>
+                Dashboard
+              </Link>
+              <span className="text-muted">/</span>
+              <Link href={`/account/shops/${shop.slug}/products`}>
+                Products
+              </Link>
+              <span className="text-muted">/</span>
+              <div className="text-muted" aria-current="page">
+                {title}
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-6">
+            <div className="hstack gap-2 h-100">
+              <div className="flex-grow-1 d-none d-lg-flex"></div>
+              <div>
+                <ProgressButton
+                  loading={isSubmitting}
+                  className="py-2"
+                  onClick={() => {
+                    handleSubmit(
+                      async (data) => await executeSave({ ...data })
+                    )();
+                  }}
+                >
+                  {title}
+                </ProgressButton>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="">
@@ -419,7 +403,7 @@ function ProductEdit({ shopId, productId, onPopBack }: ProductEditProps) {
                       />
                     </div>
                   </div>
-                  <div className="col-lg-6">
+                  <div className="col-12">
                     <Input
                       label="Brand name"
                       id="brandInput"
@@ -430,7 +414,7 @@ function ProductEdit({ shopId, productId, onPopBack }: ProductEditProps) {
                       })}
                     />
                   </div>
-                  <div className="col-lg-6">
+                  {/* <div className="col-lg-6">
                     <label className="form-label">Country of origin</label>
                     <AutocompleteSelect<string, string>
                       options={[
@@ -444,7 +428,7 @@ function ProductEdit({ shopId, productId, onPopBack }: ProductEditProps) {
                       getOptionLabel={(v) => v}
                       getOptionKey={(v) => v}
                     />
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="row">

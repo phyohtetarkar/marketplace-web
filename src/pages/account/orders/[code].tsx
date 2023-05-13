@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { ChangeEvent, useContext, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
+import { ProgressContext } from "../../../common/contexts";
 import {
   formatNumber,
   formatTimestamp,
@@ -12,13 +13,25 @@ import {
 import { withAuthentication } from "../../../common/WithAuthentication";
 import Alert from "../../../components/Alert";
 import ConfirmModal from "../../../components/ConfirmModal";
+import Dropdown from "../../../components/Dropdown";
 import Loading from "../../../components/Loading";
-import { cancelOrder, getOrderByCode } from "../../../services/OrderService";
+import Modal from "../../../components/Modal";
+import {
+  cancelOrder,
+  getOrderByCode,
+  uploadPayslip
+} from "../../../services/OrderService";
 
 function OrderDetail() {
+  const router = useRouter();
+
+  const progressContext = useContext(ProgressContext);
+
   const [confirmCancel, setConfirmCancel] = useState(false);
 
-  const router = useRouter();
+  const [showReceipt, setShowReceipt] = useState(false);
+
+  const paySlipFileRef = useRef<HTMLInputElement | null>(null);
 
   const { code } = router.query;
 
@@ -29,6 +42,25 @@ function OrderDetail() {
       revalidateOnFocus: false
     }
   );
+
+  const handleUploadPayslip = async (event: ChangeEvent<HTMLInputElement>) => {
+    try {
+      const files = event.target.files;
+      if (files && files.length > 0 && data?.id) {
+        progressContext.update(true);
+        const file = files[0];
+        await uploadPayslip(data.id, file);
+        mutate();
+        toast.success("Pay slip uploaded successfully");
+      }
+    } catch (error) {
+      const msg = parseErrorResponse(error);
+      toast.error(msg);
+    } finally {
+      progressContext.update(false);
+      event.target.value = "";
+    }
+  };
 
   const content = () => {
     if (isLoading) {
@@ -43,23 +75,25 @@ function OrderDetail() {
       return <Alert message="Order not found" />;
     }
 
-    let statusColor = "bg-warning";
+    let statusColor = "text-warning";
 
     switch (data.status) {
       case "CANCELLED":
-        statusColor = "bg-danger";
+        statusColor = "text-danger";
         break;
       case "COMPLETED":
-        statusColor = "bg-success";
+        statusColor = "text-success";
         break;
     }
 
     return (
       <div className="row">
-        <div className="col-12 col-lg-7 col-xl-8">
+        <div className="col-12 col-lg-7 col-xl-8 mb-3">
           <div className="card mb-3">
+            <div className="card-header py-3">
+              <h5 className="mb-0 fw-semibold">Products</h5>
+            </div>
             <div className="card-body">
-              <h4 className="fw-semibold mb-3">Products</h4>
               <div className="row row-cols-1 row-cols-lg-2 row-cols-xxxl-3 g-3">
                 {data.items.map((item, i) => {
                   return (
@@ -134,69 +168,96 @@ function OrderDetail() {
 
           <div className="card">
             <div className="card-header py-3">
-              <h5 className="mb-0 fw-semibold">Note</h5>
+              <h5 className="mb-0 fw-semibold">Delivery info</h5>
             </div>
             <div className="card-body">
-              <p className="mb-0">{data.note}</p>
+              <div className="row g-3">
+                <div className="col-lg-6">
+                  <h6 className="fw-semibold mb-1">Name</h6>
+                  <div className="text-muted">{data.delivery.name}</div>
+                </div>
+                <div className="col-lg-6">
+                  <h6 className="fw-semibold mb-1">Phone</h6>
+                  <div className="text-muted">{data.delivery.phone}</div>
+                </div>
+                <div className="col-12">
+                  <h6 className="fw-semibold mb-1">City</h6>
+                  <div className="text-muted">{data.delivery.city}</div>
+                </div>
+                <div className="col-12">
+                  <h6 className="fw-semibold mb-1">Address</h6>
+                  <div className="text-muted">{data.delivery.address}</div>
+                </div>
+                <div className="col-12">
+                  <h6 className="fw-semibold mb-1">Note</h6>
+                  <div className="text-muted">{data.note}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div className="col-12 col-lg-5 col-xl-4">
           <div className="card mb-3">
-            <div className="card-header bg-white py-2h">
-              <div className="hstack justify-content-between">
-                <div className="fw-semibold">Status:</div>
-                <div
-                  className={`ms-2 small text-light ${statusColor} px-2 py-1 rounded`}
-                >
-                  {data.status.toUpperCase()}
-                </div>
-              </div>
+            <div className="card-header py-3">
+              <h5 className="mb-0 fw-semibold">Order summary</h5>
             </div>
             <div className="card-body">
-              <div className="hstack justify-content-between mb-2h">
-                <div className="text-muted">Quantity:</div>
-                <div className="ms-2">{data.quantity}</div>
-              </div>
-              <div className="hstack justify-content-between mb-2h">
-                <div className="text-muted">Subtotal:</div>
-                <div className="ms-2">
+              <dl className="row mb-0">
+                <dt className="col-sm-4 fw-semibold">Status:</dt>
+                <dd
+                  className={`col-sm-8 ${statusColor} text-sm-end mb-2 fw-semibold`}
+                >
+                  {data.status}
+                </dd>
+
+                <dt className="col-sm-4  fw-semibold">Quantity:</dt>
+                <dd className="col-sm-8 text-muted text-sm-end mb-2">
+                  {data.quantity}
+                </dd>
+
+                <dt className="col-sm-4  fw-semibold">Subtotal:</dt>
+                <dd className="col-sm-8 text-muted text-sm-end mb-2">
                   {formatNumber(data.subTotalPrice)} Ks
-                </div>
-              </div>
-              <div className="hstack justify-content-between">
-                <div className="text-muted">Discount:</div>
-                <div className="ms-2 text-danger">
+                </dd>
+
+                <dt className="col-sm-4  fw-semibold">Discount:</dt>
+                <dd className="col-sm-8 text-sm-end text-danger">
                   -{formatNumber(data.discount)} Ks
+                </dd>
+
+                <div className="col-12">
+                  <hr className="text-muted" />
                 </div>
-              </div>
-              <hr className="text-muted" />
-              <div className="hstack justify-content-between">
-                <div className="fw-semibold">Total Price:</div>
-                <div className="ms-2 fw-semibold">
+
+                <dt className="col-sm-4  fw-semibold">Total Price:</dt>
+                <dd className="col-sm-8 text-sm-end mb-0">
                   {formatNumber(data.totalPrice)} Ks
-                </div>
-              </div>
+                </dd>
+              </dl>
             </div>
           </div>
 
           <div className="card mb-3">
             <div className="card-header py-3">
-              <h5 className="mb-0 fw-semibold">Delivery info</h5>
+              <h5 className="mb-0 fw-semibold">Payment</h5>
             </div>
             <div className="card-body">
               <dl className="row mb-0">
-                <dt className="col-12 fw-semibold">Name</dt>
-                <dd className="col-12 text-muted">{data.delivery.name}</dd>
+                <dt className="col-12 fw-semibold">Payment method</dt>
+                <dd className="col-12 text-muted mb-2">
+                  {data.paymentMethod === "BANK_TRANSFER"
+                    ? "Bank Transfer"
+                    : "Cash On Delivery"}
+                </dd>
 
-                <dt className="col-12 fw-semibold">Phone</dt>
-                <dd className="col-12 text-muted">{data.delivery.phone}</dd>
-
-                <dt className="col-12 fw-semibold">City</dt>
-                <dd className="col-12 text-muted">{data.delivery.city}</dd>
-
-                <dt className="col-12 fw-semibold">Address</dt>
-                <dd className="col-12 text-muted">{data.delivery.address}</dd>
+                {data.paymentMethod === "BANK_TRANSFER" && (
+                  <>
+                    <dt className="col-12 fw-semibold">Account type</dt>
+                    <dd className="col-12 text-muted mb-0">
+                      {data.payment.accountType}
+                    </dd>
+                  </>
+                )}
               </dl>
             </div>
           </div>
@@ -267,14 +328,49 @@ function OrderDetail() {
               </nav>
             </div>
             <div className="col-md-6 d-flex">
+              {data?.paymentMethod === "BANK_TRANSFER" && (
+                <Dropdown
+                  toggle="Receipt image"
+                  toggleClassName="btn btn-light dropdown-toggle"
+                  menuClassName="dropdown-menu-end"
+                  className="ms-md-auto"
+                >
+                  <li
+                    className="dropdown-item"
+                    role="button"
+                    onClick={() => {
+                      setShowReceipt(true);
+                    }}
+                  >
+                    View
+                  </li>
+                  <li
+                    className="dropdown-item"
+                    role="button"
+                    onClick={() => {
+                      paySlipFileRef.current?.click();
+                    }}
+                  >
+                    Upload
+                  </li>
+                </Dropdown>
+              )}
               {data?.status === "PENDING" && (
                 <button
-                  className="text-nowrap ms-md-auto btn btn-danger"
+                  className="text-nowrap btn btn-danger ms-2h"
                   onClick={() => setConfirmCancel(true)}
                 >
                   Cancel Order
                 </button>
               )}
+              <input
+                ref={paySlipFileRef}
+                onChange={handleUploadPayslip}
+                name="paySlip"
+                className="d-none"
+                type="file"
+                accept="image/x-png,image/jpeg"
+              />
             </div>
           </div>
         </div>
@@ -299,6 +395,42 @@ function OrderDetail() {
           }
         }}
       />
+
+      <Modal show={showReceipt}>
+        {(isShown) => {
+          return (
+            <>
+              <div className="modal-header">
+                <h4 className="modal-title">Receipt</h4>
+                <button
+                  type="button"
+                  className="btn-close shadow-none"
+                  aria-label="Close"
+                  onClick={() => setShowReceipt(false)}
+                ></button>
+              </div>
+              <div className="modal-body p-0">
+                {data?.payment.receiptImage ? (
+                  <Image
+                    src={data.payment.receiptImage}
+                    alt=""
+                    sizes="100vw"
+                    width={0}
+                    height={0}
+                    style={{
+                      objectFit: "contain",
+                      width: "100%",
+                      height: "auto"
+                    }}
+                  />
+                ) : (
+                  <div className="p-3 text-muted">No image uploaded</div>
+                )}
+              </div>
+            </>
+          );
+        }}
+      </Modal>
     </>
   );
 }

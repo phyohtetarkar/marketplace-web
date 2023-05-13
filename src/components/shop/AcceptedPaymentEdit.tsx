@@ -43,6 +43,20 @@ function AcceptedPaymentEdit(props: AcceptedPaymentEditProps) {
               error={errors.accountType?.message}
             />
           </div>
+
+          <div className="col-12">
+            <Input
+              label="Account name *"
+              id="accountNameInput"
+              type="text"
+              placeholder="Enter account name"
+              {...register("accountName", {
+                setValueAs: setEmptyOrString,
+                required: "Please enter account name"
+              })}
+              error={errors.accountName?.message}
+            />
+          </div>
           <div className="col-12">
             <Input
               label="Account number *"

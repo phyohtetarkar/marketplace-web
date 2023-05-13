@@ -225,7 +225,7 @@ function ShopManage(props: ShopManageProps) {
           </nav>
         </div>
       </div>
-      <div className="container py-3">
+      <div className="container py-3 mb-5">
         <div className="position-relative border rounded bg-white vstack overflow-hidden mb-3">
           <ShopHeading shop={shop} />
 

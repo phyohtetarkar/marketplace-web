@@ -135,6 +135,7 @@ export interface ShopReview {
 export interface ShopAcceptedPayment {
   id?: number;
   accountType?: string;
+  accountName?: string;
   accountNumber?: string;
 }
 
@@ -293,7 +294,7 @@ export interface DeliveryDetail {
 
 export interface PaymentDetail {
   accountType?: string;
-  paySlipImage?: string;
+  receiptImage?: string;
   file?: File;
 }
 
