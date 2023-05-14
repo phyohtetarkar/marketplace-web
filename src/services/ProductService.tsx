@@ -128,13 +128,6 @@ export async function existsProductBySlug(slug: String) {
 
 export async function deleteProduct(id: number) {
   const url = `${basePath}/${id}`;
-  // const resp = await fetch(url, {
-  //   method: "DELETE",
-  //   headers: {
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
-
   const resp = await makeApiRequest(url, { method: "DELETE" }, true);
 
   await validateResponse(resp);

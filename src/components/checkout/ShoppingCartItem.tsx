@@ -191,9 +191,7 @@ function ShoppingCartItem(props: ShoppingCartItemProps) {
                 </div>
               )}
               <div className="flex-grow-1"></div>
-              <div>
-                <h6 className="mb-0">{price}</h6>
-              </div>
+              <div style={{ fontSize: 18 }}>{price}</div>
             </div>
           </div>
         </div>

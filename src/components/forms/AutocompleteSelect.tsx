@@ -95,6 +95,7 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
     referenceId,
     popperId,
     options,
+    defaultValue,
     placeholder,
     error,
     onChange,
@@ -130,6 +131,7 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
     }
     return null;
   });
+
   const [filter, setFilter] = useState<string>();
 
   const handleDocumentClick = useCallback(
@@ -160,16 +162,26 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
     };
   }, [handleDocumentClick]);
 
+  // useEffect(() => {
+  //   if (defaultValue) {
+  //     setSelectedOption({
+  //       key: props.getOptionKey(defaultValue),
+  //       value: defaultValue! as T
+  //     });
+  //   }
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [defaultValue]);
+
   useEffect(() => {
-    if (props.defaultValue) {
+    if (defaultValue) {
       setSelectedOption({
-        key: props.getOptionKey(props.defaultValue!),
-        value: props.defaultValue! as T
+        key: props.getOptionKey(defaultValue),
+        value: defaultValue! as T
       });
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.defaultValue]);
+  }, [options, defaultValue]);
 
   function handleFilter(v: T) {
     if (!filter) {

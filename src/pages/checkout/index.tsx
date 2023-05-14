@@ -354,7 +354,9 @@ function Checkout() {
                               checked={field.value === "BANK_TRANSFER"}
                               onChange={(evt) => {
                                 evt.target.checked &&
-                                  setValue("paymentMethod", "BANK_TRANSFER");
+                                  setValue("paymentMethod", "BANK_TRANSFER", {
+                                    shouldDirty: true
+                                  });
                                 acceptedPaymentsState.mutate();
                               }}
                             ></input>

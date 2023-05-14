@@ -3,9 +3,10 @@ import dynamic from "next/dynamic";
 import { default as NextImage } from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { ProgressContext } from "../../common/contexts";
 import { useCategories } from "../../common/hooks";
 import {
   Category,
@@ -23,11 +24,12 @@ import {
   setStringToSlug
 } from "../../common/utils";
 import {
-  getProductById,
+  deleteProduct,
   getProductBySlug,
   saveProduct
 } from "../../services/ProductService";
 import Alert from "../Alert";
+import ConfirmModal from "../ConfirmModal";
 import { AutocompleteSelect, Input } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import Loading from "../Loading";
@@ -52,6 +54,10 @@ function ProductEdit(props: ProductEditProps) {
   const { shop, slug } = props;
 
   const router = useRouter();
+
+  const progressContext = useContext(ProgressContext);
+
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const [fetching, setFetching] = useState(!!slug);
   const [product, setProduct] = useState<Product>({
@@ -123,9 +129,9 @@ function ProductEdit(props: ProductEditProps) {
       return;
     }
 
-    if (!categories) {
-      return;
-    }
+    // if (!categories) {
+    //   return;
+    // }
 
     getProductBySlug(slug)
       .then((p) => {
@@ -147,8 +153,7 @@ function ProductEdit(props: ProductEditProps) {
       .finally(() => {
         setFetching(false);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categories]);
+  }, [slug]);
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
     const files = event.target.files;
@@ -263,6 +268,20 @@ function ProductEdit(props: ProductEditProps) {
     }
   };
 
+  const executeDelete = async () => {
+    try {
+      if (!product.id) {
+        throw undefined;
+      }
+      await deleteProduct(product.id);
+      toast.success("Product deleted successfully");
+      router.back();
+    } catch (error) {
+      const msg = parseErrorResponse(error);
+      toast.error(msg);
+    }
+  };
+
   if (fetching) {
     return <Loading />;
   }
@@ -308,17 +327,25 @@ function ProductEdit(props: ProductEditProps) {
           <div className="col-lg-6">
             <div className="hstack gap-2 h-100">
               <div className="flex-grow-1 d-none d-lg-flex"></div>
-              <div>
+              <div className="hstack gap-2">
+                {(product.id ?? 0) > 0 && (
+                  <button
+                    type="button"
+                    className="btn btn-danger py-2"
+                    onClick={() => {
+                      setConfirmDelete(true);
+                    }}
+                  >
+                    Delete
+                  </button>
+                )}
                 <ProgressButton
                   loading={isSubmitting}
                   className="py-2"
-                  onClick={() => {
-                    handleSubmit(
-                      async (data) => await executeSave({ ...data })
-                    )();
-                  }}
+                  variant="secondary"
+                  type="submit"
                 >
-                  {title}
+                  {product.id ?? 0 > 0 ? "Update" : "Create"}
                 </ProgressButton>
               </div>
             </div>
@@ -984,6 +1011,16 @@ function ProductEdit(props: ProductEditProps) {
           );
         }}
       </Modal>
+
+      <ConfirmModal
+        message="Are you sure to delete?"
+        show={confirmDelete}
+        close={() => setConfirmDelete(false)}
+        onConfirm={async () => {
+          setConfirmDelete(false);
+          executeDelete();
+        }}
+      />
     </div>
   );
 }

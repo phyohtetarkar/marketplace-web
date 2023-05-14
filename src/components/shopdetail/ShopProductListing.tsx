@@ -1,5 +1,6 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -9,7 +10,11 @@ import {
   formatTimestamp,
   parseErrorResponse
 } from "../../common/utils";
-import { findShopProducts, ProductQuery } from "../../services/ProductService";
+import {
+  deleteProduct,
+  findShopProducts,
+  ProductQuery
+} from "../../services/ProductService";
 import Alert from "../Alert";
 import ConfirmModal from "../ConfirmModal";
 import Loading from "../Loading";
@@ -23,8 +28,6 @@ function ShopProductListing(props: ShopProductListingProps) {
   const { shopId } = props;
 
   const router = useRouter();
-
-  const [pendingProductId, setPendingProductId] = useState<number>();
 
   const [pendingDeleteId, setPendingDeleteId] = useState<number>();
 
@@ -93,7 +96,12 @@ function ShopProductListing(props: ShopProductListingProps) {
                       </div>
                     </td>
                     <td className="w-100">
-                      <span className="text-wrap">{p.name}</span>
+                      <Link
+                        href={`/products/${p.slug}`}
+                        className="text-wrap text-dark"
+                      >
+                        {p.name}
+                      </Link>
                     </td>
                     <td>{formatNumber(p.price ?? 0)}</td>
                     <td>{formatTimestamp(p.createdAt ?? 0)}</td>
@@ -106,7 +114,12 @@ function ShopProductListing(props: ShopProductListingProps) {
                       >
                         <PencilSquareIcon width={20} />
                       </button>
-                      <button className="btn btn-danger ms-2">
+                      <button
+                        className="btn btn-danger ms-2"
+                        onClick={() => {
+                          setPendingDeleteId(p.id);
+                        }}
+                      >
                         <TrashIcon width={20} />
                       </button>
                     </td>
@@ -169,7 +182,13 @@ function ShopProductListing(props: ShopProductListingProps) {
         close={() => setPendingDeleteId(undefined)}
         onConfirm={async () => {
           try {
+            if (!pendingDeleteId) {
+              throw undefined;
+            }
+            await deleteProduct(pendingDeleteId);
             setPendingDeleteId(undefined);
+            mutate();
+            toast.success("Product deleted successfully");
           } catch (error) {
             const msg = parseErrorResponse(error);
             toast.error(msg);
