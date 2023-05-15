@@ -154,9 +154,14 @@ function Header({ hideAuth }: HeaderProps) {
 
             <AuthenticationContext.Consumer>
               {({ payload, status }) => {
-                if (payload || status === "loading") {
+                if (!status || status === "loading") {
                   return null;
                 }
+
+                if (status !== "unauthorized") {
+                  return null;
+                }
+
                 return (
                   <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0 d-none d-lg-flex">
                     <div className="nav-item">
@@ -295,10 +300,7 @@ function Header({ hideAuth }: HeaderProps) {
 
               <AuthenticationContext.Consumer>
                 {({ payload, status }) => {
-                  if (status === "loading") {
-                    return null;
-                  }
-                  if (payload) {
+                  if (payload && status === "success") {
                     return (
                       <div className="navbar-nav align-items-lg-center mt-3 mt-lg-0">
                         <AccountDropdown
@@ -307,6 +309,11 @@ function Header({ hideAuth }: HeaderProps) {
                       </div>
                     );
                   }
+
+                  if (status !== "unauthorized") {
+                    return null;
+                  }
+
                   return (
                     <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0 d-lg-none">
                       <div className="nav-item">

@@ -110,20 +110,6 @@ export async function completeOrder(orderId: number) {
   await validateResponse(resp);
 }
 
-export async function markRemoveOrderItem(orderId: number, itemId: number) {
-  const url = `${basePath}/${orderId}/items/${itemId}/remove`;
-
-  const resp = await makeApiRequest(
-    url,
-    {
-      method: "PUT"
-    },
-    true
-  );
-
-  await validateResponse(resp);
-}
-
 export async function uploadPayslip(orderId: number, file: File) {
   const url = `${basePath}/${orderId}/upload-receipt`;
 

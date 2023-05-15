@@ -9,16 +9,30 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from "react";
+import { toast } from "react-toastify";
+import { ProgressContext } from "../../common/contexts";
 import { Shop } from "../../common/models";
 import { parseErrorResponse } from "../../common/utils";
-import { getShopBySlug, isShopMember } from "../../services/ShopService";
+import {
+  getShopBySlug,
+  isShopMember,
+  uploadShopCover,
+  uploadShopLogo
+} from "../../services/ShopService";
 import Accordion from "../Accordion";
 import Alert from "../Alert";
 import Dropdown from "../Dropdown";
 import Loading from "../Loading";
-import { ShopHeading } from "../shopdetail";
 import PendingOrderCountView from "./PendingOrderCountView";
+import ShopHeading from "./ShopHeading";
 
 interface ShopManageProps {
   activeTab?:
@@ -38,6 +52,8 @@ function ShopManage(props: ShopManageProps) {
 
   const router = useRouter();
 
+  const progressContext = useContext(ProgressContext);
+
   const [error, setError] = useState<string>();
 
   const [shop, setShop] = useState<Shop>();
@@ -46,6 +62,10 @@ function ShopManage(props: ShopManageProps) {
 
   const initRef = useRef(false);
 
+  const logoFileFef = useRef<HTMLInputElement>(null);
+
+  const coverFileFef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (!router.isReady) {
       return;
@@ -53,7 +73,10 @@ function ShopManage(props: ShopManageProps) {
     const { slug } = router.query;
 
     if (typeof slug === "string") {
-      !initRef.current && loadShop(slug);
+      if (!initRef.current) {
+        setLoading(true);
+        loadShop(slug);
+      }
     }
 
     initRef.current = true;
@@ -62,7 +85,6 @@ function ShopManage(props: ShopManageProps) {
 
   const loadShop = async (slug: string) => {
     try {
-      setLoading(true);
       var shop = await getShopBySlug(slug);
       if (!shop) {
         throw "Shop not found";
@@ -78,6 +100,36 @@ function ShopManage(props: ShopManageProps) {
       setError(parseErrorResponse(error));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    try {
+      const files = event.target.files;
+      if (files && files.length > 0 && shop?.id) {
+        const file = files[0];
+        const fileSize = file.size / (1024 * 1024);
+
+        const limit = event.target.name === "logo" ? 0.36 : 0.512;
+        if (fileSize > limit) {
+          throw `File size must not greater than ${limit * 1000}KB`;
+        }
+
+        progressContext.update(true);
+
+        if (event.target.name === "logo") {
+          await uploadShopLogo(shop.id, file);
+        } else if (event.target.name === "cover") {
+          await uploadShopCover(shop.id, file);
+        }
+        shop.slug && (await loadShop(shop.slug));
+      }
+    } catch (error) {
+      const msg = parseErrorResponse(error);
+      toast.error(msg);
+    } finally {
+      progressContext.update(false);
+      event.target.value = "";
     }
   };
 
@@ -235,10 +287,22 @@ function ShopManage(props: ShopManageProps) {
             toggleClassName="btn btn-light shadow-sm"
             menuClassName="shadow"
           >
-            <li role="button" className="dropdown-item-primary">
+            <li
+              role="button"
+              className="dropdown-item-primary"
+              onClick={() => {
+                logoFileFef.current?.click();
+              }}
+            >
               Upload Logo
             </li>
-            <li role="button" className="dropdown-item-primary">
+            <li
+              role="button"
+              className="dropdown-item-primary"
+              onClick={() => {
+                coverFileFef.current?.click();
+              }}
+            >
               Upload Cover
             </li>
           </Dropdown>
@@ -270,6 +334,24 @@ function ShopManage(props: ShopManageProps) {
           </div>
         </div>
       </div>
+
+      <input
+        ref={logoFileFef}
+        onChange={handleImageUpload}
+        name="logo"
+        className="d-none"
+        type="file"
+        accept="image/x-png,image/jpeg"
+      />
+
+      <input
+        ref={coverFileFef}
+        onChange={handleImageUpload}
+        name="cover"
+        className="d-none"
+        type="file"
+        accept="image/x-png,image/jpeg"
+      />
     </>
   );
 }

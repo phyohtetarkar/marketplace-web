@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
+import { withAuthentication } from "../../../../../common/WithAuthentication";
 import { ProductEdit } from "../../../../../components/product";
-import ShopManage from "../../../../../components/shop/ShopManage";
+import { ShopManage } from "../../../../../components/shop";
 
 function ProductUpdate() {
   const router = useRouter();
@@ -16,4 +17,4 @@ function ProductUpdate() {
   );
 }
 
-export default ProductUpdate;
+export default withAuthentication(ProductUpdate);

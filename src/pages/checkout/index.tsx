@@ -401,7 +401,7 @@ function Checkout() {
                         {acceptedPaymentsState.data?.map((ap, i) => {
                           return (
                             <li
-                              key={i}
+                              key={ap.id}
                               className="vstack dropdown-item"
                               role={"button"}
                               onClick={(evt) => {
@@ -428,7 +428,7 @@ function Checkout() {
                       )}
 
                       <label htmlFor="receiptFile" className="form-label mt-3">
-                        Receipt image
+                        Transfer receipt image
                         <span className="text-muted ms-1">(optional)</span>
                       </label>
                       <input
@@ -438,9 +438,23 @@ function Checkout() {
                         id="receiptFile"
                         accept="image/x-png,image/jpeg"
                         onChange={(evt) => {
-                          const files = evt.target.files;
-                          if (files && files.length > 0) {
-                            setValue("payment.file", files[0]);
+                          try {
+                            const files = evt.target.files;
+                            if (files && files.length > 0) {
+                              const file = files[0];
+                              const fileSize = file.size / (1024 * 1024);
+
+                              if (fileSize > 0.6) {
+                                throw "File size must not greater than 600KB";
+                              }
+
+                              setValue("payment.file", file);
+                            }
+                          } catch (error) {
+                            const msg = parseErrorResponse(error);
+                            toast.error(msg);
+                          } finally {
+                            evt.target.value = "";
                           }
                         }}
                       ></input>

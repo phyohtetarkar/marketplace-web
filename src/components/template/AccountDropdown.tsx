@@ -89,7 +89,8 @@ function AccountDropdown(props: AccountDropdownProps) {
             //Auth.signOut().catch(console.error);
             signOut()
               .then(() => {
-                authContext.update(undefined, undefined);
+                authContext.update("unauthorized", undefined);
+                // sessionStorage.removeItem("accessToken");
               })
               .catch((error) => {
                 toast.error(parseErrorResponse(error));

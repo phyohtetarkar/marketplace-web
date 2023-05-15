@@ -1,5 +1,5 @@
-import ShopManage from "../../../../components/shop/ShopManage";
-import { ShopSetting } from "../../../../components/shopdetail";
+import { withAuthentication } from "../../../../common/WithAuthentication";
+import { ShopManage, ShopSetting } from "../../../../components/shop";
 
 function Setting() {
   return (
@@ -9,4 +9,4 @@ function Setting() {
   );
 }
 
-export default Setting;
+export default withAuthentication(Setting);

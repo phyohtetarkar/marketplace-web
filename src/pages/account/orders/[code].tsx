@@ -16,6 +16,7 @@ import ConfirmModal from "../../../components/ConfirmModal";
 import Dropdown from "../../../components/Dropdown";
 import Loading from "../../../components/Loading";
 import Modal from "../../../components/Modal";
+import AcceptedPaymentList from "../../../components/shop/AcceptedPaymentList";
 import {
   cancelOrder,
   getOrderByCode,
@@ -30,6 +31,8 @@ function OrderDetail() {
   const [confirmCancel, setConfirmCancel] = useState(false);
 
   const [showReceipt, setShowReceipt] = useState(false);
+
+  const [showAcceptedPayments, setShowAcceptedPayments] = useState(false);
 
   const paySlipFileRef = useRef<HTMLInputElement | null>(null);
 
@@ -47,8 +50,13 @@ function OrderDetail() {
     try {
       const files = event.target.files;
       if (files && files.length > 0 && data?.id) {
-        progressContext.update(true);
         const file = files[0];
+        const fileSize = file.size / (1024 * 1024);
+        if (fileSize > 0.6) {
+          throw "File size must not greater than 600KB";
+        }
+        progressContext.update(true);
+
         await uploadPayslip(data.id, file);
         mutate();
         toast.success("Pay slip uploaded successfully");
@@ -229,8 +237,16 @@ function OrderDetail() {
                   <hr className="text-muted" />
                 </div>
 
-                <dt className="col-sm-4  fw-semibold">Total Price:</dt>
-                <dd className="col-sm-8 text-sm-end mb-0">
+                <dt
+                  className="col-sm-4 fw-semibold"
+                  style={{ fontSize: "1.2rem" }}
+                >
+                  Total Price:
+                </dt>
+                <dd
+                  className="col-sm-8 text-sm-end mb-0"
+                  style={{ fontSize: "1.2rem" }}
+                >
                   {formatNumber(data.totalPrice)} Ks
                 </dd>
               </dl>
@@ -239,7 +255,19 @@ function OrderDetail() {
 
           <div className="card mb-3">
             <div className="card-header py-3">
-              <h5 className="mb-0 fw-semibold">Payment</h5>
+              <div className="hstack gap-2">
+                <h5 className="mb-0 fw-semibold">Payment</h5>
+                <div className="flex-grow-1"></div>
+                {data.paymentMethod === "BANK_TRANSFER" && (
+                  <div
+                    role={"button"}
+                    className="link-anchor"
+                    onClick={() => setShowAcceptedPayments(true)}
+                  >
+                    View accounts
+                  </div>
+                )}
+              </div>
             </div>
             <div className="card-body">
               <dl className="row mb-0">
@@ -426,6 +454,30 @@ function OrderDetail() {
                 ) : (
                   <div className="p-3 text-muted">No image uploaded</div>
                 )}
+              </div>
+            </>
+          );
+        }}
+      </Modal>
+      <Modal show={showAcceptedPayments}>
+        {(isShown) => {
+          if (!isShown) {
+            return <></>;
+          }
+
+          return (
+            <>
+              <div className="modal-header">
+                <h4 className="modal-title">Accepted payments</h4>
+                <button
+                  type="button"
+                  className="btn-close shadow-none"
+                  aria-label="Close"
+                  onClick={() => setShowAcceptedPayments(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <AcceptedPaymentList shopId={data?.shop?.id ?? 0} />
               </div>
             </>
           );

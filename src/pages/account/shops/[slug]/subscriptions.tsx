@@ -1,5 +1,5 @@
-import ShopManage from "../../../../components/shop/ShopManage";
-import ShopSubscription from "../../../../components/shop/ShopSubscription";
+import { withAuthentication } from "../../../../common/WithAuthentication";
+import { ShopManage, ShopSubscription } from "../../../../components/shop";
 
 function Subscriptions() {
   return (
@@ -9,4 +9,4 @@ function Subscriptions() {
   );
 }
 
-export default Subscriptions;
+export default withAuthentication(Subscriptions);

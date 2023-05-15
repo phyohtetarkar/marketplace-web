@@ -21,7 +21,7 @@ const CollectionItem = ({ item, onClick }: CollectionItemProps) => {
     >
       {item?.image ? (
         <Image
-          src={item.imageUrl}
+          src={item.image}
           width={50}
           height={50}
           alt=""
@@ -40,7 +40,7 @@ const CollectionItem = ({ item, onClick }: CollectionItemProps) => {
 function Collections() {
   const router = useRouter();
 
-  const { categories, error, isLoading } = useCategories(false);
+  const { categories, error, isLoading } = useCategories(true);
 
   const [subCategories, setSubCategories] = useState<Category[]>();
 

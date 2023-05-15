@@ -1,5 +1,5 @@
-import ShopManage from "../../../../../components/shop/ShopManage";
-import ShopOrderListing from "../../../../../components/shop/ShopOrderListing";
+import { withAuthentication } from "../../../../../common/WithAuthentication";
+import { ShopManage, ShopOrderListing } from "../../../../../components/shop";
 
 function Orders() {
   return (
@@ -9,4 +9,4 @@ function Orders() {
   );
 }
 
-export default Orders;
+export default withAuthentication(Orders);

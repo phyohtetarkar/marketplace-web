@@ -9,9 +9,8 @@ import ProductListing from "../../../components/product/ProductListing";
 import {
   AboutUs,
   ShopHeading,
-  ShopProductListing,
   ShopReviewListing
-} from "../../../components/shopdetail";
+} from "../../../components/shop";
 import Tabs from "../../../components/Tabs";
 import { getShopBySlug } from "../../../services/ShopService";
 

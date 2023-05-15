@@ -112,9 +112,16 @@ function Shops() {
                     Home
                   </Link>
                 </li>
-                <li className="breadcrumb-item active" aria-current="page">
-                  Shops
-                </li>
+
+                {query?.q ? (
+                  <li className="breadcrumb-item active" aria-current="page">
+                    Search results for: {`"${query.q}"`}
+                  </li>
+                ) : (
+                  <li className="breadcrumb-item active" aria-current="page">
+                    Shops
+                  </li>
+                )}
               </ol>
             </nav>
           </div>

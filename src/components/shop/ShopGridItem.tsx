@@ -37,7 +37,7 @@ function ShopGridItem({ value }: ShopGridItemProps) {
           <div className="text-truncate">
             <Link
               href={`/shops/${value.slug}`}
-              className="h6 mb-1 text-decoration-none link-dark"
+              className="h6 mb-1 link-dark"
               style={{ fontSize: 18 }}
             >
               {value.name}

@@ -6,7 +6,7 @@ import {
 import useSWR from "swr";
 import { formatNumber } from "../../common/utils";
 import { getShopStatistic } from "../../services/ShopService";
-import SaleLineChart from "../shopdetail/SaleLineChart";
+import SaleLineChart from "./SaleLineChart";
 
 function ShopDashboard({ shopId }: { shopId: number }) {
   const iconSize = 56;

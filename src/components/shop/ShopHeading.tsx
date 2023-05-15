@@ -31,6 +31,7 @@ function ShopHeading(props: ShopHeadingProps) {
             src={shop.cover}
             alt=""
             fill
+            sizes="100vw"
             priority
             style={{
               objectFit: "cover"

@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { Shop, User } from "./models";
 
-export type Status = "loading" | "success" | "failure";
+export type Status = "loading" | "success" | "unauthorized" | "failure";
 
 export interface StateContext<T> {
   payload?: T;

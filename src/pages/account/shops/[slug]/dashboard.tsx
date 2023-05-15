@@ -1,5 +1,5 @@
-import ShopManage from "../../../../components/shop/ShopManage";
-import { ShopDashboard } from "../../../../components/shopdetail";
+import { withAuthentication } from "../../../../common/WithAuthentication";
+import { ShopDashboard, ShopManage } from "../../../../components/shop";
 
 function Dashboard() {
   return (
@@ -9,4 +9,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default withAuthentication(Dashboard);

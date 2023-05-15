@@ -124,6 +124,42 @@ export async function updateShopSetting(value: ShopSetting) {
   await validateResponse(resp);
 }
 
+export async function uploadShopLogo(shopId: number, file: File) {
+  const url = `${basePath}/${shopId}/logo`;
+
+  const form = new FormData();
+  form.append("file", file);
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "PUT",
+      body: form
+    },
+    true
+  );
+
+  await validateResponse(resp);
+}
+
+export async function uploadShopCover(shopId: number, file: File) {
+  const url = `${basePath}/${shopId}/cover`;
+
+  const form = new FormData();
+  form.append("file", file);
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "PUT",
+      body: form
+    },
+    true
+  );
+
+  await validateResponse(resp);
+}
+
 export async function saveShopAcceptedPayment(
   shopId: number,
   value: ShopAcceptedPayment
@@ -210,11 +246,11 @@ export async function isShopMember(shopId: number) {
   try {
     const url = `${basePath}/${shopId}/check-member`;
 
-    const authHeader = getAuthHeader();
+    // const authHeader = getAuthHeader();
 
-    if (!authHeader) {
-      return false;
-    }
+    // if (!authHeader) {
+    //   return false;
+    // }
 
     // const resp = await fetch(url, {
     //   headers: {

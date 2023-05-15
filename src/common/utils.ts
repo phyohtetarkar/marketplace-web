@@ -1,4 +1,3 @@
-import { Auth } from "aws-amplify";
 import dayjs from "dayjs";
 import { APIError, UnauthorizeError } from "./customs";
 import { Discount } from "./models";
@@ -154,7 +153,7 @@ export async function validateResponse(resp: Response) {
 
 export function parseErrorResponse(error: any, skipAuth?: boolean) {
   if (error instanceof UnauthorizeError) {
-    sessionStorage?.clear();
+    // sessionStorage?.clear();
     // Auth.signOut()
     //   .catch(console.error)
     //   .finally(() => {
@@ -197,27 +196,12 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
   return error?.message ?? "Something went wrong, please try again";
 }
 
-export async function checkShopMember(shopId: number, auth: any) {
-  try {
-    const accessToken = (await auth.currentSession())
-      ?.getAccessToken()
-      ?.getJwtToken();
-
-    const url = `${getAPIBasePath()}shop-members/check?shop-id=${shopId ?? 0}`;
-
-    if (accessToken) {
-      const resp = await fetch(url, {
-        headers: {
-          Authorization: "Bearer " + accessToken
-        }
-      });
-
-      if (resp.ok) {
-        return (await resp.json()) as boolean;
-      }
-    }
-  } catch (error) {
-    console.log(error);
+export function getCookieValue(key: string) {
+  if (typeof window === "undefined") {
+    return undefined;
   }
-  return false;
+  return document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("accessToken="))
+    ?.split("=")[1];
 }

@@ -1,5 +1,6 @@
 import { NextRouter, withRouter } from "next/router";
 import React from "react";
+import Alert from "../components/Alert";
 import { AuthenticationContext } from "./contexts";
 
 interface WithRouterProps {
@@ -39,13 +40,28 @@ export const withAuthentication = (Component: React.ComponentType<any>) => {
           return;
         }
 
-        if (status === "failure" || !payload) {
+        if (status === "failure") {
+          return;
+        }
+
+        if (status === "unauthorized" || !payload) {
           this.props.router.push("/login");
         }
       }
 
       render(): React.ReactNode {
         const { payload, status } = this.context;
+
+        if (status === "failure") {
+          return (
+            <div className="container py-3">
+              <Alert
+                message="Something went wrong. Please try again"
+                variant="danger"
+              />
+            </div>
+          );
+        }
 
         if (status !== "success" || !payload) {
           return null;

@@ -1,4 +1,3 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -15,8 +14,7 @@ import {
   cancelOrder,
   completeOrder,
   confirmOrder,
-  getOrderByCode,
-  markRemoveOrderItem
+  getOrderByCode
 } from "../../services/OrderService";
 import Alert from "../Alert";
 import ConfirmModal from "../ConfirmModal";
@@ -35,8 +33,6 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
   >();
 
   const [showReceipt, setShowReceipt] = useState(false);
-
-  const [removeItemId, setRemoveItemId] = useState<number>();
 
   const { code } = router.query;
 
@@ -113,27 +109,8 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
                               href={`/products/${item.productSlug}`}
                               className={`fw-semibold text-decoration-none text-dark`}
                             >
-                              {item.removed ? (
-                                <del>{item.productName}</del>
-                              ) : (
-                                item.productName
-                              )}
+                              {item.productName}
                             </Link>
-                            {data.status !== "COMPLETED" &&
-                              !item.removed &&
-                              data.items.length > 1 && (
-                                <Tooltip title="Mark as removed">
-                                  <div
-                                    className="small text-danger ms-1"
-                                    role="button"
-                                    onClick={() => {
-                                      setRemoveItemId(item.id);
-                                    }}
-                                  >
-                                    <TrashIcon width={18} />
-                                  </div>
-                                </Tooltip>
-                              )}
                           </div>
                           {item.attributes && (
                             <div
@@ -232,8 +209,16 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
                   <hr className="text-muted" />
                 </div>
 
-                <dt className="col-sm-4  fw-semibold">Total Price:</dt>
-                <dd className="col-sm-8 text-sm-end mb-0">
+                <dt
+                  className="col-sm-4 fw-semibold"
+                  style={{ fontSize: "1.2rem" }}
+                >
+                  Total Price:
+                </dt>
+                <dd
+                  className="col-sm-8 text-sm-end mb-0"
+                  style={{ fontSize: "1.2rem" }}
+                >
                   {formatNumber(data.totalPrice)} Ks
                 </dd>
               </dl>
@@ -395,25 +380,6 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
             mutate();
             swrConfig.mutate(`/shops/${shop.id ?? 0}/pending-order-count`);
             toast.success("Update order status successfully");
-          } catch (error) {
-            const msg = parseErrorResponse(error);
-            toast.error(msg);
-          }
-        }}
-      />
-
-      <ConfirmModal
-        show={typeof removeItemId === "number" && removeItemId > 0}
-        message="Are you sure to remove item?"
-        close={() => setRemoveItemId(undefined)}
-        onConfirm={async () => {
-          try {
-            if (!removeItemId || removeItemId <= 0 || !data?.id) {
-              throw "Something went wrong. Please try again";
-            }
-            await markRemoveOrderItem(data.id, removeItemId);
-            mutate();
-            toast.success("Item removed successfully");
           } catch (error) {
             const msg = parseErrorResponse(error);
             toast.error(msg);

@@ -1,24 +1,15 @@
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { getLoginUser } from "../services/UserService";
 import { AuthenticationContext, StateContext, Status } from "./contexts";
+import { UnauthorizeError } from "./customs";
 import { User } from "./models";
-import { parseErrorResponse } from "./utils";
+import { getCookieValue, parseErrorResponse } from "./utils";
 
 export const AuthenticationContextProvider = ({
   children
 }: {
   children: ReactNode;
 }) => {
-  // const { data, error, isLoading, mutate } = useSWR<User, Error>(
-  //   "/login-user",
-  //   getLoginUser,
-  //   {
-  //     revalidateOnFocus: false,
-  //     errorRetryCount: 0,
-  //     revalidateOnMount: false
-  //   }
-  // );
-
   const updateAuthState = useCallback((status?: Status, payload?: User) => {
     setAuthUser((old) => {
       return { ...old, status, payload };
@@ -26,7 +17,6 @@ export const AuthenticationContextProvider = ({
   }, []);
 
   const [authUser, setAuthUser] = useState<StateContext<User>>({
-    payload: undefined,
     status: "loading",
     update: updateAuthState
   });
@@ -34,24 +24,35 @@ export const AuthenticationContextProvider = ({
   useEffect(() => {
     const loadUser = async () => {
       try {
+        setAuthUser((old) => {
+          return { ...old, status: "loading" };
+        });
         const data = await getLoginUser();
-        setAuthUser({
-          status: "success",
-          payload: data,
-          update: updateAuthState
+        setAuthUser((old) => {
+          return { ...old, status: "success", payload: data };
         });
       } catch (error) {
         console.log(parseErrorResponse(error, true));
-        setAuthUser({
-          status: "failure",
-          payload: undefined,
-          update: updateAuthState
-        });
+        if (error instanceof UnauthorizeError) {
+          setAuthUser((old) => {
+            return { ...old, status: "unauthorized", payload: undefined };
+          });
+        } else {
+          setAuthUser((old) => {
+            return { ...old, status: "failure", payload: undefined };
+          });
+        }
       }
     };
 
-    loadUser();
-  }, [updateAuthState]);
+    if (getCookieValue("accessToken")) {
+      loadUser();
+    } else {
+      setAuthUser((old) => {
+        return { ...old, status: "unauthorized", payload: undefined };
+      });
+    }
+  }, []);
 
   // useEffect(() => {
   //   Auth.currentAuthenticatedUser()

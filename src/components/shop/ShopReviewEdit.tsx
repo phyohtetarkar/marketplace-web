@@ -61,6 +61,7 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
       await writeReview({ ...values, shopId: shopContext?.id });
       reload?.();
       await loadUserReview(values.shopId ?? 0);
+      toast.success("Review submitted");
     } catch (error) {
       const msg = parseErrorResponse(error);
       toast.error(msg);

@@ -1,4 +1,4 @@
-import { getAPIBasePath } from "./utils";
+import { getAPIBasePath, getCookieValue } from "./utils";
 
 async function makeApiRequest(
   url: string,
@@ -14,7 +14,7 @@ async function makeApiRequest(
   // headers["X-XSRF-TOKEN"] = csrfToken;
 
   if (authenticated) {
-    const token = sessionStorage?.getItem("accessToken") ?? "";
+    const token = getCookieValue("accessToken") ?? "";
     headers.Authorization = `Bearer ${token}`;
   }
   const response = await fetch(`${getAPIBasePath()}/${url}`, {
@@ -30,7 +30,7 @@ async function makeApiRequest(
     });
     if (refreshResponse.ok) {
       const { accessToken } = await refreshResponse.json();
-      sessionStorage?.setItem("accessToken", accessToken);
+      // sessionStorage?.setItem("accessToken", accessToken);
       // retry original request with new access token
       const retryResponse = await makeApiRequest(url, options, authenticated);
       return retryResponse;

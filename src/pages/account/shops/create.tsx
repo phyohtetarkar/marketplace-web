@@ -724,41 +724,46 @@ function CreateShop() {
   });
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
-    let files = event.target.files;
-    const name = event.target.name;
-    if (files && files.length > 0) {
-      let file = files[0];
-      const fileSize = file.size / (1024 * 1024);
+    try {
+      let files = event.target.files;
+      const name = event.target.name;
+      if (files && files.length > 0) {
+        let file = files[0];
+        const fileSize = file.size / (1024 * 1024);
 
-      if (fileSize >= 0.512) {
-        event.target.value;
-        return;
-      }
-
-      var reader = new FileReader();
-      reader.onload = function (e) {
-        //props.setFieldValue?.(name, e.target?.result);
-        const result = e.target?.result;
-        if (!result) {
-          return;
+        const limit = name === "logo" ? 0.36 : 0.512;
+        if (fileSize > limit) {
+          throw `File size must not greater than ${limit * 1000}KB`;
         }
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          //props.setFieldValue?.(name, e.target?.result);
+          const result = e.target?.result;
+          if (!result) {
+            return;
+          }
+
+          if (name === "logo" && logoRef.current) {
+            setValue("logo", result as string);
+          } else if (name === "cover" && coverRef.current) {
+            setValue("cover", result as string);
+          }
+        };
+        reader.readAsDataURL(file);
 
         if (name === "logo" && logoRef.current) {
-          setValue("logo", result as string);
+          setValue("logoImage", file);
         } else if (name === "cover" && coverRef.current) {
-          setValue("cover", result as string);
+          setValue("coverImage", file);
         }
-      };
-      reader.readAsDataURL(file);
-
-      if (name === "logo" && logoRef.current) {
-        setValue("logoImage", file);
-      } else if (name === "cover" && coverRef.current) {
-        setValue("coverImage", file);
       }
+    } catch (error) {
+      const msg = parseErrorResponse(error);
+      toast.error(msg);
+    } finally {
+      event.target.value = "";
     }
-
-    event.target.value = "";
   }
 
   const executeCreate = async (shop: ShopCreateForm) => {

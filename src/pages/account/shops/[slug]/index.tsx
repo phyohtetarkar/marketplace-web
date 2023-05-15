@@ -26,7 +26,7 @@ import {
   ShopProductListing,
   ShopReviewListing,
   ShopSetting
-} from "../../../../components/shopdetail";
+} from "../../../../components/shop";
 import { getShopBySlug, isShopMember } from "../../../../services/ShopService";
 
 const tabs = ["dashboard", "products", "discounts", "orders", "setting"];

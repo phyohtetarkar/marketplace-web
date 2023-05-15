@@ -1,4 +1,3 @@
-import { Auth } from "aws-amplify";
 import makeApiRequest from "../common/makeApiRequest";
 import { AuthResult } from "../common/models";
 import { getAPIBasePath, validateResponse } from "../common/utils";
@@ -95,7 +94,8 @@ export async function signOut() {
   const resp = await makeApiRequest(
     url,
     {
-      method: "POST"
+      method: "POST",
+      credentials: "include"
     },
     true
   );
@@ -103,18 +103,18 @@ export async function signOut() {
   await validateResponse(resp);
 }
 
-export async function confirmSignUp({
-  phone,
-  password,
-  code
-}: {
-  phone: string;
-  password: string;
-  code: string;
-}) {
-  try {
-    await Auth.confirmSignUp(phone, code, { forceAliasCreation: false });
-  } catch (error) {
-    throw error;
-  }
-}
+// export async function confirmSignUp({
+//   phone,
+//   password,
+//   code
+// }: {
+//   phone: string;
+//   password: string;
+//   code: string;
+// }) {
+//   try {
+//     await Auth.confirmSignUp(phone, code, { forceAliasCreation: false });
+//   } catch (error) {
+//     throw error;
+//   }
+// }

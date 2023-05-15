@@ -22,11 +22,13 @@ function Products() {
     return;
   }
 
-  const { q, page, brand } = router.query;
+  const { q, page, brand, maxPrice } = router.query;
 
   const query: ProductQuery = {
     q: typeof q === "string" ? q : undefined,
     page: typeof page === "string" ? parseInt(page) : undefined,
+    "max-price":
+      typeof maxPrice === "string" ? parseFloat(maxPrice) : undefined,
     brand: brand
   };
 

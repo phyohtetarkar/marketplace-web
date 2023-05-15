@@ -4,6 +4,7 @@ import useSWR from "swr";
 import { ProgressContext } from "../../common/contexts";
 import { CartItem, Shop } from "../../common/models";
 import { parseErrorResponse } from "../../common/utils";
+import { withAuthentication } from "../../common/WithAuthentication";
 import Alert from "../../components/Alert";
 import PricingCard from "../../components/checkout/PricingCard";
 import ShoppingCartItem from "../../components/checkout/ShoppingCartItem";
@@ -256,4 +257,4 @@ function ShoppingCart() {
   );
 }
 
-export default ShoppingCart;
+export default withAuthentication(ShoppingCart);

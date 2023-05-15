@@ -1,5 +1,5 @@
-import ShopManage from "../../../../components/shop/ShopManage";
-import { DiscountListing } from "../../../../components/shopdetail";
+import { withAuthentication } from "../../../../common/WithAuthentication";
+import { DiscountListing, ShopManage } from "../../../../components/shop";
 
 function Discounts() {
   return (
@@ -9,4 +9,4 @@ function Discounts() {
   );
 }
 
-export default Discounts;
+export default withAuthentication(Discounts);

@@ -1,5 +1,6 @@
+import { withAuthentication } from "../../../../../common/WithAuthentication";
 import { ProductEdit } from "../../../../../components/product";
-import ShopManage from "../../../../../components/shop/ShopManage";
+import { ShopManage } from "../../../../../components/shop";
 
 function ProductCreate() {
   return (
@@ -7,4 +8,4 @@ function ProductCreate() {
   );
 }
 
-export default ProductCreate;
+export default withAuthentication(ProductCreate);

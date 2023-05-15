@@ -48,7 +48,7 @@ function Register() {
         password: values.password!
       });
 
-      sessionStorage.setItem("accessToken", result.accessToken);
+      //sessionStorage.setItem("accessToken", result.accessToken);
       authContext.update("success", result.user);
 
       // if (process.env.NEXT_PUBLIC_PROFILE === "dev") {
@@ -63,7 +63,6 @@ function Register() {
       //   });
       // }
     } catch (error) {
-      console.log("error signing up:", error);
       setError(parseErrorResponse(error));
     } finally {
     }

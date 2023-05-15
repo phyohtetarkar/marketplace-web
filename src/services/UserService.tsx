@@ -45,6 +45,24 @@ export async function updateProfile(value: User) {
   await validateResponse(resp);
 }
 
+export async function uploadUserImage(file: File) {
+  const url = `${basePath}/image`;
+
+  const form = new FormData();
+  form.append("file", file);
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "PUT",
+      body: form
+    },
+    true
+  );
+
+  await validateResponse(resp);
+}
+
 export async function getLoginUser() {
   const url = `${basePath}`;
   // const resp = await fetch(url, {

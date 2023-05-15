@@ -6,7 +6,11 @@ import useSWR from "swr";
 import { Category } from "../../common/models";
 import { parseErrorResponse } from "../../common/utils";
 import { getBrandsByCategory } from "../../services/CategoryService";
-import { findProducts, ProductQuery } from "../../services/ProductService";
+import {
+  findProducts,
+  getProductBrandsByNameLike,
+  ProductQuery
+} from "../../services/ProductService";
 import Accordion from "../Accordion";
 import Alert from "../Alert";
 import Loading from "../Loading";
@@ -36,11 +40,12 @@ const Filter = (props: FilterProps) => {
   const [brands, setBrands] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!categoryId) {
-      return;
+    if (categoryId) {
+      getBrandsByCategory(categoryId).then(setBrands).catch(console.error);
+    } else if (q) {
+      getProductBrandsByNameLike(q).then(setBrands).catch(console.error);
     }
-    getBrandsByCategory(categoryId).then(setBrands).catch(console.error);
-  }, [categoryId]);
+  }, [categoryId, q]);
 
   const isChecked = (b: string) => {
     if (!brand) {
@@ -97,26 +102,22 @@ const Filter = (props: FilterProps) => {
                         className="form-check-input shadow-none"
                         checked={isChecked(b)}
                         onChange={(evt) => {
-                          let brands: string[] = [];
+                          let brands = new Set<string>();
                           const q = { ...router.query };
 
                           if (typeof q.brand === "string") {
-                            brands.push(q.brand);
+                            brands.add(q.brand);
                           } else if (typeof q.brand === "object") {
-                            brands = [...q.brand];
+                            brands = new Set(...q.brand);
                           }
 
                           if (evt.target.checked) {
-                            brands.push(b);
+                            brands.add(b);
                           } else {
-                            const index = brands.findIndex((v) => v === b);
-
-                            if (index >= 0) {
-                              brands.splice(index, 1);
-                            }
+                            brands.delete(b);
                           }
 
-                          q.brand = brands;
+                          q.brand = Array.from(brands);
                           if (q.page) {
                             delete q.page;
                           }
@@ -146,20 +147,32 @@ const Filter = (props: FilterProps) => {
                 className="form-range"
                 id="priceRange"
                 step={1000}
-                min={10000}
+                min={0}
                 max={300000}
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(parseInt(e.target.value))}
               ></input>
               <div className="hstack">
-                <div>10000Ks</div>
+                <div>0Ks</div>
                 <div className="flex-grow-1"></div>
                 <div>{maxPrice}Ks</div>
               </div>
             </div>
           </div>
           <div className="p-3">
-            <button className="btn btn-primary w-100 py-2">Apply filter</button>
+            <button
+              className="btn btn-primary w-100 py-2"
+              onClick={() => {
+                const q = { ...router.query, maxPrice: maxPrice };
+
+                router.push({
+                  pathname: basePath,
+                  query: q
+                });
+              }}
+            >
+              Apply filter
+            </button>
           </div>
         </div>
       </Accordion>
@@ -291,7 +304,7 @@ function ProductCatalog(props: ProductCatalogProps) {
       <div className="container py-3">
         <div className="row g-3">
           <div className="col-lg-4 col-xl-3">
-            <Filter basePath={basePath} categoryId={category?.id} />
+            <Filter basePath={basePath} categoryId={category?.id} q={query.q} />
           </div>
           <div className="col-lg-8 col-xl-9">
             <div className="d-flex">

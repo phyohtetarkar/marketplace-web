@@ -5,7 +5,7 @@ import { buildQueryParams, validateResponse } from "../common/utils";
 const basePath = "products";
 
 export interface ProductQuery {
-  q?: String;
+  q?: string;
   "category-id"?: number;
   "shop-id"?: number;
   "discount-id"?: number;
@@ -173,15 +173,20 @@ export async function findShopProducts(shopId: number, value: ProductQuery) {
   const query = buildQueryParams(value);
 
   const url = `shops/${shopId}/products${query}`;
-  // const resp = await fetch(url, {
-  //   headers: {
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
 
   const resp = await makeApiRequest(url, {}, true);
 
   await validateResponse(resp);
 
   return resp.json() as Promise<PageData<Product>>;
+}
+
+export async function getProductBrandsByNameLike(q: string) {
+  const url = `${basePath}/${q}/brands`;
+
+  const resp = await makeApiRequest(url);
+
+  await validateResponse(resp);
+
+  return resp.json() as Promise<string[]>;
 }

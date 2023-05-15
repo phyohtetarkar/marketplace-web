@@ -156,43 +156,47 @@ function ProductEdit(props: ProductEditProps) {
   }, [slug]);
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
-    const files = event.target.files;
+    try {
+      const files = event.target.files;
 
-    if (files && files.length > 0) {
-      let file = files[0];
-      const fileSize = file.size / (1024 * 1024);
+      if (files && files.length > 0) {
+        let file = files[0];
+        const fileSize = file.size / (1024 * 1024);
 
-      if (fileSize > 0.512) {
-        event.target.value = "";
-        return;
-      }
-
-      var reader = new FileReader();
-      reader.onload = function (e) {
-        const result = e.target?.result;
-        if (result && typeof result === "string") {
-          const img = new Image();
-
-          img.onload = (evt) => {
-            if (img.width > 800 || img.height > 800) {
-              toast.error("Image over dimension");
-              return;
-            }
-
-            const image: ProductImage = {
-              file: file,
-              url: result
-            };
-            imagesField.append(image);
-          };
-
-          img.src = result;
+        if (fileSize > 0.36) {
+          throw "File size must not greater than 360KB";
         }
-      };
-      reader.readAsDataURL(file);
-    }
 
-    event.target.value = "";
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          const result = e.target?.result;
+          if (result && typeof result === "string") {
+            const img = new Image();
+
+            img.onload = (evt) => {
+              // if (img.width > 800 || img.height > 800) {
+              //   toast.error("Image over dimension");
+              //   return;
+              // }
+
+              const image: ProductImage = {
+                file: file,
+                url: result
+              };
+              imagesField.append(image);
+            };
+
+            img.src = result;
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    } catch (error) {
+      const msg = parseErrorResponse(error);
+      toast.error(msg);
+    } finally {
+      event.target.value = "";
+    }
   }
 
   function generateVariant(
@@ -273,12 +277,15 @@ function ProductEdit(props: ProductEditProps) {
       if (!product.id) {
         throw undefined;
       }
+      progressContext.update(true);
       await deleteProduct(product.id);
       toast.success("Product deleted successfully");
       router.back();
     } catch (error) {
       const msg = parseErrorResponse(error);
       toast.error(msg);
+    } finally {
+      progressContext.update(false);
     }
   };
 
@@ -922,7 +929,7 @@ function ProductEdit(props: ProductEditProps) {
               <div className="card-footer px-md-4 py-3">
                 <span className="text-muted">
                   Product image can upload up to <strong>5</strong> images with
-                  size constraint of at most <strong>512KB</strong> each.
+                  size constraint of at most <strong>360KB</strong> each.
                 </span>
               </div>
             </div>

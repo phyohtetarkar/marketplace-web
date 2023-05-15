@@ -1,4 +1,3 @@
-//import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "swiper/css";
 import "swiper/css/zoom";
 import "swiper/css/navigation";
@@ -6,12 +5,11 @@ import "swiper/css/pagination";
 import "react-toastify/dist/ReactToastify.css";
 import "../../styles/bootstrap-custom.css";
 import "../../styles/globals.css";
-import { Amplify } from "aws-amplify";
 import { NextPage } from "next";
 import type { AppProps } from "next/app";
 import NextNProgress from "nextjs-progressbar";
 import { ReactElement, ReactNode } from "react";
-import awsconfig from "../aws-exports";
+//import awsconfig from "../aws-exports";
 import { AuthenticationContextProvider } from "../common/AuthenticationContextProvider";
 import { Layout } from "../components/template";
 import { ToastContainer } from "react-toastify";

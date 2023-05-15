@@ -80,10 +80,9 @@ function Login() {
         username: phone,
         password: values.password!
       });
-      sessionStorage.setItem("accessToken", result.accessToken);
+      //sessionStorage.setItem("accessToken", result.accessToken);
       authContext.update("success", result.user);
     } catch (error: any) {
-      console.log("error signing in:", error.code);
       setError(parseErrorResponse(error));
     }
   };

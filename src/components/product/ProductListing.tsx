@@ -1,7 +1,11 @@
 import { useState } from "react";
 import useSWR from "swr";
 import { parseErrorResponse } from "../../common/utils";
-import { findShopProducts, ProductQuery } from "../../services/ProductService";
+import {
+  findProducts,
+  findShopProducts,
+  ProductQuery
+} from "../../services/ProductService";
 import Alert from "../Alert";
 import Loading from "../Loading";
 import Pagination from "../Pagination";
@@ -20,7 +24,7 @@ function ProductListing(props: ProductListingProps) {
 
   const { data, error, isLoading, mutate } = useSWR(
     ["/products", query],
-    ([url, query]) => findShopProducts(shopId, query),
+    ([url, query]) => findProducts(query),
     {
       revalidateOnFocus: false
     }

@@ -1,8 +1,8 @@
-import ShopManage from "../../../../../components/shop/ShopManage";
-import ShopOrderDetail from "../../../../../components/shop/ShopOrderDetail";
+import { withAuthentication } from "../../../../../common/WithAuthentication";
+import { ShopManage, ShopOrderDetail } from "../../../../../components/shop";
 
 function OrderDetail() {
   return <ShopManage>{(shop) => <ShopOrderDetail shop={shop} />}</ShopManage>;
 }
 
-export default OrderDetail;
+export default withAuthentication(OrderDetail);
