@@ -35,6 +35,7 @@ export interface User {
   email?: string;
   image?: string;
   disabled?: boolean;
+  verified?: boolean;
 }
 
 export interface HomeData {

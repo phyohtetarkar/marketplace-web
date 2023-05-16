@@ -176,15 +176,19 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
       return "Something went wrong, please try again";
     }
 
-    if (error?.message === "username-exists") {
+    if (error.message === "username-exists") {
       return "Phone number already in use";
     }
 
-    if (error?.message === "bad-credentials") {
+    if (error.message === "bad-credentials") {
       return "Phone number or password incorrect";
     }
 
     return error.message;
+  }
+
+  if (error instanceof TypeError) {
+    return "Server down";
   }
 
   console.log(error);

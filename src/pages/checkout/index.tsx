@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR, { useSWRConfig } from "swr";
 import { AuthenticationContext } from "../../common/contexts";
@@ -83,6 +83,11 @@ function Checkout() {
       paymentMethod: "COD",
       cartItems: cartItems
     }
+  });
+
+  const paymentMethod = useWatch({
+    control: control,
+    name: "paymentMethod"
   });
 
   const summary = useMemo(() => {
@@ -357,7 +362,7 @@ function Checkout() {
                                   setValue("paymentMethod", "BANK_TRANSFER", {
                                     shouldDirty: true
                                   });
-                                acceptedPaymentsState.mutate();
+                                //acceptedPaymentsState.mutate();
                               }}
                             ></input>
                             <label
@@ -373,95 +378,86 @@ function Checkout() {
                   />
                 </div>
               </div>
-              <Controller
-                control={control}
-                name="paymentMethod"
-                render={({ field }) => {
-                  if (field.value !== "BANK_TRANSFER") {
-                    return <></>;
-                  }
-                  return (
-                    <div className="col-12">
-                      <label className="form-label">Transfer to *</label>
-                      <Dropdown
-                        toggle={
-                          !payment ? (
-                            <span className="flex-grow-1 text-muted text-start">
-                              Select account type
-                            </span>
-                          ) : (
-                            <div className="flex-grow-1 fw-medium text-dark text-start">
-                              {payment.accountType}
-                            </div>
-                          )
-                        }
-                        toggleClassName="btn btn-outline-light rounded text-muted py-2h px-3 border dropdown-toggle hstack"
-                        menuClassName="w-100 shadow"
-                      >
-                        {acceptedPaymentsState.data?.map((ap, i) => {
-                          return (
-                            <li
-                              key={ap.id}
-                              className="vstack dropdown-item"
-                              role={"button"}
-                              onClick={(evt) => {
-                                setValue("payment.accountType", ap.accountType);
-                                setPayment(ap);
-                              }}
-                            >
-                              <h6 className="mb-0">{ap.accountType}</h6>
-                            </li>
-                          );
-                        })}
-                      </Dropdown>
-
-                      {payment && (
-                        <div className="mt-3 card">
-                          <div className="card-body">
-                            <h6 className="fw-bold">{payment.accountType}</h6>
-                            <div>{payment.accountName}</div>
-                            <div className="text-muted">
-                              {payment.accountNumber}
-                            </div>
-                          </div>
+              {paymentMethod === "BANK_TRANSFER" && (
+                <div className="col-12">
+                  <label className="form-label">Transfer to *</label>
+                  <Dropdown
+                    toggle={
+                      !payment ? (
+                        <span className="flex-grow-1 text-muted text-start">
+                          Select account type
+                        </span>
+                      ) : (
+                        <div className="flex-grow-1 fw-medium text-dark text-start">
+                          {payment.accountType}
                         </div>
-                      )}
+                      )
+                    }
+                    toggleClassName="btn btn-outline-light rounded text-muted py-2h px-3 border dropdown-toggle hstack"
+                    menuClassName="w-100 shadow"
+                  >
+                    {acceptedPaymentsState.data?.map((ap, i) => {
+                      return (
+                        <li
+                          key={ap.id}
+                          className="vstack dropdown-item"
+                          role={"button"}
+                          onClick={(evt) => {
+                            setValue("payment.accountType", ap.accountType);
+                            setPayment(ap);
+                          }}
+                        >
+                          <h6 className="mb-0">{ap.accountType}</h6>
+                        </li>
+                      );
+                    })}
+                  </Dropdown>
 
-                      <label htmlFor="receiptFile" className="form-label mt-3">
-                        Transfer receipt image
-                        <span className="text-muted ms-1">(optional)</span>
-                      </label>
-                      <input
-                        ref={receiptFileRef}
-                        className="form-control"
-                        type="file"
-                        id="receiptFile"
-                        accept="image/x-png,image/jpeg"
-                        onChange={(evt) => {
-                          try {
-                            const files = evt.target.files;
-                            if (files && files.length > 0) {
-                              const file = files[0];
-                              const fileSize = file.size / (1024 * 1024);
-
-                              if (fileSize > 0.6) {
-                                throw "File size must not greater than 600KB";
-                              }
-
-                              setValue("payment.file", file);
-                            }
-                          } catch (error) {
-                            const msg = parseErrorResponse(error);
-                            toast.error(msg);
-                          } finally {
-                            evt.target.value = "";
-                          }
-                        }}
-                      ></input>
+                  {payment && (
+                    <div className="mt-3 card">
+                      <div className="card-body">
+                        <h6 className="fw-bold">{payment.accountType}</h6>
+                        <div>{payment.accountName}</div>
+                        <div className="text-muted">
+                          {payment.accountNumber}
+                        </div>
+                      </div>
                     </div>
-                  );
-                }}
-              />
+                  )}
+
+                  <label htmlFor="receiptFile" className="form-label mt-3">
+                    Transfer receipt image
+                    <span className="text-muted ms-1">(optional)</span>
+                  </label>
+                  <input
+                    ref={receiptFileRef}
+                    className="form-control"
+                    type="file"
+                    id="receiptFile"
+                    accept="image/x-png,image/jpeg"
+                    onChange={(evt) => {
+                      try {
+                        const files = evt.target.files;
+                        if (files && files.length > 0) {
+                          const file = files[0];
+                          const fileSize = file.size / (1024 * 1024);
+
+                          if (fileSize > 0.6) {
+                            throw "File size must not greater than 600KB";
+                          }
+
+                          setValue("payment.file", file);
+                        }
+                      } catch (error) {
+                        const msg = parseErrorResponse(error);
+                        toast.error(msg);
+                      } finally {
+                        evt.target.value = "";
+                      }
+                    }}
+                  ></input>
+                </div>
+              )}
             </div>
           </div>
           <div className="col-lg-4">
@@ -577,6 +573,7 @@ function Checkout() {
             </div>
             <button
               className="btn btn-danger py-2h w-100"
+              disabled={isSubmitting}
               onClick={() => {
                 handleSubmit(executeSubmitOrder)();
               }}

@@ -1,23 +1,23 @@
 import makeApiRequest from "../common/makeApiRequest";
 import { User } from "../common/models";
-import { getAPIBasePath, validateResponse } from "../common/utils";
+import { validateResponse } from "../common/utils";
 
 const basePath = "profile";
 
-export async function createUser(value: User) {
-  const url = `${getAPIBasePath()}users?api-key=${
-    process.env.NEXT_PUBLIC_API_KEY
-  }`;
-  const resp = await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(value),
-    headers: {
-      "Content-Type": "application/json"
-    }
-  });
+// export async function createUser(value: User) {
+//   const url = `${getAPIBasePath()}users?api-key=${
+//     process.env.NEXT_PUBLIC_API_KEY
+//   }`;
+//   const resp = await fetch(url, {
+//     method: "POST",
+//     body: JSON.stringify(value),
+//     headers: {
+//       "Content-Type": "application/json"
+//     }
+//   });
 
-  await validateResponse(resp);
-}
+//   await validateResponse(resp);
+// }
 
 export async function updateProfile(value: User) {
   const url = `${basePath}`;

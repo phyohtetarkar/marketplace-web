@@ -2,10 +2,7 @@ import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import {
-  AuthenticationContext,
-  ShopDetailContext
-} from "../../common/contexts";
+import { AuthenticationContext } from "../../common/contexts";
 import { ShopReview } from "../../common/models";
 import { parseErrorResponse } from "../../common/utils";
 import { getUserReview, writeReview } from "../../services/ShopReviewService";
@@ -17,12 +14,12 @@ import Rating from "../Rating";
 const _ratings = [5, 4, 3, 2, 1];
 
 interface ShopReviewEditProps {
+  shopId: number;
   reload?: () => void;
 }
 
 function ShopReviewEdit(props: ShopReviewEditProps) {
-  const { reload } = props;
-  const shopContext = useContext(ShopDetailContext);
+  const { shopId, reload } = props;
   const authContext = useContext(AuthenticationContext);
   const router = useRouter();
   const [review, setReview] = useState<ShopReview>();
@@ -48,7 +45,7 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
     if (authContext.status !== "success") {
       return;
     }
-    loadUserReview(shopContext?.id ?? 0);
+    loadUserReview(shopId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authContext]);
 
@@ -58,7 +55,13 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
         router.push("/login");
         return;
       }
-      await writeReview({ ...values, shopId: shopContext?.id });
+
+      if (!authContext.payload?.verified) {
+        router.push("/confirm-otp");
+        return;
+      }
+
+      await writeReview({ ...values, shopId: shopId });
       reload?.();
       await loadUserReview(values.shopId ?? 0);
       toast.success("Review submitted");

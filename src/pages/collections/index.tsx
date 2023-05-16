@@ -4,7 +4,9 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useCategories } from "../../common/hooks";
 import { Category } from "../../common/models";
+import { parseErrorResponse } from "../../common/utils";
 import Accordion from "../../components/Accordion";
+import Alert from "../../components/Alert";
 import Loading from "../../components/Loading";
 
 interface CollectionItemProps {
@@ -49,7 +51,11 @@ function Collections() {
   }
 
   if (error) {
-    return null;
+    return (
+      <div className="container py-3">
+        <Alert message={parseErrorResponse(error)} variant="danger" />
+      </div>
+    );
   }
 
   return (

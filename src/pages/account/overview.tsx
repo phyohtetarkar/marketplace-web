@@ -37,7 +37,7 @@ function ProfileOverview() {
                       width={60}
                       height={60}
                       alt=""
-                      className="rounded-circle"
+                      className="rounded-circle border"
                       style={{
                         objectFit: "cover"
                       }}

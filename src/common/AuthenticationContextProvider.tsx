@@ -16,43 +16,44 @@ export const AuthenticationContextProvider = ({
     });
   }, []);
 
+  const reloadAuthUser = useCallback(async () => {
+    try {
+      setAuthUser((old) => {
+        return { ...old, status: "loading" };
+      });
+      const data = await getLoginUser();
+      setAuthUser((old) => {
+        return { ...old, status: "success", payload: data };
+      });
+    } catch (error) {
+      console.log(parseErrorResponse(error, true));
+      if (error instanceof UnauthorizeError) {
+        setAuthUser((old) => {
+          return { ...old, status: "unauthorized", payload: undefined };
+        });
+      } else {
+        setAuthUser((old) => {
+          return { ...old, status: "failure", payload: undefined };
+        });
+      }
+    }
+  }, []);
+
   const [authUser, setAuthUser] = useState<StateContext<User>>({
     status: "loading",
-    update: updateAuthState
+    update: updateAuthState,
+    reload: reloadAuthUser
   });
 
   useEffect(() => {
-    const loadUser = async () => {
-      try {
-        setAuthUser((old) => {
-          return { ...old, status: "loading" };
-        });
-        const data = await getLoginUser();
-        setAuthUser((old) => {
-          return { ...old, status: "success", payload: data };
-        });
-      } catch (error) {
-        console.log(parseErrorResponse(error, true));
-        if (error instanceof UnauthorizeError) {
-          setAuthUser((old) => {
-            return { ...old, status: "unauthorized", payload: undefined };
-          });
-        } else {
-          setAuthUser((old) => {
-            return { ...old, status: "failure", payload: undefined };
-          });
-        }
-      }
-    };
-
     if (getCookieValue("accessToken")) {
-      loadUser();
+      reloadAuthUser();
     } else {
       setAuthUser((old) => {
         return { ...old, status: "unauthorized", payload: undefined };
       });
     }
-  }, []);
+  }, [reloadAuthUser]);
 
   // useEffect(() => {
   //   Auth.currentAuthenticatedUser()

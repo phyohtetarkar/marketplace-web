@@ -64,8 +64,8 @@ function Login() {
       return;
     }
 
-    if (authContext.payload && authContext.status === "success") {
-      router.replace("/");
+    if (authContext.status === "success") {
+      router.replace(authContext.payload?.verified ? "/" : "/confirm-otp");
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

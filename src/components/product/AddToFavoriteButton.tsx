@@ -63,6 +63,10 @@ function AddToFavoriteButton({
           //   setAdding(false);
           // }, 2000);
           if (authContext.status === "success") {
+            if (!authContext.payload?.verified) {
+              router.push("/confirm-otp");
+              return;
+            }
             setLoading(true);
             const operation = favorite
               ? deleteFavoriteProduct(productId)

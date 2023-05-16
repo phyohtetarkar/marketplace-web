@@ -1,12 +1,11 @@
 import Image from "next/image";
-import { useState } from "react";
-import useSWR from "swr";
+import { useEffect, useState } from "react";
 import { ShopReview } from "../../common/models";
 import { formatTimestamp, parseErrorResponse } from "../../common/utils";
 import { getReviews } from "../../services/ShopReviewService";
 import Alert from "../Alert";
 import Loading from "../Loading";
-import Pagination from "../Pagination";
+import ProgressButton from "../ProgressButton";
 import Rating from "../Rating";
 import ShopReviewEdit from "./ShopReviewEdit";
 
@@ -21,8 +20,8 @@ function Review({ value }: ShopReviewProps) {
         <div className="position-relative flex-shrink-0">
           <Image
             src={value.reviewer?.image ?? "/images/profile.png"}
-            width={60}
-            height={60}
+            width={46}
+            height={46}
             alt=""
             className="rounded-circle"
             style={{
@@ -33,7 +32,7 @@ function Review({ value }: ShopReviewProps) {
         <div>
           <h6 className="mb-0">{value.reviewer?.name}</h6>
           <span className="text-muted small">
-            {formatTimestamp(value.updatedAt ?? 0)}
+            {formatTimestamp(value.createdAt ?? 0)}
           </span>
           <div className="mt-3">
             <Rating rating={value.rating ?? 0} />
@@ -53,44 +52,95 @@ function ShopReviewListing({
   hideEdit?: boolean;
 }) {
   const [page, setPage] = useState(0);
-  const { data, error, isLoading, mutate } = useSWR(
-    ["/shop-reviews", page],
-    ([url, p]) => getReviews(shopId, "DESC", p),
-    {
-      revalidateOnFocus: false
+  const [reviews, setReviews] = useState<ShopReview[]>();
+
+  const [loading, setLoading] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
+  const [hasNext, setHasNext] = useState(false);
+  const [error, setError] = useState<string>();
+
+  // const { data, error, isLoading, mutate } = useSWR(
+  //   ["/shop-reviews", page],
+  //   ([url, p]) => getReviews(shopId, "DESC", p),
+  //   {
+  //     revalidateOnFocus: false
+  //   }
+  // );
+
+  useEffect(() => {
+    loadReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const loadReviews = async () => {
+    try {
+      setLoading(true);
+      const result = await getReviews(shopId, "DESC", page);
+      setReviews(result.contents);
+      setHasNext(result.currentPage < result.totalPage - 1);
+      setPage(result.currentPage);
+    } catch (error) {
+      setError(parseErrorResponse(error));
+    } finally {
+      setLoading(false);
     }
-  );
+  };
+
+  const loadMoreResult = async () => {
+    try {
+      setLoadMore(true);
+      const result = await getReviews(shopId, "DESC", page + 1);
+      setReviews((old) => {
+        if (old) {
+          return [...old, ...result.contents];
+        }
+        return [...result.contents];
+      });
+      setHasNext(result.currentPage < result.totalPage - 1);
+      setPage(result.currentPage);
+    } catch (error) {
+      setError(parseErrorResponse(error));
+    } finally {
+      setLoadMore(false);
+    }
+  };
 
   const content = () => {
-    if (isLoading) {
+    if (loading) {
       return <Loading />;
     }
 
     if (error) {
-      return <Alert message={parseErrorResponse(error)} variant="danger" />;
+      return <Alert message={error} variant="danger" />;
     }
 
-    if (data?.contents.length === 0) {
+    if (!reviews || reviews.length === 0) {
       return <Alert message="No reviews found" />;
     }
 
     return (
       <>
         <ul className="list-group list-group-flush">
-          {data?.contents &&
-            data?.contents.map((r, i) => <Review key={i} value={r} />)}
+          {reviews?.map((r, i) => (
+            <Review key={i} value={r} />
+          ))}
         </ul>
-        {(data?.totalPage ?? 0) > 1 && (
-          <div className="hstack justify-content-end mt-2">
-            <div>
-              <Pagination
-                currentPage={data?.currentPage}
-                totalPage={data?.totalPage}
-                onChange={setPage}
-              />
-            </div>
+        {
+          <div className="hstack justify-content-center">
+            {hasNext && (
+              <div>
+                <ProgressButton
+                  loading={loadMore}
+                  theme="outline"
+                  onClick={loadMoreResult}
+                  className="rounded-pill"
+                >
+                  View more
+                </ProgressButton>
+              </div>
+            )}
           </div>
-        )}
+        }
       </>
     );
   };
@@ -99,8 +149,9 @@ function ShopReviewListing({
     <div>
       {!hideEdit && (
         <ShopReviewEdit
+          shopId={shopId}
           reload={() => {
-            mutate();
+            loadReviews();
           }}
         />
       )}

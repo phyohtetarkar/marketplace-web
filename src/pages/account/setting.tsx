@@ -1,20 +1,26 @@
 import Image from "next/image";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useSWRConfig } from "swr";
-import { AuthenticationContext } from "../../common/contexts";
+import { AuthenticationContext, ProgressContext } from "../../common/contexts";
 import { User } from "../../common/models";
 import { parseErrorResponse, setEmptyOrString } from "../../common/utils";
 import { withAuthentication } from "../../common/WithAuthentication";
 import AccountMenu from "../../components/account/AccountMenu";
 import { Input } from "../../components/forms";
 import ProgressButton from "../../components/ProgressButton";
-import { getLoginUser, updateProfile } from "../../services/UserService";
+import {
+  getLoginUser,
+  updateProfile,
+  uploadUserImage
+} from "../../services/UserService";
 
 function ProfileSetting() {
-  const { mutate } = useSWRConfig();
   const authContext = useContext(AuthenticationContext);
+
+  const progressContext = useContext(ProgressContext);
+
+  const imageFileRef = useRef<HTMLInputElement>(null);
 
   const user = authContext.payload;
 
@@ -27,9 +33,8 @@ function ProfileSetting() {
   const save = async (values: User) => {
     try {
       await updateProfile(values);
-      // mutate("/login-user");
-      const user = await getLoginUser();
-      authContext.update("success", user);
+      //const user = await getLoginUser();
+      authContext.reload();
     } catch (error) {
       const msg = parseErrorResponse(error);
       toast.error(msg);
@@ -147,16 +152,54 @@ function ProfileSetting() {
                           <Image
                             src={user?.image ?? "/images/profile.png"}
                             fill
-                            alt="User Photo"
+                            alt="User image"
+                            sizes="33vw"
                             className="rounded-circle border"
                             style={{
                               objectFit: "cover"
                             }}
                             priority
                           />
-                          <div className="ms-auto position-absolute bottom-0 py-1 btn btn-dark opacity-75 w-100 text-light text-center">
+                          <div
+                            className="ms-auto position-absolute bottom-0 py-1 btn btn-dark opacity-75 w-100 text-light text-center"
+                            onClick={() => {
+                              imageFileRef.current?.click();
+                            }}
+                          >
                             Edit
                           </div>
+                          <input
+                            ref={imageFileRef}
+                            className="form-control d-none"
+                            type="file"
+                            id="imageFile"
+                            accept="image/x-png,image/jpeg"
+                            onChange={async (evt) => {
+                              try {
+                                const files = evt.target.files;
+                                if (files && files.length > 0) {
+                                  const file = files[0];
+                                  const fileSize = file.size / (1024 * 1024);
+
+                                  if (fileSize > 0.36) {
+                                    throw "File size must not greater than 360KB";
+                                  }
+
+                                  progressContext.update(true);
+
+                                  await uploadUserImage(file);
+
+                                  await authContext.reload();
+                                }
+                              } catch (error) {
+                                const msg = parseErrorResponse(error);
+                                toast.error(msg);
+                              } finally {
+                                evt.target.value = "";
+                                progressContext.update(false);
+                              }
+                            }}
+                          ></input>
                         </div>
                       </div>
                     </div>

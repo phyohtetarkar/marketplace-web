@@ -13,9 +13,6 @@ interface ProductGridItemProps {
 }
 
 function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
-  const authContext = useContext(AuthenticationContext);
-  const [addingToFavorite, setAddingToFavorite] = useState(false);
-
   let popular;
   let outOfStock;
   // let image = product.images![0]!;

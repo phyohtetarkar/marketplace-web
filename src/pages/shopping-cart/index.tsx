@@ -149,6 +149,7 @@ function ShoppingCart() {
                   <input
                     className="form-check-input"
                     type="radio"
+                    id={`shopCheck${g.shop.id}`}
                     checked={g.shop.id === selectedShopId}
                     onChange={(evt) => {
                       if (g.shop.id !== selectedShopId) {
@@ -157,7 +158,11 @@ function ShoppingCart() {
                       }
                     }}
                   ></input>
-                  <label className="form-check-label fw-medium">
+                  <label
+                    htmlFor={`shopCheck${g.shop.id}`}
+                    className="form-check-label fw-medium"
+                    role={"button"}
+                  >
                     {g.shop.name}
                   </label>
                 </div>

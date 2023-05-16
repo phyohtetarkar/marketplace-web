@@ -7,10 +7,12 @@ export interface StateContext<T> {
   payload?: T;
   status?: Status;
   update: (status?: Status, payload?: User) => void;
+  reload: () => Promise<void>;
 }
 
 export const AuthenticationContext = createContext<StateContext<User>>({
-  update: (status, payload) => {}
+  update: (status, payload) => {},
+  reload: async () => {}
 });
 
 export const ShopDetailContext = createContext<Shop | undefined>(undefined);

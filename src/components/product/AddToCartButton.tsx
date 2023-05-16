@@ -38,11 +38,11 @@ function AddToCartButton({
         className ?? ""
       }`}
       onClick={() => {
-        // setAdding(true);
-        // setTimeout(() => {
-        //   setAdding(false);
-        // }, 2000);
         if (authContext.status === "success") {
+          if (!authContext.payload?.verified) {
+            router.push("/confirm-otp");
+            return;
+          }
           setAdding(true);
           addToCart({
             productId: productId,

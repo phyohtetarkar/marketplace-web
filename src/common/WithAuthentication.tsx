@@ -11,13 +11,19 @@ interface AuthComponentProps extends WithRouterProps {}
 
 export const withAuthentication = (Component: React.ComponentType<any>) => {
   return withRouter(
-    class AuthenticatedRoute extends React.Component<AuthComponentProps> {
+    class AuthenticatedRoute extends React.Component<
+      AuthComponentProps,
+      { calledPush: boolean }
+    > {
       static contextType = AuthenticationContext;
       declare context: React.ContextType<typeof AuthenticationContext>;
 
       constructor(props: AuthComponentProps) {
         super(props);
         this.handleAuthState = this.handleAuthState.bind(this);
+        this.state = {
+          calledPush: false
+        };
       }
 
       componentDidMount() {
@@ -31,8 +37,15 @@ export const withAuthentication = (Component: React.ComponentType<any>) => {
       handleAuthState() {
         const { payload, status } = this.context;
 
+        if (this.state.calledPush) {
+          return;
+        }
+
         if (!status) {
           this.props.router.push("/");
+          this.setState({
+            calledPush: true
+          });
           return;
         }
 
@@ -46,6 +59,17 @@ export const withAuthentication = (Component: React.ComponentType<any>) => {
 
         if (status === "unauthorized" || !payload) {
           this.props.router.push("/login");
+          this.setState({
+            calledPush: true
+          });
+          return;
+        }
+
+        if (!payload?.verified) {
+          this.props.router.push("/confirm-otp");
+          this.setState({
+            calledPush: true
+          });
         }
       }
 
@@ -64,6 +88,10 @@ export const withAuthentication = (Component: React.ComponentType<any>) => {
         }
 
         if (status !== "success" || !payload) {
+          return null;
+        }
+
+        if (!payload.verified) {
           return null;
         }
 

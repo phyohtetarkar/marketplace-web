@@ -21,10 +21,15 @@ function Register() {
   const authContext = useContext(AuthenticationContext);
   const [error, setError] = useState<string>();
 
+  const [showOTPConfirm, setShowOTPConfirm] = useState(false);
+
   const {
     register,
+    control,
     formState: { errors, isSubmitting },
-    handleSubmit
+    handleSubmit,
+    getValues,
+    trigger
   } = useForm<SignUpInputs>();
 
   useEffect(() => {
@@ -32,8 +37,8 @@ function Register() {
       return;
     }
 
-    if (authContext.payload && authContext.status === "success") {
-      router.replace("/");
+    if (authContext.status === "success") {
+      router.replace(authContext.payload?.verified ? "/" : "/confirm-otp");
     }
   }, [router, authContext]);
 
@@ -48,7 +53,6 @@ function Register() {
         password: values.password!
       });
 
-      //sessionStorage.setItem("accessToken", result.accessToken);
       authContext.update("success", result.user);
 
       // if (process.env.NEXT_PUBLIC_PROFILE === "dev") {
@@ -122,7 +126,7 @@ function Register() {
                     error={errors.phone && "Please enter valid phone number"}
                   />
                 </div>
-                <div className="col-md-12">
+                <div className="col-12">
                   <PasswordInput
                     label="Password"
                     autoComplete="new-password"
@@ -138,7 +142,7 @@ function Register() {
                     }
                   />
                 </div>
-                <div className="col-md-12">
+                <div className="col-12">
                   <PasswordInput
                     label="Confirm Password"
                     autoComplete="new-password"
@@ -150,6 +154,7 @@ function Register() {
                     error={errors.confirmPassword && "Password does not match"}
                   />
                 </div>
+
                 <div className="col-md-12 mt-4">
                   <ProgressButton
                     type="submit"

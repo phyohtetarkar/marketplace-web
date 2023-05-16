@@ -1137,7 +1137,7 @@ function CreateShop() {
 
                   <ProgressButton
                     variant="danger"
-                    className="py-2"
+                    className="py-2 w-100"
                     loading={isSubmitting}
                     onClick={() => {
                       handleSubmit(

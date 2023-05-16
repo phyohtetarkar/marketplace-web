@@ -35,6 +35,10 @@ function DeleteFromFavoriteButton({
       className={`h-100 position-relative ${className ?? ""}`}
       onClick={() => {
         if (authContext.status === "success") {
+          if (!authContext.payload?.verified) {
+            router.push("/confirm-otp");
+            return;
+          }
           setLoading(true);
           deleteFavoriteProduct(productId)
             .then((resp) => {

@@ -12,6 +12,7 @@ const basePath = "orders";
 export interface OrderQuery {
   date?: string;
   status?: OrderStatus;
+  code?: string;
   page?: number;
 }
 
