@@ -103,6 +103,58 @@ export async function signOut() {
   await validateResponse(resp);
 }
 
+export async function verifyUser({
+  code,
+  requestId
+}: {
+  code: string;
+  requestId: number;
+}) {
+  const body = { code, requestId };
+
+  const url = `${basePath}/verify`;
+
+  const resp = await makeApiRequest(
+    url,
+    {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    },
+    true
+  );
+
+  await validateResponse(resp);
+}
+
+export async function resetPassword({
+  phone,
+  password,
+  code,
+  requestId
+}: {
+  phone: string;
+  password: string;
+  code: string;
+  requestId: number;
+}) {
+  const body = { phone, password, code, requestId };
+
+  const url = `${basePath}/reset-password`;
+
+  const resp = await makeApiRequest(url, {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  await validateResponse(resp);
+}
+
 // export async function confirmSignUp({
 //   phone,
 //   password,

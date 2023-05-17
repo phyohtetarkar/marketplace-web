@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { formControlHeight } from "../common/app.config";
 import { AuthenticationContext } from "../common/contexts";
 import { setEmptyOrString } from "../common/utils";
@@ -10,14 +10,15 @@ import { Input, PasswordInput } from "../components/forms";
 import ProgressButton from "../components/ProgressButton";
 
 interface ResetPasswordProps {
-  otp: string;
   phone: string;
 }
 
 const ResetPassword = (props: ResetPasswordProps) => {
-  const { otp, phone } = props;
+  const { phone } = props;
 
   const [error, setError] = useState<string>();
+
+  const [timer, setTimer] = useState(0);
 
   const {
     register,
@@ -26,12 +27,24 @@ const ResetPassword = (props: ResetPasswordProps) => {
     handleSubmit
   } = useForm({
     defaultValues: {
-      otp: otp,
+      otp: "",
       phone: phone,
       password: "",
       confirmPassword: ""
     }
   });
+
+  useEffect(() => {
+    if (timer === 0) {
+      return;
+    }
+    const timeout = setTimeout(() => {
+      setTimer((old) => old - 1);
+    }, 1000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [timer]);
 
   return (
     <div className="container py-3">
@@ -44,6 +57,39 @@ const ResetPassword = (props: ResetPasswordProps) => {
               {error && <Alert message={error} variant="danger" />}
 
               <div className="vstack">
+                <div className="row g-0 mb-3">
+                  <div className="col-12">
+                    <label className="form-label">OTP Code</label>
+                  </div>
+                  <div className="col me-3">
+                    <Input
+                      id="otpInput"
+                      type="text"
+                      placeholder="Enter otp code"
+                      {...register("otp", {
+                        setValueAs: setEmptyOrString,
+                        required: "Please enter otp code"
+                      })}
+                      error={errors.otp?.message}
+                    />
+                  </div>
+                  <div className="col-auto">
+                    <button
+                      disabled={timer > 0}
+                      className="btn btn-outline-primary"
+                      style={{
+                        height: formControlHeight
+                      }}
+                      onClick={() => {
+                        setTimer(15);
+                      }}
+                    >
+                      Send
+                      {timer > 0 && <span className="ms-1">({timer})</span>}
+                    </button>
+                  </div>
+                </div>
+
                 <div className="mb-3">
                   <PasswordInput
                     label="New Password"
@@ -99,8 +145,6 @@ function ForgotPassword() {
 
   const [showReset, setShowReset] = useState(false);
 
-  const [timer, setTimer] = useState(0);
-
   const [error, setError] = useState<string>();
 
   const {
@@ -126,18 +170,6 @@ function ForgotPassword() {
     }
   }, [router, authContext]);
 
-  useEffect(() => {
-    if (timer === 0) {
-      return;
-    }
-    const timeout = setTimeout(() => {
-      setTimer((old) => old - 1);
-    }, 1000);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [timer]);
-
   if (authContext.status === "success") {
     return null;
   }
@@ -161,7 +193,7 @@ function ForgotPassword() {
               {error && <Alert message={error} variant="danger" />}
 
               <div className="vstack">
-                <div className="mb-3">
+                <div className="mb-4">
                   <Input
                     label="Phone Number"
                     id="phoneInput"
@@ -176,51 +208,6 @@ function ForgotPassword() {
                   />
                 </div>
 
-                <div className="row g-0 mb-4">
-                  <div className="col-12">
-                    <label className="form-label">OTP Code</label>
-                  </div>
-                  <div className="col me-3">
-                    <Input
-                      id="otpInput"
-                      type="text"
-                      placeholder="Enter otp code"
-                      {...register("otp", {
-                        setValueAs: setEmptyOrString,
-                        required: "Please enter otp code"
-                      })}
-                      error={errors.otp?.message}
-                    />
-                  </div>
-                  <div className="col-auto">
-                    <Controller
-                      control={control}
-                      name="phone"
-                      render={({ field, fieldState: { invalid } }) => {
-                        return (
-                          <button
-                            disabled={timer > 0 || invalid || !field.value}
-                            className="btn btn-outline-primary"
-                            style={{
-                              height: formControlHeight
-                            }}
-                            onClick={() => {
-                              trigger("phone").then((result) => {
-                                result && setTimer(15);
-                              });
-                            }}
-                          >
-                            Send
-                            {timer > 0 && (
-                              <span className="ms-1">({timer})</span>
-                            )}
-                          </button>
-                        );
-                      }}
-                    />
-                  </div>
-                </div>
-
                 <ProgressButton
                   className="py-2h w-100"
                   loading={isSubmitting}
@@ -230,7 +217,7 @@ function ForgotPassword() {
                     })();
                   }}
                 >
-                  Confirm OTP
+                  Continue
                 </ProgressButton>
               </div>
             </div>
