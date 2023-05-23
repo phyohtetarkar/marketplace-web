@@ -16,23 +16,39 @@ function ProductManageGridItem({
   onDeleteClick
 }: ProductManageGridItemProps) {
   let popular;
-  let hidden;
   let outOfStock;
 
   let price = <>{formatNumber(value.price ?? 0)} Ks</>;
 
-  if (value.hidden) {
-    hidden = (
-      <div
-        className="bg-danger px-2 py-1 text-light rounded-1 position-absolute top-0 end-0 m-2"
-        style={{
-          fontSize: 12
-        }}
-      >
-        Hidden
-      </div>
-    );
-  }
+  const status = () => {
+    if (value.status === "PUBLISHED") {
+      return (
+        <div
+          className="bg-success px-2 py-1 text-light rounded-1 position-absolute top-0 end-0 m-2"
+          style={{
+            fontSize: 12
+          }}
+        >
+          PUBLISHED
+        </div>
+      );
+    }
+
+    if (value.status === "DRAFT") {
+      return (
+        <div
+          className="bg-default px-2 py-1 text-light rounded-1 position-absolute top-0 end-0 m-2"
+          style={{
+            fontSize: 12
+          }}
+        >
+          DRAFT
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   //   if (data.popular) {
   //     popular = (
@@ -99,7 +115,7 @@ function ProductManageGridItem({
           </div>
           {outOfStock && outOfStock}
           {popular && popular}
-          {hidden && hidden}
+          {status()}
         </div>
       </Link>
       <div className="card-body">
