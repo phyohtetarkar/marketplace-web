@@ -7,6 +7,7 @@ import {
   InboxStackIcon,
   ReceiptPercentIcon
 } from "@heroicons/react/24/outline";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
@@ -41,7 +42,8 @@ interface ShopManageProps {
     | "discounts"
     | "orders"
     | "subscriptions"
-    | "setting";
+    | "setting"
+    | "renew-subscription";
   children: (shop: Shop) => ReactNode;
 }
 
@@ -166,6 +168,8 @@ function ShopManage(props: ShopManageProps) {
     );
   }
 
+  const currentTime = new Date().getTime();
+
   const menus = (
     <>
       <div className="vstack gap-1">
@@ -224,6 +228,16 @@ function ShopManage(props: ShopManageProps) {
               strokeWidth={2}
               width={iconSize}
             />
+          ),
+          suffix: (
+            <>
+              {(shop?.expiredAt ?? 0) <= currentTime && (
+                <ExclamationTriangleIcon
+                  width={20}
+                  className="text-warning ms-2"
+                />
+              )}
+            </>
           )
         })}
         {menuLink({
@@ -281,58 +295,89 @@ function ShopManage(props: ShopManageProps) {
         <div className="position-relative border rounded bg-white vstack overflow-hidden mb-3">
           <ShopHeading shop={shop} />
 
-          <Dropdown
-            toggle={<AdjustmentsHorizontalIcon width={24} strokeWidth={1.5} />}
-            className="position-absolute top-0 end-0 m-3"
-            toggleClassName="btn btn-light shadow-sm"
-            menuClassName="shadow"
-          >
-            <li
-              role="button"
-              className="dropdown-item-primary"
-              onClick={() => {
-                logoFileFef.current?.click();
-              }}
+          {shop.status === "APPROVED" && (
+            <Dropdown
+              toggle={
+                <AdjustmentsHorizontalIcon width={24} strokeWidth={1.5} />
+              }
+              className="position-absolute top-0 end-0 m-3"
+              toggleClassName="btn btn-light shadow-sm"
+              menuClassName="shadow"
             >
-              Upload Logo
-            </li>
-            <li
-              role="button"
-              className="dropdown-item-primary"
-              onClick={() => {
-                coverFileFef.current?.click();
-              }}
-            >
-              Upload Cover
-            </li>
-          </Dropdown>
-        </div>
-        <div className="row g-3">
-          <div className="col-12 col-lg-3">
-            <div className="rounded border bg-white">
-              <Accordion
-                open={true}
-                header={(open) => {
-                  return <span className="fw-bold">Menu</span>;
+              <li
+                role="button"
+                className="dropdown-item-primary"
+                onClick={() => {
+                  logoFileFef.current?.click();
                 }}
-                headerClassName="px-3 py-2h border-bottom d-flex d-lg-none"
-                bodyClassName=""
-                iconType="plus-minus"
               >
-                <div className="p-3">{menus}</div>
-              </Accordion>
+                Upload Logo
+              </li>
+              <li
+                role="button"
+                className="dropdown-item-primary"
+                onClick={() => {
+                  coverFileFef.current?.click();
+                }}
+              >
+                Upload Cover
+              </li>
+            </Dropdown>
+          )}
+        </div>
+        {shop.status === "APPROVED" ? (
+          <div className="row g-3">
+            <div className="col-12 col-lg-3">
+              <div className="rounded border bg-white">
+                <Accordion
+                  open={true}
+                  header={(open) => {
+                    return <span className="fw-bold">Menu</span>;
+                  }}
+                  headerClassName="px-3 py-2h border-bottom d-flex d-lg-none"
+                  bodyClassName=""
+                  iconType="plus-minus"
+                >
+                  <div className="p-3">{menus}</div>
+                </Accordion>
+              </div>
+            </div>
+            <div className="col-12 col-lg-9">
+              {(shop.expiredAt ?? 0) >= currentTime ||
+              activeTab === "subscriptions" ||
+              activeTab === "renew-subscription" ? (
+                children(shop)
+              ) : (
+                <div>
+                  <Alert
+                    message={
+                      <div>
+                        No active subscription.
+                        <Link
+                          href={`/account/shops/${shop.slug}/subscriptions`}
+                          className="ms-1 fw-semibold link-anchor"
+                        >
+                          Manage subscriptions
+                        </Link>
+                        .
+                      </div>
+                    }
+                    variant="warning"
+                  />
+                </div>
+              )}
             </div>
           </div>
-          <div className="col-12 col-lg-9">
-            {!shop.expired || activeTab === "subscriptions" ? (
-              children(shop)
-            ) : (
-              <div>
-                <Alert message="Shop subscription expired." variant="warning" />
-              </div>
-            )}
-          </div>
-        </div>
+        ) : (
+          <Alert
+            message={
+              shop.status === "DISABLED"
+                ? "Your shop has been disabled."
+                : `We are currently reviewing your shop.`
+            }
+            variant="warning"
+          />
+        )}
       </div>
 
       <input

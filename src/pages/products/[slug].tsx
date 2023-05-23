@@ -600,7 +600,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     //const accessToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
     const product = await getProductBySlug(slug as string);
-    if (product?.hidden === false && !product?.disabled) {
+    var currentTime = new Date().getTime();
+
+    if (
+      product?.status === "PUBLISHED" &&
+      !product?.disabled &&
+      product.shop?.status === "APPROVED" &&
+      (product.shop.expiredAt ?? 0) >= currentTime
+    ) {
       return {
         props: {
           product: product

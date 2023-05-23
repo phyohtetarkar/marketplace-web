@@ -2,9 +2,13 @@ export type OrderStatus = "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED";
 
 export type PaymentMethod = "COD" | "BANK_TRANSFER";
 
-//export type ShopStatus = "PENDING" | "ACTIVE" | "EXPIRED" | "DISABLED";
+export type ShopStatus = "PENDING" | "APPROVED" | "DISABLED";
+
+export type ProductStatus = "DRAFT" | "PUBLISHED";
 
 export type DiscountType = "PERCENTAGE" | "FIXED_AMOUNT";
+
+export type ShopSubscriptionStatus = "PROCESSING" | "SUCCESS" | "FAILED";
 
 export interface PageData<T> {
   contents: T[];
@@ -79,11 +83,10 @@ export interface Shop {
   headline?: string;
   rating?: number;
   featured?: boolean;
-  activated?: boolean;
-  expired?: boolean;
-  disabled?: boolean;
   createdAt?: number;
   pendingOrderCount?: number;
+  status?: ShopStatus;
+  expiredAt?: number;
   logo?: string | null;
   cover?: string | null;
   about?: string;
@@ -134,9 +137,25 @@ export interface ShopReview {
 
 export interface ShopAcceptedPayment {
   id?: number;
+  shopId?: number;
   accountType?: string;
   accountName?: string;
   accountNumber?: string;
+}
+
+export interface ShopSubscription {
+  id: number;
+  title: string;
+  totalPrice: number;
+  discount: number;
+  subTotalPrice: number;
+  status: ShopSubscriptionStatus;
+  duration: number;
+  startAt: number;
+  endAt: number;
+  preSubscription: boolean;
+  shop?: Shop;
+  createdAt?: number;
 }
 
 export interface ShopCreateForm {
@@ -156,7 +175,7 @@ export interface ShopCreateForm {
   coverImage?: File;
 }
 
-export interface SaleHistory {
+export interface ShopMonthlySale {
   year: number;
   month: number;
   totalSale: number;
@@ -176,8 +195,8 @@ export interface Product {
   newArrival?: boolean;
   withVariant?: boolean;
   description?: string;
-  hidden?: boolean;
   disabled?: boolean;
+  status?: ProductStatus;
   discount?: Discount;
   category?: Category;
   shop?: Shop;
@@ -305,4 +324,19 @@ export interface OrderCreateForm {
   cartItems?: CartItem[];
   delivery?: DeliveryDetail;
   payment?: PaymentDetail;
+}
+
+export interface SubscriptionPlan {
+  id: number;
+  title: string;
+  duration: number;
+  price: number;
+  promoUsable: boolean;
+}
+
+export interface PaymentTokenResult {
+  webPaymentUrl: string;
+  paymentToken: string;
+  respCode: string;
+  respDesc: string;
 }

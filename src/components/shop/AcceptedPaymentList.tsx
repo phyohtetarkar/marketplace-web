@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { parseErrorResponse } from "../../common/utils";
-import { getShopAcceptedPayments } from "../../services/ShopService";
+import { getShopAcceptedPayments } from "../../services/AcceptedPaymentService";
 import Alert from "../Alert";
 import Loading from "../Loading";
 

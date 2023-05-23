@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
+
 interface AlertProps {
-  message: string;
+  message: ReactNode;
   variant?: "primary" | "info" | "success" | "warning" | "danger";
 }
 

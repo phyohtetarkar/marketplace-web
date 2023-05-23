@@ -23,12 +23,10 @@ import { withAuthentication } from "../../common/WithAuthentication";
 import ConfirmModal from "../../components/ConfirmModal";
 import Dropdown from "../../components/Dropdown";
 import { AutocompleteSelect, Input, Textarea } from "../../components/forms";
+import { getShopAcceptedPayments } from "../../services/AcceptedPaymentService";
 import { getShopDeliveryCities } from "../../services/CityService";
 import { createOrder } from "../../services/OrderService";
-import {
-  getShopAcceptedPayments,
-  getShopSetting
-} from "../../services/ShopService";
+import { getShopSetting } from "../../services/ShopService";
 
 function Checkout() {
   const router = useRouter();

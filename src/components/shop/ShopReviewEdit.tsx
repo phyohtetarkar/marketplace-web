@@ -110,7 +110,7 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
                           )
                         }
                         toggleClassName="btn btn-outline-light rounded text-muted py-2h px-3 border dropdown-toggle hstack"
-                        menuClassName="w-100"
+                        menuClassName="w-100 shadow"
                       >
                         {_ratings.map((e, i) => {
                           return (

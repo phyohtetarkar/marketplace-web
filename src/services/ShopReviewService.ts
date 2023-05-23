@@ -2,7 +2,7 @@ import makeApiRequest from "../common/makeApiRequest";
 import { PageData, ShopReview } from "../common/models";
 import { buildQueryParams, validateResponse } from "../common/utils";
 
-const basePath = "shops";
+const basePath = "shop-reviews";
 
 export async function writeReview(value: ShopReview) {
   const url = `${basePath}/${value.shopId}/reviews`;
@@ -31,7 +31,7 @@ export async function writeReview(value: ShopReview) {
 }
 
 export async function getUserReview(shopId: number) {
-  const url = `${basePath}/${shopId}/my-review`;
+  const url = `${basePath}/${shopId}/me`;
   // const resp = await fetch(url, {
   //   headers: {
   //     Authorization: await getAuthHeader()
@@ -51,10 +51,11 @@ export async function getReviews(
   page?: number
 ) {
   const query = buildQueryParams({
+    shopId: shopId,
     direction: direction,
     page: page
   });
-  const url = `${basePath}/${shopId}/reviews${query}`;
+  const url = `${basePath}${query}`;
   //const resp = await fetch(url);
 
   const resp = await makeApiRequest(url);

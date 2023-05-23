@@ -134,7 +134,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     //const isMember = await checkShopMember(shop.id ?? 0, Auth);
 
-    if (shop?.activated && !shop.disabled && !shop.expired) {
+    var currentTime = new Date().getTime();
+
+    if (shop?.status === "APPROVED") {
       return {
         props: {
           shop: shop

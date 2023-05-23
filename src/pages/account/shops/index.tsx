@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
+import { parseErrorResponse } from "../../../common/utils";
 import { withAuthentication } from "../../../common/WithAuthentication";
 import AccountMenu from "../../../components/account/AccountMenu";
 import Alert from "../../../components/Alert";
@@ -26,6 +27,7 @@ function MyShops() {
     }
 
     if (error) {
+      return <Alert message={parseErrorResponse(error)} variant="danger" />;
     }
 
     if (data?.contents.length === 0) {

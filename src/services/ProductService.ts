@@ -25,7 +25,7 @@ export async function saveProduct(value: Product) {
   form.append("featured", value.featured ? "true" : "false");
   form.append("newArrival", value.newArrival ? "true" : "false");
   form.append("withVariant", value.withVariant ? "true" : "false");
-  form.append("hidden", value.hidden ? "true" : "false");
+  value.status && form.append("status", value.status);
   value.description && form.append("description", value.description);
   value.categoryId && form.append("categoryId", value.categoryId.toPrecision());
   value.shopId && form.append("shopId", value.shopId.toPrecision());
@@ -69,7 +69,7 @@ export async function saveProduct(value: Product) {
     });
   });
 
-  const url = `${basePath}`;
+  const url = `private/${basePath}`;
 
   const resp = await makeApiRequest(
     url,
@@ -84,12 +84,7 @@ export async function saveProduct(value: Product) {
 }
 
 export async function getProductById(productId: number) {
-  const url = `${basePath}/${productId}`;
-  // const resp = await fetch(url, {
-  //   headers: {
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
+  const url = `private/${basePath}/${productId}`;
 
   const resp = await makeApiRequest(url, {}, true);
 
@@ -103,7 +98,6 @@ export async function getProductById(productId: number) {
 
 export async function getProductBySlug(slug: String) {
   const url = `${basePath}/${slug}`;
-  //const resp = await fetch(url);
 
   const resp = await makeApiRequest(url);
 
@@ -115,19 +109,8 @@ export async function getProductBySlug(slug: String) {
     .catch((e) => null);
 }
 
-export async function existsProductBySlug(slug: String) {
-  const url = `${basePath}/${slug}/exists`;
-  //const resp = await fetch(url);
-
-  const resp = await makeApiRequest(url);
-
-  await validateResponse(resp);
-
-  return resp.json() as Promise<boolean>;
-}
-
 export async function deleteProduct(id: number) {
-  const url = `${basePath}/${id}`;
+  const url = `private/${basePath}/${id}`;
   const resp = await makeApiRequest(url, { method: "DELETE" }, true);
 
   await validateResponse(resp);
@@ -172,7 +155,7 @@ export async function findProducts(value: ProductQuery) {
 export async function findShopProducts(shopId: number, value: ProductQuery) {
   const query = buildQueryParams(value);
 
-  const url = `shops/${shopId}/products${query}`;
+  const url = `private/shops/${shopId}/products${query}`;
 
   const resp = await makeApiRequest(url, {}, true);
 

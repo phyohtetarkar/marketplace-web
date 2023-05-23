@@ -13,13 +13,13 @@ export async function getAllCities() {
 }
 
 export async function saveShopDeliveryCities(shopId: number, cities: City[]) {
-  const url = `shops/${shopId}/delivery-cities`;
+  const url = `delivery-cities`;
 
   const resp = await makeApiRequest(
     url,
     {
       method: "POST",
-      body: JSON.stringify(cities),
+      body: JSON.stringify({ shopId: shopId, cities: cities }),
       headers: {
         "Content-Type": "application/json"
       }
@@ -31,9 +31,9 @@ export async function saveShopDeliveryCities(shopId: number, cities: City[]) {
 }
 
 export async function getShopDeliveryCities(shopId: number) {
-  const url = `shops/${shopId}/delivery-cities`;
+  const url = `delivery-cities?shop-id=${shopId}`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest(url);
 
   await validateResponse(resp);
 

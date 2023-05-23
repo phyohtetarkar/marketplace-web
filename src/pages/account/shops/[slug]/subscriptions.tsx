@@ -4,7 +4,7 @@ import { ShopManage, ShopSubscription } from "../../../../components/shop";
 function Subscriptions() {
   return (
     <ShopManage activeTab="subscriptions">
-      {(shop) => shop.id && <ShopSubscription shopId={shop.id} />}
+      {(shop) => shop.id && <ShopSubscription shop={shop} />}
     </ShopManage>
   );
 }

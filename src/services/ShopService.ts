@@ -1,20 +1,16 @@
 import makeApiRequest from "../common/makeApiRequest";
 import {
   PageData,
-  SaleHistory,
+  PaymentTokenResult,
   Shop,
-  ShopAcceptedPayment,
   ShopContact,
   ShopCreateForm,
   ShopGeneral,
+  ShopMonthlySale,
   ShopSetting,
   ShopStatistic
 } from "../common/models";
-import {
-  buildQueryParams,
-  getAuthHeader,
-  validateResponse
-} from "../common/utils";
+import { buildQueryParams, validateResponse } from "../common/utils";
 
 const basePath = "shops";
 
@@ -24,25 +20,27 @@ export interface ShopQuery {
 }
 
 export async function createShop(value: ShopCreateForm) {
-  const url = basePath;
+  const url = `private/${basePath}`;
   const formData = new FormData();
   value.name && formData.append("name", value.name);
   value.slug && formData.append("slug", value.slug);
   value.headline && formData.append("headline", value.headline);
   value.about && formData.append("about", value.about);
   value.address && formData.append("address", value.address);
-  formData.append("cashOnDelivery", value.cashOnDelivery ? "true" : "false");
-  formData.append("bankTransfer", value.bankTransfer ? "true" : "false");
+  formData.append("cashOnDelivery", "true");
+  //formData.append("bankTransfer", value.bankTransfer ? "true" : "false");
   value.logoImage && formData.append("logo", value.logoImage);
   value.coverImage && formData.append("cover", value.coverImage);
+  // value.subscriptionPlanId &&
+  //   formData.append("subscriptionPlanId", value.subscriptionPlanId.toString());
 
-  value.acceptedPayments?.forEach((v, i) => {
-    //v.id && formData.append(`acceptedPayments[${i}].id`, v.id.toPrecision());
-    v.accountType &&
-      formData.append(`acceptedPayments[${i}].accountType`, v.accountType);
-    v.accountNumber &&
-      formData.append(`acceptedPayments[${i}].accountNumber`, v.accountNumber);
-  });
+  // value.acceptedPayments?.forEach((v, i) => {
+  //   //v.id && formData.append(`acceptedPayments[${i}].id`, v.id.toPrecision());
+  //   v.accountType &&
+  //     formData.append(`acceptedPayments[${i}].accountType`, v.accountType);
+  //   v.accountNumber &&
+  //     formData.append(`acceptedPayments[${i}].accountNumber`, v.accountNumber);
+  // });
 
   value.deliveryCities?.forEach((v, i) => {
     formData.append(`deliveryCities[${i}].id`, v.id.toString());
@@ -59,10 +57,15 @@ export async function createShop(value: ShopCreateForm) {
   );
 
   await validateResponse(resp);
+
+  return resp
+    .json()
+    .then((json) => json as PaymentTokenResult)
+    .catch((e) => undefined);
 }
 
 export async function updateShopGeneral(value: ShopGeneral) {
-  const url = `${basePath}/${value.shopId}/general`;
+  const url = `private/${basePath}/${value.shopId}/general`;
 
   // const resp = await fetch(url, {
   //   method: "PUT",
@@ -91,7 +94,7 @@ export async function updateShopGeneral(value: ShopGeneral) {
 }
 
 export async function updateShopContact(value: ShopContact) {
-  const url = `${basePath}/${value.shopId}/contact`;
+  const url = `private/${basePath}/${value.shopId}/contact`;
   const resp = await makeApiRequest(
     url,
     {
@@ -108,7 +111,7 @@ export async function updateShopContact(value: ShopContact) {
 }
 
 export async function updateShopSetting(value: ShopSetting) {
-  const url = `${basePath}/${value.shopId}/setting`;
+  const url = `private/${basePath}/${value.shopId}/setting`;
   const resp = await makeApiRequest(
     url,
     {
@@ -125,7 +128,7 @@ export async function updateShopSetting(value: ShopSetting) {
 }
 
 export async function uploadShopLogo(shopId: number, file: File) {
-  const url = `${basePath}/${shopId}/logo`;
+  const url = `private/${basePath}/${shopId}/logo`;
 
   const form = new FormData();
   form.append("file", file);
@@ -143,7 +146,7 @@ export async function uploadShopLogo(shopId: number, file: File) {
 }
 
 export async function uploadShopCover(shopId: number, file: File) {
-  const url = `${basePath}/${shopId}/cover`;
+  const url = `private/${basePath}/${shopId}/cover`;
 
   const form = new FormData();
   form.append("file", file);
@@ -160,44 +163,8 @@ export async function uploadShopCover(shopId: number, file: File) {
   await validateResponse(resp);
 }
 
-export async function saveShopAcceptedPayment(
-  shopId: number,
-  value: ShopAcceptedPayment
-) {
-  const url = `${basePath}/${shopId}/accepted-payments`;
-  const resp = await makeApiRequest(
-    url,
-    {
-      method: !value.id ? "POST" : "PUT",
-      body: JSON.stringify(value),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    },
-    true
-  );
-
-  await validateResponse(resp);
-}
-
-export async function deleteShopAcceptedPayment(
-  shopId: number,
-  paymentId: number
-) {
-  const url = `${basePath}/${shopId}/accepted-payments/${paymentId}`;
-  const resp = await makeApiRequest(
-    url,
-    {
-      method: "DELETE"
-    },
-    true
-  );
-
-  await validateResponse(resp);
-}
-
 export async function getShopById(id: number) {
-  const url = `${basePath}/${id}`;
+  const url = `private/${basePath}/${id}`;
   // const resp = await fetch(url, {
   //   headers: {
   //     Authorization: await getAuthHeader()
@@ -244,19 +211,7 @@ export async function existsShopBySlug(slug: String, excludeId: number) {
 
 export async function isShopMember(shopId: number) {
   try {
-    const url = `${basePath}/${shopId}/check-member`;
-
-    // const authHeader = getAuthHeader();
-
-    // if (!authHeader) {
-    //   return false;
-    // }
-
-    // const resp = await fetch(url, {
-    //   headers: {
-    //     Authorization: authHeader
-    //   }
-    // });
+    const url = `shop-members/${shopId}/check-member`;
 
     const resp = await makeApiRequest(url, {}, true);
 
@@ -311,7 +266,7 @@ export async function findShops(query: ShopQuery) {
 }
 
 export async function getShopStatistic(shopId: number) {
-  const url = `${basePath}/${shopId}/statistic`;
+  const url = `private/${basePath}/${shopId}/statistic`;
 
   const resp = await makeApiRequest(url, {}, true);
 
@@ -321,7 +276,7 @@ export async function getShopStatistic(shopId: number) {
 }
 
 export async function getShopSetting(shopId: number) {
-  const url = `${basePath}/${shopId}/setting`;
+  const url = `private/${basePath}/${shopId}/setting`;
 
   const resp = await makeApiRequest(url, {}, true);
 
@@ -334,7 +289,7 @@ export async function getShopSetting(shopId: number) {
 }
 
 export async function getPendingOrderCount(shopId: number) {
-  const url = `${basePath}/${shopId}/pending-order-count`;
+  const url = `private/${basePath}/${shopId}/pending-order-count`;
 
   const resp = await makeApiRequest(url, {}, true);
 
@@ -344,21 +299,11 @@ export async function getPendingOrderCount(shopId: number) {
 }
 
 export async function getMonthlySale(shopId: number, year: number) {
-  const url = `${basePath}/${shopId}/monthly-sales?year=${year}`;
+  const url = `private/${basePath}/${shopId}/monthly-sales?year=${year}`;
 
   const resp = await makeApiRequest(url, {}, true);
 
   await validateResponse(resp);
 
-  return resp.json() as Promise<SaleHistory[]>;
-}
-
-export async function getShopAcceptedPayments(shopId: number) {
-  const url = `${basePath}/${shopId}/accepted-payments`;
-
-  const resp = await makeApiRequest(url, {}, true);
-
-  await validateResponse(resp);
-
-  return resp.json() as Promise<ShopAcceptedPayment[]>;
+  return resp.json() as Promise<ShopMonthlySale[]>;
 }

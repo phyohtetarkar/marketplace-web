@@ -24,14 +24,16 @@ import {
   setStringToSlug
 } from "../../common/utils";
 import {
+  deleteShopAcceptedPayment,
+  getShopAcceptedPayments,
+  saveShopAcceptedPayment
+} from "../../services/AcceptedPaymentService";
+import {
   getShopDeliveryCities,
   saveShopDeliveryCities
 } from "../../services/CityService";
 import {
-  deleteShopAcceptedPayment,
-  getShopAcceptedPayments,
   getShopSetting,
-  saveShopAcceptedPayment,
   updateShopContact,
   updateShopGeneral,
   updateShopSetting
@@ -445,7 +447,7 @@ const ShopPaymentForm = (props: ShopSettingProps) => {
 
   const saveAcceptedPayment = async (value: ShopAcceptedPayment) => {
     try {
-      await saveShopAcceptedPayment(shopId, value);
+      await saveShopAcceptedPayment({ ...value, shopId: shopId });
       setAcceptedPayment(undefined);
       setShowEdit(false);
       acceptedPaymentsState.mutate();
@@ -474,9 +476,9 @@ const ShopPaymentForm = (props: ShopSettingProps) => {
                   type="checkbox"
                   role="switch"
                   name="cashOnDelivery"
-                  disabled={settingState.isLoading}
+                  disabled={true}
                   checked={setting?.cashOnDelivery ?? false}
-                  onChange={handleSettingChange}
+                  onChange={() => {}}
                 ></input>
                 <label
                   htmlFor="codCheck"
@@ -594,7 +596,7 @@ const ShopPaymentForm = (props: ShopSettingProps) => {
         onConfirm={async () => {
           try {
             acceptedPayment?.id &&
-              (await deleteShopAcceptedPayment(shopId, acceptedPayment.id));
+              (await deleteShopAcceptedPayment(acceptedPayment.id));
             acceptedPaymentsState.mutate();
             setAcceptedPayment(undefined);
             setDeleteConfirm(false);

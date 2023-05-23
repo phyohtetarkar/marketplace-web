@@ -1,4 +1,8 @@
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon
+} from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
 import { Shop } from "../../common/models";
@@ -12,22 +16,32 @@ interface ShopManageGridItemProps {
 const _imageSize = 100;
 
 function ShopManageGridItem({ value }: ShopManageGridItemProps) {
-  // const statusView = () => {
-  //   let color = "success text-success";
-  //   if (value.status === "SUBSCRIPTION_EXPIRED") {
-  //     color = "warning text-warning";
-  //   }
+  const statusView = () => {
+    switch (value.status) {
+      case "APPROVED":
+        return (
+          <Tooltip title="Approved">
+            <CheckCircleIcon width={24} className="text-success ms-1" />
+          </Tooltip>
+        );
 
-  //   if (value.status === "DENIED") {
-  //     color = "danger text-danger";
-  //   }
+      case "PENDING":
+        return (
+          <Tooltip title="Your shop is currently reviewing.">
+            <ExclamationTriangleIcon width={24} className="text-warning ms-1" />
+          </Tooltip>
+        );
 
-  //   return (
-  //     <div className={`rounded small fw-medium bg-${color} bg-opacity-25 px-1`}>
-  //       {value.status}
-  //     </div>
-  //   );
-  // };
+      case "DISABLED":
+        return (
+          <Tooltip title="Your shop has been disabled.">
+            <ExclamationCircleIcon width={24} className="text-danger ms-1" />
+          </Tooltip>
+        );
+    }
+
+    return null;
+  };
 
   return (
     <div className="card h-100 border">
@@ -53,10 +67,11 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
           </div>
 
           <Link href={`/shops/${value.slug}`} className="link-dark">
-            <h6 className="text-truncate mb-1" style={{ fontSize: 16 }}>
+            <h6 className="mb-3" style={{ fontSize: 16 }}>
               {value.name}
             </h6>
           </Link>
+
           <div className="small text-muted mb-2 text-truncate">
             {value.headline}
           </div>
@@ -71,23 +86,12 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
               href={`/account/shops/${value.slug}/dashboard`}
               className="btn btn-primary flex-grow-1 hstack justify-content-center gap-2"
             >
-              {/* <ChartBarIcon width={20} /> */}
               <span>Manage shop</span>
             </Link>
           </div>
-
-          {value.disabled && (
-            <div role={"button"} className="position-absolute top-0 end-0 m-3">
-              <Tooltip title="Shop has been disabled">
-                <ExclamationTriangleIcon
-                  width={24}
-                  className="text-danger"
-                  strokeWidth={1.5}
-                />
-              </Tooltip>
-            </div>
-          )}
         </div>
+
+        <div className="position-absolute top-0 end-0 m-3">{statusView()}</div>
       </div>
     </div>
   );

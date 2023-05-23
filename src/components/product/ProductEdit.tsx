@@ -317,7 +317,12 @@ function ProductEdit(props: ProductEditProps) {
         <div className="row mb-3 g-3">
           <div className="col-lg-6">
             <h4 className="mb-1 fw-semibold">{title}</h4>
-            <div className="d-flex flex-wrap gap-2">
+            <div
+              className="d-flex flex-wrap gap-2"
+              style={{
+                fontSize: "0.9rem"
+              }}
+            >
               <Link href={`/account/shops/${shop.slug}/dashboard`}>
                 Dashboard
               </Link>
@@ -542,23 +547,6 @@ function ProductEdit(props: ProductEditProps) {
                         className="form-check-label fw-medium"
                       >
                         New arrival
-                      </label>
-                    </div>
-                  </div>
-                  <div className="col-auto">
-                    <div className="form-check form-switch">
-                      <input
-                        id="hiddenCheck"
-                        className="form-check-input"
-                        type="checkbox"
-                        role="switch"
-                        {...register("hidden")}
-                      ></input>
-                      <label
-                        htmlFor="hiddenCheck"
-                        className="form-check-label fw-medium"
-                      >
-                        Hidden
                       </label>
                     </div>
                   </div>
