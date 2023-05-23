@@ -45,7 +45,7 @@ function ShoppingCart() {
 
     const shops = new Set(
       data
-        .filter((item) => !item.product?.shop?.disabled)
+        .filter((item) => item.product?.shop?.status === "APPROVED")
         .map((item) => item.product?.shop?.id!)
     );
 
