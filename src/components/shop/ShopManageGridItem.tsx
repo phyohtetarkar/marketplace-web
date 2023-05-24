@@ -81,7 +81,7 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
 
           {/* <div className="mb-4 align-self-center">{statusView()}</div> */}
 
-          <div className="hstack gap-2">
+          <div className="hstack gap-2 mt-auto">
             <Link
               href={`/account/shops/${value.slug}/dashboard`}
               className="btn btn-primary flex-grow-1 hstack justify-content-center gap-2"

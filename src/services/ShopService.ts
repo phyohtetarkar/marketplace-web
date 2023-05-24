@@ -24,6 +24,7 @@ export async function createShop(value: ShopCreateForm) {
   const formData = new FormData();
   value.name && formData.append("name", value.name);
   value.slug && formData.append("slug", value.slug);
+  value.phone && formData.append("phone", value.phone);
   value.headline && formData.append("headline", value.headline);
   value.about && formData.append("about", value.about);
   value.address && formData.append("address", value.address);

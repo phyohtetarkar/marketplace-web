@@ -199,6 +199,9 @@ const ShopContactForm = (props: ShopSettingProps) => {
 
   const executeSave = async (values: ShopContact) => {
     try {
+      if (!values.phones || values.phones.length === 0) {
+        throw "At least one phone number required";
+      }
       await updateShopContact(values);
       router.replace(router.asPath);
     } catch (error) {

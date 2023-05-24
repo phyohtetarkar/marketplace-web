@@ -163,6 +163,7 @@ export interface ShopCreateForm {
   headline?: string;
   address?: string;
   about?: string;
+  phone?: string;
   cashOnDelivery?: boolean;
   bankTransfer?: boolean;
   acceptedPayments?: ShopAcceptedPayment[];

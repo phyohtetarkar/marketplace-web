@@ -35,12 +35,12 @@ function ShopSubscription(props: ShopSubscriptionProps) {
       const current = await getCurrentSubscription(shop.id ?? 0);
       const list = await getPreSubscriptions(shop.id ?? 0);
       const ss: ShopSubscription[] = [];
-      if (current) {
-        ss.push(current);
-      }
-
       if (list) {
         ss.push(...list);
+      }
+
+      if (current) {
+        ss.push(current);
       }
       setSubscriptions(ss);
     } catch (error) {
@@ -54,11 +54,13 @@ function ShopSubscription(props: ShopSubscriptionProps) {
     const currentTime = new Date().getTime();
     if (currentTime >= s.startAt && currentTime <= s.endAt) {
       return (
-        <div className="px-2 py-1 rounded bg-primary text-light">ACTIVE</div>
+        <div className="px-2 py-1 rounded-pill bg-success text-light">
+          ACTIVE
+        </div>
       );
     }
 
-    return <div className="px-2 py-1 rounded bg-default">PENDING</div>;
+    return <div className="px-2 py-1 rounded-pill bg-default">PENDING</div>;
   };
 
   const content = () => {

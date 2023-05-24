@@ -806,6 +806,19 @@ function CreateShop() {
                   </div>
                   <div className="col-12">
                     <Input
+                      label="Phone Number *"
+                      id="phoneInput"
+                      type="text"
+                      placeholder="Enter shop phone number"
+                      {...register("phone", {
+                        required: true,
+                        pattern: /^(09)\d{7,12}$/
+                      })}
+                      error={errors.phone && "Please enter valid phone number"}
+                    />
+                  </div>
+                  <div className="col-12">
+                    <Input
                       label="Headline"
                       id="headlineInput"
                       type="text"
