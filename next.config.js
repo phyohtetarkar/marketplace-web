@@ -17,6 +17,15 @@ const nextConfig = {
         hostname: "52.77.255.240"
       }
     ]
+  },
+  async redirects() {
+    return [
+      {
+        source: "/account/shops/:slug",
+        destination: "/account/shops/:slug/dashboard",
+        permanent: true
+      }
+    ];
   }
 };
 

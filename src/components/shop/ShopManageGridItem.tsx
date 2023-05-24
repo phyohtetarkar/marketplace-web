@@ -67,7 +67,7 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
           </div>
 
           <Link href={`/shops/${value.slug}`} className="link-dark">
-            <h6 className="mb-3" style={{ fontSize: 16 }}>
+            <h6 className="mb-1" style={{ fontSize: 16 }}>
               {value.name}
             </h6>
           </Link>

@@ -30,6 +30,7 @@ import {
 } from "../../services/ProductService";
 import Alert from "../Alert";
 import ConfirmModal from "../ConfirmModal";
+import Dropdown from "../Dropdown";
 import { AutocompleteSelect, Input } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import Loading from "../Loading";
@@ -240,6 +241,7 @@ function ProductEdit(props: ProductEditProps) {
 
   const executeSave = async (values: Product) => {
     try {
+      progressContext.update(true);
       const product = { ...values };
       if (product.variants && product.variants.length > 0) {
         //let totalStock = 0;
@@ -264,11 +266,13 @@ function ProductEdit(props: ProductEditProps) {
 
       //console.log(product);
       await saveProduct(product);
-      toast.success("Product successfully saved");
+      toast.success("Product saved");
       router.back();
     } catch (error) {
       const msg = parseErrorResponse(error);
       toast.error(msg);
+    } finally {
+      progressContext.update(false);
     }
   };
 
@@ -300,160 +304,174 @@ function ProductEdit(props: ProductEditProps) {
   const title = (!product.id ? "Create" : "Update") + " product";
 
   return (
-    <div>
-      <form
-        onSubmit={(evt) => {
-          evt.preventDefault();
-          handleSubmit(async (data) => {
-            await executeSave(data);
-          })();
-        }}
-        onKeyDown={(evt) => {
-          if (evt.key === "Enter") {
-            evt.preventDefault();
-          }
-        }}
-      >
-        <div className="row mb-3 g-3">
-          <div className="col-lg-6">
-            <h4 className="mb-1 fw-semibold">{title}</h4>
-            <div
-              className="d-flex flex-wrap gap-2"
-              style={{
-                fontSize: "0.9rem"
-              }}
-            >
-              <Link href={`/account/shops/${shop.slug}/dashboard`}>
-                Dashboard
-              </Link>
-              <span className="text-muted">/</span>
-              <Link href={`/account/shops/${shop.slug}/products`}>
-                Products
-              </Link>
-              <span className="text-muted">/</span>
-              <div className="text-muted" aria-current="page">
-                {title}
-              </div>
+    <>
+      <div className="row mb-3 g-3">
+        <div className="col-lg-6">
+          <h4 className="mb-1 fw-semibold">{title}</h4>
+          <div
+            className="d-flex flex-wrap gap-2"
+            style={{
+              fontSize: "0.9rem"
+            }}
+          >
+            <Link href={`/account/shops/${shop.slug}/dashboard`}>
+              Dashboard
+            </Link>
+            <span className="text-muted">/</span>
+            <Link href={`/account/shops/${shop.slug}/products`}>Products</Link>
+            <span className="text-muted">/</span>
+            <div className="text-muted" aria-current="page">
+              {title}
             </div>
           </div>
-          <div className="col-lg-6">
-            <div className="hstack gap-2 h-100">
-              <div className="flex-grow-1 d-none d-lg-flex"></div>
-              <div className="hstack gap-2">
-                {(product.id ?? 0) > 0 && (
-                  <button
-                    type="button"
-                    className="btn btn-danger py-2"
-                    onClick={() => {
-                      setConfirmDelete(true);
-                    }}
-                  >
-                    Delete
-                  </button>
-                )}
-                <ProgressButton
+        </div>
+        <div className="col-lg-6">
+          <div className="hstack gap-2 h-100">
+            <div className="flex-grow-1 d-none d-lg-flex"></div>
+            <div className="hstack gap-2">
+              {(product.id ?? 0) > 0 && (
+                <button
+                  type="button"
+                  className="btn btn-danger py-2"
+                  onClick={() => {
+                    setConfirmDelete(true);
+                  }}
+                >
+                  Delete
+                </button>
+              )}
+              {/* <ProgressButton
                   loading={isSubmitting}
                   className="py-2"
                   variant="secondary"
                   type="submit"
                 >
                   {product.id ?? 0 > 0 ? "Update" : "Create"}
-                </ProgressButton>
-              </div>
+                </ProgressButton> */}
+              <Dropdown
+                toggle={<div>Save as</div>}
+                menuClassName="dropdown-menu-end"
+                toggleClassName="btn btn-secondary py-2 dropdown-toggle hstack"
+              >
+                <li
+                  className="dropdown-item"
+                  role="button"
+                  onClick={() => {
+                    handleSubmit(async (data) => {
+                      await executeSave({ ...data, status: "DRAFT" });
+                    })();
+                  }}
+                >
+                  Draft
+                </li>
+                <div className="dropdown-divider"></div>
+                <li
+                  className="dropdown-item"
+                  role="button"
+                  onClick={() => {
+                    handleSubmit(async (data) => {
+                      await executeSave({ ...data, status: "PUBLISHED" });
+                    })();
+                  }}
+                >
+                  Publish
+                </li>
+              </Dropdown>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="">
-          <div className="vstack gap-3">
-            <div className="card">
-              <div className="card-header bg-white py-3 px-md-4 border-bottom">
-                <h5 className="mb-0">General</h5>
+      <div className="">
+        <div className="vstack gap-3">
+          <div className="card">
+            <div className="card-header bg-white py-3 px-md-4 border-bottom">
+              <h5 className="mb-0">General</h5>
+            </div>
+            <div className="card-body p-md-4">
+              <div className="row g-4 mb-4">
+                <div className="col-lg-6">
+                  <Input
+                    label="Name *"
+                    id="nameInput"
+                    type="text"
+                    placeholder="Enter product name"
+                    {...register("name", {
+                      required: "Please enter product name",
+                      setValueAs: setEmptyOrString,
+                      onChange: (evt) => {
+                        setValue("slug", setStringToSlug(evt.target.value), {
+                          shouldValidate: !!errors.slug?.message
+                        });
+                      }
+                    })}
+                    error={errors.name?.message}
+                  />
+                </div>
+
+                <div className="col-lg-6">
+                  <Input
+                    label="Slug *"
+                    id="slugInput"
+                    type="text"
+                    placeholder="your-product-name"
+                    {...register("slug", {
+                      required: "Please enter slug",
+                      setValueAs: setEmptyOrString
+                    })}
+                    error={errors.slug?.message}
+                  />
+                </div>
               </div>
-              <div className="card-body p-md-4">
-                <div className="row g-4 mb-4">
-                  <div className="col-lg-6">
-                    <Input
-                      label="Name *"
-                      id="nameInput"
-                      type="text"
-                      placeholder="Enter product name"
-                      {...register("name", {
-                        required: "Please enter product name",
-                        setValueAs: setEmptyOrString,
-                        onChange: (evt) => {
-                          setValue("slug", setStringToSlug(evt.target.value), {
-                            shouldValidate: !!errors.slug?.message
-                          });
-                        }
-                      })}
-                      error={errors.name?.message}
-                    />
-                  </div>
-
-                  <div className="col-lg-6">
-                    <Input
-                      label="Slug *"
-                      id="slugInput"
-                      type="text"
-                      placeholder="your-product-name"
-                      {...register("slug", {
-                        required: "Please enter slug",
-                        setValueAs: setEmptyOrString
-                      })}
-                      error={errors.slug?.message}
+              <div className="row g-4 mb-4">
+                <div className="col-12">
+                  <div className="">
+                    <label className="form-label">Category *</label>
+                    <Controller
+                      name="category"
+                      control={control}
+                      rules={{
+                        validate: (v) => !!v || "Please select category"
+                      }}
+                      render={({ field, fieldState: { error } }) => {
+                        return (
+                          <AutocompleteSelect<Category, number>
+                            options={categories ?? []}
+                            defaultValue={field.value}
+                            getOptionLabel={(v) => v.name}
+                            getOptionKey={(v) => v.id}
+                            getNestedData={(v) => v.children}
+                            canSelect={(v) =>
+                              !v.children || v.children?.length === 0
+                            }
+                            onChange={(v) => {
+                              if (!v) {
+                                return;
+                              }
+                              setValue("category", v, {
+                                shouldValidate: !!error?.message
+                              });
+                              setValue("categoryId", v.id);
+                            }}
+                            error={error?.message}
+                          />
+                        );
+                      }}
                     />
                   </div>
                 </div>
-                <div className="row g-4 mb-4">
-                  <div className="col-12">
-                    <div className="">
-                      <label className="form-label">Category *</label>
-                      <Controller
-                        name="category"
-                        control={control}
-                        rules={{
-                          validate: (v) => !!v || "Please select category"
-                        }}
-                        render={({ field, fieldState: { error } }) => {
-                          return (
-                            <AutocompleteSelect<Category, number>
-                              options={categories ?? []}
-                              defaultValue={field.value}
-                              getOptionLabel={(v) => v.name}
-                              getOptionKey={(v) => v.id}
-                              getNestedData={(v) => v.children}
-                              canSelect={(v) =>
-                                !v.children || v.children?.length === 0
-                              }
-                              onChange={(v) => {
-                                if (!v) {
-                                  return;
-                                }
-                                setValue("category", v, {
-                                  shouldValidate: !!error?.message
-                                });
-                                setValue("categoryId", v.id);
-                              }}
-                              error={error?.message}
-                            />
-                          );
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    <Input
-                      label="Brand name"
-                      id="brandInput"
-                      type="text"
-                      placeholder="Enter brand name"
-                      {...register("brand", {
-                        setValueAs: setEmptyOrString
-                      })}
-                    />
-                  </div>
-                  {/* <div className="col-lg-6">
+                <div className="col-12">
+                  <Input
+                    label="Brand name"
+                    id="brandInput"
+                    type="text"
+                    placeholder="Enter brand name"
+                    {...register("brand", {
+                      setValueAs: setEmptyOrString
+                    })}
+                  />
+                </div>
+                {/* <div className="col-lg-6">
                     <label className="form-label">Country of origin</label>
                     <AutocompleteSelect<string, string>
                       options={[
@@ -468,302 +486,300 @@ function ProductEdit(props: ProductEditProps) {
                       getOptionKey={(v) => v}
                     />
                   </div> */}
-                </div>
+              </div>
 
-                <div className="row">
-                  <div className="col-12">
-                    <label className="form-label">Description</label>
-                    <div
-                      className="flex-grow-1"
-                      // ref={(e) => {
-                      //   const h = e?.clientHeight ?? 300;
-                      //   setEditorHeight(h > 250 ? h : 300);
-                      // }}
-                    >
-                      <Controller
-                        control={control}
-                        name="description"
-                        render={({ field }) => {
-                          return (
-                            <DynamicEditor
-                              id="descriptionInput"
-                              placeholder="Enter product description..."
-                              minHeight={300}
-                              value={field.value}
-                              onEditorChange={(v) => {
-                                setValue("description", v);
-                              }}
-                            />
-                          );
-                        }}
-                      />
-                    </div>
+              <div className="row">
+                <div className="col-12">
+                  <label className="form-label">Description</label>
+                  <div
+                    className="flex-grow-1"
+                    // ref={(e) => {
+                    //   const h = e?.clientHeight ?? 300;
+                    //   setEditorHeight(h > 250 ? h : 300);
+                    // }}
+                  >
+                    <Controller
+                      control={control}
+                      name="description"
+                      render={({ field }) => {
+                        return (
+                          <DynamicEditor
+                            id="descriptionInput"
+                            placeholder="Enter product description..."
+                            minHeight={300}
+                            value={field.value}
+                            onEditorChange={(v) => {
+                              setValue("description", v);
+                            }}
+                          />
+                        );
+                      }}
+                    />
                   </div>
                 </div>
+              </div>
 
-                <div className="row g-4 my-4">
-                  {!product.id && (
-                    <div className="col-auto">
-                      <div className="form-check form-switch">
-                        <input
-                          id="variantCheck"
-                          className="form-check-input"
-                          type="checkbox"
-                          role="switch"
-                          {...register("withVariant", {
-                            onChange: (evt) => {
-                              if (!evt.target.checked) {
-                                varaintsField.remove();
-                                setValue("attributes", undefined);
-                              } else {
-                                setValue("price", undefined);
-                                setValue("sku", undefined);
-                              }
-                              setValue("stockLeft", undefined);
-                              setWithVariant(evt.target.checked);
-                            }
-                          })}
-                        ></input>
-                        <label
-                          htmlFor="variantCheck"
-                          className="form-check-label fw-medium"
-                        >
-                          With variants
-                        </label>
-                      </div>
-                    </div>
-                  )}
+              <div className="row g-4 my-4">
+                {!product.id && (
                   <div className="col-auto">
                     <div className="form-check form-switch">
                       <input
-                        id="newArrivalCheck"
+                        id="variantCheck"
                         className="form-check-input"
                         type="checkbox"
                         role="switch"
-                        {...register("newArrival")}
+                        {...register("withVariant", {
+                          onChange: (evt) => {
+                            if (!evt.target.checked) {
+                              varaintsField.remove();
+                              setValue("attributes", undefined);
+                            } else {
+                              setValue("price", undefined);
+                              setValue("sku", undefined);
+                            }
+                            setValue("stockLeft", undefined);
+                            setWithVariant(evt.target.checked);
+                          }
+                        })}
                       ></input>
                       <label
-                        htmlFor="newArrivalCheck"
+                        htmlFor="variantCheck"
                         className="form-check-label fw-medium"
                       >
-                        New arrival
+                        With variants
                       </label>
                     </div>
+                  </div>
+                )}
+                <div className="col-auto">
+                  <div className="form-check form-switch">
+                    <input
+                      id="newArrivalCheck"
+                      className="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      {...register("newArrival")}
+                    ></input>
+                    <label
+                      htmlFor="newArrivalCheck"
+                      className="form-check-label fw-medium"
+                    >
+                      New arrival
+                    </label>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            {withVariant && (
-              <div className="card">
-                <div className="card-header bg-white py-3 px-md-4">
-                  <div className="hstack justify-content-between">
-                    <h5 className="mb-0">Variants</h5>
-                    {!product.id ? (
-                      <button
-                        type="button"
-                        className="btn btn-primary ms-2"
-                        onClick={() => {
-                          setShowOptionModal(true);
-                        }}
-                      >
-                        Edit Options
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="btn btn-primary ms-2"
-                        onClick={() => {
-                          setShowVariantModal(true);
-                        }}
-                      >
-                        Add Variant
-                      </button>
-                    )}
-                  </div>
-                </div>
-                <div className="card-body p-0">
-                  <div
-                    className="table-responsive scrollbar-custom"
-                    style={{ maxHeight: 360 }}
-                  >
-                    <table className="table align-middle">
-                      <thead className="table-light text-nowrap align-middle">
-                        <tr style={{ height: 50 }}>
-                          <th className="ps-3 ps-md-4 fw-medium w-100">
-                            VARIANT
-                          </th>
-                          <th className="fw-medium" style={{ minWidth: 200 }}>
-                            PRICE
-                          </th>
-                          <th className="fw-medium" style={{ minWidth: 200 }}>
-                            SKU
-                          </th>
-                          <th className="fw-medium" style={{ minWidth: 200 }}>
-                            STOCK
-                          </th>
-                          <th className="fw-medium" style={{ minWidth: 100 }}>
-                            ACTION
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="border-top-0">
-                        {varaintsField.fields.map((variant, i) => {
-                          if (variant.deleted) {
-                            return null;
-                          }
-                          return (
-                            <tr key={variant.vId}>
-                              <td className="ps-3 ps-md-4 w-100">
-                                <span className="text-nowrap me-3">
-                                  {variant.attributes
-                                    .sort((f, s) => f.sort - s.sort)
-                                    .map((a) => a.value)
-                                    .join(" / ")}
-                                </span>
-                              </td>
-                              <td className="align-top">
-                                <Input
-                                  type="text"
-                                  placeholder="Enter variant price"
-                                  height={40}
-                                  {...register(`variants.${i}.price`, {
-                                    setValueAs: setEmptyOrNumber,
-                                    validate: (v) => {
-                                      //const floatRegex = "^([0-9]*[.])?[0-9]+$";
-                                      const floatRegex =
-                                        "^[0-9]{1,10}([.][0-9]{1,2})?$";
-                                      if (!`${v}`.match(floatRegex)) {
-                                        return "Invalid price input";
-                                      }
-                                      return true;
-                                    }
-                                  })}
-                                  error={errors.variants?.[i]?.price?.message}
-                                />
-                              </td>
-                              <td className="align-top">
-                                <Input
-                                  type="text"
-                                  placeholder="Enter variant sku"
-                                  height={40}
-                                  {...register(`variants.${i}.sku`)}
-                                />
-                              </td>
-                              <td className="align-top">
-                                <Input
-                                  type="text"
-                                  placeholder="Enter stock amount"
-                                  height={40}
-                                  {...register(`variants.${i}.stockLeft`, {
-                                    setValueAs: (v) =>
-                                      !v ? 0 : setEmptyOrNumber(v),
-                                    validate: (v) => {
-                                      const numRegex = "^[0-9]*$";
-                                      if (!`${v}`.match(numRegex)) {
-                                        return "Invalid stock amount input";
-                                      }
-                                      return true;
-                                    }
-                                  })}
-                                  error={
-                                    errors.variants?.[i]?.stockLeft?.message
-                                  }
-                                />
-                              </td>
-                              <td>
-                                {varaintsField.fields.filter((v) => !v.deleted)
-                                  .length > 1 && (
-                                  <div
-                                    role="button"
-                                    className="link-danger"
-                                    onClick={() => {
-                                      if ((variant.id ?? 0) > 0) {
-                                        varaintsField.update(i, {
-                                          ...variant,
-                                          deleted: true
-                                        });
-                                      } else {
-                                        varaintsField.remove(i);
-                                      }
-                                    }}
-                                  >
-                                    <TrashIcon width={20} />
-                                  </div>
-                                )}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  {errors.variants?.root?.message && (
-                    <div className="text-danger medium px-3 pb-3 px-md-4 pb-md-4">
-                      {errors.variants.root.message}
-                    </div>
+          {withVariant && (
+            <div className="card">
+              <div className="card-header bg-white py-3 px-md-4">
+                <div className="hstack justify-content-between">
+                  <h5 className="mb-0">Variants</h5>
+                  {!product.id ? (
+                    <button
+                      type="button"
+                      className="btn btn-primary ms-2"
+                      onClick={() => {
+                        setShowOptionModal(true);
+                      }}
+                    >
+                      Edit Options
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn btn-primary ms-2"
+                      onClick={() => {
+                        setShowVariantModal(true);
+                      }}
+                    >
+                      Add Variant
+                    </button>
                   )}
                 </div>
               </div>
-            )}
-
-            {!withVariant && (
-              <div className="card">
-                <div className="card-header bg-white py-3 px-md-4 border-bottom">
-                  <h5 className="mb-0">Pricing</h5>
+              <div className="card-body p-0">
+                <div
+                  className="table-responsive scrollbar-custom"
+                  style={{ maxHeight: 360 }}
+                >
+                  <table className="table align-middle">
+                    <thead className="table-light text-nowrap align-middle">
+                      <tr style={{ height: 50 }}>
+                        <th className="ps-3 ps-md-4 fw-medium w-100">
+                          VARIANT
+                        </th>
+                        <th className="fw-medium" style={{ minWidth: 200 }}>
+                          PRICE
+                        </th>
+                        <th className="fw-medium" style={{ minWidth: 200 }}>
+                          SKU
+                        </th>
+                        <th className="fw-medium" style={{ minWidth: 200 }}>
+                          STOCK
+                        </th>
+                        <th className="fw-medium" style={{ minWidth: 100 }}>
+                          ACTION
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="border-top-0">
+                      {varaintsField.fields.map((variant, i) => {
+                        if (variant.deleted) {
+                          return null;
+                        }
+                        return (
+                          <tr key={variant.vId}>
+                            <td className="ps-3 ps-md-4 w-100">
+                              <span className="text-nowrap me-3">
+                                {variant.attributes
+                                  .sort((f, s) => f.sort - s.sort)
+                                  .map((a) => a.value)
+                                  .join(" / ")}
+                              </span>
+                            </td>
+                            <td className="align-top">
+                              <Input
+                                type="text"
+                                placeholder="Enter variant price"
+                                height={40}
+                                {...register(`variants.${i}.price`, {
+                                  setValueAs: setEmptyOrNumber,
+                                  validate: (v) => {
+                                    //const floatRegex = "^([0-9]*[.])?[0-9]+$";
+                                    const floatRegex =
+                                      "^[0-9]{1,10}([.][0-9]{1,2})?$";
+                                    if (!`${v}`.match(floatRegex)) {
+                                      return "Invalid price input";
+                                    }
+                                    return true;
+                                  }
+                                })}
+                                error={errors.variants?.[i]?.price?.message}
+                              />
+                            </td>
+                            <td className="align-top">
+                              <Input
+                                type="text"
+                                placeholder="Enter variant sku"
+                                height={40}
+                                {...register(`variants.${i}.sku`)}
+                              />
+                            </td>
+                            <td className="align-top">
+                              <Input
+                                type="text"
+                                placeholder="Enter stock amount"
+                                height={40}
+                                {...register(`variants.${i}.stockLeft`, {
+                                  setValueAs: (v) =>
+                                    !v ? 0 : setEmptyOrNumber(v),
+                                  validate: (v) => {
+                                    const numRegex = "^[0-9]*$";
+                                    if (!`${v}`.match(numRegex)) {
+                                      return "Invalid stock amount input";
+                                    }
+                                    return true;
+                                  }
+                                })}
+                                error={errors.variants?.[i]?.stockLeft?.message}
+                              />
+                            </td>
+                            <td>
+                              {varaintsField.fields.filter((v) => !v.deleted)
+                                .length > 1 && (
+                                <div
+                                  role="button"
+                                  className="link-danger"
+                                  onClick={() => {
+                                    if ((variant.id ?? 0) > 0) {
+                                      varaintsField.update(i, {
+                                        ...variant,
+                                        deleted: true
+                                      });
+                                    } else {
+                                      varaintsField.remove(i);
+                                    }
+                                  }}
+                                >
+                                  <TrashIcon width={20} />
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
-                <div className="card-body p-md-4">
-                  <div className="row g-4">
-                    <div className="col-lg-6">
-                      <Input
-                        label="Price *"
-                        id="priceInput"
-                        type="text"
-                        placeholder="Enter price"
-                        error={errors.price?.message}
-                        {...register("price", {
-                          setValueAs: setEmptyOrNumber,
-                          validate: (v, fv) => {
-                            //const floatRegex = "^([0-9]*[.])?[0-9]+$";
-                            const floatRegex = "^[0-9]{1,10}([.][0-9]{1,2})?$";
-                            if (!fv.withVariant && !`${v}`.match(floatRegex)) {
-                              return "Invalid price input";
-                            }
-                            return true;
+
+                {errors.variants?.root?.message && (
+                  <div className="text-danger medium px-3 pb-3 px-md-4 pb-md-4">
+                    {errors.variants.root.message}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {!withVariant && (
+            <div className="card">
+              <div className="card-header bg-white py-3 px-md-4 border-bottom">
+                <h5 className="mb-0">Pricing</h5>
+              </div>
+              <div className="card-body p-md-4">
+                <div className="row g-4">
+                  <div className="col-lg-6">
+                    <Input
+                      label="Price *"
+                      id="priceInput"
+                      type="text"
+                      placeholder="Enter price"
+                      error={errors.price?.message}
+                      {...register("price", {
+                        setValueAs: setEmptyOrNumber,
+                        validate: (v, fv) => {
+                          //const floatRegex = "^([0-9]*[.])?[0-9]+$";
+                          const floatRegex = "^[0-9]{1,10}([.][0-9]{1,2})?$";
+                          if (!fv.withVariant && !`${v}`.match(floatRegex)) {
+                            return "Invalid price input";
                           }
-                        })}
-                      />
-                    </div>
-                    <div className="col-lg-6">
-                      <Input
-                        label="SKU"
-                        id="skuInput"
-                        type="text"
-                        placeholder="Enter product sku"
-                        {...register("sku")}
-                      />
-                    </div>
-                    <div className="col-12">
-                      <Input
-                        label="Stock *"
-                        id="stockInput"
-                        type="text"
-                        placeholder="Enter stock amount"
-                        {...register("stockLeft", {
-                          setValueAs: (v) => (!v ? 0 : setEmptyOrNumber(v)),
-                          validate: (v, fv) => {
-                            const numRegex = "^[0-9]*$";
-                            if (!fv.withVariant && !`${v}`.match(numRegex)) {
-                              return "Invalid stock amount input";
-                            }
-                            return true;
+                          return true;
+                        }
+                      })}
+                    />
+                  </div>
+                  <div className="col-lg-6">
+                    <Input
+                      label="SKU"
+                      id="skuInput"
+                      type="text"
+                      placeholder="Enter product sku"
+                      {...register("sku")}
+                    />
+                  </div>
+                  <div className="col-12">
+                    <Input
+                      label="Stock *"
+                      id="stockInput"
+                      type="text"
+                      placeholder="Enter stock amount"
+                      {...register("stockLeft", {
+                        setValueAs: (v) => (!v ? 0 : setEmptyOrNumber(v)),
+                        validate: (v, fv) => {
+                          const numRegex = "^[0-9]*$";
+                          if (!fv.withVariant && !`${v}`.match(numRegex)) {
+                            return "Invalid stock amount input";
                           }
-                        })}
-                        error={errors.stockLeft?.message}
-                      />
-                    </div>
-                    {/* <div className="col-lg-12">
+                          return true;
+                        }
+                      })}
+                      error={errors.stockLeft?.message}
+                    />
+                  </div>
+                  {/* <div className="col-lg-12">
                   <label className="form-label">Discount</label>
                   <div className="input-group">
                     <Input
@@ -789,157 +805,156 @@ function ProductEdit(props: ProductEditProps) {
                     </div>
                   </div>
                 </div> */}
-                  </div>
                 </div>
-              </div>
-            )}
-
-            <div ref={imagesRef} className="card">
-              <div className="card-header bg-white py-3 px-md-4 border-bottom">
-                <h5 className="mb-0">Images</h5>
-              </div>
-              <div className="card-body p-md-4">
-                {errors.images?.root?.message && (
-                  <div className="text-danger mb-3">
-                    {errors.images.root.message}
-                  </div>
-                )}
-                <div className="d-flex flex-wrap gap-3">
-                  {imagesField.fields
-                    .filter((img) => !img.deleted)
-                    .map((img, index) => {
-                      return (
-                        <div key={index} className="position-relative">
-                          <NextImage
-                            src={img.url ?? "/images/placeholder.jpeg"}
-                            width={150}
-                            height={150}
-                            alt=""
-                            style={{
-                              objectFit: "contain"
-                            }}
-                            className="rounded border"
-                          />
-                          <div className="hstack justify-content-center">
-                            <div className="form-check">
-                              <input
-                                id={`thumbnail${index}Check`}
-                                className="form-check-input"
-                                type="radio"
-                                checked={img.thumbnail ?? false}
-                                {...register(`images.${index}.thumbnail`, {
-                                  onChange: (evt) => {
-                                    // imagesField.fields.forEach((m, j) => {
-                                    //   if (index !== j) {
-                                    //     setValue(
-                                    //       `images.${j}.thumbnail`,
-                                    //       false
-                                    //     );
-                                    //   }
-                                    // });
-
-                                    const images = imagesField.fields.map(
-                                      (m, j) => {
-                                        return {
-                                          ...m,
-                                          thumbnail: index === j
-                                        };
-                                      }
-                                    );
-
-                                    imagesField.replace(images);
-                                  }
-                                })}
-                              ></input>
-                              <label
-                                htmlFor={`thumbnail${index}Check`}
-                                className="form-check-label"
-                              >
-                                Thumbnail
-                              </label>
-                            </div>
-                          </div>
-
-                          <button
-                            type="button"
-                            className="position-absolute top-0 end-0 m-2 btn btn-sm btn-danger"
-                            onClick={() => {
-                              if (img.id && img.id > 0) {
-                                imagesField.update(index, {
-                                  ...img,
-                                  deleted: true
-                                });
-                              } else {
-                                imagesField.remove(index);
-                              }
-                            }}
-                          >
-                            <TrashIcon width={18} />
-                          </button>
-                        </div>
-                      );
-                    })}
-                  <Controller
-                    control={control}
-                    name="images"
-                    render={({ field }) => {
-                      const list =
-                        field.value?.filter((img) => !img.deleted) ?? [];
-
-                      if (list.length >= 5) {
-                        return <></>;
-                      }
-                      return (
-                        <button
-                          type="button"
-                          className="btn btn-light-gray hstack justify-content-center"
-                          style={{ width: 150, height: 150 }}
-                          onClick={() => fileRef.current?.click()}
-                        >
-                          <PlusIcon
-                            width={44}
-                            strokeWidth={2}
-                            className="text-muted"
-                          />
-                        </button>
-                      );
-                    }}
-                  />
-                </div>
-                <input
-                  ref={fileRef}
-                  type="file"
-                  className="d-none"
-                  accept="image/x-png,image/jpeg"
-                  onChange={handleImageChange}
-                />
-              </div>
-              <div className="card-footer px-md-4 py-3">
-                <span className="text-muted">
-                  Product image can upload up to <strong>5</strong> images with
-                  size constraint of at most <strong>360KB</strong> each.
-                </span>
               </div>
             </div>
+          )}
 
-            <div className="card">
-              <div className="card-header bg-white py-3 px-md-4 border-bottom">
-                <h5 className="mb-0">Product video</h5>
-              </div>
-              <div className="card-body p-md-4">
-                <div className="vstack gap-4">
-                  <Input
-                    id="videoInput"
-                    type="text"
-                    placeholder="Enter youtube ID"
-                    {...register("videoId")}
-                  />
+          <div ref={imagesRef} className="card">
+            <div className="card-header bg-white py-3 px-md-4 border-bottom">
+              <h5 className="mb-0">Images</h5>
+            </div>
+            <div className="card-body p-md-4">
+              {errors.images?.root?.message && (
+                <div className="text-danger mb-3">
+                  {errors.images.root.message}
                 </div>
+              )}
+              <div className="d-flex flex-wrap gap-3">
+                {imagesField.fields
+                  .filter((img) => !img.deleted)
+                  .map((img, index) => {
+                    return (
+                      <div key={index} className="position-relative">
+                        <NextImage
+                          src={img.url ?? "/images/placeholder.jpeg"}
+                          width={150}
+                          height={150}
+                          alt=""
+                          style={{
+                            objectFit: "contain"
+                          }}
+                          className="rounded border"
+                        />
+                        <div className="hstack justify-content-center">
+                          <div className="form-check">
+                            <input
+                              id={`thumbnail${index}Check`}
+                              className="form-check-input"
+                              type="radio"
+                              checked={img.thumbnail ?? false}
+                              {...register(`images.${index}.thumbnail`, {
+                                onChange: (evt) => {
+                                  // imagesField.fields.forEach((m, j) => {
+                                  //   if (index !== j) {
+                                  //     setValue(
+                                  //       `images.${j}.thumbnail`,
+                                  //       false
+                                  //     );
+                                  //   }
+                                  // });
+
+                                  const images = imagesField.fields.map(
+                                    (m, j) => {
+                                      return {
+                                        ...m,
+                                        thumbnail: index === j
+                                      };
+                                    }
+                                  );
+
+                                  imagesField.replace(images);
+                                }
+                              })}
+                            ></input>
+                            <label
+                              htmlFor={`thumbnail${index}Check`}
+                              className="form-check-label"
+                            >
+                              Thumbnail
+                            </label>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          className="position-absolute top-0 end-0 m-2 btn btn-sm btn-danger"
+                          onClick={() => {
+                            if (img.id && img.id > 0) {
+                              imagesField.update(index, {
+                                ...img,
+                                deleted: true
+                              });
+                            } else {
+                              imagesField.remove(index);
+                            }
+                          }}
+                        >
+                          <TrashIcon width={18} />
+                        </button>
+                      </div>
+                    );
+                  })}
+                <Controller
+                  control={control}
+                  name="images"
+                  render={({ field }) => {
+                    const list =
+                      field.value?.filter((img) => !img.deleted) ?? [];
+
+                    if (list.length >= 5) {
+                      return <></>;
+                    }
+                    return (
+                      <button
+                        type="button"
+                        className="btn btn-light-gray hstack justify-content-center"
+                        style={{ width: 150, height: 150 }}
+                        onClick={() => fileRef.current?.click()}
+                      >
+                        <PlusIcon
+                          width={44}
+                          strokeWidth={2}
+                          className="text-muted"
+                        />
+                      </button>
+                    );
+                  }}
+                />
+              </div>
+              <input
+                ref={fileRef}
+                type="file"
+                className="d-none"
+                accept="image/x-png,image/jpeg"
+                onChange={handleImageChange}
+              />
+            </div>
+            <div className="card-footer px-md-4 py-3">
+              <span className="text-muted">
+                Product image can upload up to <strong>5</strong> images with
+                size constraint of at most <strong>360KB</strong> each.
+              </span>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-header bg-white py-3 px-md-4 border-bottom">
+              <h5 className="mb-0">Product video</h5>
+            </div>
+            <div className="card-body p-md-4">
+              <div className="vstack gap-4">
+                <Input
+                  id="videoInput"
+                  type="text"
+                  placeholder="Enter youtube ID"
+                  {...register("videoId")}
+                />
               </div>
             </div>
           </div>
         </div>
-      </form>
+      </div>
 
       <Modal id="optionEditModal" show={showOptionModal} variant="large">
         {(isShown) => {
@@ -1016,7 +1031,7 @@ function ProductEdit(props: ProductEditProps) {
           executeDelete();
         }}
       />
-    </div>
+    </>
   );
 }
 

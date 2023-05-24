@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
+import { Product, ProductStatus } from "../../common/models";
 import {
   formatNumber,
   formatTimestamp,
@@ -43,6 +44,21 @@ function ShopProductListing(props: ShopProductListingProps) {
     }
   );
 
+  const statusView = (p?: ProductStatus) => {
+    switch (p) {
+      case "PUBLISHED":
+        return (
+          <small className="rounded bg-success text-light px-2 py-1">
+            PUBLISHED
+          </small>
+        );
+      case "DRAFT":
+        return <small className="rounded bg-default px-2 py-1">DRAFT</small>;
+    }
+
+    return null;
+  };
+
   const content = () => {
     if (isLoading) {
       return <Loading />;
@@ -70,6 +86,9 @@ function ShopProductListing(props: ShopProductListingProps) {
                 </th>
                 <th scope="col" style={{ minWidth: 150 }}>
                   Price
+                </th>
+                <th scope="col" style={{ minWidth: 100 }}>
+                  Status
                 </th>
                 <th scope="col" style={{ minWidth: 150 }}>
                   Created At
@@ -104,6 +123,7 @@ function ShopProductListing(props: ShopProductListingProps) {
                       </Link>
                     </td>
                     <td>{formatNumber(p.price ?? 0)}</td>
+                    <td>{statusView(p.status)}</td>
                     <td>{formatTimestamp(p.createdAt ?? 0)}</td>
                     <td>
                       <button

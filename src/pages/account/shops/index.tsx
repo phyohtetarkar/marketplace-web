@@ -60,14 +60,6 @@ function MyShops() {
 
   return (
     <div>
-      {/* <div className="header-bar">
-        <div className="container">
-          <div className="py-4">
-            <h1 className="text-center text-lg-start mb-0">My Shops</h1>
-          </div>
-        </div>
-      </div> */}
-
       <div className="container py-3 mb-5">
         <div className="row g-3">
           <div className="col-lg-4 col-xl-3">

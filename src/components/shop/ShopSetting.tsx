@@ -83,8 +83,8 @@ const ShopGeneralForm = (props: ShopSettingProps) => {
     try {
       const shop = await updateShopGeneral(values);
       router.replace({
-        pathname: `/account/shops/[slug]`,
-        query: { slug: shop.slug, tab: "setting" }
+        pathname: `/account/shops/[slug]/setting`,
+        query: { slug: shop.slug }
       });
     } catch (error) {
       const msg = parseErrorResponse(error);

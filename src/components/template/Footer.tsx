@@ -12,14 +12,16 @@ function Footer() {
         <div className="container py-3">
           <div className="row g-3">
             <div className="col-lg-4">
-              <h5 className="text-light">Contact us</h5>
-              <div className="vstack gap-1"></div>
+              <h5 className="text-light">About us</h5>
+              <p className="text-light text-opacity-75 mb-0 small">
+                Multi vendor eCommerce marketplace in Myanmar.
+              </p>
             </div>
             <div className="col-lg-2">
               <h5 className="text-light">Information</h5>
               <div className="vstack small gap-2">
                 <a href="#" className="dark-link">
-                  About us
+                  Contact us
                 </a>
                 <a href="#" className="dark-link">
                   Terms &amp; conditions
