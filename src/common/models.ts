@@ -127,7 +127,6 @@ export interface ShopStatistic {
 
 export interface ShopReview {
   shopId?: number;
-  userId?: number;
   rating?: number;
   description?: string;
   reviewer?: User;

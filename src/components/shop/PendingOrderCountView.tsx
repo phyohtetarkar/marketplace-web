@@ -16,6 +16,10 @@ function PendingOrderCountView(props: PendingOrderCountViewProps) {
     }
   );
 
+  if (data && parseInt(data) <= 0) {
+    return <></>;
+  }
+
   return (
     <small className="bg-danger rounded-pill px-2 text-light ms-2">
       {data ?? 0}

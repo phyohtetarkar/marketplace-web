@@ -5,15 +5,7 @@ import { buildQueryParams, validateResponse } from "../common/utils";
 const basePath = "shop-reviews";
 
 export async function writeReview(value: ShopReview) {
-  const url = `${basePath}/${value.shopId}/reviews`;
-  // const resp = await fetch(url, {
-  //   method: "POST",
-  //   body: JSON.stringify(value),
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
+  const url = `${basePath}`;
 
   const resp = await makeApiRequest(
     url,
@@ -51,7 +43,7 @@ export async function getReviews(
   page?: number
 ) {
   const query = buildQueryParams({
-    shopId: shopId,
+    "shop-id": shopId,
     direction: direction,
     page: page
   });
