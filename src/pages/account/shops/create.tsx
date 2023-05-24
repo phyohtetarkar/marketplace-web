@@ -864,7 +864,7 @@ function CreateShop() {
             <div className="card mb-3">
               <div className="card-header py-3">
                 <div className="hstack">
-                  <h4 className="fw-semibold mb-0">Delivery cities</h4>
+                  <h4 className="fw-semibold mb-0">Delivery cities *</h4>
                   <div className="flex-grow-1"></div>
                   <button
                     type="button"
@@ -876,6 +876,9 @@ function CreateShop() {
                 </div>
               </div>
               <div className="card-body">
+                {deliveryCitiesField.fields.length === 0 && (
+                  <div className="text-muted">Select delivery cities.</div>
+                )}
                 <div className="row row-cols-1 row-cols-md-2 g-3">
                   {deliveryCitiesField.fields.map((f) => {
                     return (
@@ -1025,6 +1028,9 @@ function CreateShop() {
                       <ul className="mb-0">
                         {errors.name?.message && <li>{errors.name.message}</li>}
                         {errors.slug?.message && <li>{errors.slug.message}</li>}
+                        {errors.phone?.message && (
+                          <li>{errors.phone.message}</li>
+                        )}
                         {errors.deliveryCities?.root?.message && (
                           <li>{errors.deliveryCities?.root?.message}</li>
                         )}

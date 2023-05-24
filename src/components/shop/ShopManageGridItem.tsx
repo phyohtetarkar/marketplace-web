@@ -45,8 +45,8 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
 
   return (
     <div className="card h-100 border">
-      <div className="card-body overflow-hidden position-relative">
-        <div className="vstack text-center">
+      <div className="card-body overflow-hidden position-relative h-100">
+        <div className="vstack text-center h-100">
           <div
             className="bg-light rounded-circle mb-3 align-self-center"
             onContextMenu={(e) => e.preventDefault()}
@@ -81,7 +81,9 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
 
           {/* <div className="mb-4 align-self-center">{statusView()}</div> */}
 
-          <div className="hstack gap-2 mt-auto">
+          <div className="flex-grow-1"></div>
+
+          <div className="hstack gap-2">
             <Link
               href={`/account/shops/${value.slug}/dashboard`}
               className="btn btn-primary flex-grow-1 hstack justify-content-center gap-2"

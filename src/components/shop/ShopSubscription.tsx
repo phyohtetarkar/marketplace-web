@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Shop, ShopSubscription } from "../../common/models";
 import { formatTimestamp, parseErrorResponse } from "../../common/utils";
@@ -16,8 +15,6 @@ interface ShopSubscriptionProps {
 
 function ShopSubscription(props: ShopSubscriptionProps) {
   const { shop } = props;
-
-  const router = useRouter();
 
   const [subscriptions, setSubscriptions] = useState<ShopSubscription[]>();
   const [isLoading, setLoading] = useState(true);
@@ -54,13 +51,15 @@ function ShopSubscription(props: ShopSubscriptionProps) {
     const currentTime = new Date().getTime();
     if (currentTime >= s.startAt && currentTime <= s.endAt) {
       return (
-        <div className="px-2 py-1 rounded-pill bg-success text-light">
+        <div className="px-2 py-1 rounded-pill bg-success small text-light">
           ACTIVE
         </div>
       );
     }
 
-    return <div className="px-2 py-1 rounded-pill bg-default">PENDING</div>;
+    return (
+      <div className="px-2 py-1 rounded-pill small bg-default">PENDING</div>
+    );
   };
 
   const content = () => {
@@ -87,7 +86,7 @@ function ShopSubscription(props: ShopSubscriptionProps) {
               <th scope="col" style={{ minWidth: 100 }}>
                 Duration
               </th>
-              <th scope="col" style={{ minWidth: 150 }}>
+              <th scope="col" style={{ minWidth: 160 }}>
                 Start/End
               </th>
               <th scope="col" style={{ minWidth: 120 }}>
@@ -104,7 +103,9 @@ function ShopSubscription(props: ShopSubscriptionProps) {
                   </td>
                   <td>{s.duration} days</td>
                   <td>
-                    {formatTimestamp(s.startAt)}-{formatTimestamp(s.endAt)}
+                    {formatTimestamp(s.startAt)}
+                    <span className="fw-semibold mx-1">{"<=>"}</span>
+                    {formatTimestamp(s.endAt)}
                   </td>
                   <td>
                     <div className="d-flex">{getStatusView(s)}</div>

@@ -137,7 +137,7 @@ function RichTextEditor({
             name: "indentation",
             items: ["outdent", "indent"]
           },
-          { name: "view", items: ["preview", "fullscreen", "code", "help"] }
+          { name: "view", items: ["preview", "fullscreen", "help"] }
         ]
       }}
     />
