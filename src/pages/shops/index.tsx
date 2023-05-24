@@ -99,9 +99,6 @@ function Shops() {
 
   return (
     <div className="mb-5">
-      <Head>
-        <title>All Shops</title>
-      </Head>
       <div className="header-bar">
         <div className="container">
           <div className="row py-4 px-2">

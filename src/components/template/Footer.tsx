@@ -13,12 +13,7 @@ function Footer() {
           <div className="row g-3">
             <div className="col-lg-4">
               <h5 className="text-light">Contact us</h5>
-              <div className="vstack gap-1">
-                <p className="mb-2 text-light text-opacity-75 small">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Integer in feugiat lorem.
-                </p>
-              </div>
+              <div className="vstack gap-1"></div>
             </div>
             <div className="col-lg-2">
               <h5 className="text-light">Information</h5>

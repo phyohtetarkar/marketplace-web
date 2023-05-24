@@ -6,6 +6,7 @@ import useSWR from "swr";
 import { Shop, SubscriptionPlan } from "../../../../common/models";
 import { formatNumber, parseErrorResponse } from "../../../../common/utils";
 import Alert from "../../../../components/Alert";
+import { Input } from "../../../../components/forms";
 import Loading from "../../../../components/Loading";
 import Modal from "../../../../components/Modal";
 import ProgressButton from "../../../../components/ProgressButton";
@@ -140,6 +141,13 @@ function RenewSubscription() {
                   ></button>
                 </div>
                 <div className="modal-body">
+                  <div className={`input-group mb-3`}>
+                    <Input placeholder="Promo code" height={44} />
+                    <ProgressButton className="" theme="outline">
+                      Apply
+                    </ProgressButton>
+                  </div>
+
                   <div className="hstack justify-content-between mb-2h">
                     <dt className="fw-semibold">Plan:</dt>
                     <dd className="text-muted mb-0">

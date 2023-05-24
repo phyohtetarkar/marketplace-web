@@ -72,9 +72,11 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
             </h6>
           </Link>
 
-          <div className="small text-muted mb-2 text-truncate">
-            {value.headline}
-          </div>
+          {value.headline && (
+            <div className="small text-muted mb-2 text-truncate">
+              {value.headline}
+            </div>
+          )}
           <div className="mb-3 align-self-center">
             <Rating rating={value.rating!} />
           </div>

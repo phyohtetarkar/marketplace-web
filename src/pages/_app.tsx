@@ -1,18 +1,15 @@
-import "swiper/css";
-import "swiper/css/zoom";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "react-toastify/dist/ReactToastify.css";
-import "../../styles/bootstrap-custom.css";
-import "../../styles/globals.css";
 import { NextPage } from "next";
 import type { AppProps } from "next/app";
 import NextNProgress from "nextjs-progressbar";
 import { ReactElement, ReactNode } from "react";
+import "react-toastify/dist/ReactToastify.css";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/zoom";
+import "../../styles/bootstrap-custom.css";
+import "../../styles/globals.css";
 //import awsconfig from "../aws-exports";
-import { AuthenticationContextProvider } from "../common/AuthenticationContextProvider";
-import { Layout } from "../components/template";
-import { ToastContainer } from "react-toastify";
 import {
   CategoryScale,
   Chart,
@@ -23,8 +20,11 @@ import {
   PointElement,
   Tooltip
 } from "chart.js";
+import { ToastContainer } from "react-toastify";
+import { AuthenticationContextProvider } from "../common/AuthenticationContextProvider";
 import { LocalizationContextProvider } from "../common/localization";
 import ProgressContextProvider from "../common/ProgressContextProvider";
+import { Layout } from "../components/template";
 
 // Amplify.configure({
 //   ...awsconfig,

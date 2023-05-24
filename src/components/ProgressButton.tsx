@@ -28,7 +28,7 @@ function ProgressButton(props: ProgressButtonProps) {
       type={type}
       className={`btn btn-${
         theme === "outline" ? "outline-" : ""
-      }${variant} hstack justify-content-center align-self-center ${className}`}
+      }${variant} hstack justify-content-center ${className}`}
       disabled={loading || disabled}
       onClick={onClick}
     >

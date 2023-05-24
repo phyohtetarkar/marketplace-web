@@ -1,6 +1,7 @@
 import Head from "next/head";
 import React, { ReactNode, useContext } from "react";
 import { ProgressContext } from "../../common/contexts";
+import MetaTags from "../MetaTags";
 import ProgressModal from "../ProgressModal";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -8,11 +9,18 @@ import Header from "./Header";
 interface LayoutProps {
   hideAuth?: boolean;
   hideFooter?: boolean;
+  useCustomMeta?: boolean;
   background?: string;
   children: ReactNode;
 }
 
-function Layout({ hideAuth, hideFooter, background, children }: LayoutProps) {
+function Layout({
+  hideAuth,
+  hideFooter,
+  useCustomMeta,
+  background,
+  children
+}: LayoutProps) {
   const progressContext = useContext(ProgressContext);
   return (
     <>
@@ -21,7 +29,12 @@ function Layout({ hideAuth, hideFooter, background, children }: LayoutProps) {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="theme-color" content="#ffffff" />
         <link rel="icon" href="/favicon.ico" />
-        <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
+        {!useCustomMeta && (
+          <>
+            <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
+            <MetaTags />
+          </>
+        )}
       </Head>
       <div
         className="d-flex flex-column h-100"

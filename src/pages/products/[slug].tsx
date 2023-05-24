@@ -4,7 +4,7 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { ReactElement, useEffect, useMemo, useState } from "react";
 import Swiper, { Navigation, Pagination, Zoom } from "swiper";
 import { Swiper as SwiperView, SwiperSlide } from "swiper/react";
 import {
@@ -15,6 +15,7 @@ import {
 } from "../../common/models";
 import { formatNumber, transformDiscount } from "../../common/utils";
 import Alert from "../../components/Alert";
+import MetaTags from "../../components/MetaTags";
 import {
   AddToCartButton,
   AddToFavoriteButton,
@@ -22,6 +23,7 @@ import {
 } from "../../components/product";
 import Rating from "../../components/Rating";
 import Tabs from "../../components/Tabs";
+import { Layout } from "../../components/template";
 import { getProductBySlug } from "../../services/ProductService";
 
 function ProductDetail({ product }: { product: Product | null }) {
@@ -201,6 +203,11 @@ function ProductDetail({ product }: { product: Product | null }) {
     <>
       <Head>
         <title>{product.name}</title>
+        <MetaTags
+          title={product.name}
+          cover={product.thumbnail}
+          coanical={`${process.env.NEXT_PUBLIC_BASE_URL}/products/${product.slug}`}
+        />
       </Head>
       <div className="vstack">
         <div className="header-bar">
@@ -628,5 +635,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     notFound: true
   };
 };
+
+ProductDetail.getLayout = (page: ReactElement) => (
+  <Layout useCustomMeta>{page}</Layout>
+);
 
 export default ProductDetail;

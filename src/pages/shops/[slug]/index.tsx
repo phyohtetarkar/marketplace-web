@@ -1,10 +1,12 @@
 import { GetServerSideProps } from "next";
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { ShopDetailContext } from "../../../common/contexts";
 import { Shop } from "../../../common/models";
 import Alert from "../../../components/Alert";
+import MetaTags from "../../../components/MetaTags";
 import ProductListing from "../../../components/product/ProductListing";
 import {
   AboutUs,
@@ -12,6 +14,7 @@ import {
   ShopReviewListing
 } from "../../../components/shop";
 import Tabs from "../../../components/Tabs";
+import { Layout } from "../../../components/template";
 import { getShopBySlug } from "../../../services/ShopService";
 
 type PageTab = "products" | "reviews" | "about-us";
@@ -49,15 +52,17 @@ function ShopHome({ shop }: { shop: Shop | null }) {
     );
   }
 
-  const heading = (
-    <>
-      <h5 className="mb-0">{shop.name}</h5>
-      <div className="text-muted small mb-1 text-truncate">{shop.headline}</div>
-    </>
-  );
-
   return (
     <>
+      <Head>
+        <title>{shop.name}</title>
+        <MetaTags
+          title={shop.name}
+          cover={shop.cover}
+          description={shop.headline}
+          coanical={`${process.env.NEXT_PUBLIC_BASE_URL}/shops/${shop.slug}`}
+        />
+      </Head>
       <div className="vstack">
         <div className="header-bar">
           <div className="container">
@@ -157,5 +162,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     notFound: true
   };
 };
+
+ShopHome.getLayout = (page: ReactElement) => (
+  <Layout useCustomMeta>{page}</Layout>
+);
 
 export default ShopHome;

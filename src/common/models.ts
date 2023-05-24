@@ -87,8 +87,8 @@ export interface Shop {
   pendingOrderCount?: number;
   status?: ShopStatus;
   expiredAt?: number;
-  logo?: string | null;
-  cover?: string | null;
+  logo?: string;
+  cover?: string;
   about?: string;
   contact?: ShopContact;
   logoImage?: File;
