@@ -148,7 +148,7 @@ export interface ShopSubscription {
   totalPrice: number;
   discount: number;
   subTotalPrice: number;
-  status: ShopSubscriptionStatus;
+  status?: ShopSubscriptionStatus;
   duration: number;
   startAt: number;
   endAt: number;

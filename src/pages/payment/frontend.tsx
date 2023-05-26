@@ -94,6 +94,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         throw "Subscription not found";
       }
 
+      if (!subscription.status) {
+        return {
+          redirect: {
+            permanent: false,
+            destination: `/account/shops/${subscription.shop?.slug}/subscriptions`
+          }
+        };
+      }
+
       return {
         props: {
           subscription: subscription
