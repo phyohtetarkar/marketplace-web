@@ -13,7 +13,11 @@ function SubscriptionResult({
       return <h2 className="text-success">Subscription Success</h2>;
     }
 
-    return <h2 className="text-danger">Subscription Failed</h2>;
+    if (subscription.status === "FAILED") {
+      return <h2 className="text-danger">Subscription Failed</h2>;
+    }
+
+    return <></>;
   };
 
   return (

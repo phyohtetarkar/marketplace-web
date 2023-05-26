@@ -59,7 +59,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
           className="position-relative"
           onContextMenu={(e) => e.preventDefault()}
         >
-          <div className="ratio ratio-4x3">
+          <div className="ratio ratio-4x3 bg-light">
             <Image
               className="card-img-top"
               src={value.thumbnail ?? "/placeholder.jpeg"}
@@ -68,7 +68,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
               sizes="33vw"
               priority
               style={{
-                objectFit: "cover"
+                objectFit: "contain"
               }}
             />
           </div>
