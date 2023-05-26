@@ -94,7 +94,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         throw "Subscription not found";
       }
 
-      if (!subscription.status) {
+      if (!subscription.status || subscription.status === "PROCESSING") {
         return {
           redirect: {
             statusCode: 302,
