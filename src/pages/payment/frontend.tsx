@@ -98,6 +98,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return {
           redirect: {
             permanent: false,
+            statusCode: 302,
             destination: `/account/shops/${subscription.shop?.slug}/subscriptions`
           }
         };
@@ -123,6 +124,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     redirect: {
       permanent: false,
+      statusCode: 302,
       destination: "/"
     }
   };
