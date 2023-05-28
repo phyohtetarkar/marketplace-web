@@ -69,7 +69,7 @@ function AccountDropdown(props: AccountDropdownProps) {
           <div className="dropdown-divider"></div>
           <li>
             <a
-              href={"http://localhost:3080"}
+              href={process.env.NEXT_PUBLIC_ADMIN_URL}
               target="_blank"
               rel="noreferrer"
               className="dropdown-item text-decoration-none"
