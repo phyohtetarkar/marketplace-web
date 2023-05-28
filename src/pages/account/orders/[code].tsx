@@ -118,7 +118,7 @@ function OrderDetail() {
                           <Image
                             className="rounded border"
                             src={
-                              item.product?.thumbnail ??
+                              item.productThumbnail ??
                               "/images/placeholder.jpeg"
                             }
                             alt="Product image."
@@ -134,7 +134,7 @@ function OrderDetail() {
                             href={`/products/${item.productSlug}`}
                             className="fw-semibold text-decoration-none text-dark"
                           >
-                            {item.removed ? (
+                            {item.cancelled ? (
                               <del>{item.productName}</del>
                             ) : (
                               item.productName

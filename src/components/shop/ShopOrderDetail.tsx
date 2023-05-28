@@ -1,3 +1,4 @@
+import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -12,6 +13,7 @@ import {
 } from "../../common/utils";
 import {
   cancelOrder,
+  cancelOrderItem,
   completeOrder,
   confirmOrder,
   getOrderByCode
@@ -33,6 +35,8 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
   >();
 
   const [showReceipt, setShowReceipt] = useState(false);
+
+  const [cancelItemId, setCancelItemId] = useState<number>();
 
   const { code } = router.query;
 
@@ -68,6 +72,8 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
         break;
     }
 
+    const showCancel = data.items.filter((item) => !item.cancelled).length > 1;
+
     return (
       <div className="row g-3">
         <div className="col-12 col-xl-7 col-xxxl-8">
@@ -92,7 +98,7 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
                           <Image
                             className="rounded border"
                             src={
-                              item.product?.thumbnail ??
+                              item.productThumbnail ??
                               "/images/placeholder.jpeg"
                             }
                             alt="Product image."
@@ -109,8 +115,24 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
                               href={`/products/${item.productSlug}`}
                               className={`fw-semibold text-decoration-none text-dark`}
                             >
-                              {item.productName}
+                              {item.cancelled ? (
+                                <del>{item.productName}</del>
+                              ) : (
+                                item.productName
+                              )}
                             </Link>
+                            {showCancel && (
+                              <Tooltip title="Cancel Item" className="ms-1">
+                                <TrashIcon
+                                  width={20}
+                                  role="button"
+                                  className="text-danger"
+                                  onClick={() => {
+                                    setCancelItemId(item.id);
+                                  }}
+                                />
+                              </Tooltip>
+                            )}
                           </div>
                           {item.attributes && (
                             <div
@@ -385,6 +407,25 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
             mutate();
             swrConfig.mutate(`/shops/${shop.id ?? 0}/pending-order-count`);
             toast.success("Update order status successfully");
+          } catch (error) {
+            const msg = parseErrorResponse(error);
+            toast.error(msg);
+          }
+        }}
+      />
+
+      <ConfirmModal
+        show={!!cancelItemId}
+        message={`Are you sure to cancel item?`}
+        close={() => setCancelItemId(undefined)}
+        onConfirm={async () => {
+          try {
+            if (!cancelItemId) {
+              return;
+            }
+
+            await cancelOrderItem(cancelItemId);
+            mutate();
           } catch (error) {
             const msg = parseErrorResponse(error);
             toast.error(msg);

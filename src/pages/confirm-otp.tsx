@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { formControlHeight } from "../common/app.config";
 import { AuthenticationContext } from "../common/contexts";
 import { setEmptyOrString } from "../common/utils";
-import { withAuthentication } from "../common/WithAuthentication";
 import Alert from "../components/Alert";
 import { Input } from "../components/forms";
 import ProgressButton from "../components/ProgressButton";
@@ -23,10 +22,11 @@ function ConfirmOTP() {
     register,
     control,
     formState: { errors, isSubmitting },
-    handleSubmit
+    handleSubmit,
+    setValue
   } = useForm({
     defaultValues: {
-      otp: ""
+      code: ""
     }
   });
 
@@ -95,11 +95,11 @@ function ConfirmOTP() {
                       id="otpInput"
                       type="text"
                       placeholder="Enter otp code"
-                      {...register("otp", {
+                      {...register("code", {
                         setValueAs: setEmptyOrString,
                         required: "Please enter otp code"
                       })}
-                      error={errors.otp?.message}
+                      error={errors.code?.message}
                     />
                   </div>
                   <div className="col-auto">

@@ -1,6 +1,6 @@
 import makeApiRequest from "../common/makeApiRequest";
 import { AuthResult } from "../common/models";
-import { getAPIBasePath, validateResponse } from "../common/utils";
+import { validateResponse } from "../common/utils";
 
 const basePath = "auth";
 
@@ -104,13 +104,12 @@ export async function signOut() {
 }
 
 export async function verifyUser({
-  code,
-  requestId
+  code
 }: {
   code: string;
   requestId: number;
 }) {
-  const body = { code, requestId };
+  const body = { code };
 
   const url = `${basePath}/verify`;
 
@@ -132,15 +131,14 @@ export async function verifyUser({
 export async function resetPassword({
   phone,
   password,
-  code,
-  requestId
+  code
 }: {
   phone: string;
   password: string;
   code: string;
   requestId: number;
 }) {
-  const body = { phone, password, code, requestId };
+  const body = { phone, password, code };
 
   const url = `${basePath}/reset-password`;
 

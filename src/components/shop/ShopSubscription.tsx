@@ -58,7 +58,7 @@ function ShopSubscription(props: ShopSubscriptionProps) {
     }
 
     return (
-      <div className="px-2 py-1 rounded-pill small bg-default">PENDING</div>
+      <div className="px-2 py-1 rounded-pill small bg-default">WAITING</div>
     );
   };
 

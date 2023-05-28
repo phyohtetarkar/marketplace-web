@@ -13,6 +13,10 @@ function SubscriptionResult({
       return <h2 className="text-success">Subscription Success</h2>;
     }
 
+    if (subscription.status === "PENDING") {
+      return <h2 className="text-warning">Transaction is pending</h2>;
+    }
+
     if (subscription.status === "FAILED") {
       return <h2 className="text-danger">Subscription Failed</h2>;
     }
@@ -94,7 +98,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         throw "Subscription not found";
       }
 
-      if (!subscription.status || subscription.status === "PROCESSING") {
+      if (!subscription.status) {
         return {
           redirect: {
             statusCode: 302,

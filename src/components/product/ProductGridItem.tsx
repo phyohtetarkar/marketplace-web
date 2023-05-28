@@ -1,11 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useContext, useState } from "react";
-import { AuthenticationContext } from "../../common/contexts";
 import { Product } from "../../common/models";
 import { formatNumber, transformDiscount } from "../../common/utils";
 import AddToCartButton from "./AddToCartButton";
-import AddToFavoriteButton from "./AddToFavoriteButton";
 
 interface ProductGridItemProps {
   value: Product;
@@ -33,7 +30,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
   //     );
   //   }
 
-  if ((value.stockLeft ?? 0) === 0) {
+  if (!value.withVariant && (value.stockLeft ?? 0) === 0) {
     outOfStock = (
       <div className="bg-dark opacity-75 py-2 text-light position-absolute text-center bottom-0 start-0 end-0">
         Out Of Stock
@@ -111,14 +108,13 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
           </h6>
 
           <div className="mt-3 hstack align-items-stretch gap-2 d-none d-sm-flex">
-            {value.id && !value.withVariant && (
+            {!value.withVariant ? (
               <AddToCartButton
-                productId={value.id}
+                productId={value.id ?? 0}
                 className="flex-grow-1"
                 disabled={!!outOfStock}
               />
-            )}
-            {value.id && value.withVariant && (
+            ) : (
               <Link
                 href={`/products/${value.slug}`}
                 className="btn btn-primary flex-grow-1"

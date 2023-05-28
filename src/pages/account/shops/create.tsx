@@ -876,18 +876,19 @@ function CreateShop() {
                 </div>
               </div>
               <div className="card-body">
-                {deliveryCitiesField.fields.length === 0 && (
-                  <div className="text-muted">Select delivery cities.</div>
+                {deliveryCitiesField.fields.length === 0 ? (
+                  <div className="text-muted">No cities selected</div>
+                ) : (
+                  <div className="row row-cols-1 row-cols-md-2 g-3">
+                    {deliveryCitiesField.fields.map((f) => {
+                      return (
+                        <div key={f.vId} className="col fw-semibold">
+                          {f.name}
+                        </div>
+                      );
+                    })}
+                  </div>
                 )}
-                <div className="row row-cols-1 row-cols-md-2 g-3">
-                  {deliveryCitiesField.fields.map((f) => {
-                    return (
-                      <div key={f.vId} className="col fw-semibold">
-                        {f.name}
-                      </div>
-                    );
-                  })}
-                </div>
               </div>
             </div>
           </div>

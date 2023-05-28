@@ -8,7 +8,7 @@ export type ProductStatus = "DRAFT" | "PUBLISHED";
 
 export type DiscountType = "PERCENTAGE" | "FIXED_AMOUNT";
 
-export type ShopSubscriptionStatus = "PROCESSING" | "SUCCESS" | "FAILED";
+export type ShopSubscriptionStatus = "PENDING" | "SUCCESS" | "FAILED";
 
 export interface PageData<T> {
   contents: T[];
@@ -296,10 +296,11 @@ export interface OrderItem {
   id: number;
   productName: string;
   productSlug: string;
+  productThumbnail?: string;
   unitPrice: number;
   discount: number;
   quantity: number;
-  removed: boolean;
+  cancelled: boolean;
   product?: Product;
   attributes?: ProductVariantAttribute[];
 }
