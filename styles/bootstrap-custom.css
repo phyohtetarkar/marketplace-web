@@ -5366,6 +5366,7 @@ textarea.form-control-lg {
   flex-wrap: wrap;
   padding: 0 0;
   margin-bottom: 1rem;
+  font-size: 1rem;
   list-style: none;
 }
 

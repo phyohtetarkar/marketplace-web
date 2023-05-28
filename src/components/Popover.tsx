@@ -68,7 +68,7 @@ function Popover(props: PopoverProps) {
       },
       {
         name: "sameWidth",
-        enabled: sameWidth,
+        enabled: sameWidth ?? false,
         fn: ({ state }) => {
           state.styles.popper.width = `${state.rects.reference.width}px`;
         },
