@@ -27,17 +27,22 @@ function ContactUs() {
                     </dd>
                   </dl>
                 </div>
-                <div className="col-12">
-                  <hr className="bg-dark-gray" />
-                </div>
-                <div className="col-12">
-                  <MapView
-                    location={{
-                      latitude: 16.7983725,
-                      longitude: 96.1495573
-                    }}
-                  />
-                </div>
+
+                {shop.contact?.latitude && shop.contact.longitude && (
+                  <>
+                    <div className="col-12">
+                      <hr className="bg-dark-gray" />
+                    </div>
+                    <div className="col-12">
+                      <MapView
+                        location={{
+                          latitude: shop.contact.latitude,
+                          longitude: shop.contact.longitude
+                        }}
+                      />
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -1,13 +1,8 @@
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon
-} from "@heroicons/react/24/solid";
+import { StarIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
-import { Shop } from "../../common/models";
-import Rating from "../Rating";
-import Tooltip from "../Tooltip";
+import { Shop, ShopStatus } from "../../common/models";
+import { formatTimestamp } from "../../common/utils";
 
 interface ShopManageGridItemProps {
   value: Shop;
@@ -16,36 +11,24 @@ interface ShopManageGridItemProps {
 const _imageSize = 100;
 
 function ShopManageGridItem({ value }: ShopManageGridItemProps) {
-  const statusView = () => {
-    switch (value.status) {
-      case "APPROVED":
-        return (
-          <Tooltip title="Approved">
-            <CheckCircleIcon width={24} className="text-success ms-1" />
-          </Tooltip>
-        );
-
-      case "PENDING":
-        return (
-          <Tooltip title="Your shop is currently reviewing.">
-            <ExclamationTriangleIcon width={24} className="text-warning ms-1" />
-          </Tooltip>
-        );
-
-      case "DISABLED":
-        return (
-          <Tooltip title="Your shop has been disabled.">
-            <ExclamationCircleIcon width={24} className="text-danger ms-1" />
-          </Tooltip>
-        );
+  const statusView = (status?: ShopStatus) => {
+    if (status === "APPROVED") {
+      return <small className="fw-semibold text-success">{status}</small>;
     }
 
-    return null;
+    if (status === "PENDING") {
+      return <small className="fw-semibold text-warning">{status}</small>;
+    }
+
+    if (status === "DISABLED") {
+      return <small className="fw-semibold text-danger">{status}</small>;
+    }
+    return <></>;
   };
 
   return (
     <div className="card h-100 border">
-      <div className="card-body overflow-hidden position-relative h-100">
+      <div className="card-body overflow-hidden h-100">
         <div className="vstack text-center h-100">
           <div
             className="bg-light rounded-circle mb-3 align-self-center"
@@ -66,36 +49,43 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
             </div>
           </div>
 
-          <Link href={`/shops/${value.slug}`} className="link-dark">
+          <Link
+            href={`/account/shops/${value.slug}/dashboard`}
+            className="link-dark"
+          >
             <h6 className="mb-1" style={{ fontSize: 16 }}>
               {value.name}
             </h6>
           </Link>
 
           {value.headline && (
-            <div className="small text-muted mb-2 text-truncate">
+            <div className="small text-muted mb-4 text-truncate">
               {value.headline}
             </div>
           )}
-          <div className="mb-3 align-self-center">
-            <Rating rating={value.rating!} />
-          </div>
-
-          {/* <div className="mb-4 align-self-center">{statusView()}</div> */}
 
           <div className="flex-grow-1"></div>
 
-          <div className="hstack gap-2">
-            <Link
-              href={`/account/shops/${value.slug}/dashboard`}
-              className="btn btn-primary flex-grow-1 hstack justify-content-center gap-2"
-            >
-              <span>Manage shop</span>
-            </Link>
+          <div className="vstack text-start flex-grow-0">
+            <div className="hstack">
+              <span className="flex-grow-1 text-muted">Rating</span>
+              <div className="hstack text-warning gap-1">
+                <span>{value?.rating?.toFixed(1) ?? "0.0"}</span>
+                <StarIcon width={16} />
+              </div>
+            </div>
+            <hr className="bg-dark-gray my-2h" />
+            <div className="hstack">
+              <span className="flex-grow-1 text-muted">Since</span>
+              <span>{formatTimestamp(value?.createdAt ?? 0)}</span>
+            </div>
+            <hr className="bg-dark-gray my-2h" />
+            <div className="hstack">
+              <span className="flex-grow-1 text-muted">Status</span>
+              {statusView(value?.status)}
+            </div>
           </div>
         </div>
-
-        <div className="position-absolute top-0 end-0 m-3">{statusView()}</div>
       </div>
     </div>
   );
