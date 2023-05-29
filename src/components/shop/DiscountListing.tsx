@@ -1,8 +1,9 @@
+import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { MoreVertical } from "react-feather";
 import useSWR from "swr";
 import { Discount, PageData } from "../../common/models";
-import { parseErrorResponse } from "../../common/utils";
+import { formatTimestamp, parseErrorResponse } from "../../common/utils";
 import { deleteDiscount, findDiscounts } from "../../services/DiscountService";
 import Alert from "../Alert";
 import ConfirmModal from "../ConfirmModal";
@@ -63,10 +64,15 @@ function DiscountListing({ shopId }: { shopId: number }) {
                 <th scope="col" style={{ minWidth: 120 }}>
                   VALUE
                 </th>
-                <th scope="col" style={{ minWidth: 150 }}>
+                <th scope="col" style={{ minWidth: 100 }}>
                   TYPE
                 </th>
-                <th scope="col" style={{ minWidth: 50 }}></th>
+                <th scope="col" style={{ minWidth: 150 }}>
+                  CREATED AT
+                </th>
+                <th scope="col" style={{ minWidth: 150 }}>
+                  ACTION
+                </th>
               </tr>
             </thead>
             <tbody className="text-nowrap">
@@ -82,25 +88,27 @@ function DiscountListing({ shopId }: { shopId: number }) {
                     <td>
                       <span className="text-nowrap">{type(d.type)}</span>
                     </td>
+                    <td>{formatTimestamp(d.createdAt ?? 0)}</td>
                     <td>
                       <div className="hstack align-items-center">
                         <Dropdown
                           toggle={
-                            <div role="button" className="text-muted">
-                              <MoreVertical width={20} />
+                            <div role="button" className="">
+                              <AdjustmentsHorizontalIcon width={20} />
                             </div>
                           }
                           popperConfig={{
                             placement: "left",
                             strategy: "fixed"
                           }}
+                          toggleClassName="btn btn-default"
                           menuClassName="border-0 shadow-lg"
                         >
                           <li
                             role="button"
                             className="dropdown-item"
                             onClick={() => {
-                              setDiscount(d);
+                              setDiscount({ ...d, shopId: shopId });
                               setShowEdit(true);
                             }}
                           >
@@ -110,7 +118,7 @@ function DiscountListing({ shopId }: { shopId: number }) {
                             role="button"
                             className="dropdown-item"
                             onClick={() => {
-                              setDiscount(d);
+                              setDiscount({ ...d, shopId: shopId });
                               setShowApply(true);
                             }}
                           >
@@ -155,7 +163,7 @@ function DiscountListing({ shopId }: { shopId: number }) {
         <button
           className="btn btn-primary py-2"
           onClick={() => {
-            setDiscount({ type: "PERCENTAGE" });
+            setDiscount({ type: "PERCENTAGE", shopId: shopId });
             setShowEdit(true);
           }}
         >
@@ -196,6 +204,7 @@ function DiscountListing({ shopId }: { shopId: number }) {
         {(isShown) => {
           return isShown && discount ? (
             <DiscountApply
+              shopId={shopId}
               discount={discount}
               handleClose={() => {
                 setShowApply(false);

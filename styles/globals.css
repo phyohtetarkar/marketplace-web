@@ -75,7 +75,7 @@ body {
   padding: 63px 0 0 0;
   margin: 0;
   height: 100%;
-  background-color: var(--bs-light);
+  background-color: #fff;
   font-family: Inter, Noto Sans Myanmar UI, -apple-system, BlinkMacSystemFont, Roboto,
     Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
     sans-serif !important;

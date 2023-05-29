@@ -90,7 +90,7 @@ function RenewSubscription() {
             </div>
           </div>
         </div>
-        <div className="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxxl-4 g-3">
           {data.map((sp, i) => {
             return (
               <div key={sp.id} className="col">
@@ -204,7 +204,7 @@ function RenewSubscription() {
 
   return (
     <>
-      <ShopManage activeTab="renew-subscription">
+      <ShopManage activeTab="renew-subscription" hideMenu>
         {(shop) => content(shop)}
       </ShopManage>
     </>

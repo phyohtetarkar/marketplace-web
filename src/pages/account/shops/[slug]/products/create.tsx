@@ -4,7 +4,9 @@ import { ShopManage } from "../../../../../components/shop";
 
 function ProductCreate() {
   return (
-    <ShopManage>{(shop) => shop.id && <ProductEdit shop={shop} />}</ShopManage>
+    <ShopManage hideMenu>
+      {(shop) => shop.id && <ProductEdit shop={shop} />}
+    </ShopManage>
   );
 }
 

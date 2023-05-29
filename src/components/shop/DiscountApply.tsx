@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useContext, useEffect, useState } from "react";
-import { ShopDetailContext } from "../../common/contexts";
+import { useEffect, useState } from "react";
 import { Discount, Product } from "../../common/models";
 import { formatNumber, parseErrorResponse } from "../../common/utils";
 import { applyDiscount, removeDiscount } from "../../services/DiscountService";
@@ -67,24 +66,21 @@ const DiscountApplyCheck = (props: DiscountApplyCheckProps) => {
 
 function DiscountApply({
   discount,
-  handleClose
+  handleClose,
+  shopId
 }: {
   discount: Discount;
   handleClose?: () => void;
+  shopId: number;
 }) {
-  const shopContext = useContext(ShopDetailContext);
   const [products, setProducts] = useState<Product[]>([]);
   const [nextPage, setNextPage] = useState(-1);
   const [loading, setLoading] = useState(false);
   const [appliedOnly, setAppliedOnly] = useState(false);
 
   useEffect(() => {
-    if (!shopContext?.id) {
-      return;
-    }
-
     const query: ProductQuery = {
-      "shop-id": shopContext?.id,
+      "shop-id": shopId,
       "discount-id": appliedOnly ? discount.id : undefined
     };
 
@@ -110,7 +106,7 @@ function DiscountApply({
       return;
     }
     const query: ProductQuery = {
-      "shop-id": shopContext?.id,
+      "shop-id": shopId,
       "discount-id": appliedOnly ? discount.id : undefined,
       page: nextPage
     };

@@ -1,5 +1,6 @@
 import {
   AdjustmentsHorizontalIcon,
+  ArrowTopRightOnSquareIcon,
   Cog6ToothIcon,
   ComputerDesktopIcon,
   CurrencyDollarIcon,
@@ -44,13 +45,14 @@ interface ShopManageProps {
     | "subscriptions"
     | "setting"
     | "renew-subscription";
+  hideMenu?: boolean;
   children: (shop: Shop) => ReactNode;
 }
 
 const iconSize = 20;
 
 function ShopManage(props: ShopManageProps) {
-  const { activeTab, children } = props;
+  const { activeTab, hideMenu, children } = props;
 
   const router = useRouter();
 
@@ -291,6 +293,7 @@ function ShopManage(props: ShopManageProps) {
           </nav>
         </div>
       </div>
+
       <div className="container py-3 mb-5">
         <div className="position-relative border rounded bg-white vstack overflow-hidden mb-3">
           <ShopHeading shop={shop} />
@@ -306,7 +309,7 @@ function ShopManage(props: ShopManageProps) {
             >
               <li
                 role="button"
-                className="dropdown-item-primary"
+                className="dropdown-item"
                 onClick={() => {
                   logoFileFef.current?.click();
                 }}
@@ -315,34 +318,46 @@ function ShopManage(props: ShopManageProps) {
               </li>
               <li
                 role="button"
-                className="dropdown-item-primary"
+                className="dropdown-item"
                 onClick={() => {
                   coverFileFef.current?.click();
                 }}
               >
                 Upload Cover
               </li>
+              <div className="dropdown-divider"></div>
+              <Link
+                href={`/shops/${shop.slug}`}
+                target={"_blank"}
+                className="hstack gap-2 dropdown-item text-decoratin-none"
+              >
+                <span>View public</span>
+                <ArrowTopRightOnSquareIcon width={20} />
+              </Link>
             </Dropdown>
           )}
         </div>
+
         {shop.status === "APPROVED" ? (
           <div className="row g-3">
-            <div className="col-12 col-lg-3">
-              <div className="rounded border bg-white">
-                <Accordion
-                  open={true}
-                  header={(open) => {
-                    return <span className="fw-bold">Menu</span>;
-                  }}
-                  headerClassName="px-3 py-2h border-bottom d-flex d-lg-none"
-                  bodyClassName=""
-                  iconType="plus-minus"
-                >
-                  <div className="p-3">{menus}</div>
-                </Accordion>
+            {!hideMenu && (
+              <div className="col-12 col-lg-3">
+                <div className="rounded border bg-white">
+                  <Accordion
+                    open={true}
+                    header={(open) => {
+                      return <span className="fw-bold">Menu</span>;
+                    }}
+                    headerClassName="px-3 py-2h border-bottom d-flex d-lg-none"
+                    bodyClassName=""
+                    iconType="plus-minus"
+                  >
+                    <div className="p-3">{menus}</div>
+                  </Accordion>
+                </div>
               </div>
-            </div>
-            <div className="col-12 col-lg-9">
+            )}
+            <div className={`${hideMenu ? "col-12" : "col-12 col-lg-9"}`}>
               {(shop.expiredAt ?? 0) >= currentTime ||
               activeTab === "subscriptions" ||
               activeTab === "renew-subscription" ? (

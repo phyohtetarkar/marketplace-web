@@ -76,7 +76,7 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
 
     return (
       <div className="row g-3">
-        <div className="col-12 col-xl-7 col-xxxl-8">
+        <div className="col-12 col-lg-8">
           <div className="card mb-3">
             <div className="card-header py-3">
               <h5 className="mb-0 fw-semibold">Products</h5>
@@ -198,7 +198,7 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
             </div>
           </div>
         </div>
-        <div className="col-12 col-xl-5 col-xxxl-4">
+        <div className="col-12 col-lg-4">
           <div className="card mb-3">
             <div className="card-header py-3">
               <h5 className="mb-0 fw-semibold">Order summary</h5>

@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
-import { Product, ProductStatus } from "../../common/models";
+import { Discount, Product, ProductStatus } from "../../common/models";
 import {
   formatNumber,
   formatTimestamp,
@@ -59,6 +59,18 @@ function ShopProductListing(props: ShopProductListingProps) {
     return null;
   };
 
+  const discountView = (d?: Discount) => {
+    if (d?.type === "PERCENTAGE") {
+      return `${d.value} %`;
+    }
+
+    if (d?.type === "FIXED_AMOUNT") {
+      return formatNumber(d.value ?? 0);
+    }
+
+    return "";
+  };
+
   const content = () => {
     if (isLoading) {
       return <Loading />;
@@ -79,21 +91,26 @@ function ShopProductListing(props: ShopProductListingProps) {
             <thead className="text-nowrap">
               <tr>
                 <th scope="col" style={{ minWidth: 120 }}>
-                  Image
+                  IMAGE
                 </th>
                 <th scope="col" style={{ minWidth: 250 }}>
-                  Name
+                  NAME
                 </th>
                 <th scope="col" style={{ minWidth: 150 }}>
-                  Price
+                  PRICE
+                </th>
+                <th scope="col" style={{ minWidth: 150 }}>
+                  DISCOUNT
                 </th>
                 <th scope="col" style={{ minWidth: 100 }}>
-                  Status
+                  STATUS
                 </th>
                 <th scope="col" style={{ minWidth: 150 }}>
-                  Created At
+                  CREATED AT
                 </th>
-                <th scope="col" style={{ minWidth: 150 }}></th>
+                <th scope="col" style={{ minWidth: 150 }}>
+                  ACTION
+                </th>
               </tr>
             </thead>
             <tbody className="text-nowrap">
@@ -123,11 +140,12 @@ function ShopProductListing(props: ShopProductListingProps) {
                       </Link>
                     </td>
                     <td>{formatNumber(p.price ?? 0)}</td>
+                    <td className="text-danger">-{discountView(p.discount)}</td>
                     <td>{statusView(p.status)}</td>
                     <td>{formatTimestamp(p.createdAt ?? 0)}</td>
                     <td>
                       <button
-                        className="btn btn-secondary"
+                        className="btn btn-default"
                         onClick={() => {
                           router.push(`${router.asPath}/${p.slug}`);
                         }}

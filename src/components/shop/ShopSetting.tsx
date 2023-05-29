@@ -501,7 +501,20 @@ const ShopPaymentForm = (props: ShopSettingProps) => {
                   name="bankTransfer"
                   disabled={settingState.isLoading}
                   checked={setting?.bankTransfer ?? false}
-                  onChange={handleSettingChange}
+                  onChange={(evt) => {
+                    // if (
+                    //   evt.target.checked &&
+                    //   (acceptedPaymentsState.data?.length ?? 0) === 0
+                    // ) {
+                    //   toast.error(
+                    //     "At least one accepted payment require to enable bank transfer payment"
+                    //   );
+
+                    //   return;
+                    // }
+
+                    handleSettingChange(evt);
+                  }}
                 ></input>
                 <label
                   htmlFor="bankTransferCheck"

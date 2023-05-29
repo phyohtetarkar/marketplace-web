@@ -1,7 +1,5 @@
-import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { formControlHeight } from "../../common/app.config";
-import { ShopDetailContext } from "../../common/contexts";
 import { Discount } from "../../common/models";
 import {
   parseErrorResponse,
@@ -21,17 +19,14 @@ interface DiscountEditProps {
 function DiscountEdit(props: DiscountEditProps) {
   const { discount = { type: "PERCENTAGE" }, currentPage, handleClose } = props;
 
-  const shopContext = useContext(ShopDetailContext);
-
   const {
     register,
     formState: { errors, isSubmitting },
     handleSubmit
-  } = useForm<Discount>({ values: { ...discount, shopId: shopContext?.id } });
+  } = useForm<Discount>({ values: { ...discount } });
 
   const save = async (values: Discount) => {
     try {
-      console.log(values);
       await saveDiscount(values);
       handleClose?.(true);
     } catch (error) {

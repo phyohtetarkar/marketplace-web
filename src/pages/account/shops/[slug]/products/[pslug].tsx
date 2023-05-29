@@ -11,7 +11,7 @@ function ProductUpdate() {
   const slug = typeof pslug === "string" ? pslug : undefined;
 
   return (
-    <ShopManage>
+    <ShopManage hideMenu>
       {(shop) => shop.id && <ProductEdit shop={shop} slug={slug} />}
     </ShopManage>
   );

@@ -74,15 +74,22 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
                 <StarIcon width={16} />
               </div>
             </div>
-            <hr className="bg-dark-gray my-2h" />
+            {/* <hr className="bg-dark-gray my-2h" />
             <div className="hstack">
               <span className="flex-grow-1 text-muted">Since</span>
               <span>{formatTimestamp(value?.createdAt ?? 0)}</span>
-            </div>
+            </div> */}
             <hr className="bg-dark-gray my-2h" />
             <div className="hstack">
               <span className="flex-grow-1 text-muted">Status</span>
               {statusView(value?.status)}
+            </div>
+            <hr className="bg-dark-gray my-2h" />
+            <div className="hstack">
+              <span className="flex-grow-1 text-muted">Expired at</span>
+              {(value?.expiredAt ?? 0) > 0
+                ? formatTimestamp(value.expiredAt ?? 0)
+                : "--"}
             </div>
           </div>
         </div>

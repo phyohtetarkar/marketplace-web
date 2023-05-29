@@ -9,6 +9,7 @@ import "swiper/css/pagination";
 import "swiper/css/zoom";
 import "../../styles/bootstrap-custom.css";
 import "../../styles/globals.css";
+import "../../styles/flatpickr.airbnb.css";
 //import awsconfig from "../aws-exports";
 import {
   CategoryScale,

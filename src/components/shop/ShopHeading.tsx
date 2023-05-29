@@ -47,7 +47,7 @@ function ShopHeading(props: ShopHeadingProps) {
         <div className="col">
           <div className="hstack">
             <div className="flex-shrink-0 mt-n6">
-              <div className="bg-white p-1 pb-0 rounded border position-relative">
+              <div className="bg-white p-1 rounded border position-relative">
                 <Image
                   src={shop?.logo ?? "/images/placeholder.jpeg"}
                   width={100}
