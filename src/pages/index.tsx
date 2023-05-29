@@ -6,28 +6,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { HomeData } from "../common/models";
 import { getAPIBasePath } from "../common/utils";
 
-const _categories = [
-  "Electronics",
-  "Clothes and wear",
-  "Home interiors",
-  "Computer and tech",
-  "Tools and equipments",
-  "Food and drinks",
-  "Sports and outdoor",
-  "Health and beauty"
-];
-
-const _banners = ["banner.jpeg", "banner.jpeg", "banner.jpeg"];
-const _shops = [
-  "Healthy Shop",
-  "Addidas",
-  "Nike",
-  "Next Generation",
-  "Sweety Home",
-  "Win Mobile World",
-  "MK"
-];
-
 const Home = ({ data }: { data: HomeData }) => {
   return (
     <div className="container py-3">

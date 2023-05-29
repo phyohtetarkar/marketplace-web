@@ -1,6 +1,5 @@
 User-agent: *
-Allow: /index.html
+Allow: /
 Allow: /shops
 Allow: /login
 Allow: /sign-up
-Disallow: /
