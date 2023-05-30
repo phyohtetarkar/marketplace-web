@@ -447,7 +447,7 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
                 ></button>
               </div>
               <div className="modal-body p-0">
-                {data?.payment.receiptImage ? (
+                {data?.payment?.receiptImage ? (
                   <Image
                     src={data.payment.receiptImage}
                     alt=""

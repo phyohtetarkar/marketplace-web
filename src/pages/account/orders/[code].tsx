@@ -438,7 +438,7 @@ function OrderDetail() {
                 ></button>
               </div>
               <div className="modal-body p-0">
-                {data?.payment.receiptImage ? (
+                {data?.payment?.receiptImage ? (
                   <Image
                     src={data.payment.receiptImage}
                     alt=""
@@ -459,6 +459,7 @@ function OrderDetail() {
           );
         }}
       </Modal>
+
       <Modal show={showAcceptedPayments}>
         {(isShown) => {
           if (!isShown) {
