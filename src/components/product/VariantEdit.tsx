@@ -83,7 +83,8 @@ function VaraintEdit(props: VaraintEditProps) {
             })}
           <div className="col-lg-6">
             <Input
-              label="Price"
+              label="Price *"
+              type="number"
               placeholder="Enter variant price"
               error={errors.price?.message}
               {...register("price", {
@@ -107,11 +108,11 @@ function VaraintEdit(props: VaraintEditProps) {
           </div>
           <div className="col-12">
             <Input
-              label="Stock amount"
-              type="text"
+              label="Stock *"
+              type="number"
               placeholder="Enter stock amount"
               {...register("stockLeft", {
-                setValueAs: (v) => (!v ? 0 : setEmptyOrNumber(v)),
+                setValueAs: setEmptyOrNumber,
                 validate: (v, fv) => {
                   const numRegex = "^[0-9]*$";
                   if (!`${v}`.match(numRegex)) {

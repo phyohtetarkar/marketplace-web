@@ -830,66 +830,68 @@ function ProductEdit(props: ProductEditProps) {
             </div>
           </div>
           <div className="col-12 col-lg-4">
-            <div className="card mb-3">
-              <div className="card-header py-3 border-bottom">
-                <h5 className="mb-0">Pricing</h5>
-              </div>
-              <div className="card-body">
-                <div className="row g-3">
-                  <div className="col-12">
-                    <Input
-                      label="Price *"
-                      id="priceInput"
-                      type="number"
-                      placeholder="Enter price"
-                      disabled={withVariant}
-                      error={errors.price?.message}
-                      {...register("price", {
-                        setValueAs: setEmptyOrNumber,
-                        validate: (v, fv) => {
-                          //const floatRegex = "^([0-9]*[.])?[0-9]+$";
-                          const floatRegex = "^[0-9]{1,10}([.][0-9]{1,2})?$";
-                          if (!fv.withVariant && !`${v}`.match(floatRegex)) {
-                            return "Invalid price input";
+            {!withVariant && (
+              <div className="card mb-3">
+                <div className="card-header py-3 border-bottom">
+                  <h5 className="mb-0">Pricing</h5>
+                </div>
+                <div className="card-body">
+                  <div className="row g-3">
+                    <div className="col-12">
+                      <Input
+                        label="Price *"
+                        id="priceInput"
+                        type="number"
+                        placeholder="Enter price"
+                        disabled={withVariant}
+                        error={errors.price?.message}
+                        {...register("price", {
+                          setValueAs: setEmptyOrNumber,
+                          validate: (v, fv) => {
+                            //const floatRegex = "^([0-9]*[.])?[0-9]+$";
+                            const floatRegex = "^[0-9]{1,10}([.][0-9]{1,2})?$";
+                            if (!fv.withVariant && !`${v}`.match(floatRegex)) {
+                              return "Invalid price input";
+                            }
+                            return true;
                           }
-                          return true;
-                        }
-                      })}
-                    />
-                  </div>
-                  <div className="col-12">
-                    <Input
-                      label="SKU"
-                      id="skuInput"
-                      type="text"
-                      disabled={withVariant}
-                      placeholder="Enter product sku"
-                      {...register("sku")}
-                    />
-                  </div>
-                  <div className="col-12">
-                    <Input
-                      label="Stock *"
-                      id="stockInput"
-                      type="number"
-                      disabled={withVariant}
-                      placeholder="Enter stock amount"
-                      {...register("stockLeft", {
-                        setValueAs: setEmptyOrNumber,
-                        validate: (v, fv) => {
-                          const numRegex = "^[0-9]*$";
-                          if (!fv.withVariant && !`${v}`.match(numRegex)) {
-                            return "Invalid stock amount input";
+                        })}
+                      />
+                    </div>
+                    <div className="col-12">
+                      <Input
+                        label="SKU"
+                        id="skuInput"
+                        type="text"
+                        disabled={withVariant}
+                        placeholder="Enter product sku"
+                        {...register("sku")}
+                      />
+                    </div>
+                    <div className="col-12">
+                      <Input
+                        label="Stock *"
+                        id="stockInput"
+                        type="number"
+                        disabled={withVariant}
+                        placeholder="Enter stock amount"
+                        {...register("stockLeft", {
+                          setValueAs: setEmptyOrNumber,
+                          validate: (v, fv) => {
+                            const numRegex = "^[0-9]*$";
+                            if (!fv.withVariant && !`${v}`.match(numRegex)) {
+                              return "Invalid stock amount input";
+                            }
+                            return true;
                           }
-                          return true;
-                        }
-                      })}
-                      error={errors.stockLeft?.message}
-                    />
+                        })}
+                        error={errors.stockLeft?.message}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
             <div className="card">
               <div className="card-header py-3 border-bottom">
                 <h5 className="mb-0">Product video</h5>

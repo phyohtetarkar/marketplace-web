@@ -318,7 +318,11 @@ function ShopManage(props: ShopManageProps) {
       );
     }
 
-    if ((shop.expiredAt ?? 0) < currentTime) {
+    if (
+      (shop.expiredAt ?? 0) < currentTime &&
+      activeTab !== "subscriptions" &&
+      activeTab !== "renew-subscription"
+    ) {
       return (
         <>
           {headerBar(shop)}
