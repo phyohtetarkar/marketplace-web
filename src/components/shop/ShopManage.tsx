@@ -44,15 +44,18 @@ interface ShopManageProps {
     | "orders"
     | "subscriptions"
     | "setting"
-    | "renew-subscription";
+    | "renew-subscription"
+    | "order-detail"
+    | "product-edit";
   hideMenu?: boolean;
+  customBody?: boolean;
   children: (shop: Shop) => ReactNode;
 }
 
 const iconSize = 20;
 
 function ShopManage(props: ShopManageProps) {
-  const { activeTab, hideMenu, children } = props;
+  const { activeTab, hideMenu, customBody, children } = props;
 
   const router = useRouter();
 
@@ -172,7 +175,7 @@ function ShopManage(props: ShopManageProps) {
 
   const currentTime = new Date().getTime();
 
-  const menus = (
+  const menus = () => (
     <>
       <div className="vstack gap-1">
         {menuLink({
@@ -254,6 +257,28 @@ function ShopManage(props: ShopManageProps) {
     </>
   );
 
+  const headerBar = (shop: Shop) => {
+    return (
+      <div className="header-bar">
+        <div className="container py-4">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb mb-0">
+              <li className="breadcrumb-item">
+                <Link href="/account/overview">Profile</Link>
+              </li>
+              <li className="breadcrumb-item">
+                <Link href="/account/shops">Shops</Link>
+              </li>
+              <li className="breadcrumb-item active" aria-current="page">
+                {shop.name}
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="container py-3">
@@ -274,25 +299,56 @@ function ShopManage(props: ShopManageProps) {
     return <></>;
   }
 
+  if (customBody) {
+    if (shop.status !== "APPROVED") {
+      return (
+        <>
+          {headerBar(shop)}
+          <div className="container py-3">
+            <Alert
+              message={
+                shop.status === "DISABLED"
+                  ? "Your shop has been disabled."
+                  : `We are currently reviewing your shop.`
+              }
+              variant="warning"
+            />
+          </div>
+        </>
+      );
+    }
+
+    if ((shop.expiredAt ?? 0) < currentTime) {
+      return (
+        <>
+          {headerBar(shop)}
+          <div className="container py-3">
+            <Alert
+              message={
+                <div>
+                  No active subscription.
+                  <Link
+                    href={`/account/shops/${shop.slug}/subscriptions`}
+                    className="ms-1 fw-semibold link-anchor"
+                  >
+                    Manage subscriptions
+                  </Link>
+                  .
+                </div>
+              }
+              variant="warning"
+            />
+          </div>
+        </>
+      );
+    }
+
+    return <>{children(shop)}</>;
+  }
+
   return (
     <>
-      <div className="header-bar">
-        <div className="container py-4">
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb mb-0">
-              <li className="breadcrumb-item">
-                <Link href="/account/overview">Profile</Link>
-              </li>
-              <li className="breadcrumb-item">
-                <Link href="/account/shops">Shops</Link>
-              </li>
-              <li className="breadcrumb-item active" aria-current="page">
-                {shop.name}
-              </li>
-            </ol>
-          </nav>
-        </div>
-      </div>
+      {headerBar(shop)}
 
       <div className="container py-3 mb-5">
         <div className="position-relative border rounded bg-white vstack overflow-hidden mb-3">
@@ -352,7 +408,7 @@ function ShopManage(props: ShopManageProps) {
                     bodyClassName=""
                     iconType="plus-minus"
                   >
-                    <div className="p-3">{menus}</div>
+                    <div className="p-3">{menus()}</div>
                   </Accordion>
                 </div>
               </div>

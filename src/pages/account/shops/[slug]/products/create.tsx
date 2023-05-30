@@ -4,7 +4,7 @@ import { ShopManage } from "../../../../../components/shop";
 
 function ProductCreate() {
   return (
-    <ShopManage hideMenu>
+    <ShopManage customBody>
       {(shop) => shop.id && <ProductEdit shop={shop} />}
     </ShopManage>
   );

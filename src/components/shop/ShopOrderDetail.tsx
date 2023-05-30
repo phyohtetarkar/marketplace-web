@@ -308,81 +308,86 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
 
   return (
     <>
-      <div className="row mb-3 g-3">
-        <div className="col-lg-6">
-          <h4 className="mb-1 fw-semibold">Order Detail</h4>
-          <div
-            className="d-flex flex-wrap gap-2"
-            style={{
-              fontSize: "0.9rem"
-            }}
-          >
-            <Link href={`/account/shops/${shop.slug}/dashboard`}>
-              Dashboard
-            </Link>
-            <span className="text-muted">/</span>
-            <Link href={`/account/shops/${shop.slug}/orders`}>Orders</Link>
-            <span className="text-muted">/</span>
-            <div className="text-muted" aria-current="page">
-              {typeof code === "string" ? code : ""}
+      <div className="header-bar">
+        <div className="container py-4">
+          <div className="row">
+            <div className="col-lg-6">
+              <h4 className="mb-1 fw-semibold text-light">{shop.name}</h4>
+              <nav aria-label="breadcrumb">
+                <ol className="breadcrumb mb-0">
+                  <li className="breadcrumb-item">
+                    <Link href={`/account/shops/${shop.slug}/dashboard`}>
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li className="breadcrumb-item">
+                    <Link href={`/account/shops/${shop.slug}/orders`}>
+                      Orders
+                    </Link>
+                  </li>
+                  <li className="breadcrumb-item active" aria-current="page">
+                    {typeof code === "string" ? code : ""}
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <div className="col-lg-6 d-flex">
+              <div className="hstack gap-3 ms-lg-auto">
+                {data?.paymentMethod === "BANK_TRANSFER" && (
+                  <button
+                    className="btn btn-default text-nowrap"
+                    onClick={() => setShowReceipt(true)}
+                  >
+                    View receipt
+                  </button>
+                )}
+                {data?.status !== "COMPLETED" && (
+                  <Dropdown
+                    toggle={<div>Update status</div>}
+                    menuClassName="dropdown-menu-end"
+                    toggleClassName="btn btn-light dropdown-toggle hstack"
+                  >
+                    {data?.status == "PENDING" && (
+                      <li
+                        className="dropdown-item"
+                        role="button"
+                        onClick={() => {
+                          setUpdateStatus("confirm");
+                        }}
+                      >
+                        Confirm
+                      </li>
+                    )}
+                    {data?.status !== "CANCELLED" && (
+                      <li
+                        className="dropdown-item"
+                        role="button"
+                        onClick={() => {
+                          setUpdateStatus("complete");
+                        }}
+                      >
+                        Complete
+                      </li>
+                    )}
+                    <div className="dropdown-divider"></div>
+                    <li
+                      className="dropdown-item text-danger"
+                      role="button"
+                      onClick={() => {
+                        setUpdateStatus("cancel");
+                      }}
+                    >
+                      Cancel
+                    </li>
+                  </Dropdown>
+                )}
+              </div>
             </div>
           </div>
         </div>
-        <div className="col-lg-6">
-          <div className="hstack flex-wrap gap-2 h-100">
-            <div className="flex-grow-1 d-none d-lg-flex"></div>
-            {data?.paymentMethod === "BANK_TRANSFER" && (
-              <button
-                className="btn btn-default text-nowrap"
-                onClick={() => setShowReceipt(true)}
-              >
-                View receipt
-              </button>
-            )}
-            {data?.status !== "COMPLETED" && (
-              <Dropdown
-                toggle={<div>Update status</div>}
-                menuClassName="dropdown-menu-end"
-                toggleClassName="btn btn-primary dropdown-toggle hstack"
-              >
-                {data?.status == "PENDING" && (
-                  <li
-                    className="dropdown-item"
-                    role="button"
-                    onClick={() => {
-                      setUpdateStatus("confirm");
-                    }}
-                  >
-                    Confirm
-                  </li>
-                )}
-                {data?.status !== "CANCELLED" && (
-                  <li
-                    className="dropdown-item"
-                    role="button"
-                    onClick={() => {
-                      setUpdateStatus("complete");
-                    }}
-                  >
-                    Complete
-                  </li>
-                )}
-                <div className="dropdown-divider"></div>
-                <li
-                  className="dropdown-item text-danger"
-                  role="button"
-                  onClick={() => {
-                    setUpdateStatus("cancel");
-                  }}
-                >
-                  Cancel
-                </li>
-              </Dropdown>
-            )}
-          </div>
-        </div>
       </div>
-      <div className="mb-5">{content()}</div>
+
+      <div className="container py-3 mb-5">{content()}</div>
 
       <ConfirmModal
         show={!!updateStatus}

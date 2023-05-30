@@ -1,3 +1,4 @@
+import { ArrowsRightLeftIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Shop, ShopSubscription } from "../../common/models";
@@ -80,13 +81,13 @@ function ShopSubscription(props: ShopSubscriptionProps) {
         <table className="table align-middle">
           <thead className="text-nowrap">
             <tr>
-              <th scope="col" style={{ minWidth: 250 }}>
+              <th scope="col" style={{ minWidth: 200 }}>
                 Subscription Plan
               </th>
               <th scope="col" style={{ minWidth: 100 }}>
                 Duration
               </th>
-              <th scope="col" style={{ minWidth: 160 }}>
+              <th scope="col" style={{ minWidth: 200 }}>
                 Start/End
               </th>
               <th scope="col" style={{ minWidth: 120 }}>
@@ -98,14 +99,21 @@ function ShopSubscription(props: ShopSubscriptionProps) {
             {subscriptions.map((s, i) => {
               return (
                 <tr key={i}>
-                  <td scope="row" className="py-2h">
+                  <th scope="row" className="py-2h">
                     {s.title}
-                  </td>
+                  </th>
                   <td>{s.duration} days</td>
                   <td>
-                    {formatTimestamp(s.startAt)}
-                    <span className="fw-semibold mx-1">{"<=>"}</span>
-                    {formatTimestamp(s.endAt)}
+                    <div className="hstack">
+                      {formatTimestamp(s.startAt)}
+                      {/* <span className="fw-semibold mx-1">{"<=>"}</span> */}
+                      <ArrowsRightLeftIcon
+                        width={20}
+                        className="mx-1"
+                        strokeWidth={1.5}
+                      />
+                      {formatTimestamp(s.endAt)}
+                    </div>
                   </td>
                   <td>
                     <div className="d-flex">{getStatusView(s)}</div>

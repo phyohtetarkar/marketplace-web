@@ -9,7 +9,8 @@ import { Discount, Product, ProductStatus } from "../../common/models";
 import {
   formatNumber,
   formatTimestamp,
-  parseErrorResponse
+  parseErrorResponse,
+  transformDiscount
 } from "../../common/utils";
 import {
   deleteProduct,
@@ -71,6 +72,19 @@ function ShopProductListing(props: ShopProductListingProps) {
     return "";
   };
 
+  const priceView = (p: Product) => {
+    if (p.discount) {
+      return (
+        <div className="vstack">
+          <span>{formatNumber(p.price ?? 0)}</span>
+          <span className="text-danger">(-{discountView(p.discount)})</span>
+        </div>
+      );
+    }
+
+    return formatNumber(p.price ?? 0);
+  };
+
   const content = () => {
     if (isLoading) {
       return <Loading />;
@@ -94,14 +108,14 @@ function ShopProductListing(props: ShopProductListingProps) {
                   IMAGE
                 </th>
                 <th scope="col" style={{ minWidth: 250 }}>
-                  NAME
+                  PRODUCT
                 </th>
                 <th scope="col" style={{ minWidth: 150 }}>
                   PRICE
                 </th>
-                <th scope="col" style={{ minWidth: 150 }}>
+                {/* <th scope="col" style={{ minWidth: 150 }}>
                   DISCOUNT
-                </th>
+                </th> */}
                 <th scope="col" style={{ minWidth: 100 }}>
                   STATUS
                 </th>
@@ -139,8 +153,8 @@ function ShopProductListing(props: ShopProductListingProps) {
                         {p.name}
                       </Link>
                     </td>
-                    <td>{formatNumber(p.price ?? 0)}</td>
-                    <td className="text-danger">-{discountView(p.discount)}</td>
+                    <td>{priceView(p)}</td>
+                    {/* <td className="text-danger">-{discountView(p.discount)}</td> */}
                     <td>{statusView(p.status)}</td>
                     <td>{formatTimestamp(p.createdAt ?? 0)}</td>
                     <td>

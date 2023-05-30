@@ -69,59 +69,69 @@ function RenewSubscription() {
 
     return (
       <>
-        <div className="border-bottom mb-4">
-          <h4 className="mb-1 fw-semibold">Subscription Plans</h4>
-          <div
-            className="d-flex flex-wrap gap-2 mb-2h"
-            style={{
-              fontSize: "0.9rem"
-            }}
-          >
-            <Link href={`/account/shops/${shop.slug}/dashboard`}>
-              Dashboard
-            </Link>
-            <span className="text-muted">/</span>
-            <Link href={`/account/shops/${shop.slug}/subscriptions`}>
-              Subscriptions
-            </Link>
-            <span className="text-muted">/</span>
-            <div className="text-muted" aria-current="page">
-              Renew subscription
+        <div className="header-bar">
+          <div className="container py-4">
+            <div className="row g-3">
+              <div className="col-lg-6">
+                <h4 className="mb-1 fw-semibold text-light">{shop.name}</h4>
+                <nav aria-label="breadcrumb">
+                  <ol className="breadcrumb mb-0">
+                    <li className="breadcrumb-item">
+                      <Link href={`/account/shops/${shop.slug}/dashboard`}>
+                        Dashboard
+                      </Link>
+                    </li>
+                    <li className="breadcrumb-item">
+                      <Link href={`/account/shops/${shop.slug}/subscriptions`}>
+                        Subscriptions
+                      </Link>
+                    </li>
+                    <li className="breadcrumb-item active" aria-current="page">
+                      Renew Subscription
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+              <div className="col-lg-6 d-flex"></div>
             </div>
           </div>
         </div>
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxxl-4 g-3">
-          {data.map((sp, i) => {
-            return (
-              <div key={sp.id} className="col">
-                <div className="card h-100">
-                  <div className="card-header py-2h">
-                    <h5 className="text-center mb-0">{sp.title}</h5>
-                  </div>
-                  <div className="card-body text-center">
-                    <h2 className="mb-3 card-title mt-2">
-                      {formatNumber(sp.price)} Ks
-                    </h2>
 
-                    <div className="text-muted mb-4">
-                      Duration: {sp.duration} days
+        <div className="container py-3 mb-5">
+          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxxl-4 g-3">
+            {data.map((sp, i) => {
+              return (
+                <div key={sp.id} className="col">
+                  <div className="card h-100">
+                    <div className="card-header py-2h">
+                      <h5 className="text-center mb-0">{sp.title}</h5>
                     </div>
+                    <div className="card-body text-center">
+                      <h2 className="mb-3 card-title mt-2">
+                        {formatNumber(sp.price)} Ks
+                      </h2>
 
-                    <button
-                      className="btn btn-primary w-100"
-                      onClick={() => {
-                        setSubscriptionPlan(sp);
-                        setShowPriceSummary(true);
-                      }}
-                    >
-                      Select
-                    </button>
+                      <div className="text-muted mb-4">
+                        Duration: {sp.duration} days
+                      </div>
+
+                      <button
+                        className="btn btn-primary w-100"
+                        onClick={() => {
+                          setSubscriptionPlan(sp);
+                          setShowPriceSummary(true);
+                        }}
+                      >
+                        Select
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
+
         <Modal show={showPriceSummary}>
           {(isShown) => {
             if (!isShown) {
@@ -204,7 +214,7 @@ function RenewSubscription() {
 
   return (
     <>
-      <ShopManage activeTab="renew-subscription" hideMenu>
+      <ShopManage activeTab="renew-subscription" customBody>
         {(shop) => content(shop)}
       </ShopManage>
     </>

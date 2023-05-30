@@ -356,12 +356,20 @@ function OrderDetail() {
               </nav>
             </div>
             <div className="col-md-6 d-flex">
+              {data?.status === "PENDING" && (
+                <button
+                  className="text-nowrap btn btn-danger ms-md-auto"
+                  onClick={() => setConfirmCancel(true)}
+                >
+                  Cancel Order
+                </button>
+              )}
               {data?.paymentMethod === "BANK_TRANSFER" && (
                 <Dropdown
                   toggle="Receipt image"
                   toggleClassName="btn btn-light dropdown-toggle"
                   menuClassName="dropdown-menu-end"
-                  className="ms-md-auto"
+                  className="ms-3"
                 >
                   <li
                     className="dropdown-item"
@@ -382,14 +390,6 @@ function OrderDetail() {
                     Upload
                   </li>
                 </Dropdown>
-              )}
-              {data?.status === "PENDING" && (
-                <button
-                  className="text-nowrap btn btn-danger ms-2h"
-                  onClick={() => setConfirmCancel(true)}
-                >
-                  Cancel Order
-                </button>
               )}
               <input
                 ref={paySlipFileRef}

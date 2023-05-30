@@ -3,7 +3,7 @@ import { ShopManage, ShopOrderDetail } from "../../../../../components/shop";
 
 function OrderDetail() {
   return (
-    <ShopManage hideMenu>
+    <ShopManage customBody>
       {(shop) => <ShopOrderDetail shop={shop} />}
     </ShopManage>
   );
