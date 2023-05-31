@@ -11,6 +11,7 @@ export interface RichTextEditorInputProps {
   onEditorChange?: OnEditorChange;
   minHeight?: number | string;
   noBorder?: boolean;
+  iframeEmbed?: boolean;
 }
 
 function RichTextEditor({
@@ -21,7 +22,8 @@ function RichTextEditor({
   imageUploadPath,
   onEditorChange,
   minHeight = 480,
-  noBorder
+  noBorder,
+  iframeEmbed
 }: RichTextEditorInputProps) {
   if (typeof window === "undefined") {
     return null;
@@ -58,6 +60,9 @@ function RichTextEditor({
         skin: "tinymce-5",
         link_default_target: "_blank",
         help_tabs: ["shortcuts"],
+        media_alt_source: false,
+        media_dimensions: false,
+        media_poster: false,
         images_upload_handler: (info, progress) => {
           return new Promise<string>((resolve, reject) => {
             //console.log(info.blob().size);
@@ -80,6 +85,7 @@ function RichTextEditor({
           "quickbars",
           "table",
           "code",
+          "media",
           "autolink",
           "help"
         ],
@@ -137,6 +143,12 @@ function RichTextEditor({
             name: "indentation",
             items: ["outdent", "indent"]
           },
+          iframeEmbed
+            ? {
+                name: "media",
+                items: ["media"]
+              }
+            : { name: "media", items: [] },
           { name: "view", items: ["preview", "fullscreen", "help"] }
         ]
       }}

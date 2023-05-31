@@ -166,11 +166,6 @@ export async function uploadShopCover(shopId: number, file: File) {
 
 export async function getShopById(id: number) {
   const url = `private/${basePath}/${id}`;
-  // const resp = await fetch(url, {
-  //   headers: {
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
 
   const resp = await makeApiRequest(url, {}, true);
 

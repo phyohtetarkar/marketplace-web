@@ -158,7 +158,7 @@ function Header({ hideAuth }: HeaderProps) {
                   return null;
                 }
 
-                if (status !== "unauthorized") {
+                if (status === "success") {
                   return null;
                 }
 
@@ -310,7 +310,7 @@ function Header({ hideAuth }: HeaderProps) {
                     );
                   }
 
-                  if (status !== "unauthorized") {
+                  if (status === "success") {
                     return null;
                   }
 

@@ -77,12 +77,12 @@ function RenewSubscription() {
                 <nav aria-label="breadcrumb">
                   <ol className="breadcrumb mb-0">
                     <li className="breadcrumb-item">
-                      <Link href={`/account/shops/${shop.slug}/dashboard`}>
+                      <Link href={`/account/shops/${shop.id}/dashboard`}>
                         Dashboard
                       </Link>
                     </li>
                     <li className="breadcrumb-item">
-                      <Link href={`/account/shops/${shop.slug}/subscriptions`}>
+                      <Link href={`/account/shops/${shop.id}/subscriptions`}>
                         Subscriptions
                       </Link>
                     </li>

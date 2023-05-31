@@ -133,7 +133,7 @@ function ShopSubscription(props: ShopSubscriptionProps) {
         <div className="col"></div>
         <div className="col-auto">
           <Link
-            href={`/account/shops/${shop.slug}/renew-subscription`}
+            href={`/account/shops/${shop.id}/renew-subscription`}
             className="btn btn-primary px-3 py-2"
           >
             Renew subscription

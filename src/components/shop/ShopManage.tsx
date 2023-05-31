@@ -24,7 +24,7 @@ import { ProgressContext } from "../../common/contexts";
 import { Shop } from "../../common/models";
 import { parseErrorResponse } from "../../common/utils";
 import {
-  getShopBySlug,
+  getShopById,
   isShopMember,
   uploadShopCover,
   uploadShopLogo
@@ -77,22 +77,27 @@ function ShopManage(props: ShopManageProps) {
     if (!router.isReady) {
       return;
     }
+
+    if (initRef.current) {
+      return;
+    }
+
     const { slug } = router.query;
 
-    if (typeof slug === "string") {
-      if (!initRef.current) {
-        setLoading(true);
-        loadShop(slug);
-      }
+    if (typeof slug === "string" && !isNaN(parseInt(slug))) {
+      setLoading(true);
+      loadShop(parseInt(slug));
+    } else {
+      setError("Shop not found");
     }
 
     initRef.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
-  const loadShop = async (slug: string) => {
+  const loadShop = async (shopId: number) => {
     try {
-      var shop = await getShopBySlug(slug);
+      var shop = await getShopById(shopId);
       if (!shop) {
         throw "Shop not found";
       }
@@ -129,7 +134,7 @@ function ShopManage(props: ShopManageProps) {
         } else if (event.target.name === "cover") {
           await uploadShopCover(shop.id, file);
         }
-        shop.slug && (await loadShop(shop.slug));
+        shop.id && (await loadShop(shop.id));
       }
     } catch (error) {
       const msg = parseErrorResponse(error);
@@ -153,7 +158,7 @@ function ShopManage(props: ShopManageProps) {
     icon: ReactNode;
     suffix?: ReactNode;
   }) {
-    const href = `/account/shops/${shop?.slug}/${path}`;
+    const href = `/account/shops/${shop?.id}/${path}`;
     return (
       <Link
         href={href}
@@ -332,7 +337,7 @@ function ShopManage(props: ShopManageProps) {
                 <div>
                   No active subscription.
                   <Link
-                    href={`/account/shops/${shop.slug}/subscriptions`}
+                    href={`/account/shops/${shop.id}/subscriptions`}
                     className="ms-1 fw-semibold link-anchor"
                   >
                     Manage subscriptions
@@ -429,7 +434,7 @@ function ShopManage(props: ShopManageProps) {
                       <div>
                         No active subscription.
                         <Link
-                          href={`/account/shops/${shop.slug}/subscriptions`}
+                          href={`/account/shops/${shop.id}/subscriptions`}
                           className="ms-1 fw-semibold link-anchor"
                         >
                           Manage subscriptions

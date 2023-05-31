@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import useSWR from "swr";
-import { formControlHeight } from "../../common/app.config";
 import { OrderStatus, Shop } from "../../common/models";
 import {
   formatNumber,
@@ -79,7 +78,7 @@ function ShopOrderListing({ shop }: { shop: Shop }) {
                   <tr key={i}>
                     <th scope="row" className="py-2h">
                       <Link
-                        href={`/account/shops/${shop.slug}/orders/${o.orderCode}`}
+                        href={`/account/shops/${shop.id}/orders/${o.orderCode}`}
                         className="nav-link text-decoration-underline p-0"
                       >
                         {o.orderCode}

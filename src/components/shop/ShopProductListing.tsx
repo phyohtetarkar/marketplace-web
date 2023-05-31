@@ -9,8 +9,7 @@ import { Discount, Product, ProductStatus } from "../../common/models";
 import {
   formatNumber,
   formatTimestamp,
-  parseErrorResponse,
-  transformDiscount
+  parseErrorResponse
 } from "../../common/utils";
 import {
   deleteProduct,
@@ -158,14 +157,12 @@ function ShopProductListing(props: ShopProductListingProps) {
                     <td>{statusView(p.status)}</td>
                     <td>{formatTimestamp(p.createdAt ?? 0)}</td>
                     <td>
-                      <button
+                      <Link
+                        href={`/account/shops/${shopId}/products/${p.id}`}
                         className="btn btn-default"
-                        onClick={() => {
-                          router.push(`${router.asPath}/${p.slug}`);
-                        }}
                       >
                         <PencilSquareIcon width={20} />
-                      </button>
+                      </Link>
                       <button
                         className="btn btn-danger ms-2"
                         onClick={() => {
@@ -215,14 +212,12 @@ function ShopProductListing(props: ShopProductListingProps) {
       <div className="row g-3 mb-3">
         <div className="col"></div>
         <div className="col-auto">
-          <button
+          <Link
+            href={`/account/shops/${shopId}/products/create`}
             className="btn btn-primary px-3 py-2"
-            onClick={() => {
-              router.push(`${router.asPath}/create`);
-            }}
           >
             Create new
-          </button>
+          </Link>
         </div>
       </div>
 

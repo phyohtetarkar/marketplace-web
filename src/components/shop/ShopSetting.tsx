@@ -84,7 +84,7 @@ const ShopGeneralForm = (props: ShopSettingProps) => {
       const shop = await updateShopGeneral(values);
       router.replace({
         pathname: `/account/shops/[slug]/setting`,
-        query: { slug: shop.slug }
+        query: { slug: shop.id }
       });
     } catch (error) {
       const msg = parseErrorResponse(error);
@@ -433,6 +433,13 @@ const ShopPaymentForm = (props: ShopSettingProps) => {
 
   const handleSettingChange = async (evt: ChangeEvent<HTMLInputElement>) => {
     try {
+      if (
+        evt.target.name === "bankTransfer" &&
+        evt.target.checked &&
+        !acceptedPaymentsState.data?.length
+      ) {
+        throw "Required at least one accepted payment";
+      }
       setSetting((old) => ({
         ...old,
         [evt.target.name]: evt.target.checked

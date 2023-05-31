@@ -25,6 +25,7 @@ import {
 } from "../../common/utils";
 import {
   deleteProduct,
+  getProductById,
   getProductBySlug,
   saveProduct
 } from "../../services/ProductService";
@@ -35,7 +36,6 @@ import { AutocompleteSelect, Input } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import Loading from "../Loading";
 import Modal from "../Modal";
-import ProgressButton from "../ProgressButton";
 import OptionEdit from "./OptionEdit";
 import VaraintEdit from "./VariantEdit";
 
@@ -126,34 +126,30 @@ function ProductEdit(props: ProductEditProps) {
   });
 
   useEffect(() => {
-    if (!slug) {
-      return;
-    }
-
-    // if (!categories) {
-    //   return;
-    // }
-
-    getProductBySlug(slug)
-      .then((p) => {
-        if (!p) {
-          throw "Product not found";
-        }
-        setProduct({
-          ...p,
-          shopId: p.shop?.id,
-          categoryId: p.category?.id,
-          discountId: p.discount?.id
+    if (typeof slug === "string" && !isNaN(parseInt(slug))) {
+      getProductById(parseInt(slug))
+        .then((p) => {
+          if (!p) {
+            throw "Product not found";
+          }
+          setProduct({
+            ...p,
+            shopId: p.shop?.id,
+            categoryId: p.category?.id,
+            discountId: p.discount?.id
+          });
+          setWithVariant(p.withVariant);
+        })
+        .catch((error) => {
+          const msg = parseErrorResponse(error);
+          setError(msg);
+        })
+        .finally(() => {
+          setFetching(false);
         });
-        setWithVariant(p.withVariant);
-      })
-      .catch((error) => {
-        const msg = parseErrorResponse(error);
-        setError(msg);
-      })
-      .finally(() => {
-        setFetching(false);
-      });
+    } else {
+      setFetching(false);
+    }
   }, [slug]);
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
@@ -313,12 +309,12 @@ function ProductEdit(props: ProductEditProps) {
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb mb-0">
                   <li className="breadcrumb-item">
-                    <Link href={`/account/shops/${shop.slug}/dashboard`}>
+                    <Link href={`/account/shops/${shop.id}/dashboard`}>
                       Dashboard
                     </Link>
                   </li>
                   <li className="breadcrumb-item">
-                    <Link href={`/account/shops/${shop.slug}/products`}>
+                    <Link href={`/account/shops/${shop.id}/products`}>
                       Products
                     </Link>
                   </li>
@@ -378,176 +374,34 @@ function ProductEdit(props: ProductEditProps) {
 
       <div className="container py-3 mb-5">
         <div className="row g-3">
-          <div className="col-12 col-lg-8">
+          <div className="col-12 col-lg-8 order-2 order-lg-1">
             <div className="card mb-3">
               <div className="card-header py-3 border-bottom">
-                <h5 className="mb-0">General</h5>
+                <h5 className="mb-0">Product description</h5>
               </div>
-              <div className="card-body">
-                <div className="row g-3 mb-4">
-                  <div className="col-lg-6">
-                    <Input
-                      label="Name *"
-                      id="nameInput"
-                      type="text"
-                      placeholder="Enter product name"
-                      {...register("name", {
-                        required: "Please enter product name",
-                        setValueAs: setEmptyOrString,
-                        onChange: (evt) => {
-                          setValue("slug", setStringToSlug(evt.target.value), {
-                            shouldValidate: !!errors.slug?.message
-                          });
-                        }
-                      })}
-                      error={errors.name?.message}
-                    />
-                  </div>
-
-                  <div className="col-lg-6">
-                    <Input
-                      label="Slug *"
-                      id="slugInput"
-                      type="text"
-                      placeholder="your-product-name"
-                      {...register("slug", {
-                        required: "Please enter slug",
-                        setValueAs: setEmptyOrString
-                      })}
-                      error={errors.slug?.message}
-                    />
-                  </div>
-
-                  <div className="col-12">
-                    <div>
-                      <label className="form-label">Category *</label>
-                      <Controller
-                        name="category"
-                        control={control}
-                        rules={{
-                          validate: (v) => !!v || "Please select category"
-                        }}
-                        render={({ field, fieldState: { error } }) => {
-                          return (
-                            <AutocompleteSelect<Category, number>
-                              options={categories ?? []}
-                              defaultValue={field.value}
-                              getOptionLabel={(v) => v.name}
-                              getOptionKey={(v) => v.id}
-                              getNestedData={(v) => v.children}
-                              canSelect={(v) =>
-                                !v.children || v.children?.length === 0
-                              }
-                              onChange={(v) => {
-                                if (!v) {
-                                  return;
-                                }
-                                setValue("category", v, {
-                                  shouldValidate: !!error?.message
-                                });
-                                setValue("categoryId", v.id);
-                              }}
-                              error={error?.message}
-                            />
-                          );
+              <div className="card-body p-0">
+                <Controller
+                  control={control}
+                  name="description"
+                  render={({ field }) => {
+                    return (
+                      <DynamicEditor
+                        id="descriptionInput"
+                        placeholder="Enter product description..."
+                        minHeight={380}
+                        value={field.value}
+                        iframeEmbed
+                        noBorder
+                        onEditorChange={(v) => {
+                          setValue("description", v);
                         }}
                       />
-                    </div>
-                  </div>
-
-                  <div className="col-12">
-                    <Input
-                      label="Brand name"
-                      id="brandInput"
-                      type="text"
-                      placeholder="Enter brand name"
-                      {...register("brand", {
-                        setValueAs: setEmptyOrString
-                      })}
-                    />
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-12">
-                    <label className="form-label">Description</label>
-                    <div className="flex-grow-1">
-                      <Controller
-                        control={control}
-                        name="description"
-                        render={({ field }) => {
-                          return (
-                            <DynamicEditor
-                              id="descriptionInput"
-                              placeholder="Enter product description..."
-                              minHeight={300}
-                              value={field.value}
-                              onEditorChange={(v) => {
-                                setValue("description", v);
-                              }}
-                            />
-                          );
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <hr className="text-muted"></hr>
-
-                <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
-                  {!product.id && (
-                    <div className="col-12">
-                      <div className="form-check form-switch">
-                        <input
-                          id="variantCheck"
-                          className="form-check-input"
-                          type="checkbox"
-                          role="switch"
-                          {...register("withVariant", {
-                            onChange: (evt) => {
-                              if (!evt.target.checked) {
-                                varaintsField.remove();
-                                setValue("attributes", undefined);
-                              } else {
-                                setValue("price", undefined);
-                                setValue("sku", undefined);
-                              }
-                              setValue("stockLeft", undefined);
-                              setWithVariant(evt.target.checked);
-                              clearErrors();
-                            }
-                          })}
-                        ></input>
-                        <label
-                          htmlFor="variantCheck"
-                          className="form-check-label fw-medium"
-                        >
-                          With variants
-                        </label>
-                      </div>
-                    </div>
-                  )}
-                  <div className="col">
-                    <div className="form-check form-switch">
-                      <input
-                        id="newArrivalCheck"
-                        className="form-check-input"
-                        type="checkbox"
-                        role="switch"
-                        {...register("newArrival")}
-                      ></input>
-                      <label
-                        htmlFor="newArrivalCheck"
-                        className="form-check-label fw-medium"
-                      >
-                        New arrival
-                      </label>
-                    </div>
-                  </div>
-                </div>
+                    );
+                  }}
+                />
               </div>
             </div>
+
             {withVariant && (
               <div className="card mb-3">
                 <div className="card-header py-3">
@@ -701,6 +555,69 @@ function ProductEdit(props: ProductEditProps) {
               </div>
             )}
 
+            {!withVariant && (
+              <div className="card mb-3">
+                <div className="card-header py-3 border-bottom">
+                  <h5 className="mb-0">Pricing</h5>
+                </div>
+                <div className="card-body">
+                  <div className="row g-3">
+                    <div className="col-12 col-lg-6">
+                      <Input
+                        label="Price *"
+                        id="priceInput"
+                        type="number"
+                        placeholder="Enter price"
+                        disabled={withVariant}
+                        error={errors.price?.message}
+                        {...register("price", {
+                          setValueAs: setEmptyOrNumber,
+                          validate: (v, fv) => {
+                            //const floatRegex = "^([0-9]*[.])?[0-9]+$";
+                            const floatRegex = "^[0-9]{1,10}([.][0-9]{1,2})?$";
+                            if (!fv.withVariant && !`${v}`.match(floatRegex)) {
+                              return "Invalid price input";
+                            }
+                            return true;
+                          }
+                        })}
+                      />
+                    </div>
+                    <div className="col-12 col-lg-6">
+                      <Input
+                        label="SKU"
+                        id="skuInput"
+                        type="text"
+                        disabled={withVariant}
+                        placeholder="Enter product sku"
+                        {...register("sku")}
+                      />
+                    </div>
+                    <div className="col-12">
+                      <Input
+                        label="Stock *"
+                        id="stockInput"
+                        type="number"
+                        disabled={withVariant}
+                        placeholder="Enter stock amount"
+                        {...register("stockLeft", {
+                          setValueAs: setEmptyOrNumber,
+                          validate: (v, fv) => {
+                            const numRegex = "^[0-9]*$";
+                            if (!fv.withVariant && !`${v}`.match(numRegex)) {
+                              return "Invalid stock amount input";
+                            }
+                            return true;
+                          }
+                        })}
+                        error={errors.stockLeft?.message}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div ref={imagesRef} className="card">
               <div className="card-header py-3 border-bottom">
                 <h5 className="mb-0">Images</h5>
@@ -829,70 +746,154 @@ function ProductEdit(props: ProductEditProps) {
               </div>
             </div>
           </div>
-          <div className="col-12 col-lg-4">
-            {!withVariant && (
-              <div className="card mb-3">
-                <div className="card-header py-3 border-bottom">
-                  <h5 className="mb-0">Pricing</h5>
+          <div className="col-12 col-lg-4 order-1 order-lg-2">
+            <div className="card">
+              <div className="card-header py-3 border-bottom">
+                <h5 className="mb-0">General</h5>
+              </div>
+              <div className="card-body">
+                <div className="row g-3 mb-4">
+                  <div className="col-12">
+                    <Input
+                      label="Name *"
+                      id="nameInput"
+                      type="text"
+                      placeholder="Enter product name"
+                      {...register("name", {
+                        required: "Please enter product name",
+                        setValueAs: setEmptyOrString,
+                        onChange: (evt) => {
+                          setValue("slug", setStringToSlug(evt.target.value), {
+                            shouldValidate: !!errors.slug?.message
+                          });
+                        }
+                      })}
+                      error={errors.name?.message}
+                    />
+                  </div>
+
+                  <div className="col-12">
+                    <Input
+                      label="Slug *"
+                      id="slugInput"
+                      type="text"
+                      placeholder="your-product-name"
+                      {...register("slug", {
+                        required: "Please enter slug",
+                        setValueAs: setEmptyOrString
+                      })}
+                      error={errors.slug?.message}
+                    />
+                  </div>
+
+                  <div className="col-12">
+                    <div>
+                      <label className="form-label">Category *</label>
+                      <Controller
+                        name="category"
+                        control={control}
+                        rules={{
+                          validate: (v) => !!v || "Please select category"
+                        }}
+                        render={({ field, fieldState: { error } }) => {
+                          return (
+                            <AutocompleteSelect<Category, number>
+                              options={categories ?? []}
+                              defaultValue={field.value}
+                              getOptionLabel={(v) => v.name}
+                              getOptionKey={(v) => v.id}
+                              getNestedData={(v) => v.children}
+                              canSelect={(v) =>
+                                !v.children || v.children?.length === 0
+                              }
+                              onChange={(v) => {
+                                if (!v) {
+                                  return;
+                                }
+                                setValue("category", v, {
+                                  shouldValidate: !!error?.message
+                                });
+                                setValue("categoryId", v.id);
+                              }}
+                              error={error?.message}
+                            />
+                          );
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="col-12">
+                    <Input
+                      label="Brand name"
+                      id="brandInput"
+                      type="text"
+                      placeholder="Enter brand name"
+                      {...register("brand", {
+                        setValueAs: setEmptyOrString
+                      })}
+                    />
+                  </div>
                 </div>
-                <div className="card-body">
-                  <div className="row g-3">
+
+                <hr className="text-muted"></hr>
+
+                <div className="row g-3">
+                  {!product.id && (
                     <div className="col-12">
-                      <Input
-                        label="Price *"
-                        id="priceInput"
-                        type="number"
-                        placeholder="Enter price"
-                        disabled={withVariant}
-                        error={errors.price?.message}
-                        {...register("price", {
-                          setValueAs: setEmptyOrNumber,
-                          validate: (v, fv) => {
-                            //const floatRegex = "^([0-9]*[.])?[0-9]+$";
-                            const floatRegex = "^[0-9]{1,10}([.][0-9]{1,2})?$";
-                            if (!fv.withVariant && !`${v}`.match(floatRegex)) {
-                              return "Invalid price input";
+                      <div className="form-check form-switch ps-0">
+                        <label
+                          htmlFor="variantCheck"
+                          className="form-check-label fw-medium ps-0"
+                        >
+                          With variants
+                        </label>
+                        <div className="flex-grow-1"></div>
+                        <input
+                          id="variantCheck"
+                          className="form-check-input"
+                          type="checkbox"
+                          role="switch"
+                          {...register("withVariant", {
+                            onChange: (evt) => {
+                              if (!evt.target.checked) {
+                                varaintsField.remove();
+                                setValue("attributes", undefined);
+                              } else {
+                                setValue("price", undefined);
+                                setValue("sku", undefined);
+                              }
+                              setValue("stockLeft", undefined);
+                              setWithVariant(evt.target.checked);
+                              clearErrors();
                             }
-                            return true;
-                          }
-                        })}
-                      />
+                          })}
+                        ></input>
+                      </div>
                     </div>
-                    <div className="col-12">
-                      <Input
-                        label="SKU"
-                        id="skuInput"
-                        type="text"
-                        disabled={withVariant}
-                        placeholder="Enter product sku"
-                        {...register("sku")}
-                      />
-                    </div>
-                    <div className="col-12">
-                      <Input
-                        label="Stock *"
-                        id="stockInput"
-                        type="number"
-                        disabled={withVariant}
-                        placeholder="Enter stock amount"
-                        {...register("stockLeft", {
-                          setValueAs: setEmptyOrNumber,
-                          validate: (v, fv) => {
-                            const numRegex = "^[0-9]*$";
-                            if (!fv.withVariant && !`${v}`.match(numRegex)) {
-                              return "Invalid stock amount input";
-                            }
-                            return true;
-                          }
-                        })}
-                        error={errors.stockLeft?.message}
-                      />
+                  )}
+                  <div className="col-12">
+                    <div className="form-check form-switch ps-0">
+                      <label
+                        htmlFor="newArrivalCheck"
+                        className="form-check-label fw-medium ps-0"
+                      >
+                        New arrival
+                      </label>
+                      <div className="flex-grow-1"></div>
+                      <input
+                        id="newArrivalCheck"
+                        className="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        {...register("newArrival")}
+                      ></input>
                     </div>
                   </div>
                 </div>
               </div>
-            )}
-            <div className="card">
+            </div>
+            {/* <div className="card">
               <div className="card-header py-3 border-bottom">
                 <h5 className="mb-0">Product video</h5>
               </div>
@@ -906,7 +907,7 @@ function ProductEdit(props: ProductEditProps) {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

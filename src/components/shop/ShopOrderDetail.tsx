@@ -316,12 +316,12 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb mb-0">
                   <li className="breadcrumb-item">
-                    <Link href={`/account/shops/${shop.slug}/dashboard`}>
+                    <Link href={`/account/shops/${shop.id}/dashboard`}>
                       Dashboard
                     </Link>
                   </li>
                   <li className="breadcrumb-item">
-                    <Link href={`/account/shops/${shop.slug}/orders`}>
+                    <Link href={`/account/shops/${shop.id}/orders`}>
                       Orders
                     </Link>
                   </li>
