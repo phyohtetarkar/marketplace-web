@@ -112,15 +112,17 @@ function ShoppingCartItem(props: ShoppingCartItemProps) {
 
   const image = item.product?.thumbnail ?? "/images/placeholder.jpeg";
 
-  let price = <>{formatNumber(item.product?.price ?? 0)} Ks</>;
+  const priceValue = item.variant?.price ?? item.product.price ?? 0;
+
+  let price = <>{formatNumber(priceValue)} Ks</>;
 
   if (item.product?.discount) {
     price = (
       <>
         <del className="text-muted small fw-normal me-1">
-          {formatNumber(item.product?.price ?? 0)}&nbsp;Ks
+          {formatNumber(priceValue)}&nbsp;Ks
         </del>
-        {transformDiscount(item.product.discount, item.product.price, 1)}
+        {transformDiscount(item.product.discount, priceValue, 1)}
         &nbsp;Ks
       </>
     );
