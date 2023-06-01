@@ -13,25 +13,46 @@ interface ShopGridItemProps {
 function ShopGridItem({ value }: ShopGridItemProps) {
   return (
     <div className="card">
-      <div className="card-body overflow-hidden">
+      <div className="card-body overflow-hidden position-relative">
+        <div
+          style={{
+            height: 108
+          }}
+          className="position-absolute start-0 top-0 end-0 bg-primary rounded-top"
+        >
+          {/* <Image
+            src={value.cover ?? "/images/cover.png"}
+            alt="Shop cover"
+            fill
+            sizes="33vw"
+            className="rounded-top"
+            priority
+            style={{
+              objectFit: "cover"
+            }}
+          /> */}
+        </div>
         <div className="vstack text-center">
           <div
-            className="bg-light rounded-circle mb-3 align-self-center"
+            className="rounded-circle bg-white mb-3 align-self-center"
             onContextMenu={(e) => e.preventDefault()}
+            style={{
+              marginTop: 36,
+              zIndex: 10,
+              padding: 5
+            }}
           >
-            <div className="ratio ratio-1x1" style={{ width: _imageSize }}>
-              <Image
-                className="rounded-circle"
-                src={value.logo ?? "/images/placeholder.jpeg"}
-                alt="Shop image."
-                fill
-                sizes="33vw"
-                priority
-                style={{
-                  objectFit: "cover"
-                }}
-              />
-            </div>
+            <Image
+              className="rounded-circle"
+              src={value.logo ?? "/images/placeholder.jpeg"}
+              alt="Shop image"
+              width={_imageSize}
+              height={_imageSize}
+              priority
+              style={{
+                objectFit: "cover"
+              }}
+            />
           </div>
 
           <div className="text-truncate mb-1">

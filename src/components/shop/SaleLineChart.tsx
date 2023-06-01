@@ -117,7 +117,11 @@ function SaleLineChart({ shopId }: { shopId: number }) {
         </div>
       </div>
       <div className="card-body">
-        <canvas ref={setCanvas} />
+        <div className="overflow-auto pb-3">
+          <div style={{ minWidth: 800 }}>
+            <canvas ref={setCanvas} />
+          </div>
+        </div>
       </div>
     </div>
   );

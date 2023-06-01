@@ -1,5 +1,5 @@
 import makeApiRequest from "../common/makeApiRequest";
-import { PageData, Product } from "../common/models";
+import { PageData, Product, ProductStatus } from "../common/models";
 import { buildQueryParams, validateResponse } from "../common/utils";
 
 const basePath = "products";
@@ -11,6 +11,7 @@ export interface ProductQuery {
   "discount-id"?: number;
   "max-price"?: number;
   brand?: string | string[];
+  status?: ProductStatus;
   page?: number;
 }
 

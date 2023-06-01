@@ -82,16 +82,16 @@ function ShopSubscription(props: ShopSubscriptionProps) {
           <thead className="text-nowrap">
             <tr>
               <th scope="col" style={{ minWidth: 200 }}>
-                Subscription Plan
+                SUBSCRIPTION PLAN
               </th>
               <th scope="col" style={{ minWidth: 100 }}>
-                Duration
+                DURATION
               </th>
               <th scope="col" style={{ minWidth: 200 }}>
-                Start/End
+                START / END
               </th>
               <th scope="col" style={{ minWidth: 120 }}>
-                Status
+                STATUS
               </th>
             </tr>
           </thead>

@@ -49,16 +49,16 @@ function ShopOrderListing({ shop }: { shop: Shop }) {
             <thead className="text-nowrap">
               <tr>
                 <th scope="col" style={{ minWidth: 200 }}>
-                  Order #
+                  CODE #
                 </th>
                 <th className="fw-medium" style={{ minWidth: 120 }}>
-                  Date Purchased
+                  DATE
                 </th>
                 <th className="fw-medium" style={{ minWidth: 150 }}>
-                  Status
+                  STATUS
                 </th>
                 <th className="fw-medium" style={{ minWidth: 150 }}>
-                  Total
+                  TOTAL
                 </th>
               </tr>
             </thead>

@@ -1,11 +1,7 @@
 import { useState } from "react";
 import useSWR from "swr";
 import { parseErrorResponse } from "../../common/utils";
-import {
-  findProducts,
-  findShopProducts,
-  ProductQuery
-} from "../../services/ProductService";
+import { findProducts, ProductQuery } from "../../services/ProductService";
 import Alert from "../Alert";
 import Loading from "../Loading";
 import Pagination from "../Pagination";

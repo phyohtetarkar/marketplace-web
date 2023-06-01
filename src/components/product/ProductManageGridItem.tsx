@@ -6,13 +6,11 @@ import { formatNumber, transformDiscount } from "../../common/utils";
 
 interface ProductManageGridItemProps {
   value: Product;
-  onEditClick?: () => void;
   onDeleteClick?: () => void;
 }
 
 function ProductManageGridItem({
   value,
-  onEditClick,
   onDeleteClick
 }: ProductManageGridItemProps) {
   let popular;
@@ -80,19 +78,6 @@ function ProductManageGridItem({
     );
   }
 
-  // if (value.discount) {
-  //   price = (
-  //     <>
-  //       {transformDiscount(data.price, data.discount)}&nbsp;
-  //       {localize("kyat")}
-  //       <del className="text-muted small fw-normal ms-1">
-  //         {formatPrice(data.price)}&nbsp;
-  //         {localize("kyat")}
-  //       </del>
-  //     </>
-  //   );
-  // }
-
   return (
     <div className="card h-100">
       <Link href={`/products/${value.slug}`} className="text-decoration-none">
@@ -109,7 +94,7 @@ function ProductManageGridItem({
               sizes="33vw"
               priority
               style={{
-                objectFit: "cover"
+                objectFit: "contain"
               }}
             />
           </div>
@@ -132,15 +117,17 @@ function ProductManageGridItem({
             {value.name}
           </Link>
 
-          <h6 className="fw-semibold mt-2 mb-0">{price}</h6>
+          <h6 className="fw-semibold mt-2 mb-0" style={{ fontSize: "1.2rem" }}>
+            {price}
+          </h6>
 
           <div className="mt-3 hstack align-items-stretch gap-2">
-            <button
+            <Link
+              href={`/account/shops/${value.shop?.id}/products/${value.id}`}
               className="btn btn-default flex-grow-1"
-              onClick={() => onEditClick?.()}
             >
               <span>Edit</span>
-            </button>
+            </Link>
             <button
               className="btn btn-danger"
               onClick={() => onDeleteClick?.()}

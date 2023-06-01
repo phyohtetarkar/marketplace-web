@@ -18,8 +18,10 @@ import {
 } from "../../services/ProductService";
 import Alert from "../Alert";
 import ConfirmModal from "../ConfirmModal";
+import { Select } from "../forms";
 import Loading from "../Loading";
 import Pagination from "../Pagination";
+import { ProductManageGridItem } from "../product";
 
 interface ShopProductListingProps {
   shopId: number;
@@ -99,7 +101,7 @@ function ShopProductListing(props: ShopProductListingProps) {
 
     return (
       <>
-        <div className="table-responsive">
+        <div className="table-responsive d-none">
           <table className="table align-middle">
             <thead className="text-nowrap">
               <tr>
@@ -179,7 +181,20 @@ function ShopProductListing(props: ShopProductListingProps) {
           </table>
         </div>
 
-        <div className="d-flex justify-content-end pt-3">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+          {data.contents.map((p, i) => {
+            return (
+              <div key={p.id} className="col">
+                <ProductManageGridItem
+                  value={p}
+                  onDeleteClick={() => setPendingDeleteId(p.id)}
+                />
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="d-flex justify-content-end">
           <Pagination
             currentPage={data?.currentPage}
             totalPage={data?.totalPage}
@@ -209,9 +224,30 @@ function ShopProductListing(props: ShopProductListingProps) {
 
   return (
     <>
-      <div className="row g-3 mb-3">
-        <div className="col"></div>
-        <div className="col-auto">
+      <div className="row g-3 mb-4">
+        <div className="col hstack">
+          <div>
+            <Select
+              value={query.status}
+              height={44}
+              onChange={(evt) => {
+                setQuery((old) => {
+                  return {
+                    ...old,
+                    status: !evt.target.value
+                      ? undefined
+                      : (evt.target.value as ProductStatus)
+                  };
+                });
+              }}
+            >
+              <option value={""}>All Status</option>
+              <option value={"PUBLISHED"}>Published</option>
+              <option value={"DRAFT"}>Draft</option>
+            </Select>
+          </div>
+        </div>
+        <div className="col-auto hstack">
           <Link
             href={`/account/shops/${shopId}/products/create`}
             className="btn btn-primary px-3 py-2"
