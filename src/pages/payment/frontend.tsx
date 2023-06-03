@@ -30,7 +30,7 @@ function SubscriptionResult({
         {title()}
         {subscription.shop && (
           <Link
-            href={`/account/shops/${subscription.shop.slug}/subscriptions`}
+            href={`/account/shops/${subscription.shop.id}/subscriptions`}
             className="link-anchor mt-3"
           >
             Go to subscriptions
@@ -102,7 +102,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return {
           redirect: {
             statusCode: 302,
-            destination: `/account/shops/${subscription.shop?.slug}/subscriptions`
+            destination: `/account/shops/${subscription.shop?.id}/subscriptions`
           }
         };
       }
