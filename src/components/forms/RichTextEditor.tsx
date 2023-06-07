@@ -1,4 +1,5 @@
 import { Editor } from "@tinymce/tinymce-react";
+import { useRef } from "react";
 
 type OnEditorChange = (newValue: string) => void;
 
@@ -25,8 +26,14 @@ function RichTextEditor({
   noBorder,
   iframeEmbed
 }: RichTextEditorInputProps) {
+  const editorReadyRef = useRef<boolean>();
+
   if (typeof window === "undefined") {
     return null;
+  }
+
+  if (!editorReadyRef.current) {
+    return <div className="py-3 text-center">Loading editor...</div>;
   }
 
   return (
@@ -50,6 +57,8 @@ function RichTextEditor({
         editor.getContainer().style.border = `${
           noBorder ? 0 : 1
         }px solid rgba(0, 0, 0, 0.125)`;
+
+        editorReadyRef.current = true;
       }}
       init={{
         paste_data_images: false,

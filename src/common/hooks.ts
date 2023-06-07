@@ -5,6 +5,7 @@ import {
   getCategory
 } from "../services/CategoryService";
 import { getAllCities } from "../services/CityService";
+import { findDiscountsUnPaged } from "../services/DiscountService";
 import { getLoginUser } from "../services/UserService";
 
 export function useCategory(slug?: string) {
@@ -74,6 +75,22 @@ export function useLoginUser() {
 
   return {
     user: data,
+    error: error,
+    isLoading: isLoading
+  };
+}
+
+export function useDiscounts(shopId: number) {
+  const { data, error, isLoading } = useSWR(
+    `/discount/${shopId}/unpaged`,
+    () => findDiscountsUnPaged(shopId),
+    {
+      revalidateOnFocus: false
+    }
+  );
+
+  return {
+    discounts: data,
     error: error,
     isLoading: isLoading
   };

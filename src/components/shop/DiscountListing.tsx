@@ -1,8 +1,7 @@
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import { MoreVertical } from "react-feather";
 import useSWR from "swr";
-import { Discount, PageData } from "../../common/models";
+import { Discount } from "../../common/models";
 import { formatTimestamp, parseErrorResponse } from "../../common/utils";
 import { deleteDiscount, findDiscounts } from "../../services/DiscountService";
 import Alert from "../Alert";
@@ -20,7 +19,7 @@ function DiscountListing({ shopId }: { shopId: number }) {
   const [showEdit, setShowEdit] = useState(false);
   const [showApply, setShowApply] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const { data, error, isLoading, mutate } = useSWR<PageData<Discount>, Error>(
+  const { data, error, isLoading, mutate } = useSWR(
     [`/discounts/${shopId}`, page],
     ([url, p]) => findDiscounts(shopId, p),
     {

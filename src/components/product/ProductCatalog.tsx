@@ -186,8 +186,8 @@ function ProductCatalog(props: ProductCatalogProps) {
   const router = useRouter();
 
   const { data, error, isLoading } = useSWR(
-    ["/products", router],
-    ([url, router]) => (router.isReady ? findProducts(query) : undefined),
+    ["/products", query],
+    ([url, q]) => (q ? findProducts(q) : undefined),
     {
       revalidateOnFocus: false
     }

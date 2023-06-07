@@ -1,11 +1,6 @@
 import makeApiRequest from "../common/makeApiRequest";
 import { Discount, PageData } from "../common/models";
-import {
-  buildQueryParams,
-  getAPIBasePath,
-  getAuthHeader,
-  validateResponse
-} from "../common/utils";
+import { buildQueryParams, validateResponse } from "../common/utils";
 
 const basePath = "discounts";
 
@@ -119,19 +114,29 @@ export async function getDiscountById(id: number) {
 export async function findDiscounts(shopId: number, page?: number) {
   const query = buildQueryParams({
     "shop-id": shopId,
+    paged: true,
     page: page
   });
 
   const url = `${basePath}${query}`;
-  // const resp = await fetch(url, {
-  //   headers: {
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
-
   const resp = await makeApiRequest(url, {}, true);
 
   await validateResponse(resp);
 
   return resp.json() as Promise<PageData<Discount>>;
+}
+
+export async function findDiscountsUnPaged(shopId: number, page?: number) {
+  const query = buildQueryParams({
+    "shop-id": shopId,
+    paged: false,
+    page: page
+  });
+
+  const url = `${basePath}${query}`;
+  const resp = await makeApiRequest(url, {}, true);
+
+  await validateResponse(resp);
+
+  return resp.json() as Promise<Discount[]>;
 }

@@ -39,7 +39,7 @@ function ShopProductListing(props: ShopProductListingProps) {
   });
 
   const { data, error, isLoading, mutate } = useSWR(
-    ["/products", query],
+    ["/manage-products", query],
     ([url, query]) => findShopProducts(shopId, query),
     {
       revalidateOnFocus: false

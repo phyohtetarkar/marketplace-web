@@ -24,13 +24,6 @@ export interface AuthResult {
   user?: User;
 }
 
-export interface AuthUser {
-  id: string;
-  name: string;
-  phone: string;
-  email?: string;
-}
-
 export interface User {
   id?: number;
   name?: string;
@@ -40,6 +33,12 @@ export interface User {
   image?: string;
   disabled?: boolean;
   verified?: boolean;
+}
+
+export interface UserStatistic {
+  totalOrder: number;
+  totalFavorite: number;
+  totalShop: number;
 }
 
 export interface HomeData {

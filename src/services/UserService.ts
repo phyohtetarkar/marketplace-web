@@ -1,5 +1,5 @@
 import makeApiRequest from "../common/makeApiRequest";
-import { User } from "../common/models";
+import { User, UserStatistic } from "../common/models";
 import { validateResponse } from "../common/utils";
 
 const basePath = "profile";
@@ -98,4 +98,14 @@ export async function changePassword({
   );
 
   await validateResponse(resp);
+}
+
+export async function getUserStatistic() {
+  const url = `${basePath}/statistic`;
+
+  const resp = await makeApiRequest(url, {}, true);
+
+  await validateResponse(resp);
+
+  return (await resp.json()) as UserStatistic;
 }

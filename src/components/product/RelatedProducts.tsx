@@ -32,7 +32,11 @@ function RelatedProducts(props: RelatedProductsProps) {
   return (
     <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
       {data?.map((p, i) => {
-        return <ProductGridItem key={p.id} value={p} heading="category" />;
+        return (
+          <div key={p.id} className="col">
+            <ProductGridItem value={p} />
+          </div>
+        );
       })}
     </div>
   );

@@ -30,7 +30,7 @@ export async function saveProduct(value: Product) {
   value.description && form.append("description", value.description);
   value.categoryId && form.append("categoryId", value.categoryId.toPrecision());
   value.shopId && form.append("shopId", value.shopId.toPrecision());
-  value.discountId && form.append("discountId", value.discountId.toPrecision());
+  value.discount?.id && form.append("discountId", value.discount.id.toString());
   value.brand && form.append("brand", value.brand);
   value.thumbnail && form.append("thumbnail", value.thumbnail);
 

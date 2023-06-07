@@ -587,7 +587,7 @@ function ProductDetail({ product }: { product: Product | null }) {
               </div>
             </div>
             <div className="col-12 mt-6">
-              <h4 className="mb-3">Related Products</h4>
+              <h4 className="mb-4">Related Products</h4>
               <RelatedProducts
                 productId={product.id ?? 0}
                 categoryId={product.category?.id ?? 0}

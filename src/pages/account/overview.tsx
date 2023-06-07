@@ -1,18 +1,23 @@
-import {
-  MapPinIcon,
-  PencilSquareIcon,
-  TrashIcon
-} from "@heroicons/react/24/outline";
-import { PlusIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
+import useSWR from "swr";
 import { AuthenticationContext } from "../../common/contexts";
 import { withAuthentication } from "../../common/WithAuthentication";
 import AccountMenu from "../../components/account/AccountMenu";
+import { getUserStatistic } from "../../services/UserService";
 
 function ProfileOverview() {
   const authContext = useContext(AuthenticationContext);
+
+  const { data, error, isLoading } = useSWR(
+    "/profile/statistic",
+    getUserStatistic,
+    {
+      revalidateOnFocus: false
+    }
+  );
 
   if (authContext.status !== "success") {
     return null;
@@ -70,19 +75,19 @@ function ProfileOverview() {
                 <div className="card-group mt-2">
                   <div className="card border bg-light">
                     <div className="p-3">
-                      <h4 className="title">38</h4>
+                      <h4 className="title">{data?.totalOrder ?? 0}</h4>
                       <span>Orders</span>
                     </div>
                   </div>
                   <div className="card border bg-light">
                     <div className="p-3">
-                      <h4 className="title">5</h4>
+                      <h4 className="title">{data?.totalFavorite ?? 0}</h4>
                       <span>Favorites</span>
                     </div>
                   </div>
                   <div className="card border bg-light">
                     <div className="p-3">
-                      <h4 className="title">1</h4>
+                      <h4 className="title">{data?.totalShop ?? 0}</h4>
                       <span>Shops</span>
                     </div>
                   </div>

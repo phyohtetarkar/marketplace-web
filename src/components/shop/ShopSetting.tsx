@@ -118,16 +118,43 @@ const ShopGeneralForm = (props: ShopSettingProps) => {
             />
           </div>
           <div className="col-lg-6">
-            <Input
-              label="Slug *"
-              id="slugInput"
-              type="text"
-              placeholder="your-shop-name"
-              {...register("slug", {
-                setValueAs: setEmptyOrString,
-                required: "Please enter slug"
-              })}
-              error={errors.slug?.message}
+            <Controller
+              control={control}
+              name="slug"
+              rules={{
+                validate: (v) => {
+                  if (!setStringToSlug(v)) {
+                    return "Please enter valid slug";
+                  }
+                  return true;
+                }
+              }}
+              render={({ field, fieldState: { error } }) => {
+                return (
+                  <>
+                    <Input
+                      label="Slug *"
+                      value={field.value ?? ""}
+                      onChange={(evt) => {
+                        const s = evt.target.value
+                          .replace(/[^\w-\s]*/, "")
+                          .replace(/\s+/, "-")
+                          .toLowerCase();
+
+                        setValue("slug", s, {
+                          shouldValidate: true
+                        });
+                      }}
+                      error={error?.message}
+                    />
+                    {!error?.message && (
+                      <small className="text-muted">{`${
+                        window.location.origin
+                      }/shops/${field.value ?? ""}`}</small>
+                    )}
+                  </>
+                );
+              }}
             />
           </div>
           <div className="col-12">

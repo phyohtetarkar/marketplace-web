@@ -26,11 +26,11 @@ import {
 import {
   deleteProduct,
   getProductById,
-  getProductBySlug,
   saveProduct
 } from "../../services/ProductService";
 import Alert from "../Alert";
 import ConfirmModal from "../ConfirmModal";
+import DiscountSelect from "../DiscountSelect";
 import Dropdown from "../Dropdown";
 import { AutocompleteSelect, Input } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
@@ -87,7 +87,10 @@ function ProductEdit(props: ProductEditProps) {
     setValue,
     getValues,
     clearErrors
-  } = useForm<Product>({ values: product });
+  } = useForm<Product>({
+    values: product,
+    defaultValues: { shopId: shop.id, images: [] }
+  });
 
   const varaintsField = useFieldArray({
     control,
@@ -773,7 +776,7 @@ function ProductEdit(props: ProductEditProps) {
                   </div>
 
                   <div className="col-12">
-                    <Input
+                    {/* <Input
                       label="Slug *"
                       id="slugInput"
                       type="text"
@@ -783,6 +786,44 @@ function ProductEdit(props: ProductEditProps) {
                         setValueAs: setEmptyOrString
                       })}
                       error={errors.slug?.message}
+                    /> */}
+                    <Controller
+                      control={control}
+                      name="slug"
+                      rules={{
+                        validate: (v) => {
+                          if (!setStringToSlug(v)) {
+                            return "Please enter valid slug";
+                          }
+                          return true;
+                        }
+                      }}
+                      render={({ field, fieldState: { error } }) => {
+                        return (
+                          <>
+                            <Input
+                              label="Slug *"
+                              value={field.value ?? ""}
+                              onChange={(evt) => {
+                                const s = evt.target.value
+                                  .replace(/[^\w-\s]*/, "")
+                                  .replace(/\s+/, "-")
+                                  .toLowerCase();
+
+                                setValue("slug", s, {
+                                  shouldValidate: true
+                                });
+                              }}
+                              error={error?.message}
+                            />
+                            {!error?.message && (
+                              <small className="text-muted">{`${
+                                window.location.origin
+                              }/products/${field.value ?? ""}`}</small>
+                            )}
+                          </>
+                        );
+                      }}
                     />
                   </div>
 
@@ -832,6 +873,25 @@ function ProductEdit(props: ProductEditProps) {
                       {...register("brand", {
                         setValueAs: setEmptyOrString
                       })}
+                    />
+                  </div>
+
+                  <div className="col-12">
+                    <label className="form-label">Discount</label>
+                    <Controller
+                      control={control}
+                      name="discount"
+                      render={({ field }) => {
+                        return (
+                          <DiscountSelect
+                            shopId={shop.id ?? 0}
+                            value={field.value}
+                            onChange={(value) => {
+                              setValue("discount", value);
+                            }}
+                          />
+                        );
+                      }}
                     />
                   </div>
                 </div>
