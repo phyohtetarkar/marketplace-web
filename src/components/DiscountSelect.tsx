@@ -39,6 +39,7 @@ function DiscountSelect(props: DiscountSelectProps) {
       isLoading={isLoading}
       options={discounts}
       isClearable={true}
+      menuPlacement="auto"
       getOptionValue={(d) => `${d.id ?? ""}`}
       getOptionLabel={(d) =>
         `${d.title} (-${d.value}${d.type === "PERCENTAGE" ? "%" : ""})`

@@ -45,8 +45,6 @@ function RichTextEditor({
       onInit={(evt, editor) => {
         //editorRef.current = editor;
 
-        console.log(evt);
-
         editor
           .getContainer()
           .getElementsByClassName("tox-edit-area__iframe")
