@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import useSWR from "swr";
@@ -9,7 +10,7 @@ import {
 } from "../../common/utils";
 import { getShopOrders, OrderQuery } from "../../services/OrderService";
 import Alert from "../Alert";
-import { Input, Select } from "../forms";
+import { DatePickerInput2, Input, Select } from "../forms";
 import Loading from "../Loading";
 import Pagination from "../Pagination";
 
@@ -117,30 +118,49 @@ function ShopOrderListing({ shop }: { shop: Shop }) {
   return (
     <>
       <div className="row g-3 mb-3">
-        <div className="d-flex flex-wrap gap-3">
-          <div>
-            <Select
-              value={query.status ?? ""}
-              onChange={(evt) => {
-                setQuery((old) => ({
+        <div className="col-12 col-lg-auto">
+          <Select
+            value={query.status ?? ""}
+            onChange={(evt) => {
+              setQuery((old) => ({
+                ...old,
+                status: evt.target.value as OrderStatus,
+                page: undefined
+              }));
+            }}
+          >
+            <option value="">All Status</option>
+            <option value="PENDING">Pending</option>
+            <option value="CONFIRMED">Confirmed</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="CANCELLED">Cancelled</option>
+          </Select>
+        </div>
+        <div className="col-12 col-lg-auto">
+          <DatePickerInput2
+            mode="single"
+            dates={query.date ? [dayjs(query.date, "YYYY-MM-DD").toDate()] : []}
+            placeholder="By date"
+            onDateChange={(values) => {
+              var date =
+                values.length > 0
+                  ? dayjs(values[0]).format("YYYY-MM-DD")
+                  : undefined;
+              setQuery((old) => {
+                return {
                   ...old,
-                  status: evt.target.value as OrderStatus,
-                  page: undefined
-                }));
-              }}
-            >
-              <option value="">All Status</option>
-              <option value="PENDING">Pending</option>
-              <option value="CONFIRMED">Confirmed</option>
-              <option value="COMPLETED">Completed</option>
-              <option value="CANCELLED">Cancelled</option>
-            </Select>
-          </div>
-          <div>
-            <Input ref={codeInputRef} placeholder="By order code" />
-          </div>
+                  date: date
+                };
+              });
+            }}
+          />
+        </div>
+        <div className="col-12 col-lg-auto">
+          <Input ref={codeInputRef} placeholder="By order code" />
+        </div>
+        <div className="col-12 col-lg-auto">
           <button
-            className="btn btn-primary"
+            className="btn btn-primary h-100"
             disabled={isLoading}
             onClick={() => {
               setQuery((old) => {

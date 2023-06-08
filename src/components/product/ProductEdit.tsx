@@ -366,7 +366,7 @@ function ProductEdit(props: ProductEditProps) {
                       })();
                     }}
                   >
-                    Publish
+                    {product.status === "PUBLISHED" ? "Update" : "Publish"}
                   </li>
                 </Dropdown>
               </div>

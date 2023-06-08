@@ -22,7 +22,9 @@ function DiscountSelect(props: DiscountSelectProps) {
           ...css,
           padding: "0 0.25rem",
           minHeight: formControlHeight,
-          boxShadow: "none"
+          boxShadow: "none",
+          backgroundColor: "#f9fafb",
+          borderColor: "#e5e7eb"
         })
       }}
       theme={(theme) => ({
@@ -36,6 +38,7 @@ function DiscountSelect(props: DiscountSelectProps) {
       value={value}
       isLoading={isLoading}
       options={discounts}
+      isClearable={true}
       getOptionValue={(d) => `${d.id ?? ""}`}
       getOptionLabel={(d) =>
         `${d.title} (-${d.value}${d.type === "PERCENTAGE" ? "%" : ""})`

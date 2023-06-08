@@ -1,4 +1,4 @@
-import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import useSWR from "swr";
 import { Discount } from "../../common/models";
@@ -93,7 +93,7 @@ function DiscountListing({ shopId }: { shopId: number }) {
                         <Dropdown
                           toggle={
                             <div role="button" className="">
-                              <AdjustmentsHorizontalIcon width={20} />
+                              <PencilSquareIcon width={20} />
                             </div>
                           }
                           popperConfig={{

@@ -23,6 +23,7 @@ function DatePickerInput2(props: DatePickerInput2Porps) {
     if (inputElement) {
       pickerRef.current = flatpickr(inputElement, {
         mode: mode,
+        disableMobile: true,
         onChange: (dates, str, instance) => {
           if (mode === "range" && dates.length === 2) {
             onDateChange?.(dates);
