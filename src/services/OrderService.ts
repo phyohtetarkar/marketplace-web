@@ -83,8 +83,8 @@ export async function cancelOrder(orderId: number) {
   await validateResponse(resp);
 }
 
-export async function cancelOrderItem(orderItemId: number) {
-  const url = `order-items/${orderItemId}/cancel`;
+export async function cancelOrderItem(orderId: number, orderItemId: number) {
+  const url = `${basePath}/${orderId}/items/${orderItemId}/cancel`;
 
   const resp = await makeApiRequest(
     url,

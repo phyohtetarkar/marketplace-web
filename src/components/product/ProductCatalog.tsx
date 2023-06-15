@@ -35,7 +35,7 @@ const Filter = (props: FilterProps) => {
 
   const { brand } = router.query;
 
-  const [maxPrice, setMaxPrice] = useState(300000);
+  const [maxPrice, setMaxPrice] = useState(10000000);
 
   const [brands, setBrands] = useState<string[]>([]);
 
@@ -148,7 +148,7 @@ const Filter = (props: FilterProps) => {
                 id="priceRange"
                 step={1000}
                 min={0}
-                max={300000}
+                max={10000000}
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(parseInt(e.target.value))}
               ></input>
@@ -184,6 +184,8 @@ function ProductCatalog(props: ProductCatalogProps) {
   const { basePath, category, query } = props;
 
   const router = useRouter();
+
+  const { maxPrice } = router.query;
 
   const { data, error, isLoading } = useSWR(
     ["/products", query],
@@ -307,7 +309,7 @@ function ProductCatalog(props: ProductCatalogProps) {
             <Filter basePath={basePath} categoryId={category?.id} q={query.q} />
           </div>
           <div className="col-lg-8 col-xl-9">
-            <div className="d-flex">
+            <div className="d-flex flex-wrap gap-2">
               {/* <div className="btn-group ms-auto d-none d-md-block">
                 <button className="btn py-2 btn-outline-primary">
                   <ListBulletIcon width={24} />

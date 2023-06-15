@@ -12,8 +12,8 @@ interface ShopGridItemProps {
 
 function ShopGridItem({ value }: ShopGridItemProps) {
   return (
-    <div className="card">
-      <div className="card-body overflow-hidden position-relative">
+    <div className="card h-100">
+      <div className="card-body overflow-hidden position-relative h-100">
         <div
           style={{
             height: 108
@@ -32,7 +32,7 @@ function ShopGridItem({ value }: ShopGridItemProps) {
             }}
           /> */}
         </div>
-        <div className="vstack text-center">
+        <div className="vstack text-center h-100">
           <div
             className="rounded-circle bg-white mb-3 align-self-center"
             onContextMenu={(e) => e.preventDefault()}
@@ -67,7 +67,8 @@ function ShopGridItem({ value }: ShopGridItemProps) {
           <div className="small text-muted mb-4 text-truncate">
             {value.headline}
           </div>
-          <div className="vstack text-start">
+          <div className="flex-grow-1"></div>
+          <div className="vstack text-start flex-grow-0">
             <div className="hstack">
               <span className="flex-grow-1 text-muted">Rating</span>
               <div className="hstack text-warning gap-1">

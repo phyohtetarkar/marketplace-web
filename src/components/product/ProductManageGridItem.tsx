@@ -70,7 +70,7 @@ function ProductManageGridItem({
     );
   }
 
-  if ((value.stockLeft ?? 0) === 0) {
+  if (!value.withVariant && (value.stockLeft ?? 0) === 0) {
     outOfStock = (
       <div className="bg-dark opacity-75 py-2 text-light position-absolute text-center bottom-0 start-0 end-0">
         Out Of Stock

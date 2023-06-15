@@ -28,6 +28,7 @@ export async function createShop(value: ShopCreateForm) {
   value.headline && formData.append("headline", value.headline);
   value.about && formData.append("about", value.about);
   value.address && formData.append("address", value.address);
+  value.cityId && formData.append("cityId", value.cityId.toString());
   formData.append("cashOnDelivery", "true");
   //formData.append("bankTransfer", value.bankTransfer ? "true" : "false");
   value.logoImage && formData.append("logo", value.logoImage);

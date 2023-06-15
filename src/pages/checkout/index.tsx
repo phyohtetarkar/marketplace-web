@@ -48,24 +48,24 @@ function Checkout() {
   const receiptFileRef = useRef<HTMLInputElement | null>(null);
 
   const deliveryCitiesState = useSWR(
-    `/shops/${shopId}/delivery-cities`,
-    () => (shopId > 0 ? getShopDeliveryCities(shopId) : []),
+    [`/shops/${shopId}/delivery-cities`, shopId],
+    ([url, id]) => (id > 0 ? getShopDeliveryCities(id) : []),
     {
       revalidateOnFocus: false
     }
   );
 
   const acceptedPaymentsState = useSWR(
-    `/shops/${shopId}/accepted-payments`,
-    () => (shopId > 0 ? getShopAcceptedPayments(shopId) : []),
+    [`/shops/${shopId}/accepted-payments`, shopId],
+    ([url, id]) => (id > 0 ? getShopAcceptedPayments(id) : []),
     {
       revalidateOnFocus: false
     }
   );
 
   const shopSettingState = useSWR(
-    `/shops/${shopId}/setting`,
-    () => (shopId > 0 ? getShopSetting(shopId) : undefined),
+    [`/shops/${shopId}/setting`, shopId],
+    ([url, id]) => (id > 0 ? getShopSetting(id) : undefined),
     { revalidateOnFocus: false }
   );
 

@@ -341,24 +341,24 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
                     View receipt
                   </button>
                 )}
-                {data?.status !== "COMPLETED" && (
-                  <Dropdown
-                    toggle={<div>Update status</div>}
-                    menuClassName="dropdown-menu-end"
-                    toggleClassName="btn btn-light dropdown-toggle hstack"
-                  >
-                    {data?.status == "PENDING" && (
-                      <li
-                        className="dropdown-item"
-                        role="button"
-                        onClick={() => {
-                          setUpdateStatus("confirm");
-                        }}
-                      >
-                        Confirm
-                      </li>
-                    )}
-                    {data?.status !== "CANCELLED" && (
+                {data?.status !== "COMPLETED" &&
+                  data?.status !== "CANCELLED" && (
+                    <Dropdown
+                      toggle={<div>Update status</div>}
+                      menuClassName="dropdown-menu-end"
+                      toggleClassName="btn btn-light dropdown-toggle hstack"
+                    >
+                      {data?.status == "PENDING" && (
+                        <li
+                          className="dropdown-item"
+                          role="button"
+                          onClick={() => {
+                            setUpdateStatus("confirm");
+                          }}
+                        >
+                          Confirm
+                        </li>
+                      )}
                       <li
                         className="dropdown-item"
                         role="button"
@@ -368,19 +368,18 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
                       >
                         Complete
                       </li>
-                    )}
-                    <div className="dropdown-divider"></div>
-                    <li
-                      className="dropdown-item text-danger"
-                      role="button"
-                      onClick={() => {
-                        setUpdateStatus("cancel");
-                      }}
-                    >
-                      Cancel
-                    </li>
-                  </Dropdown>
-                )}
+                      <div className="dropdown-divider"></div>
+                      <li
+                        className="dropdown-item text-danger"
+                        role="button"
+                        onClick={() => {
+                          setUpdateStatus("cancel");
+                        }}
+                      >
+                        Cancel
+                      </li>
+                    </Dropdown>
+                  )}
               </div>
             </div>
           </div>
@@ -425,11 +424,11 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
         close={() => setCancelItemId(undefined)}
         onConfirm={async () => {
           try {
-            if (!cancelItemId) {
+            if (!cancelItemId || !data?.id) {
               return;
             }
 
-            await cancelOrderItem(cancelItemId);
+            await cancelOrderItem(data?.id, cancelItemId);
             mutate();
           } catch (error) {
             const msg = parseErrorResponse(error);

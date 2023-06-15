@@ -100,6 +100,7 @@ export interface ShopContact {
   phones?: string[];
   latitude?: number;
   longitude?: number;
+  city?: City;
 }
 
 export interface ShopGeneral {
@@ -169,7 +170,7 @@ export interface ShopCreateForm {
   deliveryCities?: City[];
   logo?: string;
   cover?: string;
-  subscriptionPlanId?: number;
+  cityId?: number;
   logoImage?: File;
   coverImage?: File;
 }

@@ -19,6 +19,14 @@ export function formatNumber(value: number) {
   return Intl.NumberFormat("en-US").format(value);
 }
 
+export function formatAbbreviate(value: number) {
+  if (!value) {
+    return "0";
+  }
+
+  return Intl.NumberFormat("en-US", { notation: "compact" }).format(value);
+}
+
 export function transformDiscount(discount: Discount, price = 0, qty = 1) {
   if (discount.type === "FIXED_AMOUNT") {
     return (price - (discount.value ?? 0)) * qty;

@@ -1,3 +1,4 @@
+import { useCities } from "@/common/hooks";
 import {
   PencilSquareIcon,
   PlusCircleIcon,
@@ -11,6 +12,7 @@ import { toast } from "react-toastify";
 import useSWR from "swr";
 import { ShopDetailContext } from "../../common/contexts";
 import {
+  City,
   Shop,
   ShopAcceptedPayment,
   ShopContact,
@@ -40,7 +42,7 @@ import {
 } from "../../services/ShopService";
 import Alert from "../Alert";
 import ConfirmModal from "../ConfirmModal";
-import { Input, TagInput } from "../forms";
+import { AutocompleteSelect, Input, TagInput } from "../forms";
 import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import Loading from "../Loading";
 import Modal from "../Modal";
@@ -207,7 +209,11 @@ const ShopGeneralForm = (props: ShopSettingProps) => {
 const ShopContactForm = (props: ShopSettingProps) => {
   const { shop } = props;
   const router = useRouter();
+
   const shopContext = useContext(ShopDetailContext);
+
+  const citiesState = useCities();
+
   const {
     control,
     register,
@@ -220,7 +226,8 @@ const ShopContactForm = (props: ShopSettingProps) => {
       phones: shop?.contact?.phones,
       address: shop?.contact?.address,
       latitude: shop?.contact?.latitude,
-      longitude: shop?.contact?.longitude
+      longitude: shop?.contact?.longitude,
+      city: shop.contact?.city
     }
   });
 
@@ -261,6 +268,38 @@ const ShopContactForm = (props: ShopSettingProps) => {
                 );
               }}
             />
+          </div>
+
+          <div className="col-12">
+            <label className="form-label">City</label>
+            <div className="flex-grow-1">
+              <Controller
+                control={control}
+                name="city"
+                rules={{
+                  validate: (v) => !!v || "Please select city"
+                }}
+                render={({ field }) => {
+                  return (
+                    <AutocompleteSelect<City, number>
+                      options={citiesState.cities?.sort((f, s) =>
+                        f.name.localeCompare(s.name)
+                      )}
+                      defaultValue={field.value}
+                      placeholder="Select city"
+                      getOptionKey={(c) => c.id}
+                      getOptionLabel={(c) => c.name}
+                      onChange={(c) => {
+                        setValue("city", c, {
+                          shouldValidate: true
+                        });
+                      }}
+                      error={errors.city?.message}
+                    />
+                  );
+                }}
+              />
+            </div>
           </div>
 
           <div className="col-12">
