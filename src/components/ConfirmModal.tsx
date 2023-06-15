@@ -6,14 +6,15 @@ interface ConfirmModalProps {
   show: boolean;
   message: ReactNode;
   onConfirm?: () => Promise<void>;
+  onHidden?: () => void;
   close?: () => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
-  const { show, message, onConfirm, close } = props;
+  const { show, message, onConfirm, close, onHidden } = props;
   const [loading, setLoading] = useState(false);
   return (
-    <Modal show={show}>
+    <Modal show={show} onHidden={onHidden}>
       {(isShown) => {
         return (
           <>

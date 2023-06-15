@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { useSWRConfig } from "swr";
-import { Shop } from "../../common/models";
+import { OrderItem, Shop } from "../../common/models";
 import {
   formatNumber,
   formatTimestamp,
@@ -36,7 +36,9 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
 
   const [showReceipt, setShowReceipt] = useState(false);
 
-  const [cancelItemId, setCancelItemId] = useState<number>();
+  const [showCancelItemConfirm, setShowCancelItemConfirm] = useState(false);
+
+  const [orderItem, setOrderItem] = useState<OrderItem>();
 
   const { code } = router.query;
 
@@ -128,7 +130,8 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
                                   role="button"
                                   className="text-danger"
                                   onClick={() => {
-                                    setCancelItemId(item.id);
+                                    setOrderItem(item);
+                                    setShowCancelItemConfirm(true);
                                   }}
                                 />
                               </Tooltip>
@@ -419,17 +422,19 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
       />
 
       <ConfirmModal
-        show={!!cancelItemId}
+        show={showCancelItemConfirm}
         message={`Are you sure to cancel item?`}
-        close={() => setCancelItemId(undefined)}
+        close={() => setShowCancelItemConfirm(false)}
+        onHidden={() => setOrderItem(undefined)}
         onConfirm={async () => {
           try {
-            if (!cancelItemId || !data?.id) {
-              return;
+            if (!orderItem || !data?.id) {
+              throw Error();
             }
 
-            await cancelOrderItem(data?.id, cancelItemId);
+            await cancelOrderItem(data?.id, orderItem.id);
             mutate();
+            toast.success("Item cancelled");
           } catch (error) {
             const msg = parseErrorResponse(error);
             toast.error(msg);

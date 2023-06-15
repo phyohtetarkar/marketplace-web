@@ -107,8 +107,8 @@ const Filter = (props: FilterProps) => {
 
                           if (typeof q.brand === "string") {
                             brands.add(q.brand);
-                          } else if (typeof q.brand === "object") {
-                            brands = new Set(...q.brand);
+                          } else if (q.brand instanceof Array) {
+                            brands = new Set(q.brand);
                           }
 
                           if (evt.target.checked) {

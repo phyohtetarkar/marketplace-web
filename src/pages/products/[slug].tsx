@@ -205,6 +205,7 @@ function ProductDetail({ product }: { product: Product | null }) {
         <title>{product.name}</title>
         <MetaTags
           title={product.name}
+          description={process.env.NEXT_PUBLIC_APP_NAME}
           cover={product.thumbnail}
           coanical={`${process.env.NEXT_PUBLIC_BASE_URL}/products/${product.slug}`}
         />
@@ -533,7 +534,7 @@ function ProductDetail({ product }: { product: Product | null }) {
                       }}
                     ></div>
                   </Tabs.Tab>
-                  <Tabs.Tab tabKey="specification" title="Video">
+                  <Tabs.Tab tabKey="specification" title="Video" hidden>
                     <div className="p-3"></div>
                   </Tabs.Tab>
                 </Tabs>
