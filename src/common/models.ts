@@ -245,6 +245,7 @@ export interface ProductVariantAttribute {
   attribute: string;
   value: string;
   sort: number;
+  vSort: number;
 }
 
 export interface Discount {
@@ -340,4 +341,9 @@ export interface PaymentTokenResult {
   paymentToken: string;
   respCode: string;
   respDesc: string;
+}
+
+export interface ProductFilter {
+  brands: string[];
+  maxPrice: number;
 }

@@ -1,5 +1,10 @@
 import makeApiRequest from "../common/makeApiRequest";
-import { PageData, Product, ProductStatus } from "../common/models";
+import {
+  PageData,
+  Product,
+  ProductFilter,
+  ProductStatus
+} from "../common/models";
 import { buildQueryParams, validateResponse } from "../common/utils";
 
 const basePath = "products";
@@ -67,6 +72,11 @@ export async function saveProduct(value: Product) {
       a.value && form.append(`variants[${i}].attributes[${j}].value`, a.value);
       a.sort &&
         form.append(`variants[${i}].attributes[${j}].sort`, a.sort.toString());
+      a.vSort &&
+        form.append(
+          `variants[${i}].attributes[${j}].vSort`,
+          a.vSort.toString()
+        );
     });
   });
 
@@ -165,12 +175,12 @@ export async function findShopProducts(shopId: number, value: ProductQuery) {
   return resp.json() as Promise<PageData<Product>>;
 }
 
-export async function getProductBrandsByNameLike(q: string) {
-  const url = `${basePath}/${q}/brands`;
+export async function getProductFilterByNameLike(q: string) {
+  const url = `${basePath}/${q}/filter`;
 
   const resp = await makeApiRequest(url);
 
   await validateResponse(resp);
 
-  return resp.json() as Promise<string[]>;
+  return (await resp.json()) as ProductFilter;
 }

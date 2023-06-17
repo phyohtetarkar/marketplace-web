@@ -216,7 +216,8 @@ function ProductEdit(props: ProductEditProps) {
           value: value.value.trim(),
           sort: values.length,
           attributeId: attribute.id ?? 0,
-          attribute: attribute.name ?? ""
+          attribute: attribute.name ?? "",
+          vSort: value.sort
         });
         variants.push(...generateVariant(attributes, index + 1, values));
       } else {
@@ -228,7 +229,8 @@ function ProductEdit(props: ProductEditProps) {
               value: value.value.trim(),
               sort: values.length,
               attributeId: attribute.id ?? 0,
-              attribute: attribute.name ?? ""
+              attribute: attribute.name ?? "",
+              vSort: value.sort
             }
           ]
         });

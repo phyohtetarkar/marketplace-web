@@ -1,5 +1,5 @@
 import makeApiRequest from "../common/makeApiRequest";
-import { Category } from "../common/models";
+import { Category, ProductFilter } from "../common/models";
 import { buildQueryParams, validateResponse } from "../common/utils";
 
 const basePath = "categories";
@@ -31,14 +31,14 @@ export async function getCategory(slug: string) {
     .catch((e) => null);
 }
 
-export async function getBrandsByCategory(id: number) {
-  const url = `${basePath}/${id}/brands`;
+export async function getProductFilterByCategory(id: number) {
+  const url = `${basePath}/${id}/filter`;
 
   const resp = await makeApiRequest(url);
 
   await validateResponse(resp);
 
-  return resp.json() as Promise<string[]>;
+  return (await resp.json()) as ProductFilter;
 }
 
 // export async function existsCateogryBySlug(slug: String, excludeId: number) {

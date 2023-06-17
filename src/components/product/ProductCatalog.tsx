@@ -1,14 +1,14 @@
+import { getProductFilterByCategory } from "@/services/CategoryService";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { Category } from "../../common/models";
+import { Category, ProductFilter } from "../../common/models";
 import { parseErrorResponse } from "../../common/utils";
-import { getBrandsByCategory } from "../../services/CategoryService";
 import {
   findProducts,
-  getProductBrandsByNameLike,
+  getProductFilterByNameLike,
   ProductQuery
 } from "../../services/ProductService";
 import Accordion from "../Accordion";
@@ -35,15 +35,25 @@ const Filter = (props: FilterProps) => {
 
   const { brand } = router.query;
 
-  const [maxPrice, setMaxPrice] = useState(10000000);
+  const [filter, setFilter] = useState<ProductFilter>();
 
-  const [brands, setBrands] = useState<string[]>([]);
+  const [maxPrice, setMaxPrice] = useState(0);
 
   useEffect(() => {
     if (categoryId) {
-      getBrandsByCategory(categoryId).then(setBrands).catch(console.error);
+      getProductFilterByCategory(categoryId)
+        .then((v) => {
+          setFilter(v);
+          setMaxPrice(v.maxPrice);
+        })
+        .catch(console.error);
     } else if (q) {
-      getProductBrandsByNameLike(q).then(setBrands).catch(console.error);
+      getProductFilterByNameLike(q)
+        .then((v) => {
+          setFilter(v);
+          setMaxPrice(v.maxPrice);
+        })
+        .catch(console.error);
     }
   }, [categoryId, q]);
 
@@ -73,15 +83,6 @@ const Filter = (props: FilterProps) => {
         iconType="plus-minus"
       >
         <div className="vstack gap-2">
-          {/* <div className="p-3 border-bottom">
-              <div className="small text-muted mb-3">CATEGORIES</div>
-              <div className="vstack gap-2">
-                <label>Electronics</label>
-                <label>Watches</label>
-                <label>Clothes</label>
-                <label>Home items</label>
-              </div>
-            </div> */}
           <div className="p-3 border-bottom">
             <div className="small text-muted mb-3">BRANDS</div>
             <div
@@ -92,7 +93,7 @@ const Filter = (props: FilterProps) => {
                 className="vstack gap-2"
                 style={{ maxHeight: 250, minHeight: 100 }}
               >
-                {brands.map((b, i) => {
+                {filter?.brands?.map((b, i) => {
                   return (
                     <div key={i} className="form-check">
                       <input
@@ -148,7 +149,7 @@ const Filter = (props: FilterProps) => {
                 id="priceRange"
                 step={1000}
                 min={0}
-                max={10000000}
+                max={filter?.maxPrice ?? 10000}
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(parseInt(e.target.value))}
               ></input>

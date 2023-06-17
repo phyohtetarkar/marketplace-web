@@ -107,7 +107,7 @@ function ProductGridItem({ value, heading = "seller" }: ProductGridItemProps) {
             {price}
           </h6>
 
-          <div className="mt-3 hstack align-items-stretch gap-2 d-none d-sm-flex">
+          <div className="mt-3 hstack align-items-stretch gap-2">
             {!value.withVariant ? (
               <AddToCartButton
                 productId={value.id ?? 0}

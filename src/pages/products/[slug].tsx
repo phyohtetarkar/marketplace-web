@@ -64,6 +64,18 @@ function ProductDetail({ product }: { product: Product | null }) {
       }
     }
 
+    for (const va of variantAttributes) {
+      const values = map.get(va.attributeId);
+      if (!values) {
+        continue;
+      }
+
+      map.set(
+        va.attributeId,
+        values.sort((f, s) => f.vSort - s.vSort)
+      );
+    }
+
     return map;
   }, [product]);
 

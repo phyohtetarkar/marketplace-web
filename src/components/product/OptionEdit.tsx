@@ -199,7 +199,6 @@ function OptionEdit(props: OptionEditProps) {
           className="btn btn-primary"
           disabled={isSubmitting || fields.length === 0}
           onClick={() => {
-            //formik.handleSubmit();
             handleSubmit((data) => {
               handleClose?.(data.attributes.map((a, i) => ({ ...a, sort: i })));
             })();
