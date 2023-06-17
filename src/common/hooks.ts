@@ -1,9 +1,5 @@
 import useSWR from "swr";
-import {
-  getAllCategories,
-  getBrandsByCategory,
-  getCategory
-} from "../services/CategoryService";
+import { getAllCategories, getCategory } from "../services/CategoryService";
 import { getAllCities } from "../services/CityService";
 import { findDiscountsUnPaged } from "../services/DiscountService";
 import { getLoginUser } from "../services/UserService";
@@ -47,22 +43,6 @@ export function useCities() {
 
   return {
     cities: data,
-    error: error,
-    isLoading: isLoading
-  };
-}
-
-export function useBrands(categoryId?: number) {
-  const { data, error, isLoading } = useSWR(
-    "/brands",
-    () => (categoryId ? getBrandsByCategory(categoryId) : undefined),
-    {
-      revalidateOnFocus: false
-    }
-  );
-
-  return {
-    brands: data,
     error: error,
     isLoading: isLoading
   };
