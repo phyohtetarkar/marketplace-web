@@ -214,6 +214,7 @@ function RenewSubscription() {
                       onClick={async () => {
                         try {
                           setPromoCodeError(undefined);
+                          setSubscriptionPromo(undefined);
                           if (!promoCode) {
                             throw "Please enter promo code";
                           }
