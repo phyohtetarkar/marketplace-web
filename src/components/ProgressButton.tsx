@@ -2,7 +2,14 @@ import { ReactNode } from "react";
 
 interface ProgressButtonProps {
   type?: "button" | "submit";
-  variant?: "primary" | "secondary" | "accent" | "warning" | "danger" | "dark";
+  variant?:
+    | "primary"
+    | "secondary"
+    | "accent"
+    | "warning"
+    | "danger"
+    | "dark"
+    | "default";
   theme?: "fill" | "outline";
   loading?: boolean;
   className?: string;

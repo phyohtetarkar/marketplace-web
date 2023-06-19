@@ -2,7 +2,8 @@ import makeApiRequest from "../common/makeApiRequest";
 import {
   PaymentTokenResult,
   ShopSubscription,
-  SubscriptionPlan
+  SubscriptionPlan,
+  SubscriptionPromo
 } from "../common/models";
 import { validateResponse } from "../common/utils";
 
@@ -85,5 +86,18 @@ export async function renewSubscription({
   return resp
     .json()
     .then((json) => json as PaymentTokenResult)
+    .catch((e) => undefined);
+}
+
+export async function getSubscriptionPromo(code: string) {
+  const url = `subscription-promos/${code}`;
+
+  const resp = await makeApiRequest(url, {}, true);
+
+  await validateResponse(resp);
+
+  return resp
+    .json()
+    .then((json) => json as SubscriptionPromo)
     .catch((e) => undefined);
 }

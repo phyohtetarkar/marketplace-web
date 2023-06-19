@@ -16,6 +16,7 @@ const Select = forwardRef<HTMLSelectElement, SelectInputProps>((props, ref) => {
     onBlur,
     error,
     disabled,
+    className,
     children,
     height = formControlHeight
   } = props;
@@ -30,7 +31,9 @@ const Select = forwardRef<HTMLSelectElement, SelectInputProps>((props, ref) => {
         onBlur={onBlur}
         value={value}
         disabled={disabled}
-        className={`form-select ps-3 ${error ? "is-invalid" : ""}`}
+        className={`form-select ps-3 ${error ? "is-invalid" : ""} ${
+          className ?? ""
+        }`}
         style={{
           height: height
         }}

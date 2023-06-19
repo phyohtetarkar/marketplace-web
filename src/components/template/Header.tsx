@@ -1,6 +1,8 @@
 import {
   BuildingStorefrontIcon,
-  PlusCircleIcon
+  MagnifyingGlassIcon,
+  PlusCircleIcon,
+  XMarkIcon
 } from "@heroicons/react/24/outline";
 import { Offcanvas } from "bootstrap";
 import Image from "next/image";
@@ -10,6 +12,8 @@ import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 import { AuthenticationContext } from "../../common/contexts";
 import { ShoppingCartView } from "../checkout";
 import Dropdown from "../Dropdown";
+import { Input, Select } from "../forms";
+import Modal from "../Modal";
 import AccountDropdown from "./AccountDropdown";
 import HeaderSearchHints from "./HeaderSearchHints";
 import MultiCategoryDropdown from "./MultiCategoryDropdown";
@@ -48,7 +52,11 @@ function Header({ hideAuth }: HeaderProps) {
   const router = useRouter();
   const offcanvasRef = useRef<HTMLDivElement | null>(null);
   const offcanvas = useRef<Offcanvas>();
+  const [isShowSearch, setShowSearch] = useState(false);
   const [lang, setLang] = useState("mm");
+
+  const searchRef = useRef<HTMLInputElement | null>(null);
+  const optionRef = useRef<HTMLSelectElement | null>(null);
 
   useEffect(() => {
     const initOffcanvas = async () => {
@@ -94,19 +102,20 @@ function Header({ hideAuth }: HeaderProps) {
   );
 
   return (
-    <header className="fixed-top">
-      <nav
-        className="navbar navbar-expand-lg navbar-light bg-white border-bottom"
-        style={{ height: 70 }}
-      >
-        <div className="container">
-          <Link href="/" className="navbar-brand">
-            {/* <FontAwesomeIcon
+    <>
+      <header className="fixed-top">
+        <nav
+          className="navbar navbar-expand-lg navbar-light bg-white border-bottom"
+          style={{ height: 70 }}
+        >
+          <div className="container">
+            <Link href="/" className="navbar-brand">
+              {/* <FontAwesomeIcon
               icon={["fas", "shopping-basket"]}
               className="d-inline-block"
             /> */}
-            <div className="d-flex align-items-center me-2">
-              {/* <div
+              <div className="d-flex align-items-center me-2">
+                {/* <div
                 className="ratio"
                 style={
                   { width: 160, "--bs-aspect-ratio": "30%" } as CSSProperties
@@ -120,194 +129,54 @@ function Header({ hideAuth }: HeaderProps) {
                   objectFit="contain"
                 />
               </div> */}
-              <div
-                className="ratio"
-                style={
-                  { width: 160, "--bs-aspect-ratio": "30%" } as CSSProperties
-                }
-              >
-                <Image
-                  src="/images/logo-h.svg"
-                  fill
-                  alt=""
-                  sizes="33vw"
-                  priority
-                  style={{
-                    objectFit: "contain"
-                  }}
-                />
-              </div>
-              {/* <h4 className="mb-0 fw-bold text-secondary">
+                <div
+                  className="ratio"
+                  style={
+                    { width: 160, "--bs-aspect-ratio": "30%" } as CSSProperties
+                  }
+                >
+                  <Image
+                    src="/images/logo-h.svg"
+                    fill
+                    alt=""
+                    sizes="33vw"
+                    priority
+                    style={{
+                      objectFit: "contain"
+                    }}
+                  />
+                </div>
+                {/* <h4 className="mb-0 fw-bold text-secondary">
                 {process.env.NEXT_PUBLIC_APP_NAME}
               </h4> */}
-            </div>
-          </Link>
+              </div>
+            </Link>
 
-          <div className="hstack flex-grow-1">
-            <ul className="navbar-nav align-items-lg-center gap-2 d-none d-lg-inline">
-              <li className="nav-item">
-                <HeaderSearchHints />
-              </li>
-            </ul>
-
-            <div className="flex-grow-1"></div>
-
-            <AuthenticationContext.Consumer>
-              {({ payload, status }) => {
-                if (!status || status === "loading") {
-                  return null;
-                }
-
-                if (status === "success") {
-                  return null;
-                }
-
-                return (
-                  <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0 d-none d-lg-flex">
-                    <div className="nav-item">
-                      <Link
-                        href="/login"
-                        className="text-decoration-none fw-medium nav-link"
-                      >
-                        Sign in
-                      </Link>
-                    </div>
-                    <div className="nav-item">
-                      <Link
-                        href="/sign-up"
-                        className="btn btn-primary text-nowrap"
-                      >
-                        Register
-                      </Link>
-                    </div>
-                  </div>
-                );
-              }}
-            </AuthenticationContext.Consumer>
-
-            <div className="nav-item ms-2">
-              <ShoppingCartView />
-              {/* <Link href="/shopping-cart">
-                <a className="nav-link">
-                  <div className="position-relative ms-2 hstack">
-                    <ShoppingCartIcon width={24} strokeWidth={1.5} />
-                    <div
-                      className="position-absolute top-0 start-100 translate-middle rounded-pill bg-danger text-light px-1 fw-light hstack"
-                      style={{
-                        fontSize: 12,
-                        height: 17
-                      }}
-                    >
-                      0
-                    </div>
-                  </div>
-                </a>
-              </Link> */}
-            </div>
-          </div>
-        </div>
-      </nav>
-      <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom">
-        <div className="container">
-          <div
-            ref={offcanvasRef}
-            className="offcanvas offcanvas-end bg-white"
-            tabIndex={-1}
-            id="offcanvasNavbar"
-            aria-labelledby="offcanvasNavbarLabel"
-          >
-            <div className="offcanvas-header py-2h">
-              <h5
-                className="offcanvas-title fw-bold text-primary mb-0 d-flex align-items-center"
-                id="offcanvasNavbarLabel"
-              >
-                {/* <Image
-                src="/images/logo_round.png"
-                width={30}
-                height={30}
-                alt=""
-              /> */}
-                <Image
-                  src="/images/logo-h.svg"
-                  width={130}
-                  height={40}
-                  alt=""
-                  priority
-                  style={{
-                    objectFit: "contain"
-                  }}
-                />
-                {/* <span className="">{process.env.NEXT_PUBLIC_APP_NAME}</span> */}
-              </h5>
-              <button
-                type="button"
-                className="btn-close btn-close text-reset shadow-none"
-                aria-label="Close"
-                onClick={() => {
-                  offcanvas.current?.hide();
-                }}
-              ></button>
-            </div>
-            <hr className="my-0 bg-light-gray d-block d-lg-none" />
-            <div className="offcanvas-body">
-              <ul className="navbar-nav align-items-lg-center gap-2">
-                <li className="nav-item d-none d-lg-block">
-                  <MultiCategoryDropdown />
-                </li>
-                <li className="nav-item d-block d-lg-none">
-                  <NavLink href="/collections">
-                    <div className="hstack">
-                      <span>Categories</span>
-                    </div>
-                  </NavLink>
-                </li>
+            <div className="hstack flex-grow-1">
+              <ul className="navbar-nav align-items-lg-center gap-2 d-none d-lg-inline">
                 <li className="nav-item">
-                  <NavLink href="/shops">
-                    <div className="hstack">
-                      <BuildingStorefrontIcon
-                        width={20}
-                        className="me-1 d-none d-lg-block"
-                      />
-                      <span>Shops</span>
-                    </div>
-                  </NavLink>
-                </li>
-                {/* <li className="nav-item">
-                  <NavLink href="/shops">
-                    <div className="hstack">
-                      <QuestionMarkCircleIcon
-                        width={20}
-                        className="me-1 d-none d-lg-block"
-                      />
-                      <span>FAQs</span>
-                    </div>
-                  </NavLink>
-                </li> */}
-                <li className="nav-item">
-                  <NavLink href="/account/shops/create">
-                    <div className="hstack">
-                      <PlusCircleIcon
-                        width={20}
-                        className="me-1 d-none d-lg-block"
-                      />
-                      <span>Create shop</span>
-                    </div>
-                  </NavLink>
+                  <HeaderSearchHints />
                 </li>
               </ul>
 
               <div className="flex-grow-1"></div>
 
+              <div className="nav-item d-block d-lg-none">
+                <div
+                  role={"button"}
+                  className="nav-link pe-0"
+                  onClick={() => {
+                    setShowSearch(true);
+                  }}
+                >
+                  <MagnifyingGlassIcon width={24} strokeWidth={1.5} />
+                </div>
+              </div>
+
               <AuthenticationContext.Consumer>
                 {({ payload, status }) => {
-                  if (payload && status === "success") {
-                    return (
-                      <div className="navbar-nav align-items-lg-center mt-3 mt-lg-0">
-                        <AccountDropdown
-                          onNavClick={() => offcanvas.current?.hide()}
-                        />
-                      </div>
-                    );
+                  if (!status || status === "loading") {
+                    return null;
                   }
 
                   if (status === "success") {
@@ -315,74 +184,258 @@ function Header({ hideAuth }: HeaderProps) {
                   }
 
                   return (
-                    <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0 d-lg-none">
+                    <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0 d-none d-lg-flex">
                       <div className="nav-item">
-                        <div
-                          role="button"
-                          className="btn btn-outline-primary me-2"
-                          data-bs-toggle="offcanvas"
-                          data-bs-target="#offcanvasNavbar"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            router.push("/login");
-                          }}
+                        <Link
+                          href="/login"
+                          className="text-decoration-none fw-medium nav-link"
                         >
                           Sign in
-                        </div>
+                        </Link>
                       </div>
                       <div className="nav-item">
-                        <div
-                          role="button"
+                        <Link
+                          href="/sign-up"
                           className="btn btn-primary text-nowrap"
-                          data-bs-toggle="offcanvas"
-                          data-bs-target="#offcanvasNavbar"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            router.push("/sign-up");
-                          }}
                         >
                           Register
-                        </div>
+                        </Link>
                       </div>
                     </div>
                   );
                 }}
               </AuthenticationContext.Consumer>
+
+              <div className="nav-item ms-2">
+                <ShoppingCartView />
+              </div>
             </div>
           </div>
-
-          <div className="navbar-nav ms-3 d-none d-lg-block">
-            <Dropdown
-              toggle={localeImage}
-              className="nav-item"
-              toggleClassName="dropdown-toggle nav-link hstack"
-              menuClassName="dropdown-menu-end"
+        </nav>
+        <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+          <div className="container">
+            <div
+              ref={offcanvasRef}
+              className="offcanvas offcanvas-end bg-white"
+              tabIndex={-1}
+              id="offcanvasNavbar"
+              aria-labelledby="offcanvasNavbarLabel"
             >
-              {localeItems}
-            </Dropdown>
-          </div>
+              <div className="offcanvas-header py-2h">
+                <h5
+                  className="offcanvas-title fw-bold text-primary mb-0 d-flex align-items-center"
+                  id="offcanvasNavbarLabel"
+                >
+                  <Image
+                    src="/images/logo-h.svg"
+                    width={130}
+                    height={40}
+                    alt=""
+                    priority
+                    style={{
+                      objectFit: "contain"
+                    }}
+                  />
+                  {/* <span className="">{process.env.NEXT_PUBLIC_APP_NAME}</span> */}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close btn-close text-reset shadow-none"
+                  aria-label="Close"
+                  onClick={() => {
+                    offcanvas.current?.hide();
+                  }}
+                ></button>
+              </div>
+              <hr className="my-0 bg-light-gray d-block d-lg-none" />
+              <div className="offcanvas-body">
+                <ul className="navbar-nav align-items-lg-center gap-2">
+                  <li className="nav-item d-none d-lg-block">
+                    <MultiCategoryDropdown />
+                  </li>
+                  <li className="nav-item d-block d-lg-none">
+                    <NavLink href="/collections">
+                      <div className="hstack">
+                        <span>Categories</span>
+                      </div>
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink href="/shops">
+                      <div className="hstack">
+                        <BuildingStorefrontIcon
+                          width={20}
+                          className="me-1 d-none d-lg-block"
+                        />
+                        <span>Shops</span>
+                      </div>
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink href="/account/shops/create">
+                      <div className="hstack">
+                        <PlusCircleIcon
+                          width={20}
+                          className="me-1 d-none d-lg-block"
+                        />
+                        <span>Create shop</span>
+                      </div>
+                    </NavLink>
+                  </li>
+                </ul>
 
-          <div className="d-block d-lg-none">
-            <Dropdown
-              toggle={localeImage}
-              toggleClassName="dropdown-toggle hstack text-light"
+                <div className="flex-grow-1"></div>
+
+                <AuthenticationContext.Consumer>
+                  {({ payload, status }) => {
+                    if (payload && status === "success") {
+                      return (
+                        <div className="navbar-nav align-items-lg-center mt-3 mt-lg-0">
+                          <AccountDropdown
+                            onNavClick={() => offcanvas.current?.hide()}
+                          />
+                        </div>
+                      );
+                    }
+
+                    if (status === "success") {
+                      return null;
+                    }
+
+                    return (
+                      <div className="ms-lg-2 d-flex align-items-center mt-3 mt-lg-0 d-lg-none">
+                        <div className="nav-item">
+                          <div
+                            role="button"
+                            className="btn btn-outline-primary me-2"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasNavbar"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              router.push("/login");
+                            }}
+                          >
+                            Sign in
+                          </div>
+                        </div>
+                        <div className="nav-item">
+                          <div
+                            role="button"
+                            className="btn btn-primary text-nowrap"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasNavbar"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              router.push("/sign-up");
+                            }}
+                          >
+                            Register
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }}
+                </AuthenticationContext.Consumer>
+              </div>
+            </div>
+
+            <div className="navbar-nav ms-3 d-none d-lg-block">
+              <Dropdown
+                toggle={localeImage}
+                className="nav-item"
+                toggleClassName="dropdown-toggle nav-link hstack"
+                menuClassName="dropdown-menu-end"
+              >
+                {localeItems}
+              </Dropdown>
+            </div>
+
+            <div className="d-block d-lg-none">
+              <Dropdown
+                toggle={localeImage}
+                toggleClassName="dropdown-toggle hstack text-light"
+              >
+                {localeItems}
+              </Dropdown>
+            </div>
+
+            <button
+              className="navbar-toggler ms-auto border-0"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasNavbar"
+              aria-controls="offcanvasNavbar"
             >
-              {localeItems}
-            </Dropdown>
+              <span className="navbar-toggler-icon"></span>
+            </button>
           </div>
+        </nav>
+      </header>
+      <Modal
+        show={isShowSearch}
+        onHidden={() => {
+          if (searchRef.current) {
+            searchRef.current.value = "";
+          }
+          if (optionRef.current) {
+            optionRef.current.value = "product";
+          }
+        }}
+      >
+        {(isShown) => {
+          if (!isShown) {
+            return <></>;
+          }
+          return (
+            <div className="modal-body">
+              <div className="position-relative">
+                <form
+                  className={`input-group`}
+                  onSubmit={(evt) => {
+                    evt.preventDefault();
+                    const type = optionRef.current?.value;
+                    const search = searchRef.current?.value;
+                    if (!search) {
+                      return;
+                    }
 
-          <button
-            className="navbar-toggler ms-auto border-0"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasNavbar"
-            aria-controls="offcanvasNavbar"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-        </div>
-      </nav>
-    </header>
+                    if (type === "product") {
+                      router.push(`/products?q=${search.toLowerCase()}`);
+                    } else if (type === "shop") {
+                      router.push(`/shops?q=${search.toLowerCase()}`);
+                    }
+
+                    setShowSearch(false);
+                  }}
+                >
+                  <div className="input-group-text p-0 border-0">
+                    <Select ref={optionRef} className="rounded-0 rounded-start">
+                      <option value="product">Product</option>
+                      <option value="shop">Shop</option>
+                    </Select>
+                  </div>
+                  <Input
+                    ref={searchRef}
+                    type={"text"}
+                    placeholder={`Type here...`}
+                  />
+                </form>
+
+                <div
+                  role={"button"}
+                  className="position-absolute top-50 end-0 translate-middle-y me-2"
+                  onClick={() => {
+                    setShowSearch(false);
+                  }}
+                >
+                  <XMarkIcon width={24} />
+                </div>
+              </div>
+            </div>
+          );
+        }}
+      </Modal>
+    </>
   );
 }
 

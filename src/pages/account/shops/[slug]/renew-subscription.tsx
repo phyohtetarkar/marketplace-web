@@ -3,8 +3,16 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
-import { Shop, SubscriptionPlan } from "../../../../common/models";
-import { formatNumber, parseErrorResponse } from "../../../../common/utils";
+import {
+  Shop,
+  SubscriptionPlan,
+  SubscriptionPromo
+} from "../../../../common/models";
+import {
+  calcDiscount,
+  formatNumber,
+  parseErrorResponse
+} from "../../../../common/utils";
 import Alert from "../../../../components/Alert";
 import { Input } from "../../../../components/forms";
 import Loading from "../../../../components/Loading";
@@ -13,6 +21,7 @@ import ProgressButton from "../../../../components/ProgressButton";
 import { ShopManage } from "../../../../components/shop";
 import {
   getAllSubscriptions,
+  getSubscriptionPromo,
   renewSubscription
 } from "../../../../services/SubscriptionService";
 
@@ -21,9 +30,18 @@ function RenewSubscription() {
 
   const [subscriptionPlan, setSubscriptionPlan] = useState<SubscriptionPlan>();
 
+  const [subscriptionPromo, setSubscriptionPromo] =
+    useState<SubscriptionPromo>();
+
+  const [promoCode, setPromoCode] = useState<string>();
+
+  const [promoCodeError, setPromoCodeError] = useState<string>();
+
   const [showPriceSummary, setShowPriceSummary] = useState(false);
 
   const [isSubmitting, setSubmitting] = useState(false);
+
+  const [loadingPromo, setLoadingPromo] = useState(false);
 
   const { data, isLoading, error } = useSWR(
     "/subscription-plans",
@@ -33,17 +51,31 @@ function RenewSubscription() {
     }
   );
 
+  const getDiscountValue = () => {
+    if (subscriptionPromo) {
+      const promo = subscriptionPromo;
+      return (
+        (subscriptionPlan?.price ?? 0) -
+        calcDiscount(promo.valueType, promo.value, subscriptionPlan?.price ?? 0)
+      );
+    }
+
+    return 0;
+  };
+
   const handleSubmit = async (shop: Shop) => {
     try {
       setSubmitting(true);
       const result = await renewSubscription({
         shopId: shop.id ?? 0,
-        subscriptionPlanId: subscriptionPlan?.id ?? 0
+        subscriptionPlanId: subscriptionPlan?.id ?? 0,
+        promoCodeId: subscriptionPromo?.id
       });
       if (result) {
         window.location.href = result.webPaymentUrl;
       } else {
-        router.push(`/account/shops/${shop.slug}/subscriptions`);
+        router.push(`/account/shops/${shop.id}/subscriptions`);
+        toast.success("Subscription success");
       }
     } catch (error) {
       const msg = parseErrorResponse(error);
@@ -132,7 +164,16 @@ function RenewSubscription() {
           </div>
         </div>
 
-        <Modal show={showPriceSummary}>
+        <Modal
+          show={showPriceSummary}
+          onHidden={() => {
+            setLoadingPromo(false);
+            setPromoCodeError(undefined);
+            setPromoCode(undefined);
+            setSubscriptionPromo(undefined);
+            setSubscriptionPlan(undefined);
+          }}
+        >
           {(isShown) => {
             if (!isShown) {
               return <></>;
@@ -151,11 +192,58 @@ function RenewSubscription() {
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <div className={`input-group mb-3`}>
-                    <Input placeholder="Promo code" height={44} />
-                    <ProgressButton className="" theme="outline">
+                  <div
+                    className={`input-group mb-3 ${
+                      promoCodeError ? "has-validation" : ""
+                    }`}
+                  >
+                    <Input
+                      placeholder="Promo code"
+                      height={44}
+                      value={promoCode ?? ""}
+                      className={`${promoCodeError ? "is-invalid" : ""} ${
+                        !promoCodeError && subscriptionPromo ? "is-valid" : ""
+                      }`}
+                      onChange={(evt) => {
+                        setPromoCode(evt.target.value);
+                      }}
+                    />
+                    <ProgressButton
+                      loading={loadingPromo}
+                      variant="default"
+                      onClick={async () => {
+                        try {
+                          setPromoCodeError(undefined);
+                          if (!promoCode) {
+                            throw "Please enter promo code";
+                          }
+                          setLoadingPromo(true);
+                          const promo = await getSubscriptionPromo(promoCode);
+                          if (!promo) {
+                            throw "Invalid promo code";
+                          }
+
+                          if (promo.used) {
+                            throw "Promo code already used";
+                          }
+
+                          if (promo.expiredAt < new Date().getTime()) {
+                            throw "Promo code expired";
+                          }
+                          setSubscriptionPromo(promo);
+                        } catch (error) {
+                          const msg = parseErrorResponse(error);
+                          setPromoCodeError(msg);
+                        } finally {
+                          setLoadingPromo(false);
+                        }
+                      }}
+                    >
                       Apply
                     </ProgressButton>
+                    {promoCodeError && (
+                      <div className="invalid-feedback">{promoCodeError}</div>
+                    )}
                   </div>
 
                   <div className="hstack justify-content-between mb-2h">
@@ -181,7 +269,9 @@ function RenewSubscription() {
 
                   <div className="hstack justify-content-between">
                     <dt className="fw-semibold">Discount:</dt>
-                    <dd className="text-danger mb-0">-{formatNumber(0)} Ks</dd>
+                    <dd className="text-danger mb-0">
+                      -{formatNumber(getDiscountValue())} Ks
+                    </dd>
                   </div>
 
                   <hr className="text-muted" />
@@ -191,13 +281,17 @@ function RenewSubscription() {
                       Total Price:
                     </dt>
                     <dd className="mb-0" style={{ fontSize: "1.2rem" }}>
-                      {formatNumber(subscriptionPlan?.price ?? 0)} Ks
+                      {formatNumber(
+                        (subscriptionPlan?.price ?? 0) - getDiscountValue()
+                      )}
+                      &nbsp;Ks
                     </dd>
                   </div>
                 </div>
                 <div className="modal-footer">
                   <ProgressButton
                     className="py-2 px-3"
+                    disabled={loadingPromo}
                     loading={isSubmitting}
                     onClick={() => handleSubmit(shop)}
                   >

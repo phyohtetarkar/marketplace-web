@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { APIError, UnauthorizeError } from "./customs";
-import { Discount } from "./models";
+import { Discount, DiscountType } from "./models";
 
 export function formatTimestamp(timestamp: number | string, withTime = false) {
   let date = dayjs(timestamp);
@@ -35,6 +35,21 @@ export function transformDiscount(discount: Discount, price = 0, qty = 1) {
   const percent = discount.value ?? 0;
   const discountPrice = (percent * price) / 100;
   return (price - discountPrice) * qty;
+}
+
+export function calcDiscount(
+  type: DiscountType,
+  amount: number,
+  value = 0,
+  qty = 1
+) {
+  if (type === "FIXED_AMOUNT") {
+    return (value - amount) * qty;
+  }
+
+  const percent = amount;
+  const discounted = (percent * value) / 100;
+  return (value - discounted) * qty;
 }
 
 export function wordPerMinute(wordCount: number) {

@@ -2,7 +2,11 @@ import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import useSWR from "swr";
 import { Discount } from "../../common/models";
-import { formatTimestamp, parseErrorResponse } from "../../common/utils";
+import {
+  formatNumber,
+  formatTimestamp,
+  parseErrorResponse
+} from "../../common/utils";
 import { deleteDiscount, findDiscounts } from "../../services/DiscountService";
 import Alert from "../Alert";
 import ConfirmModal from "../ConfirmModal";
@@ -78,15 +82,11 @@ function DiscountListing({ shopId }: { shopId: number }) {
               {data?.contents.map((d, i) => {
                 return (
                   <tr key={d.id}>
-                    <td className="w-100 py-2h">
+                    <td className="w-100 py-3">
                       <span>{d.title}</span>
                     </td>
-                    <td>
-                      <span className="text-nowrap">{d.value}</span>
-                    </td>
-                    <td>
-                      <span className="text-nowrap">{type(d.type)}</span>
-                    </td>
+                    <td>{formatNumber(d.value ?? 0)}</td>
+                    <td>{d.type === "FIXED_AMOUNT" ? ".00" : "%"}</td>
                     <td>{formatTimestamp(d.createdAt ?? 0)}</td>
                     <td>
                       <div className="hstack align-items-center">

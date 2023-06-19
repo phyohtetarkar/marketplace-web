@@ -67,7 +67,7 @@ function PricingCard(props: PricingCardProps) {
           )} */}
           <div className="d-flex justify-content-between">
             <span>Delivery Fee</span>
-            <span className="text-success">Depend on location</span>
+            <span className="text-success">Depend on shop</span>
           </div>
 
           <hr className="text-muted" />
