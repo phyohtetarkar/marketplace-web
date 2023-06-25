@@ -338,7 +338,7 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
               <div className="hstack gap-3 ms-lg-auto">
                 {data?.paymentMethod === "BANK_TRANSFER" && (
                   <button
-                    className="btn btn-default text-nowrap"
+                    className="btn btn-light text-nowrap"
                     onClick={() => setShowReceipt(true)}
                   >
                     View receipt
@@ -349,7 +349,7 @@ function ShopOrderDetail({ shop }: { shop: Shop }) {
                     <Dropdown
                       toggle={<div>Update status</div>}
                       menuClassName="dropdown-menu-end"
-                      toggleClassName="btn btn-light dropdown-toggle hstack"
+                      toggleClassName="btn btn-primary dropdown-toggle hstack"
                     >
                       {data?.status == "PENDING" && (
                         <li

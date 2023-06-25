@@ -355,10 +355,11 @@ function OrderDetail() {
                 </ol>
               </nav>
             </div>
-            <div className="col-md-6 d-flex">
+            <div className="col-md-6 d-flex gap-3">
+              <div className="flex-grow-1 d-none d-md-flex"></div>
               {data?.status === "PENDING" && (
                 <button
-                  className="text-nowrap btn btn-danger ms-md-auto"
+                  className="text-nowrap btn btn-danger"
                   onClick={() => setConfirmCancel(true)}
                 >
                   Cancel Order
@@ -369,7 +370,6 @@ function OrderDetail() {
                   toggle="Receipt image"
                   toggleClassName="btn btn-light dropdown-toggle"
                   menuClassName="dropdown-menu-end"
-                  className="ms-3"
                 >
                   <li
                     className="dropdown-item"
