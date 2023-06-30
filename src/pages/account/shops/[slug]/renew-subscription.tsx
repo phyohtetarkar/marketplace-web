@@ -192,60 +192,74 @@ function RenewSubscription() {
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <div
-                    className={`input-group mb-3 ${
-                      promoCodeError ? "has-validation" : ""
-                    }`}
-                  >
-                    <Input
-                      placeholder="Promo code"
-                      height={44}
-                      value={promoCode ?? ""}
-                      className={`${promoCodeError ? "is-invalid" : ""} ${
-                        !promoCodeError && subscriptionPromo ? "is-valid" : ""
+                  {subscriptionPlan?.promoUsable && (
+                    <div
+                      className={`input-group mb-3 ${
+                        promoCodeError ? "has-validation" : ""
                       }`}
-                      onChange={(evt) => {
-                        setPromoCode(evt.target.value);
-                      }}
-                    />
-                    <ProgressButton
-                      loading={loadingPromo}
-                      variant="default"
-                      onClick={async () => {
-                        try {
-                          setPromoCodeError(undefined);
-                          setSubscriptionPromo(undefined);
-                          if (!promoCode) {
-                            throw "Please enter promo code";
-                          }
-                          setLoadingPromo(true);
-                          const promo = await getSubscriptionPromo(promoCode);
-                          if (!promo) {
-                            throw "Invalid promo code";
-                          }
-
-                          if (promo.used) {
-                            throw "Promo code already used";
-                          }
-
-                          if (promo.expiredAt < new Date().getTime()) {
-                            throw "Promo code expired";
-                          }
-                          setSubscriptionPromo(promo);
-                        } catch (error) {
-                          const msg = parseErrorResponse(error);
-                          setPromoCodeError(msg);
-                        } finally {
-                          setLoadingPromo(false);
-                        }
-                      }}
                     >
-                      Apply
-                    </ProgressButton>
-                    {promoCodeError && (
-                      <div className="invalid-feedback">{promoCodeError}</div>
-                    )}
-                  </div>
+                      <Input
+                        placeholder="Promo code"
+                        height={44}
+                        value={promoCode ?? ""}
+                        disabled={!subscriptionPlan?.promoUsable}
+                        className={`${promoCodeError ? "is-invalid" : ""} ${
+                          !promoCodeError && subscriptionPromo ? "is-valid" : ""
+                        }`}
+                        onChange={(evt) => {
+                          setPromoCode(evt.target.value);
+                        }}
+                      />
+                      <ProgressButton
+                        loading={loadingPromo}
+                        variant="default"
+                        disabled={!subscriptionPlan?.promoUsable}
+                        onClick={async () => {
+                          try {
+                            setPromoCodeError(undefined);
+                            setSubscriptionPromo(undefined);
+                            if (!promoCode) {
+                              throw "Please enter promo code";
+                            }
+                            setLoadingPromo(true);
+                            const promo = await getSubscriptionPromo(promoCode);
+                            if (!promo) {
+                              throw "Invalid promo code";
+                            }
+
+                            if (promo.used) {
+                              throw "Promo code already used";
+                            }
+
+                            if (promo.expiredAt < new Date().getTime()) {
+                              throw "Promo code expired";
+                            }
+
+                            if (
+                              (promo.minConstraint ?? 0) >
+                              (subscriptionPlan?.price ?? 0)
+                            ) {
+                              throw `Promo code must be used on ${
+                                promo.minConstraint ?? 0
+                              } and above`;
+                            }
+
+                            setSubscriptionPromo(promo);
+                          } catch (error) {
+                            const msg = parseErrorResponse(error);
+                            setPromoCodeError(msg);
+                          } finally {
+                            setLoadingPromo(false);
+                          }
+                        }}
+                      >
+                        Apply
+                      </ProgressButton>
+                      {promoCodeError && (
+                        <div className="invalid-feedback">{promoCodeError}</div>
+                      )}
+                    </div>
+                  )}
 
                   <div className="hstack justify-content-between mb-2h">
                     <dt className="fw-semibold">Plan:</dt>

@@ -214,7 +214,7 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
     return "Server down";
   }
 
-  console.log(error);
+  //console.log(error);
 
   if (typeof error === "string" && error.length > 0) {
     return error;

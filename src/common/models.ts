@@ -352,7 +352,7 @@ export interface SubscriptionPromo {
   id: number;
   code: string;
   value: number;
-  minConstraint: number;
+  minConstraint?: number;
   valueType: DiscountType;
   expiredAt: number;
   used: boolean;

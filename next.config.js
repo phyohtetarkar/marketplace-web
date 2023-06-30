@@ -14,10 +14,6 @@ const nextConfig = {
       },
       {
         protocol: "http",
-        hostname: "52.77.255.240"
-      },
-      {
-        protocol: "http",
         hostname: "static.shoppingmallmyanmar.com"
       }
     ]
