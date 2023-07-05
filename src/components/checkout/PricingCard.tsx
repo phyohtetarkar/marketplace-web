@@ -102,7 +102,7 @@ function PricingCard(props: PricingCardProps) {
               Checkout
             </button>
             <Link href={"/"} className="btn btn-default py-2">
-              Contine Shopping
+              Continue Shopping
             </Link>
           </div>
         </div>
