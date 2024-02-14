@@ -1,8 +1,4 @@
-import {
-  ChevronDownIcon,
-  MinusIcon,
-  PlusIcon
-} from "@heroicons/react/24/outline";
+import { RiAddFill, RiArrowDownFill, RiSubtractFill } from "@remixicon/react";
 import { ReactNode, useState } from "react";
 
 interface AccordionProps {
@@ -37,9 +33,8 @@ function Accordion(props: AccordionProps) {
         {header(isOpen)}
         <div className="flex-grow-1"></div>
         {iconType === "chevron" && (
-          <ChevronDownIcon
-            width={20}
-            strokeWidth={2}
+          <RiArrowDownFill
+            size={20}
             className={`ms-auto`}
             style={{
               rotate: `${isOpen ? "180deg" : "0deg"}`,
@@ -51,9 +46,8 @@ function Accordion(props: AccordionProps) {
         {iconType === "plus-minus" && (
           <div className="position-relative" style={{ width: 20 }}>
             <div className="position-absolute top-50 start-50 translate-middle">
-              <PlusIcon
-                width={20}
-                strokeWidth={2}
+              <RiAddFill
+                size={20}
                 style={{
                   rotate: `${isOpen ? "180deg" : "0deg"}`,
                   visibility: isOpen ? "hidden" : "visible",
@@ -62,9 +56,8 @@ function Accordion(props: AccordionProps) {
               />
             </div>
             <div className="position-absolute top-50 start-50 translate-middle">
-              <MinusIcon
-                width={20}
-                strokeWidth={2}
+              <RiSubtractFill
+                size={20}
                 className={`text-primary`}
                 style={{
                   rotate: `${isOpen ? "180deg" : "0deg"}`,
@@ -82,13 +75,13 @@ function Accordion(props: AccordionProps) {
             overflowY: "clip",
             height: `${
               isOpen
-                ? `${bodyElement ? bodyElement.clientHeight + "px" : "auto"}`
+                ? `${bodyElement ? bodyElement.clientHeight + "px" : undefined}`
                 : "0px"
             }`,
             transition: "height 0.25s ease-in"
           }}
         >
-          <div ref={setBodyElement} className={bodyClassName ?? ""}>
+          <div ref={setBodyElement} className={`${bodyClassName ?? ""}`}>
             {children}
           </div>
         </div>

@@ -1,7 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
+  // reactStrictMode: true,
+  logging: {
+    fetches: {
+      fullUrl: true
+    }
+  },
   images: {
     remotePatterns: [
       {
@@ -10,20 +14,16 @@ const nextConfig = {
       },
       {
         protocol: "http",
-        hostname: "localhost"
+        hostname: "**"
       },
-      {
-        protocol: "http",
-        hostname: "static.shoppingmallmyanmar.com"
-      }
     ]
   },
   async redirects() {
     return [
       {
-        source: "/account/shops/:slug",
-        destination: "/account/shops/:slug/dashboard",
-        permanent: true
+        source: "/profile/shops/:id",
+        destination: "/profile/shops/:id/dashboard",
+        permanent: true,
       }
     ];
   }

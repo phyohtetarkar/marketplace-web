@@ -1,7 +1,7 @@
 import ReactSelect from "react-select";
-import { formControlHeight, primaryColor } from "../common/app.config";
-import { useDiscounts } from "../common/hooks";
-import { Discount } from "../common/models";
+import { formControlHeight, primaryColor } from "@/common/app.config";
+import { useDiscounts } from "@/common/hooks";
+import { Discount } from "@/common/models";
 
 interface DiscountSelectProps {
   shopId: number;

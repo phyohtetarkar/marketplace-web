@@ -1,13 +1,15 @@
 $min-contrast-ratio: 2.5;
 
 //$primary: linear-gradient(right, #f79131 #d82435);
-$primary: #E15B51;
+// $primary: #E15B51;
+$primary: #4f46e5;
 
 $secondary: #2b3445;
 $light: #f3f4f6;
 $success: #00a524;
 $danger: #d50002;
 $warning: #ff9017;
+$info: #0d6efd;
 
 // $btn-font-weight: 500;
 
@@ -17,8 +19,9 @@ $border-radius: 0.35rem;
 
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/variables-dark";
 @import "../../node_modules/bootstrap/scss/mixins";
-//@import "../../node_modules/bootstrap/scss/maps";
+@import "../../node_modules/bootstrap/scss/maps";
 
 $custom-colors: (
   "default": #c9c9c9,
@@ -134,8 +137,8 @@ $accordion-icon-color: #444;
 $accordion-button-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$accordion-icon-color}'><path fill-rule='evenodd' d='M3.333 8.667h4v4c0 0.368 0.299 0.667 0.667 0.667s0.667-0.299 0.667-0.667v-4h4c0.368 0 0.667-0.299 0.667-0.667s-0.299-0.667-0.667-0.667h-4v-4c0-0.368-0.299-0.667-0.667-0.667s-0.667 0.299-0.667 0.667v4h-4c-0.368 0-0.667 0.299-0.667 0.667s0.299 0.667 0.667 0.667z'/></svg>");
 $accordion-button-active-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$accordion-icon-active-color}'><path fill-rule='evenodd' d='M3.333 8.667h9.333c0.368 0 0.667-0.299 0.667-0.667s-0.299-0.667-0.667-0.667h-9.333c-0.368 0-0.667 0.299-0.667 0.667s0.299 0.667 0.667 0.667z'/></svg>");
 
-$breadcrumb-divider-color: rgba(255, 255, 255, 0.6);
-$breadcrumb-active-color: rgba(255, 255, 255, 0.6);
+// $breadcrumb-divider-color: rgba(255, 255, 255, 0.6);
+// $breadcrumb-active-color: rgba(255, 255, 255, 0.6);
 //$breadcrumb-divider:                quote("/");
 $breadcrumb-font-size: 1rem;
 

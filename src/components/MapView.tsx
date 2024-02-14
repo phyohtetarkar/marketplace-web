@@ -1,5 +1,4 @@
-import { MapIcon } from "@heroicons/react/24/outline";
-import { MapPinIcon } from "@heroicons/react/24/solid";
+import { RiMapPinLine } from "@remixicon/react";
 import { Location } from "../common/models";
 
 export interface MapViewProps {
@@ -11,7 +10,7 @@ function MapView(props: MapViewProps) {
   return (
     <div className="ratio ratio-16x9 rounded border">
       <div className="position-absolute bg-light start-0 end-0 top-0 bottom-0 d-flex">
-        <MapPinIcon width={46} className="text-muted m-auto" />
+        <RiMapPinLine size={46} className="text-muted m-auto" />
       </div>
       <iframe
         width="100%"

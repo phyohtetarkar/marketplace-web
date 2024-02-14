@@ -1,11 +1,12 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/router";
+"use client";
+import { RiDeleteBinLine } from "@remixicon/react";
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
-import { AuthenticationContext } from "../../common/contexts";
-import { parseErrorResponse } from "../../common/utils";
-import { deleteFavoriteProduct } from "../../services/FavoriteProductService";
+import { AuthenticationContext } from "@/common/contexts";
+import { parseErrorResponse } from "@/common/utils";
+import { deleteFavoriteProduct } from "@/services/FavoriteProductService";
 import ProgressButton from "../ProgressButton";
 
 interface DeleteFromFavoriteButtonProps {
@@ -33,10 +34,11 @@ function DeleteFromFavoriteButton({
       loading={loading || disabled}
       theme="outline"
       className={`h-100 position-relative ${className ?? ""}`}
+      variant="danger"
       onClick={() => {
         if (authContext.status === "success") {
-          if (!authContext.payload?.verified) {
-            router.push("/confirm-otp");
+          if (!authContext.user?.emailVerified) {
+            router.push("/verify-email");
             return;
           }
           setLoading(true);
@@ -57,7 +59,7 @@ function DeleteFromFavoriteButton({
         }
       }}
     >
-      <TrashIcon width={18} className="me-2" />
+      <RiDeleteBinLine size={18} className="me-2" />
       Remove
     </ProgressButton>
   );

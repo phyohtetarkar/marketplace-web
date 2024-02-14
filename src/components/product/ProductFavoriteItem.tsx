@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Product } from "../../common/models";
-import { formatNumber, transformDiscount } from "../../common/utils";
-import AddToCartButton from "./AddToCartButton";
+import { Product } from "@/common/models";
+import { formatNumber, transformDiscount } from "@/common/utils";
 import DeleteFromFavoriteButton from "./DeleteFromFavoriteButton";
 
 interface ProductFavoriteProps {

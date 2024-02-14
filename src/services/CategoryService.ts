@@ -1,29 +1,49 @@
-import makeApiRequest from "../common/makeApiRequest";
-import { Category, ProductFilter } from "../common/models";
-import { buildQueryParams, validateResponse } from "../common/utils";
+import makeApiRequest from "@/common/makeApiRequest";
+import { Category, ProductFilter } from "@/common/models";
+import { buildQueryParams, validateResponse } from "@/common/utils";
 
-const basePath = "categories";
-
-export async function getAllCategories(tree: boolean) {
+export async function getAllCategories(root: boolean) {
   const query = buildQueryParams({
-    tree: tree
+    root: root
   });
-  const url = `${basePath}${query}`;
+  const url = `/content/categories${query}`;
 
-  const resp = await makeApiRequest(url);
+  const resp = await makeApiRequest({
+    url
+  });
 
   await validateResponse(resp);
 
   return resp.json() as Promise<Category[]>;
 }
 
-export async function getCategory(slug: string) {
-  const url = `${basePath}/${slug}`;
-  //const resp = await fetch(url);
+export async function getCategoryById(id: number) {
+  const url = `/admin/categories/${id}`;
 
-  const resp = await makeApiRequest(url);
+  const resp = await makeApiRequest({
+    url,
+    authenticated: true
+  });
 
-  await validateResponse(resp);
+  await validateResponse(resp, true);
+
+  return resp
+    .json()
+    .then((json) => json as Category)
+    .catch((e) => null);
+}
+
+export async function getCategoryBySlug(slug: string) {
+  const url = `/content/categories/${slug}`;
+
+  const resp = await makeApiRequest({
+    url,
+    options: {
+      cache: "no-store"
+    }
+  });
+
+  await validateResponse(resp, true);
 
   return resp
     .json()
@@ -32,23 +52,11 @@ export async function getCategory(slug: string) {
 }
 
 export async function getProductFilterByCategory(id: number) {
-  const url = `${basePath}/${id}/filter`;
+  const url = `/content/categories/${id}/product-filter`;
 
-  const resp = await makeApiRequest(url);
+  const resp = await makeApiRequest({ url });
 
   await validateResponse(resp);
 
   return (await resp.json()) as ProductFilter;
 }
-
-// export async function existsCateogryBySlug(slug: String, excludeId: number) {
-//   const query = buildQueryParams({
-//     exclude: excludeId
-//   });
-//   const url = `${getAPIBasePath()}/${basePath}/${slug}/exists${query}`;
-//   const resp = await fetch(url);
-
-//   await validateResponse(resp);
-
-//   return resp.json() as Promise<boolean>;
-// }

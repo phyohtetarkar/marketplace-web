@@ -1,21 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
-import { Discount, Product } from "../../common/models";
-import { formatNumber, parseErrorResponse } from "../../common/utils";
-import { applyDiscount, removeDiscount } from "../../services/DiscountService";
-import { findProducts, ProductQuery } from "../../services/ProductService";
+import { Discount, Product } from "@/common/models";
+import { formatNumber, parseErrorResponse } from "@/common/utils";
+import { applyDiscount, removeDiscount } from "@/services/DiscountService";
+import { findProducts, ProductQuery } from "@/services/ProductService";
 import Alert from "../Alert";
 import { Input } from "../forms";
 import Loading from "../Loading";
 
 interface DiscountApplyCheckProps {
+  shopId: number;
   discounId: number;
   productId: number;
   applied: boolean;
 }
 
 const DiscountApplyCheck = (props: DiscountApplyCheckProps) => {
-  const { discounId, productId, applied } = props;
+  const { shopId, discounId, productId, applied } = props;
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(applied);
 
@@ -38,7 +39,7 @@ const DiscountApplyCheck = (props: DiscountApplyCheckProps) => {
             onChange={(evt) => {
               setLoading(true);
               if (evt.target.checked) {
-                applyDiscount(discounId, [productId])
+                applyDiscount(shopId, discounId, [productId])
                   .then(() => {
                     setChecked(evt.target.checked);
                   })
@@ -47,7 +48,7 @@ const DiscountApplyCheck = (props: DiscountApplyCheckProps) => {
                   })
                   .finally(() => setLoading(false));
               } else {
-                removeDiscount(discounId, productId)
+                removeDiscount(shopId, productId)
                   .then(() => {
                     setChecked(evt.target.checked);
                   })
@@ -208,6 +209,7 @@ function DiscountApply({
                       className="form-check-input shadow-none"
                     /> */}
                     <DiscountApplyCheck
+                      shopId={shopId}
                       discounId={discount.id ?? 0}
                       productId={p.id ?? 0}
                       applied={discount.id === p.discount?.id}

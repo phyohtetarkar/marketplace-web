@@ -1,6 +1,7 @@
+"use client";
 import useSWR from "swr";
-import { parseErrorResponse } from "../../common/utils";
-import { getRelatedProducts } from "../../services/ProductService";
+import { parseErrorResponse } from "@/common/utils";
+import { getRelatedProducts } from "@/services/ProductService";
 import Alert from "../Alert";
 import Loading from "../Loading";
 import ProductGridItem from "./ProductGridItem";

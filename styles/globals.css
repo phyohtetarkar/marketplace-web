@@ -72,7 +72,6 @@
 
 html,
 body {
-  padding: 63px 0 0 0;
   margin: 0;
   height: 100%;
   background-color: #fff;
@@ -85,9 +84,9 @@ svg {
   display: block;
 }
 
-/* a {
-  color: #1a0dab !important;
-} */
+a {
+  color: var(--bs-anchor);
+}
 
 #__next {
   height: 100%;
@@ -151,12 +150,10 @@ svg {
 
 .dark-link {
   color: rgba(255, 255, 255, 0.75);
-  text-decoration: none;
 }
 
 .dark-link:hover {
   color: white;
-  text-decoration: none;
 }
 
 .dropdown-menu-macos {
@@ -192,9 +189,19 @@ svg {
   white-space: nowrap;
 }
 
+.dropdown-item-primary a {
+  color: #444;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
 .dropdown-item-primary:hover {
   color: var(--bs-light);
   background-color: var(--bs-primary);
+}
+
+.dropdown-item-primary:hover a {
+  color: var(--bs-light);
 }
 
 .dropdown-item-primary-light {
@@ -246,6 +253,26 @@ svg {
 
 .my-list-item.active svg {
   color: var(--bs-primary);
+}
+
+.autocomplete-dropdown-item {
+  color: #444;
+  padding: 0.5rem;
+}
+
+.autocomplete-dropdown-item:hover {
+  color: white;
+  background-color: var(--bs-primary);
+}
+
+.autocomplete-dropdown-item.active {
+  color: white;
+  background-color: var(--bs-primary);
+}
+
+.autocomplete-dropdown-item.disabled {
+  color: #999;
+  background-color: white;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

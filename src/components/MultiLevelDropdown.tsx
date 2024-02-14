@@ -1,50 +1,5 @@
+import Link from "next/link";
 import { ReactNode, useRef, useState } from "react";
-
-// export const sampleList = [
-//   {
-//     key: 1,
-//     title: "Food And Drink",
-//     children: []
-//   },
-//   {
-//     key: 2,
-//     title: "Electronics",
-//     children: [
-//       {
-//         key: 3,
-//         title: "Desktop And Computers",
-//         children: [
-//           {
-//             key: 7,
-//             title: "Monitors",
-//             children: null
-//           }
-//         ]
-//       },
-//       {
-//         key: 4,
-//         title: "Phones And Tablets",
-//         children: [
-//           {
-//             key: 5,
-//             title: "Apple",
-//             children: null
-//           },
-//           {
-//             key: 6,
-//             title: "Android",
-//             children: null
-//           }
-//         ]
-//       }
-//     ]
-//   },
-//   {
-//     key: 10,
-//     title: "Health & Beauty",
-//     children: []
-//   }
-// ] as MultiMenuItem[];
 
 export interface MultiMenuItem {
   key: number | string;
@@ -54,6 +9,8 @@ export interface MultiMenuItem {
 
 type GetMenuLabel<T> = (t: T) => ReactNode;
 
+type GetMenuLink<T> = (t: T) => string;
+
 type OnMenuClick<T> = (t: T) => void;
 
 type GetSubItems<T> = (t: T) => T[] | null | undefined;
@@ -61,6 +18,7 @@ type GetSubItems<T> = (t: T) => T[] | null | undefined;
 interface MenuItemProps<T> {
   getMenuLabel: GetMenuLabel<T>;
   getSubItems: GetSubItems<T>;
+  getMenuLink?: GetMenuLink<T>;
   onMenuClick?: OnMenuClick<T>;
 }
 
@@ -73,7 +31,7 @@ interface MultiDropdownProps<T> extends SubMenuProps<T> {
 }
 
 function MenuItem<T>(props: MenuItemProps<T> & { item: T }) {
-  const { item, getMenuLabel, getSubItems, onMenuClick } = props;
+  const { item, getMenuLabel, getSubItems, getMenuLink, onMenuClick } = props;
 
   const itemRef = useRef<any | null>(null);
   const [activeNode, setActiveNode] = useState<HTMLElement | null>(null);
@@ -83,11 +41,10 @@ function MenuItem<T>(props: MenuItemProps<T> & { item: T }) {
   return (
     <div
       ref={itemRef}
-      className="dropdown-item-primary py-2"
-      style={{ cursor: "default" }}
+      className="dropdown-item-primary"
       onClick={(evt) => {
         if (itemRef.current === evt.target) {
-          onMenuClick?.(item);
+          // onMenuClick?.(item);
         }
       }}
       onMouseEnter={(evt) => {
@@ -99,7 +56,29 @@ function MenuItem<T>(props: MenuItemProps<T> & { item: T }) {
         setActiveNode(null);
       }}
     >
-      {getMenuLabel(item)}
+      {getMenuLink ? (
+        <div className="position-relative">
+          <div
+            className="position-absolute top-50 translate-middle-y"
+            style={{
+              pointerEvents: "none"
+            }}
+          >
+            {getMenuLabel(item)}
+          </div>
+          <Link
+            href={getMenuLink?.(item) ?? "/"}
+            className="d-block"
+            style={{
+              pointerEvents: itemRef.current === activeNode ? "auto" : "none"
+            }}
+          >
+            <span className="invisible">{getMenuLabel(item)}</span>
+          </Link>
+        </div>
+      ) : (
+        getMenuLabel(item)
+      )}
       {activeNode && activeNode === itemRef.current && subItems && (
         <div
           className="position-absolute top-0 start-100 ms-n1 bottom-0"
@@ -110,6 +89,7 @@ function MenuItem<T>(props: MenuItemProps<T> & { item: T }) {
             getMenuLabel={getMenuLabel}
             getSubItems={getSubItems}
             onMenuClick={onMenuClick}
+            getMenuLink={getMenuLink}
           />
         </div>
       )}
@@ -118,14 +98,14 @@ function MenuItem<T>(props: MenuItemProps<T> & { item: T }) {
 }
 
 function SubMenu<T>(props: SubMenuProps<T>) {
-  const { items, getMenuLabel, getSubItems, onMenuClick } = props;
+  const { items, getMenuLabel, getSubItems, getMenuLink, onMenuClick } = props;
 
   if (items.length === 0) {
     return null;
   }
 
   return (
-    <div className="position-relative bg-white py-2 shadow-lg rounded h-100">
+    <div className="position-relative bg-white py-2 shadow-lg rounded">
       {items.map((e, i) => {
         return (
           <MenuItem
@@ -134,6 +114,7 @@ function SubMenu<T>(props: SubMenuProps<T>) {
             getMenuLabel={getMenuLabel}
             getSubItems={getSubItems}
             onMenuClick={onMenuClick}
+            getMenuLink={getMenuLink}
           />
         );
       })}
@@ -142,7 +123,8 @@ function SubMenu<T>(props: SubMenuProps<T>) {
 }
 
 function MultiLevelDropdown<T>(props: MultiDropdownProps<T>) {
-  const { toggle, items, getMenuLabel, getSubItems, onMenuClick } = props;
+  const { toggle, items, getMenuLabel, getSubItems, getMenuLink, onMenuClick } =
+    props;
   const [active, setActive] = useState(false);
 
   return (
@@ -159,51 +141,12 @@ function MultiLevelDropdown<T>(props: MultiDropdownProps<T>) {
             getMenuLabel={getMenuLabel}
             getSubItems={getSubItems}
             onMenuClick={onMenuClick}
+            getMenuLink={getMenuLink}
           />
         </div>
       )}
     </div>
   );
-
-  // return (
-  //   <Popover offset={[0, 10]} showOnHover>
-  //     {(show, hide) => {
-  //       return [
-  //         <Popover.Reference key={1}>{toggle}</Popover.Reference>,
-  //         <Popover.Popper key={2}>
-  //           <SubMenu
-  //             items={items}
-  //             getMenuLabel={getMenuLabel}
-  //             getSubItems={getSubItems}
-  //             onMenuClick={onMenuClick}
-  //           />
-  //         </Popover.Popper>
-  //       ];
-  //     }}
-  //   </Popover>
-  // );
-
-  // return (
-  //   <Dropdown
-  //     toggle={toggle}
-  //     toggleClassName="hstack"
-  //     menuClassName="shadow-lg border-0"
-  //     showOnHover
-  //   >
-  //     {items.map((e, i) => {
-  //       return (
-  //         <li key={i} style={{ minWidth: 200, cursor: "default" }}>
-  //           <MenuItem
-  //             item={e}
-  //             getMenuLabel={getMenuLabel}
-  //             getSubItems={getSubItems}
-  //             onMenuClick={onMenuClick}
-  //           />
-  //         </li>
-  //       );
-  //     })}
-  //   </Dropdown>
-  // );
 }
 
 export default MultiLevelDropdown;

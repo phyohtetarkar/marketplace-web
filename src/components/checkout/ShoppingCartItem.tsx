@@ -1,21 +1,21 @@
-import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { RiAddLine, RiDeleteBinLine, RiSubtractLine } from "@remixicon/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
-import { AuthenticationContext, ProgressContext } from "../../common/contexts";
-import { CartItem } from "../../common/models";
+import { AuthenticationContext, ProgressContext } from "@/common/contexts";
+import { CartItem, CartItemForm } from "@/common/models";
 import {
   debounce,
   formatNumber,
   parseErrorResponse,
   transformDiscount
-} from "../../common/utils";
+} from "@/common/utils";
 import {
   removeFromCart,
   updateQuantity
-} from "../../services/ShoppingCartService";
+} from "@/services/ShoppingCartService";
 
 interface ShoppingCartItemProps {
   item: CartItem;
@@ -29,7 +29,7 @@ function ShoppingCartItem(props: ShoppingCartItemProps) {
   //   Math.random() * 100
   // )}`;
   const { item, handleCheck, enableCheck, checked } = props;
-  const authContext = useContext(AuthenticationContext);
+  const { user } = useContext(AuthenticationContext);
 
   const progressContext = useContext(ProgressContext);
 
@@ -39,11 +39,11 @@ function ShoppingCartItem(props: ShoppingCartItemProps) {
 
   const [quantity, setQuantity] = useState(item.quantity);
 
-  const updateQty = async (value: CartItem) => {
+  const updateQty = async (value: CartItemForm) => {
     try {
       progressContext.update(true);
       await updateQuantity(value);
-      mutate("/cart-items");
+      mutate("/profile/cart-items");
     } catch (error) {
       setQuantity(item.quantity);
       const msg = parseErrorResponse(error);
@@ -67,13 +67,14 @@ function ShoppingCartItem(props: ShoppingCartItemProps) {
               setQuantity(qty);
 
               processUpdateQty({
-                ...item,
+                productId: item.product.id,
+                variantId: item.variant?.id,
                 quantity: qty
               });
             }
           }}
         >
-          <MinusIcon width={20} />
+          <RiSubtractLine size={20} />
         </button>
         <div
           className="bg-light align-items-center justify-content-center d-flex border"
@@ -85,26 +86,24 @@ function ShoppingCartItem(props: ShoppingCartItemProps) {
           className="btn btn-outline text-muted border border-start-0"
           onClick={() => {
             const qty = quantity + 1;
-            if (item.variant?.stockLeft) {
-              if (item.variant.stockLeft >= qty) {
-                setQuantity(qty);
-                processUpdateQty({
-                  ...item,
-                  quantity: qty
-                });
-              }
-            } else if (item.product.stockLeft) {
-              if (item.product.stockLeft >= qty) {
-                setQuantity(qty);
-                processUpdateQty({
-                  ...item,
-                  quantity: qty
-                });
-              }
+            if (item.variant?.available) {
+              setQuantity(qty);
+              processUpdateQty({
+                productId: item.product.id,
+                variantId: item.variant.id,
+                quantity: qty
+              });
+            } else if (item.product.available) {
+              setQuantity(qty);
+              processUpdateQty({
+                productId: item.product.id,
+                variantId: item.variant?.id,
+                quantity: qty
+              });
             }
           }}
         >
-          <PlusIcon width={20} />
+          <RiAddLine size={20} />
         </button>
       </div>
     );
@@ -206,12 +205,12 @@ function ShoppingCartItem(props: ShoppingCartItemProps) {
               disabled={removing}
               onClick={() => {
                 setRemoving(true);
-                removeFromCart([item.id ?? 0])
+                removeFromCart([{productId: item.product.id, variantId: item.variant?.id}])
                   .then((resp) => {
                     toast.success("Cart item removed");
                     handleCheck(false);
-                    mutate("/cart-items");
-                    mutate(["/profile/cart-count", authContext.payload?.id]);
+                    mutate("/profile/cart-items");
+                    mutate(`/profile/cart-count/${user?.id ?? 0}`);
                   })
                   .catch((error) => {
                     const msg = parseErrorResponse(error);
@@ -231,8 +230,8 @@ function ShoppingCartItem(props: ShoppingCartItemProps) {
                   ></span>
                 </div>
               )}
-              <TrashIcon
-                width={20}
+              <RiDeleteBinLine
+                size={20}
                 style={{
                   visibility: removing ? "hidden" : "visible"
                 }}

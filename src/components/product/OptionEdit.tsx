@@ -1,12 +1,15 @@
-import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { ProductAttribute, ProductAttributeValue } from "../../common/models";
-import { setEmptyOrString } from "../../common/utils";
-import { Input, TagInput } from "../forms";
+import {
+  ProductAttributeValue,
+  ProductAttributeEdit
+} from "@/common/models";
+import { setEmptyOrString } from "@/common/utils";
+import { Input, TagInput } from "@/components/forms";
+import { RiAddLine, RiDeleteBin6Line } from "@remixicon/react";
 
 interface OptionEditProps {
-  attributes: ProductAttribute[];
-  handleClose: (attributes?: ProductAttribute[]) => void;
+  attributes: ProductAttributeEdit[];
+  handleClose: (attributes?: ProductAttributeEdit[]) => void;
 }
 
 function OptionEdit(props: OptionEditProps) {
@@ -75,30 +78,41 @@ function OptionEdit(props: OptionEditProps) {
                         }}
                         render={({ field, fieldState: { error } }) => {
                           return (
-                            <TagInput
-                              data={
-                                field.value
-                                  ?.sort((f, s) => f.sort - s.sort)
-                                  .map((v) => v.value) ?? []
-                              }
-                              placeholder="Add value"
-                              onTagsChange={(tags) => {
-                                if (tags.length === 0) {
-                                  return;
+                            <>
+                              <TagInput
+                                data={
+                                  field.value
+                                    ?.sort((f, s) => f.sort - s.sort)
+                                    .map((v) => v.value) ?? []
                                 }
+                                placeholder="Add value"
+                                onTagsChange={(tags) => {
+                                  if (tags.length === 0) {
+                                    return;
+                                  }
 
-                                const values = tags.map((t, i) => {
-                                  return {
-                                    value: t,
-                                    sort: i
-                                  } as ProductAttributeValue;
-                                });
-                                setValue(`attributes.${index}.values`, values, {
-                                  shouldValidate: true
-                                });
-                              }}
-                              error={error?.message}
-                            />
+                                  const values = tags.map((t, i) => {
+                                    return {
+                                      value: t,
+                                      sort: i
+                                    } as ProductAttributeValue;
+                                  });
+                                  setValue(
+                                    `attributes.${index}.values`,
+                                    values,
+                                    {
+                                      shouldValidate: true
+                                    }
+                                  );
+                                }}
+                                error={error?.message}
+                              />
+                              {!error?.message && (
+                                <small className="text-muted">
+                                  Click enter to add multiple values
+                                </small>
+                              )}
+                            </>
                           );
                         }}
                       />
@@ -110,7 +124,7 @@ function OptionEdit(props: OptionEditProps) {
                         remove(index);
                       }}
                     >
-                      <TrashIcon width={24} />
+                      <RiDeleteBin6Line size={24} />
                     </div>
                   </div>
                 </div>
@@ -179,7 +193,7 @@ function OptionEdit(props: OptionEditProps) {
                 });
               }}
             >
-              <PlusIcon width={20} strokeWidth={2} />
+              <RiAddLine size={20} strokeWidth={2} />
               Add option
             </button>
           </div>

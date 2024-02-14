@@ -1,109 +1,77 @@
-import makeApiRequest from "../common/makeApiRequest";
-import { User, UserStatistic } from "../common/models";
-import { validateResponse } from "../common/utils";
+import { firebaseAuth } from "@/common/firebase.config";
+import makeApiRequest from "@/common/makeApiRequest";
+import { User, UserEdit, UserStatistic } from "@/common/models";
+import { validateResponse } from "@/common/utils";
+import { updateProfile } from "firebase/auth";
 
-const basePath = "profile";
+export async function updateUser(values: UserEdit) {
+  const url = `/profile`;
 
-export async function updateProfile(value: User) {
-  const url = `${basePath}`;
-
-  const resp = await makeApiRequest(
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "PUT",
-      body: JSON.stringify(value),
+      body: JSON.stringify(values),
       headers: {
         "Content-Type": "application/json"
       }
     },
-    true
-  );
+    authenticated: true
+  });
+
+  const auth = firebaseAuth;
+
+  let retry = 0;
+
+  do {
+    try {
+      await updateProfile(auth.currentUser!, {
+        displayName: values.name
+      });
+      retry = 3;
+    } catch (error) {
+      retry += 1;
+    }
+  } while (retry < 3);
 
   await validateResponse(resp);
 }
 
 export async function uploadUserImage(file: File) {
-  const url = `${basePath}/image`;
+  const url = `/profile/image`;
 
   const form = new FormData();
   form.append("file", file);
 
-  const resp = await makeApiRequest(
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "PUT",
       body: form
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 }
 
 export async function getLoginUser() {
-  const url = `${basePath}`;
+  const url = `/profile`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest({
+    url,
+    authenticated: true
+  });
 
   await validateResponse(resp);
 
   return resp.json() as Promise<User>;
 }
 
-export async function changePhoneNumber({
-  phone,
-  password,
-  code,
-  requestId
-}: {
-  phone: string;
-  password: string;
-  code: string;
-  requestId: number;
-}) {
-  const body = { phone, password, code, requestId };
-
-  const url = `${basePath}/phone`;
-
-  const resp = await makeApiRequest(
-    url,
-    {
-      method: "PUT",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    },
-    true
-  );
-
-  await validateResponse(resp);
-}
-
-export async function changePassword({
-  oldPassword,
-  newPassword
-}: {
-  oldPassword: string;
-  newPassword: string;
-}) {
-  const url = `${basePath}/change-password?old-password=${oldPassword}&new-password=${newPassword}`;
-
-  const resp = await makeApiRequest(
-    url,
-    {
-      method: "PUT"
-    },
-    true
-  );
-
-  await validateResponse(resp);
-}
-
 export async function getUserStatistic() {
-  const url = `${basePath}/statistic`;
+  const url = `/profile/statistic`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest({ url, authenticated: true });
 
   await validateResponse(resp);
 

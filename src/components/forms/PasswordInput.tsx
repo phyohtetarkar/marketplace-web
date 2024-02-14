@@ -1,4 +1,5 @@
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+"use client";
+import { RiEyeLine, RiEyeOffLine } from "@remixicon/react";
 import { forwardRef, useState } from "react";
 import { formControlHeight } from "../../common/app.config";
 import { InputProps } from "./Input";
@@ -50,7 +51,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             role="button"
             onClick={() => setIsPassword(!isPassword)}
           >
-            {isPassword ? <EyeSlashIcon width={20} /> : <EyeIcon width={20} />}
+            {isPassword ? <RiEyeOffLine size={20} /> : <RiEyeLine size={20} />}
           </div>
           {error && <div className="invalid-feedback">{error}</div>}
         </div>

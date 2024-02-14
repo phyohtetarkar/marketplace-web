@@ -1,4 +1,5 @@
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+"use client";
+import { RiArrowDropDownFill } from "@remixicon/react";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { usePopper } from "react-popper";
 import Input from "./Input";
@@ -67,7 +68,7 @@ function Option<T, Key>(
           }}
         >
           <div
-            className={`dropdown-item py-2 ${selected ? "active" : ""} ${
+            className={`autocomplete-dropdown-item ${selected ? "active" : ""} ${
               !canSelect ? "disabled" : ""
             }`}
           >
@@ -191,7 +192,7 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
     return props
       .getOptionLabel(v)
       .toLocaleLowerCase()
-      .includes(filter.toLocaleLowerCase());
+      .startsWith(filter.toLocaleLowerCase());
   }
 
   function formatSelectedOptionValue() {
@@ -278,8 +279,8 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
             }}
           >
             {/* <div className="vr"></div> */}
-            <ChevronDownIcon
-              width={18}
+            <RiArrowDropDownFill
+              size={24}
               strokeWidth={2.5}
               className="text-dark-gray"
             />

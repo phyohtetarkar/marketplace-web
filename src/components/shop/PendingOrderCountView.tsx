@@ -1,32 +1,19 @@
-import useSWR from "swr";
-import { getPendingOrderCount } from "../../services/ShopService";
+import { usePendingOrderCount } from "@/common/hooks";
 
-interface PendingOrderCountViewProps {
-  shopId: number;
-}
+function PendingOrderCountView({ shopId }: { shopId: number }) {
+  const { count, error, isLoading } = usePendingOrderCount(shopId);
 
-function PendingOrderCountView(props: PendingOrderCountViewProps) {
-  const { shopId } = props;
-
-  const { data, error, isLoading } = useSWR(
-    `/shops/${shopId}/pending-order-count`,
-    () => getPendingOrderCount(shopId),
-    {
-      revalidateOnFocus: false
-    }
-  );
-
-  if (isLoading || !data) {
+  if (isLoading || error) {
     return <></>;
   }
 
-  if (data && parseInt(data) <= 0) {
+  if (count && parseInt(count) <= 0) {
     return <></>;
   }
 
   return (
     <small className="bg-danger rounded-pill px-2 text-light ms-2">
-      {data}
+      {count}
     </small>
   );
 }

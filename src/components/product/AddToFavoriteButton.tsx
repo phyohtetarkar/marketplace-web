@@ -1,16 +1,16 @@
-import { HeartIcon as HeartIconOutline } from "@heroicons/react/24/outline";
-import { HeartIcon } from "@heroicons/react/24/solid";
-import { useRouter } from "next/router";
+"use client";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { AuthenticationContext } from "../../common/contexts";
-import { parseErrorResponse } from "../../common/utils";
+import { AuthenticationContext } from "@/common/contexts";
+import { parseErrorResponse } from "@/common/utils";
 import {
   addToFavoriteProduct,
   checkFavorite,
   deleteFavoriteProduct
-} from "../../services/FavoriteProductService";
+} from "@/services/FavoriteProductService";
 import Tooltip from "../Tooltip";
+import { RiHeart3Fill, RiHeart3Line } from "@remixicon/react";
 
 interface AddToFavoriteButtonProps {
   productId: number;
@@ -58,13 +58,9 @@ function AddToFavoriteButton({
           minHeight: "2.5rem"
         }}
         onClick={() => {
-          // setAdding(true);
-          // setTimeout(() => {
-          //   setAdding(false);
-          // }, 2000);
           if (authContext.status === "success") {
-            if (!authContext.payload?.verified) {
-              router.push("/confirm-otp");
+            if (!authContext.user?.emailVerified) {
+              router.push("/verify-email");
               return;
             }
             setLoading(true);
@@ -102,16 +98,16 @@ function AddToFavoriteButton({
           </div>
         )}
         {favorite ? (
-          <HeartIcon
-            width={20}
+          <RiHeart3Fill
+            size={20}
             className="position-absolute top-50 start-50 translate-middle text-primary"
             style={{
               visibility: loading ? "hidden" : "visible"
             }}
           />
         ) : (
-          <HeartIconOutline
-            width={20}
+          <RiHeart3Line
+            size={20}
             strokeWidth={2}
             className="position-absolute top-50 start-50 translate-middle"
             style={{

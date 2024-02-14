@@ -2,40 +2,43 @@ import makeApiRequest from "../common/makeApiRequest";
 import { ShopAcceptedPayment } from "../common/models";
 import { validateResponse } from "../common/utils";
 
-export async function saveShopAcceptedPayment(value: ShopAcceptedPayment) {
-  const url = `accepted-payments`;
-  const resp = await makeApiRequest(
+export async function saveShopAcceptedPayment(values: ShopAcceptedPayment) {
+  const url = `/vendor/shops/${values.shopId}/accepted-payments`;
+  const resp = await makeApiRequest({
     url,
-    {
-      method: !value.id ? "POST" : "PUT",
-      body: JSON.stringify(value),
+    options: {
+      method: !values.id ? "POST" : "PUT",
+      body: JSON.stringify(values),
       headers: {
         "Content-Type": "application/json"
       }
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 }
 
-export async function deleteShopAcceptedPayment(paymentId: number) {
-  const url = `accepted-payments/${paymentId}`;
-  const resp = await makeApiRequest(
+export async function deleteShopAcceptedPayment(
+  shopId: number,
+  paymentId: number
+) {
+  const url = `/vendor/shops/${shopId}/accepted-payments/${paymentId}`;
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "DELETE"
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 }
 
 export async function getShopAcceptedPayments(shopId: number) {
-  const url = `accepted-payments?shop-id=${shopId}`;
+  const url = `/content/shops/${shopId}/accepted-payments`;
 
-  const resp = await makeApiRequest(url);
+  const resp = await makeApiRequest({ url, authenticated: true });
 
   await validateResponse(resp);
 

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { ShopAcceptedPayment } from "../../common/models";
-import { setEmptyOrString } from "../../common/utils";
+import { ShopAcceptedPayment } from "@/common/models";
+import { setEmptyOrString } from "@/common/utils";
 import { Input } from "../forms";
 import ProgressButton from "../ProgressButton";
 

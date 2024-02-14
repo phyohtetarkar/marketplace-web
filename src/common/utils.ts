@@ -1,8 +1,14 @@
 import dayjs from "dayjs";
-import { APIError, UnauthorizeError } from "./customs";
-import { Discount, DiscountType } from "./models";
+import { FirebaseError } from "firebase/app";
+import { AuthErrorCodes } from "firebase/auth";
+import { v4 as uuidv4 } from "uuid";
+import { APIError, ForbiddenError, UnauthorizeError } from "./customs";
+import { Category, Discount, ValueType } from "./models";
 
-export function formatTimestamp(timestamp: number | string, withTime = false) {
+export function formatTimestamp(timestamp?: number | string, withTime = false) {
+  if (!timestamp) {
+    return "";
+  }
   let date = dayjs(timestamp);
   if (withTime) {
     return date.format("MMM DD, YYYY hh:mm A");
@@ -11,8 +17,12 @@ export function formatTimestamp(timestamp: number | string, withTime = false) {
   return date.format("MMM DD, YYYY");
 }
 
-export function formatNumber(value: number) {
-  if (isNaN(value) || `${value}`.trim().length === 0) {
+export function formatNumber(value?: number) {
+  if (typeof value !== "number" && typeof value !== "bigint") {
+    return "";
+  }
+  
+  if (isNaN(value)) {
     return "";
   }
 
@@ -38,7 +48,7 @@ export function transformDiscount(discount: Discount, price = 0, qty = 1) {
 }
 
 export function calcDiscount(
-  type: DiscountType,
+  type: ValueType,
   amount: number,
   value = 0,
   qty = 1
@@ -88,7 +98,7 @@ export function setEmptyOrString(v: any) {
 }
 
 export function setEmptyOrNumber(v: any) {
-  if (!!v) {
+  if (!isNaN(parseFloat(v))) {
     const numRegex = "^([0-9]*[.])?[0-9]+$";
     return `${v}`.match(numRegex) ? parseFloat(v) : undefined;
   }
@@ -97,8 +107,8 @@ export function setEmptyOrNumber(v: any) {
 }
 
 export function setZeroOrNumber(v: any) {
-  if (!!v) {
-    const numRegex = "^[0-9]+$";
+  if (!isNaN(parseFloat(v))) {
+    const numRegex = "^([0-9]*[.])?[0-9]+$";
     return `${v}`.match(numRegex) ? parseFloat(v) : undefined;
   }
 
@@ -140,73 +150,43 @@ export function buildQueryParams(params: any) {
 
 export function getAPIBasePath() {
   return process.env.NEXT_PUBLIC_API_URL ?? "";
-  //return location.origin + ":8080/api/v1/";
 }
 
-export function getAuthHeader() {
-  // try {
-  //   const accessToken = (await Auth.currentSession())
-  //     .getAccessToken()
-  //     .getJwtToken();
-  //   return "Bearer " + accessToken;
-  // } catch (error) {}
-
-  const token = sessionStorage.getItem("accessToken");
-  // const accessToken = (await Auth.currentSession())
-  //   .getAccessToken()
-  //   .getJwtToken();
-  if (!token) {
-    return "";
-  }
-
-  return "Bearer " + token;
-}
-
-export async function validateResponse(resp: Response) {
+export async function validateResponse(resp: Response, skipNotFound?: boolean) {
   if (resp.status === 401) {
     throw new UnauthorizeError("Unauthorized");
   }
+
+  if (resp.status === 403) {
+    throw new ForbiddenError();
+  }
+  
   if (resp.status === 500) {
     throw new APIError(resp.status, "server-error");
   }
-  if (!resp.ok) {
+
+  if (skipNotFound && resp.status === 404) {
+    return;
+  } else if (!resp.ok) {
     throw new APIError(resp.status, await resp.text());
   }
 }
 
 export function parseErrorResponse(error: any, skipAuth?: boolean) {
   if (error instanceof UnauthorizeError) {
-    // sessionStorage?.clear();
-    // Auth.signOut()
-    //   .catch(console.error)
-    //   .finally(() => {
-    //     const href = process.env.NEXT_PUBLIC_LOGIN_URL ?? "";
-    //     window.location.href = href;
-    //   });
     if (!skipAuth) {
-      const href = process.env.NEXT_PUBLIC_LOGIN_URL ?? "";
+      const href =  `${window?.location?.origin}/login`;
       window.location.href = href;
     }
 
     return "Unauthorized";
   }
+
+  if (error instanceof ForbiddenError) {
+    return "FORBIDDEN: You don't have permission to this resource";
+  }
+
   if (error instanceof APIError) {
-    if (error.message === "permission-denied") {
-      return "Permission denied";
-    }
-
-    if (error.message === "server-error") {
-      return "Something went wrong, please try again";
-    }
-
-    if (error.message === "username-exists") {
-      return "Phone number already in use";
-    }
-
-    if (error.message === "bad-credentials") {
-      return "Phone number or password incorrect";
-    }
-
     return error.message;
   }
 
@@ -216,6 +196,40 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
 
   //console.log(error);
 
+  if (error instanceof FirebaseError) {
+    if (error.code === AuthErrorCodes.USER_DELETED) {
+      return "User not found.";
+    }
+  
+    if (error.code === AuthErrorCodes.INVALID_PASSWORD) {
+      return "Password incorrect.";
+    }
+  
+    if (error.code === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS) {
+      return "Email or password incorrect.";
+    }
+  
+    if (error.code === AuthErrorCodes.NETWORK_REQUEST_FAILED) {
+      return "Network connection error.";
+    }
+  
+    if (error.code === AuthErrorCodes.EMAIL_EXISTS) {
+      return "Account already exists with this email address.";
+    }
+  
+    if (error.code === AuthErrorCodes.EXPIRED_OOB_CODE) {
+      return "Verification code expired.";
+    }
+  
+    if (error.code === AuthErrorCodes.INVALID_OOB_CODE) {
+      return "Invalid verification code";
+    }
+  
+    if (error.code === AuthErrorCodes.TOO_MANY_ATTEMPTS_TRY_LATER) {
+      return "Too many attempts. Please try again later.";
+    }
+  }
+
   if (typeof error === "string" && error.length > 0) {
     return error;
   }
@@ -223,12 +237,20 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
   return error?.message ?? "Something went wrong, please try again";
 }
 
-export function getCookieValue(key: string) {
-  if (typeof window === "undefined") {
-    return undefined;
+export function generateUUID() {
+  return uuidv4();
+}
+
+export function getCategoryName(locale: string, category?: Category) {
+  if (!category) {
+    return "";
   }
-  return document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("accessToken="))
-    ?.split("=")[1];
+
+  const localizedName = category.names?.find(c => c.lang === locale)?.name;
+
+  if (!localizedName) {
+    return category.name;
+  }
+
+  return localizedName;
 }
