@@ -12,9 +12,10 @@ const getHomeData = cache(async () => {
     }
   });
 
-  await validateResponse(resp);
-
-  return (await resp.json()) as HomeData;
+  return resp
+    .json()
+    .then((json) => json as HomeData)
+    .catch((e) => undefined);
 });
 
 export default async function Home() {

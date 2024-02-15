@@ -17,7 +17,7 @@ import { useContext, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 import CityEdit from "./CityEdit";
-import { AuthenticationContext } from "@/common/contexts";
+import { AuthenticationContext, ProgressContext } from "@/common/contexts";
 
 const getCities = async () => {
   const url = "/admin/cities";
@@ -46,6 +46,8 @@ function CityPage() {
   const [city, setCity] = useState<City>();
 
   const [nameAscending, setNameAscending] = useState<boolean>(true);
+
+  const progressContext = useContext(ProgressContext);
 
   const { write, del } = useMemo(() => {
     return {
@@ -178,11 +180,15 @@ function CityPage() {
       <ConfirmModal
         show={showConfirm}
         message="Are you sure to delete?"
-        onConfirm={async () => {
+        onConfirm={async (result) => {
           try {
+            if (!result) {
+              return;
+            }
             if (!city) {
               return;
             }
+            progressContext.update(true);
             await deleteCity(city.id);
             mutate();
             toast.success("City deleted successfully");
@@ -191,11 +197,11 @@ function CityPage() {
             toast.error("Delete failed");
           } finally {
             setCity(undefined);
+            progressContext.update(false);
           }
         }}
         close={() => {
           setShowConfirm(false);
-          setCity(undefined);
         }}
       />
 

@@ -1,6 +1,6 @@
 "use client";
 import { withAuthentication } from "@/common/WithAuthentication";
-import { AuthenticationContext } from "@/common/contexts";
+import { AuthenticationContext, ProgressContext } from "@/common/contexts";
 import {
   CartItem,
   OrderCreateForm,
@@ -45,6 +45,8 @@ function Checkout() {
   const [orderCode, setOrderCode] = useState<string>();
 
   const receiptFileRef = useRef<HTMLInputElement | null>(null);
+
+  const progressContext = useContext(ProgressContext);
 
   const acceptedPaymentsState = useSWR(
     [`/shops/${shopId}/accepted-payments`, shopId],
@@ -132,18 +134,24 @@ function Checkout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
-  const executeSubmitOrder = (data: OrderCreateForm) => {
+  const executeSubmitOrder = async (data: OrderCreateForm) => {
     try {
-      if (
-        data.paymentMethod === "BANK_TRANSFER" &&
-        !data.payment?.accountType
-      ) {
-        throw "Please select transfer account";
+      progressContext.update(true);
+      // console.log(values);
+      const result = await createOrder(data);
+      // console.log(result);
+      setOrderCode(result);
+      mutate(`/profile/cart-count/${user?.id}`);
+      sessionStorage.removeItem("shopId");
+      sessionStorage.removeItem("cartItems");
+      if (receiptFileRef.current) {
+        receiptFileRef.current.value = "";
       }
-      setShowConfirmSubmit(true);
     } catch (error) {
       const msg = parseErrorResponse(error);
       toast.error(msg);
+    } finally {
+      progressContext.update(false);
     }
   };
 
@@ -416,8 +424,6 @@ function Checkout() {
                       } catch (error) {
                         const msg = parseErrorResponse(error);
                         toast.error(msg);
-                      } finally {
-                        evt.target.value = "";
                       }
                     }}
                   ></input>
@@ -537,10 +543,23 @@ function Checkout() {
               </div>
             </div>
             <button
-              className="btn btn-danger w-100"
+              className="btn btn-danger py-2h w-100"
               disabled={isSubmitting}
               onClick={() => {
-                handleSubmit(executeSubmitOrder)();
+                handleSubmit((values) => {
+                  try {
+                    if (
+                      values.paymentMethod === "BANK_TRANSFER" &&
+                      !values.payment?.accountType
+                    ) {
+                      throw "Please select transfer account";
+                    }
+                    setShowConfirmSubmit(true);
+                  } catch (error) {
+                    const msg = parseErrorResponse(error);
+                    toast.error(msg);
+                  }
+                })();
               }}
             >
               Place order
@@ -552,19 +571,9 @@ function Checkout() {
         show={showConfirmSubmit}
         message="Are you sure to submit order"
         close={() => setShowConfirmSubmit(false)}
-        onConfirm={async () => {
-          try {
-            const values = getValues();
-            // console.log(values);
-            const result = await createOrder(values);
-            // console.log(result);
-            setOrderCode(result);
-            mutate(`/profile/cart-count/${user?.id}`);
-            sessionStorage.removeItem("shopId");
-            sessionStorage.removeItem("cartItems");
-          } catch (error) {
-            const msg = parseErrorResponse(error);
-            toast.error(msg);
+        onConfirm={(result) => {
+          if (result) {
+            executeSubmitOrder(getValues())
           }
         }}
       />

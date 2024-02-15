@@ -1,4 +1,5 @@
 "use client";
+import { ProgressContext } from "@/common/contexts";
 import { useCities, useShop } from "@/common/hooks";
 import {
   City,
@@ -41,7 +42,7 @@ import {
 } from "@remixicon/react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR, { useSWRConfig } from "swr";
@@ -78,6 +79,7 @@ const ShopGeneralForm = ({ shop }: { shop: Shop }) => {
       mutate<Shop>(`/vendor/shops/${values.shopId}`).then((s) => {
         setValue("slug", s?.slug);
       });
+      toast.success("Update success");
     } catch (error) {
       const msg = parseErrorResponse(error);
       toast.error(msg);
@@ -193,6 +195,7 @@ const ShopGeneralForm = ({ shop }: { shop: Shop }) => {
 
 const ShopContactForm = ({ shop }: { shop: Shop }) => {
   const router = useRouter();
+  const { mutate } = useSWRConfig();
 
   const citiesState = useCities();
 
@@ -219,7 +222,8 @@ const ShopContactForm = ({ shop }: { shop: Shop }) => {
         throw "At least one phone number required";
       }
       await updateShopContact(values);
-      router.refresh();
+      mutate<Shop>(`/vendor/shops/${values.shopId}`);
+      toast.success("Update success");
     } catch (error) {
       const msg = parseErrorResponse(error);
       toast.error(msg);
@@ -370,6 +374,8 @@ const ShopPaymentForm = ({ shopId }: { shopId: number }) => {
   const [showEdit, setShowEdit] = useState(false);
 
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+
+  const progressContext = useContext(ProgressContext);
 
   const settingState = useSWR(
     `/vendor/shops/${shopId}/setting`,
@@ -587,8 +593,12 @@ const ShopPaymentForm = ({ shopId }: { shopId: number }) => {
           setAcceptedPayment(undefined);
           setDeleteConfirm(false);
         }}
-        onConfirm={async () => {
+        onConfirm={async (result) => {
+          if (!result) {
+            return;
+          }
           try {
+            progressContext.update(true);
             acceptedPayment?.id &&
               (await deleteShopAcceptedPayment(shopId, acceptedPayment.id));
             acceptedPaymentsState.mutate();
@@ -597,6 +607,8 @@ const ShopPaymentForm = ({ shopId }: { shopId: number }) => {
           } catch (error) {
             const msg = parseErrorResponse(error);
             toast.error(msg);
+          } finally {
+            progressContext.update(false);
           }
         }}
       />

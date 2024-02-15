@@ -185,8 +185,10 @@ function ProductUpdatePage(props: ProductEditProps) {
         message="Are you sure to delete?"
         show={confirmDelete}
         close={() => setConfirmDelete(false)}
-        onConfirm={async () => {
-          executeDelete();
+        onConfirm={(result) => {
+          if (result) {
+            executeDelete();
+          }
         }}
       />
     </>

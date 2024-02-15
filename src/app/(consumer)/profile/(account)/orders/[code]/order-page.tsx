@@ -124,6 +124,7 @@ function OrderPage({ code }: { code: string }) {
                             alt="Product image."
                             fill
                             sizes="33vw"
+                            priority
                             style={{
                               objectFit: "contain"
                             }}
@@ -366,7 +367,7 @@ function OrderPage({ code }: { code: string }) {
           {data?.paymentMethod === "BANK_TRANSFER" && (
             <Dropdown
               toggle="Receipt image"
-              toggleClassName="btn btn-light dropdown-toggle"
+              toggleClassName="btn btn-default dropdown-toggle"
               menuClassName="dropdown-menu-end"
             >
               <li
@@ -436,7 +437,7 @@ function OrderPage({ code }: { code: string }) {
               <div className="modal-body p-0">
                 {data?.payment?.receiptImage ? (
                   <Image
-                    src={data.payment.receiptImage}
+                    src={data.payment.receiptImage + "?t=" + new Date().getTime()}
                     alt=""
                     sizes="100vw"
                     width={0}

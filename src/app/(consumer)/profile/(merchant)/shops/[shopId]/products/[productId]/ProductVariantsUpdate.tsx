@@ -3,6 +3,7 @@ import { Product, ProductVariant } from "@/common/models";
 import { parseErrorResponse, setEmptyOrNumber } from "@/common/utils";
 import Modal from "@/components/Modal";
 import ProgressButton from "@/components/ProgressButton";
+import Tooltip from "@/components/Tooltip";
 import { Input } from "@/components/forms";
 import ProductvariantEdit from "@/components/product/ProductVariantEdit";
 import { updateProductVariants } from "@/services/ProductService";
@@ -71,15 +72,17 @@ function ProductVariantsUpdate(props: ProductEditProps) {
           <div className="hstack">
             <h5 className="mb-0 hstack">
               <span>Variants</span>
-              <div
-                role="button"
-                className="ms-1 text-anchor"
-                onClick={() => {
-                  setShowVariantModal(true);
-                }}
-              >
-                <RiAddCircleLine size={20} />
-              </div>
+              <Tooltip title="Add variant">
+                <div
+                  role="button"
+                  className="ms-1 text-anchor"
+                  onClick={() => {
+                    setShowVariantModal(true);
+                  }}
+                >
+                  <RiAddCircleLine size={20} />
+                </div>
+              </Tooltip>
             </h5>
             <ProgressButton
               className="ms-auto"

@@ -6,6 +6,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import SideMenu from "./SideMenu";
 import { AuthenticationContext } from "@/common/contexts";
+import { useRouter } from "next/navigation";
 
 const minSideMenuWidth = 80;
 const maxSideMenuWidth = 250;
@@ -15,6 +16,7 @@ function AdminLayoutWrapper({ children }: { children: ReactNode }) {
   const [delayExpanded, setDelayExpanded] = useState(true);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const { user } = useContext(AuthenticationContext);
+  const router = useRouter();
 
   useEffect(() => {
     const handleResize = () => {
@@ -46,6 +48,12 @@ function AdminLayoutWrapper({ children }: { children: ReactNode }) {
       clearTimeout(timer);
     };
   }, [menuExpanded]);
+
+  useEffect(() => {
+    if (user && !user.role?.match("ADMIN|OWNER")) {
+      router.push("/");
+    }
+  }, [user]);
 
   if (user?.role !== "ADMIN" && user?.role !== "OWNER") {
     return <></>;

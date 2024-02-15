@@ -3,12 +3,13 @@
 import { useLocalization } from "@/common/hooks";
 import { HomeData } from "@/common/models";
 import { getCategoryName } from "@/common/utils";
+import { ProductGridItem } from "@/components/product";
 import Image from "next/image";
 import Link from "next/link";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-const HomePage = ({ data }: { data: HomeData }) => {
+const HomePage = ({ data }: { data?: HomeData }) => {
   const { locale } = useLocalization();
 
   return (
@@ -22,7 +23,7 @@ const HomePage = ({ data }: { data: HomeData }) => {
                   <div className="h-100 overflow-auto scrollbar-custom">
                     <div className="position-relative">
                       <div className="d-flex flex-column gap-1 position-absolute top-0 bottom-0 start-0 end-0">
-                        {data.mainCategories?.map((e, i) => {
+                        {data?.mainCategories?.map((e, i) => {
                           return (
                             <Link
                               key={e.id}
@@ -52,7 +53,7 @@ const HomePage = ({ data }: { data: HomeData }) => {
                     }}
                     modules={[Autoplay, Pagination]}
                   >
-                    {data.banners &&
+                    {data?.banners &&
                       data.banners.map((b, i) => {
                         return (
                           <SwiperSlide
@@ -82,8 +83,8 @@ const HomePage = ({ data }: { data: HomeData }) => {
         </div>
       </div>
 
-      <div className="d-flex overflow-auto scrollbar-none mb-4 d-lg-none">
-        {/* {data.categories.map((e, i) => {
+      {/* <div className="d-flex overflow-auto scrollbar-none mb-4 d-lg-none">
+        {data.categories.map((e, i) => {
           return (
             <Link key={e.id} href={`/${e.slug}`}>
               <a
@@ -95,64 +96,10 @@ const HomePage = ({ data }: { data: HomeData }) => {
               </a>
             </Link>
           );
-        })} */}
-      </div>
+        })}
+      </div> */}
 
-      {/* {data.promotions && data.promotions.length > 0 && (
-        <>
-          <div className="d-flex align-items-center justify-content-between mb-3">
-            <h4
-              className="fw-semibold text-nowrap"
-              style={{ textOverflow: "ellipsis", overflowX: "clip" }}
-            >
-              {localize("promotions")}
-            </h4>
-            <Link href="/products/promotions">
-              <a className="text-decoration-none fw-medium text-nowrap">
-                {localize("view_all")}
-              </a>
-            </Link>
-          </div>
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 mb-5">
-            {data.promotions.map((e, i) => {
-              return (
-                <div className="col" key={i}>
-                  <ProductGridItem data={e} />
-                </div>
-              );
-            })}
-          </div>
-        </>
-      )}
-
-      {data.populars && data.populars.length > 0 && (
-        <>
-          <div className="d-flex align-items-center justify-content-between mb-3">
-            <h4
-              className="fw-semibold text-nowrap"
-              style={{ textOverflow: "ellipsis", overflowX: "clip" }}
-            >
-              {localize("popular_products")}
-            </h4>
-            <Link href="/products/populars">
-              <a className="text-decoration-none fw-medium text-nowrap">
-                {localize("view_all")}
-              </a>
-            </Link>
-          </div>
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 mb-5">
-            {data.populars.map((e, i) => {
-              return (
-                <div className="col" key={i}>
-                  <ProductGridItem data={e} />
-                </div>
-              );
-            })}
-          </div>
-        </>
-      )} */}
-
-      {data.featuredShops && (
+      {/* {data.featuredShops && (
         <>
           <div className="d-flex align-items-center justify-content-between mb-4">
             <h4
@@ -226,14 +173,14 @@ const HomePage = ({ data }: { data: HomeData }) => {
             </Swiper>
           </div>
         </>
-      )}
+      )} */}
 
       <div className="d-flex align-items-center justify-content-between mb-3">
         <h4
           className="fw-semibold text-nowrap"
           style={{ textOverflow: "ellipsis", overflowX: "clip" }}
         >
-          New arrivals
+          Featured Products
         </h4>
         {/* <Link
           href="/products/new-arrivals"
@@ -243,29 +190,38 @@ const HomePage = ({ data }: { data: HomeData }) => {
         </Link> */}
       </div>
       <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 mb-5">
-        {/* {data.newArrivals.map((p, i) => {
+        {data?.featuredProducts?.map((p, i) => {
           return (
             <div className="col" key={p.id}>
-              <ProductGridItem data={p} />
+              <ProductGridItem value={p} hideAction />
             </div>
           );
-        })} */}
+        })}
       </div>
 
-      {/* <div className="row row-cols-1 row-cols-md-2 g-3 mb-5">
-        <div className="col">
-          <ProductFavoriteItem />
-        </div>
-        <div className="col">
-          <ProductFavoriteItem />
-        </div>
-        <div className="col">
-          <ProductFavoriteItem />
-        </div>
-        <div className="col">
-          <ProductFavoriteItem />
-        </div>
-      </div> */}
+      <div className="d-flex align-items-center justify-content-between mb-3">
+        <h4
+          className="fw-semibold text-nowrap"
+          style={{ textOverflow: "ellipsis", overflowX: "clip" }}
+        >
+          Discount Products
+        </h4>
+        {/* <Link
+          href="/products/new-arrivals"
+          className="text-decoration-none fw-medium text-nowrap"
+        >
+          View all
+        </Link> */}
+      </div>
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 mb-5">
+        {data?.discountProducts?.map((p, i) => {
+          return (
+            <div className="col" key={p.id}>
+              <ProductGridItem value={p} hideAction />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

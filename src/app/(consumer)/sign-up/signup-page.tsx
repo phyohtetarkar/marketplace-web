@@ -4,7 +4,7 @@ import { parseErrorResponse, setEmptyOrString } from "@/common/utils";
 import Alert from "@/components/Alert";
 import ProgressButton from "@/components/ProgressButton";
 import { Input, PasswordInput } from "@/components/forms";
-import { signUp } from "@/services/AuthService";
+import { facebookLogin, googleLogin, signUp } from "@/services/AuthService";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -155,6 +155,14 @@ function SignUpPage() {
                       type="button"
                       className="btn btn-outline-light border w-50 d-flex align-items-center"
                       disabled={isSubmitting}
+                      onClick={async () => {
+                        try {
+                          await facebookLogin();
+                        } catch (error) {
+                          console.log(error);
+                          setError(parseErrorResponse(error));
+                        }
+                      }}
                     >
                       <Image
                         src="/images/icons8-facebook-48.png"
@@ -169,6 +177,14 @@ function SignUpPage() {
                       type="button"
                       className="btn btn-outline-light border w-50 d-flex align-items-center"
                       disabled={isSubmitting}
+                      onClick={async () => {
+                        try {
+                          await googleLogin();
+                        } catch (error) {
+                          console.log(error);
+                          setError(parseErrorResponse(error));
+                        }
+                      }}
                     >
                       <Image
                         src="/images/icons8-google-48.png"

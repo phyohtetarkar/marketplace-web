@@ -67,7 +67,7 @@ function ShopDashboard({ shopId }: { shopId: number }) {
           <div className="card">
             <div className="card-body">
               <div className="hstack gap-3">
-                <div className="bg-secondary text-light rounded">
+                <div className="bg-default text-dark rounded">
                   <RiBox3Fill size={iconSize} className="flex-shrink-0 p-2" />
                 </div>
                 <div className="vstack gap-1 text-nowrap">

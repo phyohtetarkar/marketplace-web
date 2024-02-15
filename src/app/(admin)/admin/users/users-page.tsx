@@ -1,6 +1,6 @@
 "use client";
 import { formControlHeight } from "@/common/app.config";
-import { AuthenticationContext } from "@/common/contexts";
+import { AuthenticationContext, ProgressContext } from "@/common/contexts";
 import makeApiRequest from "@/common/makeApiRequest";
 import { PageData, User } from "@/common/models";
 import {
@@ -12,7 +12,6 @@ import {
 } from "@/common/utils";
 import { withAuthorization } from "@/common/withAuthorization";
 import Alert from "@/components/Alert";
-import ConfirmModal from "@/components/ConfirmModal";
 import Dropdown from "@/components/Dropdown";
 import Loading from "@/components/Loading";
 import Pagination from "@/components/Pagination";
@@ -58,12 +57,10 @@ const dismissAdmin = async (userId: number) => {
 
 function UsersPage() {
   const authContext = useContext(AuthenticationContext);
+  const progressContext = useContext(ProgressContext);
 
   const [inputType, setInputType] = useState("email");
   const [query, setQuery] = useState<UserQuery>({});
-
-  const [isShowVerifyConfirm, setShowVerifyConfirm] = useState(false);
-  const [user, setUser] = useState<User>();
 
   const { data, error, isLoading, mutate } = useSWR(
     ["/admin/users", query],
@@ -155,6 +152,7 @@ function UsersPage() {
                               role={"button"}
                               className="dropdown-item"
                               onClick={() => {
+                                progressContext.update(true);
                                 grantAdmin(u.id)
                                   .then(() => {
                                     toast.success("User granted");
@@ -162,6 +160,9 @@ function UsersPage() {
                                   })
                                   .catch((e) => {
                                     toast.error(parseErrorResponse(e));
+                                  })
+                                  .finally(() => {
+                                    progressContext.update(false);
                                   });
                               }}
                             >
@@ -172,6 +173,7 @@ function UsersPage() {
                               role={"button"}
                               className="dropdown-item text-danger"
                               onClick={() => {
+                                progressContext.update(true);
                                 dismissAdmin(u.id)
                                   .then(() => {
                                     toast.success("User dismissed");
@@ -179,6 +181,9 @@ function UsersPage() {
                                   })
                                   .catch((e) => {
                                     toast.error(parseErrorResponse(e));
+                                  })
+                                  .finally(() => {
+                                    progressContext.update(false);
                                   });
                               }}
                             >
@@ -247,30 +252,6 @@ function UsersPage() {
         </div>
       </div>
       {content()}
-
-      <ConfirmModal
-        show={isShowVerifyConfirm}
-        message={`Are you sure to verify: ${user?.name}?`}
-        close={() => {
-          setShowVerifyConfirm(false);
-        }}
-        onHidden={() => {
-          setUser(undefined);
-        }}
-        onConfirm={async () => {
-          try {
-            if (!user) {
-              throw Error();
-            }
-            // await verifyUser(user.id);
-            mutate();
-            toast.success("User verified");
-          } catch (error) {
-            const msg = parseErrorResponse(error);
-            toast.error(msg);
-          }
-        }}
-      />
     </>
   );
 }

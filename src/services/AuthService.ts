@@ -1,10 +1,13 @@
 import { UnauthorizeError } from "@/common/customs";
 import { firebaseAuth } from "@/common/firebase.config";
 import {
+  FacebookAuthProvider,
+  GoogleAuthProvider,
   applyActionCode,
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithEmailAndPassword,
+  signInWithPopup,
   updateProfile
 } from "firebase/auth";
 
@@ -18,6 +21,18 @@ export async function login({
   const auth = firebaseAuth;
 
   return await signInWithEmailAndPassword(auth, username, password);
+}
+
+export async function googleLogin() {
+  const provider = new GoogleAuthProvider();
+  const auth = firebaseAuth;
+  return await signInWithPopup(auth, provider);
+}
+
+export async function facebookLogin() {
+  const provider = new FacebookAuthProvider();
+  const auth = firebaseAuth;
+  return await signInWithPopup(auth, provider);
 }
 
 export async function signUp({

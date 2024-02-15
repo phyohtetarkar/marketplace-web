@@ -36,7 +36,7 @@ function ProductManageGridItem({
     if (value.status === "DRAFT") {
       return (
         <div
-          className="bg-default px-2 py-1 text-light rounded-1 position-absolute top-0 end-0 m-2"
+          className="bg-default px-2 py-1 text-dark rounded-1 position-absolute top-0 end-0 m-2"
           style={{
             fontSize: 12
           }}

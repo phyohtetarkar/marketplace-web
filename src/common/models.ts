@@ -81,6 +81,8 @@ export interface HomeData {
   banners?: Banner[];
   featuredShops?: Shop[];
   mainCategories?: Category[];
+  featuredProducts?: Product[];
+  discountProducts?: Product[];
 }
 
 export interface Banner {
@@ -324,8 +326,8 @@ export interface ProductUpdate {
   available?: boolean;
   newArrival?: boolean;
   categoryId?: number;
-  discountId?: number;
-  discount?: Discount;
+  discountId?: number | null;
+  discount?: Discount | null;
 }
 
 export interface ProductImage {

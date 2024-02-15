@@ -1,4 +1,5 @@
 "use client";
+import { ProgressContext } from "@/common/contexts";
 import { OrderItem } from "@/common/models";
 import {
   formatNumber,
@@ -21,9 +22,9 @@ import {
 import { RiDeleteBinLine } from "@remixicon/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 
 interface Props {
   shopId: number;
@@ -40,6 +41,10 @@ function OrderPage({ shopId, orderId }: Props) {
   const [showCancelItemConfirm, setShowCancelItemConfirm] = useState(false);
 
   const [orderItem, setOrderItem] = useState<OrderItem>();
+
+  const progressContext = useContext(ProgressContext);
+
+  const swrConfig = useSWRConfig();
 
   const { data, error, isLoading, mutate } = useSWR(
     `/orders/${orderId}`,
@@ -98,7 +103,7 @@ function OrderPage({ shopId, orderId }: Props) {
           <div className="hstack gap-3 ms-lg-auto">
             {data?.paymentMethod === "BANK_TRANSFER" && (
               <button
-                className="btn btn-light text-nowrap"
+                className="btn btn-default text-nowrap"
                 onClick={() => setShowReceipt(true)}
               >
                 View receipt
@@ -379,11 +384,15 @@ function OrderPage({ shopId, orderId }: Props) {
         show={!!updateStatus}
         message={`Are you sure to ${updateStatus ?? ""} order?`}
         close={() => setUpdateStatus(undefined)}
-        onConfirm={async () => {
+        onConfirm={async (result) => {
           try {
+            if (!result) {
+              return;
+            }
             if (!updateStatus || !data?.id) {
               throw "Something went wrong. Please try again";
             }
+            progressContext.update(true);
             switch (updateStatus) {
               case "cancel":
                 await cancelOrderBySeller(shopId, data.id);
@@ -397,9 +406,12 @@ function OrderPage({ shopId, orderId }: Props) {
             }
             mutate();
             toast.success("Update order status successfully");
+            swrConfig.mutate(`/shops/${shopId}/pending-order-count`);
           } catch (error) {
             const msg = parseErrorResponse(error);
             toast.error(msg);
+          } finally {
+            progressContext.update(false);
           }
         }}
       />
@@ -408,19 +420,24 @@ function OrderPage({ shopId, orderId }: Props) {
         show={showCancelItemConfirm}
         message={`Are you sure to cancel item?`}
         close={() => setShowCancelItemConfirm(false)}
-        onHidden={() => setOrderItem(undefined)}
-        onConfirm={async () => {
+        onConfirm={async (result) => {
           try {
+            if (!result) {
+              return;
+            }
             if (!orderItem || !data?.id) {
               throw Error();
             }
-
+            progressContext.update(true);
             await cancelOrderItem(shopId, data.id, orderItem.id);
             mutate();
             toast.success("Item cancelled");
           } catch (error) {
             const msg = parseErrorResponse(error);
             toast.error(msg);
+          } finally {
+            setOrderItem(undefined);
+            progressContext.update(false);
           }
         }}
       />
@@ -441,7 +458,7 @@ function OrderPage({ shopId, orderId }: Props) {
               <div className="modal-body p-0">
                 {data?.payment?.receiptImage ? (
                   <Image
-                    src={data.payment.receiptImage}
+                    src={data.payment.receiptImage + "?t=" + new Date().getTime()}
                     alt=""
                     sizes="100vw"
                     width={0}

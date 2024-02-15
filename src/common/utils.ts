@@ -228,6 +228,8 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
     if (error.code === AuthErrorCodes.TOO_MANY_ATTEMPTS_TRY_LATER) {
       return "Too many attempts. Please try again later.";
     }
+
+    return "Something went wrong, please try again";
   }
 
   if (typeof error === "string" && error.length > 0) {

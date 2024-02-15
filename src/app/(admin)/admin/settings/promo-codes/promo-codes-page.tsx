@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 import { PageData, SubscriptionPromo } from "@/common/models";
@@ -19,6 +19,7 @@ import { withAuthorization } from "@/common/withAuthorization";
 import makeApiRequest from "@/common/makeApiRequest";
 import Link from "next/link";
 import { RiDeleteBinLine, RiPencilFill } from "@remixicon/react";
+import { ProgressContext } from "@/common/contexts";
 
 export interface SubscriptionPromoQuery {
   available?: boolean;
@@ -58,6 +59,8 @@ function PromoCodesPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const [promo, setPromo] = useState<SubscriptionPromo>();
+
+  const progressContext = useContext(ProgressContext);
 
   const { data, error, isLoading, mutate } = useSWR(
     ["/admin/subscription-promos", query],
@@ -211,19 +214,24 @@ function PromoCodesPage() {
         message="Are you sure to delete?"
         show={showDeleteConfirm}
         close={() => setShowDeleteConfirm(false)}
-        onHidden={() => setPromo(undefined)}
-        onConfirm={async () => {
+        onConfirm={async (result) => {
           try {
+            if (result) {
+              return;
+            }
             if (!promo?.id) {
               throw Error();
             }
-
+            progressContext.update(true);
             await deletePromoCode(promo.id);
             toast.success("Promo code deleted");
             mutate();
           } catch (error) {
             const msg = parseErrorResponse(error);
             toast.error(msg);
+          } finally {
+            setPromo(undefined);
+            progressContext.update(false);
           }
         }}
       />

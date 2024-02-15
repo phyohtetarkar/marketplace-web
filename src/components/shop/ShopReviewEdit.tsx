@@ -28,7 +28,9 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
     try {
       if (authContext.status === "success") {
         const review = await getUserReview(shopId, authContext.user?.id ?? 0);
-        review && setReview({ ...review, shopId: shopId });
+        if (review) {
+          setReview({ ...review, shopId: shopId });
+        }
       }
     } catch (error) {}
   }, []);
@@ -65,7 +67,7 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
 
       await writeReview({ ...values, shopId: shopId });
       reload?.();
-      await loadUserReview(values.shopId ?? 0);
+      await loadUserReview(shopId);
       toast.success("Review submitted");
     } catch (error) {
       const msg = parseErrorResponse(error);

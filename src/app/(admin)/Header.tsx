@@ -1,28 +1,14 @@
 "use client";
 import { AuthenticationContext } from "@/common/contexts";
 import { useLocalization } from "@/common/hooks";
-import makeApiRequest from "@/common/makeApiRequest";
-import { parseErrorResponse, validateResponse } from "@/common/utils";
+import { parseErrorResponse } from "@/common/utils";
 import Dropdown from "@/components/Dropdown";
+import { signOut } from "@/services/AuthService";
 import { RiAccountCircleFill, RiMenuLine } from "@remixicon/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { toast } from "react-toastify";
-
-const signOut = async () => {
-  const url = `/auth/sign-out`;
-
-  const resp = await makeApiRequest({
-    url,
-    options: {
-      method: "POST"
-    },
-    authenticated: true
-  });
-
-  await validateResponse(resp);
-};
 
 function Header({ onBarClick }: { onBarClick: () => void }) {
   const { status, user, update } = useContext(AuthenticationContext);

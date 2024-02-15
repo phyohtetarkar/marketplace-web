@@ -1,6 +1,6 @@
 import { Shop, ShopStatus } from "@/common/models";
 import { formatTimestamp } from "@/common/utils";
-import { RiStarFill } from "@remixicon/react";
+import { RiEqualizerLine, RiPencilFill, RiStarFill } from "@remixicon/react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -88,9 +88,9 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
 
           <Link
             href={`/profile/shops/${value.id}/dashboard`}
-            className="btn btn-primary mt-3"
+            className="btn btn-default mt-3 hstack justify-content-center"
           >
-            Manage
+            <RiEqualizerLine size={20} className="me-2" /> Manage
           </Link>
         </div>
       </div>

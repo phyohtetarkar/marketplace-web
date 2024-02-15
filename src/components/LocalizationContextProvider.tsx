@@ -1,3 +1,4 @@
+"use client";
 import { LocaleContextType, LocalizationContext } from "@/common/contexts";
 import { ReactNode, useState } from "react";
 

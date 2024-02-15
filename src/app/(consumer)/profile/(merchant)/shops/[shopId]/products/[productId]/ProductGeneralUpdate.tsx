@@ -52,8 +52,9 @@ function ProductGeneralUpdate(props: ProductEditProps) {
       available: product.available,
       newArrival: product.newArrival,
       categoryId: product.category.id,
-      discountId: product.discount?.id
-    }
+      discountId: product.discount?.id,
+      discount: product.discount
+    },
   });
 
   const executeSave = async (values: ProductGeneralUpdate) => {
@@ -63,6 +64,8 @@ function ProductGeneralUpdate(props: ProductEditProps) {
       mutate<Product>(`/vendor/shops/${shopId}/products/${product.id}`).then(
         (p) => {
           setValue("slug", p?.slug);
+          setValue("discount", p?.discount ?? null);
+          setValue("discountId", p?.discount?.id ?? null);
         }
       );
     } catch (error) {
@@ -203,10 +206,10 @@ function ProductGeneralUpdate(props: ProductEditProps) {
                 return (
                   <DiscountSelect
                     shopId={shopId}
-                    value={field.value}
+                    value={field.value ?? undefined}
                     onChange={(value) => {
-                      setValue("discount", value);
-                      setValue("discountId", value?.id);
+                      setValue("discount", value ?? null);
+                      setValue("discountId", value?.id ?? null);
                     }}
                   />
                 );

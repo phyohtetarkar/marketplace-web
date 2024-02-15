@@ -20,7 +20,6 @@ export async function createOrder(value: OrderCreateForm) {
   if (value.delivery) {
     value.delivery.name && form.append("delivery.name", value.delivery.name);
     value.delivery.phone && form.append("delivery.phone", value.delivery.phone);
-    value.delivery.city && form.append("delivery.city", value.delivery.city);
     value.delivery.address &&
       form.append("delivery.address", value.delivery.address);
   }

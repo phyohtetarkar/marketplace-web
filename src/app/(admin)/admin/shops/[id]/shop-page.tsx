@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 import { Shop, ShopStatus } from "@/common/models";
@@ -13,6 +13,7 @@ import Link from "next/link";
 import { withAuthorization } from "@/common/withAuthorization";
 import makeApiRequest from "@/common/makeApiRequest";
 import { RiExternalLinkLine } from "@remixicon/react";
+import { ProgressContext } from "@/common/contexts";
 
 const getShopById = async (shopId: number) => {
   const url = `/admin/shops/${shopId}`;
@@ -53,6 +54,7 @@ const disableShop = async (shopId: number) => {
 function ShopPage({ shopId }: { shopId: number }) {
   const [confirmApprove, setConfirmApprove] = useState(false);
   const [confirmDisable, setConfirmDisable] = useState(false);
+  const progressContext = useContext(ProgressContext);
 
   const { data, error, isLoading, mutate } = useSWR(
     `/admin/shops/${shopId}`,
@@ -228,11 +230,15 @@ function ShopPage({ shopId }: { shopId: number }) {
         show={confirmApprove}
         message={`Are you sure to approve ${data.name}?`}
         close={() => setConfirmApprove(false)}
-        onConfirm={async () => {
+        onConfirm={async (result) => {
+          if (!result) {
+            return;
+          }
           try {
             if (!data.id) {
               throw Error();
             }
+            progressContext.update(true);
             await approveShop(data.id);
             mutate();
             toast.success("Shop approved");
@@ -241,6 +247,7 @@ function ShopPage({ shopId }: { shopId: number }) {
             toast.error(msg);
           } finally {
             setConfirmApprove(false);
+            progressContext.update(false);
           }
         }}
       />
@@ -249,11 +256,15 @@ function ShopPage({ shopId }: { shopId: number }) {
         show={confirmDisable}
         message={`Are you sure to disable ${data.name}?`}
         close={() => setConfirmDisable(false)}
-        onConfirm={async () => {
+        onConfirm={async (result) => {
+          if (!result) {
+            return;
+          }
           try {
             if (!data.id) {
               throw Error();
             }
+            progressContext.update(true);
             await disableShop(data.id);
             mutate();
             toast.success("Shop disabled");
@@ -262,6 +273,7 @@ function ShopPage({ shopId }: { shopId: number }) {
             toast.error(msg);
           } finally {
             setConfirmDisable(true);
+            progressContext.update(false);
           }
         }}
       />

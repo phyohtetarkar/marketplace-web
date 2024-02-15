@@ -1,4 +1,5 @@
 "use client";
+import { ProgressContext } from "@/common/contexts";
 import { Discount } from "@/common/models";
 import {
   formatNumber,
@@ -14,7 +15,7 @@ import DiscountApply from "@/components/shop/DiscountApply";
 import DiscountEdit from "@/components/shop/DiscountEdit";
 import { deleteDiscount, findDiscounts } from "@/services/DiscountService";
 import { RiPencilFill } from "@remixicon/react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useSWR from "swr";
 
 function DiscountsPage({ shopId }: { shopId: number }) {
@@ -22,6 +23,8 @@ function DiscountsPage({ shopId }: { shopId: number }) {
   const [showEdit, setShowEdit] = useState(false);
   const [showApply, setShowApply] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const progressContext = useContext(ProgressContext);
+
   const { data, error, isLoading, mutate } = useSWR(
     `/vendor/shops/${shopId}/discounts/`,
     () => findDiscounts(shopId),
@@ -217,18 +220,24 @@ function DiscountsPage({ shopId }: { shopId: number }) {
       <ConfirmModal
         show={showConfirm}
         message="Are you sure to delete?"
-        onConfirm={async () => {
+        onConfirm={async (result) => {
           try {
+            if (!result) {
+              return;
+            }
+            progressContext.update(true);
             discount?.id && (await deleteDiscount(shopId, discount.id));
             mutate();
           } catch (error) {
             const msg = parseErrorResponse(error);
             console.log(msg);
+          } finally {
+            setDiscount(undefined);
+            progressContext.update(false);
           }
         }}
         close={() => {
           setShowConfirm(false);
-          setDiscount(undefined);
         }}
       />
     </>

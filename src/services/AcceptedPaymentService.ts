@@ -7,7 +7,7 @@ export async function saveShopAcceptedPayment(values: ShopAcceptedPayment) {
   const resp = await makeApiRequest({
     url,
     options: {
-      method: !values.id ? "POST" : "PUT",
+      method: "POST",
       body: JSON.stringify(values),
       headers: {
         "Content-Type": "application/json"

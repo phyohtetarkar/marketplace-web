@@ -200,7 +200,7 @@ export async function getShopStatistic(shopId: number) {
 }
 
 export async function getShopSetting(shopId: number) {
-  const url = `/vendor/shops/${shopId}/setting`;
+  const url = `/content/shops/${shopId}/setting`;
 
   const resp = await makeApiRequest({ url, authenticated: true });
 

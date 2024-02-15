@@ -4,7 +4,7 @@ import { parseErrorResponse } from "@/common/utils";
 import Alert from "@/components/Alert";
 import ProgressButton from "@/components/ProgressButton";
 import { Input, PasswordInput } from "@/components/forms";
-import { login } from "@/services/AuthService";
+import { facebookLogin, googleLogin, login } from "@/services/AuthService";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -34,7 +34,7 @@ function LoginPage() {
 
   }, [authContext]);
 
-  const processLogin = async (values: LoginInputs) => {
+  const passwordLogin = async (values: LoginInputs) => {
     try {
       setError(undefined);
       const result = await login({
@@ -64,7 +64,7 @@ function LoginPage() {
                 className="row g-3"
                 onSubmit={(evt) => {
                   evt.preventDefault();
-                  handleSubmit(async (data) => await processLogin(data))();
+                  handleSubmit(async (data) => await passwordLogin(data))();
                 }}
               >
                 <div className="col-md-12">
@@ -126,6 +126,14 @@ function LoginPage() {
                       type="button"
                       className="btn btn-outline-light border w-50 d-flex align-items-center"
                       disabled={isSubmitting}
+                      onClick={async () => {
+                        try {
+                          await facebookLogin();
+                        } catch (error) {
+                          console.log(error);
+                          setError(parseErrorResponse(error));
+                        }
+                      }}
                     >
                       <Image
                         src="/images/icons8-facebook-48.png"
@@ -140,6 +148,14 @@ function LoginPage() {
                       type="button"
                       className="btn btn-outline-light border w-50 d-flex align-items-center"
                       disabled={isSubmitting}
+                      onClick={async () => {
+                        try {
+                          await googleLogin();
+                        } catch (error) {
+                          console.log(error);
+                          setError(parseErrorResponse(error));
+                        }
+                      }}
                     >
                       <Image
                         src="/images/icons8-google-48.png"

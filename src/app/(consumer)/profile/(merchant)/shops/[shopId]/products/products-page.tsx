@@ -1,4 +1,5 @@
 "use client";
+import { ProgressContext } from "@/common/contexts";
 import { ProductStatus } from "@/common/models";
 import { parseErrorResponse } from "@/common/utils";
 import Alert from "@/components/Alert";
@@ -13,7 +14,7 @@ import {
   findShopProducts
 } from "@/services/ProductService";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 
@@ -25,6 +26,9 @@ function ProductsPage(props: ShopProductListingProps) {
   const { shopId } = props;
 
   const [deleteId, setDeletedId] = useState<number>();
+
+  const progressContext = useContext(ProgressContext);
+
   const [query, setQuery] = useState<ProductQuery>({
     "shop-id": shopId
   });
@@ -120,11 +124,15 @@ function ProductsPage(props: ShopProductListingProps) {
         message="Are you sure to delete?"
         show={!!deleteId}
         close={() => setDeletedId(undefined)}
-        onConfirm={async () => {
+        onConfirm={async (result) => {
           try {
+            if (!result) {
+              return;
+            }
             if (!deleteId) {
               throw undefined;
             }
+            progressContext.update(true);
             await deleteProduct(shopId, deleteId);
             setDeletedId(undefined);
             mutate();
@@ -132,6 +140,9 @@ function ProductsPage(props: ShopProductListingProps) {
           } catch (error) {
             const msg = parseErrorResponse(error);
             toast.error(msg);
+          } finally {
+            setDeletedId(undefined);
+            progressContext.update(false);
           }
         }}
       />

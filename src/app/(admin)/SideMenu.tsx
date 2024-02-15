@@ -1,13 +1,12 @@
 "use client";
 import {
+  RiBookmarkLine,
   RiBox3Line,
   RiComputerLine,
   RiGroupLine,
   RiImageLine,
   RiMap2Line,
-  RiPriceTagLine,
   RiSettings3Line,
-  RiShoppingBasketFill,
   RiStore2Line
 } from "@remixicon/react";
 import Link from "next/link";
@@ -108,7 +107,7 @@ function SideMenu({ expanded = true }) {
           />
           <MenuItem
             to="/admin/categories"
-            icon={<RiPriceTagLine size={!expanded ? 24 : 20} />}
+            icon={<RiBookmarkLine size={!expanded ? 24 : 20} />}
             label="Categories"
             expanded={expanded}
           />

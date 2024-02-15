@@ -3,6 +3,7 @@ import makeApiRequest from "@/common/makeApiRequest";
 import { Discount, PageData, Product } from "@/common/models";
 import {
   buildQueryParams,
+  debounce,
   formatNumber,
   parseErrorResponse,
   validateResponse
@@ -99,6 +100,16 @@ function ProductsPage() {
       revalidateOnFocus: false
     }
   );
+
+  const updateInput = debounce((v) => {
+    setQuery((old) => {
+      return {
+        ...old,
+        page: undefined,
+        q: !v ? undefined : v
+      };
+    });
+  }, 800);
 
   const discountView = (d?: Discount) => {
     if (d?.type === "PERCENTAGE") {
@@ -214,13 +225,7 @@ function ProductsPage() {
                 placeholder="Search..."
                 onChange={(evt) => {
                   var q = evt.target.value;
-                  setQuery((old) => {
-                    return {
-                      ...old,
-                      page: undefined,
-                      q: !q ? undefined : q
-                    };
-                  });
+                  updateInput(q);
                 }}
               />
             </div>

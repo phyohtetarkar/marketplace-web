@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 import { SubscriptionPlan } from "@/common/models";
@@ -16,6 +16,7 @@ import Link from "next/link";
 import { withAuthorization } from "@/common/withAuthorization";
 import { RiDeleteBinLine, RiPencilFill } from "@remixicon/react";
 import makeApiRequest from "@/common/makeApiRequest";
+import { ProgressContext } from "@/common/contexts";
 
 const getSubscriptionPlans = async () => {
   const url = `/admin/subscription-plans`;
@@ -43,6 +44,8 @@ function SubscriptionPlansPage() {
   //const [page, setPage] = useState(0);
   const [plan, setPlan] = useState<SubscriptionPlan>();
   const [showConfirm, setShowConfirm] = useState(false);
+  const progressContext = useContext(ProgressContext);
+
   const { data, error, isLoading, mutate } = useSWR(
     "/subscription-plans",
     getSubscriptionPlans,
@@ -181,18 +184,24 @@ function SubscriptionPlansPage() {
       <ConfirmModal
         show={showConfirm}
         message="Are you sure to delete?"
-        onConfirm={async () => {
+        onConfirm={async (result) => {
           try {
+            if (!result) {
+              return;
+            }
+            progressContext.update(true);
             plan?.id && (await deletePlan(plan.id));
             mutate();
           } catch (error) {
             const msg = parseErrorResponse(error);
             toast.error(msg);
+          } finally {
+            setPlan(undefined);
+            progressContext.update(false);
           }
         }}
         close={() => {
           setShowConfirm(false);
-          setPlan(undefined);
         }}
       />
     </>

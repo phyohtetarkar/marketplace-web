@@ -1,4 +1,5 @@
 "use client";
+import { useLocalization } from "@/common/hooks";
 import { getCategoryName, parseErrorResponse } from "@/common/utils";
 import { withAuthorization } from "@/common/withAuthorization";
 import Alert from "@/components/Alert";
@@ -6,7 +7,6 @@ import { getCategoryById } from "@/services/CategoryService";
 import Link from "next/link";
 import useSWR from "swr";
 import CategoryList from "../../CategoryList";
-import { useLocalization } from "@/common/hooks";
 
 function SubCategoriesPage({ categoryId }: { categoryId: number }) {
   const { locale } = useLocalization();

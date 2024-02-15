@@ -1,5 +1,5 @@
 "use client";
-import { AuthenticationContext } from "@/common/contexts";
+import { AuthenticationContext, ProgressContext } from "@/common/contexts";
 import makeApiRequest from "@/common/makeApiRequest";
 import { PageData, User } from "@/common/models";
 import {
@@ -46,6 +46,7 @@ const removeStaffUser = async (userId: number) => {
 
 function StaffUsersPage() {
   const { user } = useContext(AuthenticationContext);
+  const progressContext = useContext(ProgressContext);
 
   const { write } = useMemo(() => {
     return {
@@ -115,7 +116,7 @@ function StaffUsersPage() {
                   <td>{u.phone ?? ""}</td>
                   <td>{u.role}</td>
                   <td>
-                    {write && u.id !== u?.id && u.role !== "OWNER" && (
+                    {write && u.id !== user?.id && u.role !== "OWNER" && (
                       <div className="hstack gap-2">
                         <Link
                           href={`/admin/settings/staff-users/${u.id}`}
@@ -183,20 +184,24 @@ function StaffUsersPage() {
         close={() => {
           setShowRemoveConfirm(false);
         }}
-        onHidden={() => {
-          setStaff(undefined);
-        }}
-        onConfirm={async () => {
+        onConfirm={async (result) => {
           try {
+            if (!result) {
+              return;
+            }
             if (!staff) {
               throw "Unauthorized";
             }
+            progressContext.update(true);
             await removeStaffUser(staff.id);
             mutate();
             toast.success("Staff user removed");
           } catch (error) {
             const msg = parseErrorResponse(error);
             toast.error(msg);
+          } finally {
+            setStaff(undefined);
+            progressContext.update(false);
           }
         }}
       />

@@ -3,6 +3,7 @@ import makeApiRequest from "@/common/makeApiRequest";
 import { PageData, Shop, ShopStatus } from "@/common/models";
 import {
   buildQueryParams,
+  debounce,
   formatTimestamp,
   parseErrorResponse,
   validateResponse
@@ -45,6 +46,16 @@ function ShopsPage() {
       revalidateOnFocus: false
     }
   );
+
+  const updateInput = debounce((v) => {
+    setQuery((old) => {
+      return {
+        ...old,
+        page: undefined,
+        q: !v ? undefined : v
+      };
+    });
+  }, 800);
 
   const statusView = (status?: ShopStatus) => {
     if (status === "APPROVED") {
@@ -166,13 +177,7 @@ function ShopsPage() {
             placeholder="Search..."
             onChange={(evt) => {
               var q = evt.target.value;
-              setQuery((old) => {
-                return {
-                  ...old,
-                  page: undefined,
-                  q: !q ? undefined : q
-                };
-              });
+              updateInput(q);
             }}
           />
         </div>

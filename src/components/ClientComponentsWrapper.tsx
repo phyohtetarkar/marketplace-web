@@ -16,6 +16,7 @@ import {
 } from "chart.js";
 import ProgressModal from "./ProgressModal";
 import { ProgressContext } from "@/common/contexts";
+import { usePathname, useSearchParams } from "next/navigation";
 
 Chart.register(
   LineController,
@@ -35,6 +36,7 @@ type PushStateInput = [
 
 export default function ClientComponentsWrapper() {
   const progressContext = useContext(ProgressContext);
+
   useEffect(() => {
     const handleAnchorClick = (event: MouseEvent) => {
       const targetUrl = (event.currentTarget as HTMLAnchorElement).href;

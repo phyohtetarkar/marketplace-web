@@ -116,7 +116,7 @@ function Header() {
                     objectFit: "contain",
                     height: 46
                   }}
-                  className="img-fluid me-1"
+                  className="img-fluid me-2"
                 />
               <h3 className="fw-bold mb-0 text-secondary d-none d-md-block">
                 {process.env.NEXT_PUBLIC_APP_NAME}

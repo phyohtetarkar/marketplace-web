@@ -6,8 +6,8 @@ import { getAllCities } from "@/services/CityService";
 import { getLoginUser } from "@/services/UserService";
 import { findDiscounts } from "@/services/DiscountService";
 import { useCallback, useContext } from "react";
-import { LocalizationContext } from "./localization";
 import { locale_en, locale_mm } from "@/locales/locale.config";
+import { LocalizationContext } from "./contexts";
 
 export function useCategory(slug?: string) {
   const { data, error, isLoading } = useSWR(

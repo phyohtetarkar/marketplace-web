@@ -1,4 +1,5 @@
 "use client";
+import { ProgressContext } from "@/common/contexts";
 import makeApiRequest from "@/common/makeApiRequest";
 import { Category } from "@/common/models";
 import {
@@ -12,7 +13,7 @@ import ConfirmModal from "@/components/ConfirmModal";
 import Loading from "@/components/Loading";
 import { RiDeleteBinLine, RiPencilFill } from "@remixicon/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 
@@ -48,6 +49,7 @@ function CategoryList({
 }) {
   const [category, setCategory] = useState<Category>();
   const [showConfirm, setShowConfirm] = useState(false);
+  const progressContext = useContext(ProgressContext);
 
   const { data, error, isLoading, mutate } = useSWR(
     `/admin/categories/${categoryId}/list`,
@@ -162,8 +164,12 @@ function CategoryList({
       <ConfirmModal
         show={showConfirm}
         message="Are you sure to delete?"
-        onConfirm={async () => {
+        onConfirm={async (result) => {
           try {
+            if (!result) {
+              return;
+            }
+            progressContext.update(true);
             category?.id && (await deleteCategory(category.id));
             mutate();
           } catch (error) {
@@ -171,11 +177,11 @@ function CategoryList({
             toast.error("Delete failed");
           } finally {
             setCategory(undefined);
+            progressContext.update(false);
           }
         }}
         close={() => {
           setShowConfirm(false);
-          setCategory(undefined);
         }}
       />
     </>

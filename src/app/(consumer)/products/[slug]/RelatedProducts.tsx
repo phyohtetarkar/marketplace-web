@@ -35,7 +35,7 @@ function RelatedProducts(props: RelatedProductsProps) {
       {data?.map((p, i) => {
         return (
           <div key={p.id} className="col">
-            <ProductGridItem value={p} />
+            <ProductGridItem value={p} hideAction />
           </div>
         );
       })}

@@ -399,7 +399,7 @@ function CreateShopPage() {
                 )();
               }}
             >
-              <span>Register shop</span>
+              <span>Create shop</span>
             </ProgressButton>
             <div className="form-check mb-3">
               <input
