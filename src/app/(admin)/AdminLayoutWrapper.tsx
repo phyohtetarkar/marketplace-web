@@ -1,12 +1,18 @@
 "use client";
 import { withAuthentication } from "@/common/WithAuthentication";
-import { LazyMotion, domAnimation, m } from "framer-motion";
-import { ReactNode, useContext, useEffect, useRef, useState } from "react";
-import Header from "./Header";
-import Footer from "./Footer";
-import SideMenu from "./SideMenu";
 import { AuthenticationContext } from "@/common/contexts";
+import { LazyMotion, domAnimation, m } from "framer-motion";
 import { useRouter } from "next/navigation";
+import {
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from "react";
+import Footer from "./Footer";
+import Header from "./Header";
+import SideMenu from "./SideMenu";
 
 const minSideMenuWidth = 80;
 const maxSideMenuWidth = 250;
@@ -58,7 +64,7 @@ function AdminLayoutWrapper({ children }: { children: ReactNode }) {
   if (user?.role !== "ADMIN" && user?.role !== "OWNER") {
     return <></>;
   }
-  
+
   return (
     <div className="d-flex h-100">
       <LazyMotion features={domAnimation} strict>

@@ -27,6 +27,8 @@ const getSiteAssets = cache(async () => {
     .catch((e) => undefined);
 });
 
+// export const dynamic = 'force-dynamic';
+
 export const viewport: Viewport = {
   themeColor: "black",
   initialScale: 1,
