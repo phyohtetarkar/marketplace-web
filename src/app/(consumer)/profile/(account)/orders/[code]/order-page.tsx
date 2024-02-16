@@ -227,7 +227,7 @@ function OrderPage({ code }: { code: string }) {
 
                 <dt className="col-sm-4  fw-semibold">Discount:</dt>
                 <dd className="col-sm-8 text-sm-end text-danger">
-                  -{formatNumber(data.discount)} Ks
+                  -{formatNumber(data.discountPrice)} Ks
                 </dd>
 
                 <div className="col-12">

@@ -405,7 +405,7 @@ export interface Order {
   orderCode: string;
   subTotalPrice: number;
   totalPrice: number;
-  discount: number;
+  discountPrice: number;
   quantity: number;
   note?: string;
   status: OrderStatus;
