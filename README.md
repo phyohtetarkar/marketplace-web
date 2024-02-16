@@ -1,6 +1,6 @@
 # Multi-vendor marketplace web
 
-Multivendor marketplace frontend website build with [Next.js](https://nextjs.org/).
+Multi-vendor marketplace frontend website build with [Next.js](https://nextjs.org/).
 
 This project is a frontend part of [Multi-vendor marketpalce backend](https://github.com/phyohtetarkar/marketplace-backend/)
 
@@ -35,3 +35,20 @@ You can modify bootstrap scss file in `/styles/scss/bootstrap-custom.scss` and t
 ```bash
 npm run sass
 ```
+
+## Support me
+
+<a href="https://www.buymeacoffee.com/yzox2vc1i">
+	<img src="images/bmc-button.png" width="200">
+</a>
+<br/>
+<br/>
+
+
+## Screenshots
+
+<img src="images/shop-dashboard.png">
+
+<img src="images/product-detail.png">
+
+<img src="images/admin-dashboard.png">
