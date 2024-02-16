@@ -30,17 +30,12 @@ function RichTextEditor({
     return null;
   }
 
-  // if (!ready) {
-  //   return <div className="py-3 text-center text-muted">Loading editor...</div>;
-  // }
-
   return (
     <Editor
       id={id}
-      tinymceScriptSrc={`${location.origin}/tinymce/tinymce.min.js`}
+      tinymceScriptSrc={process.env.NEXT_PUBLIC_TINYMCE_SCRIPT_SOURCE}
       value={value}
       onEditorChange={(newValue, editor) => {
-        //formik.setFieldValue("body", newValue)
         onEditorChange?.(newValue);
       }}
       onInit={(evt, editor) => {

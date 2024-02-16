@@ -4,7 +4,14 @@ Multi-vendor marketplace frontend website build with [Next.js](https://nextjs.or
 
 This project is a frontend part of [Multi-vendor marketpalce backend](https://github.com/phyohtetarkar/marketplace-backend/)
 
-## Setup and run
+## Requirements and setup
+
+<ol>
+	<li>Node.js 18.17 or later</li>
+	<li>TinyMCE self-hosted</li>
+</ol>
+
+This project use [TinyMCE](https://www.tiny.cloud/) for rich text editing. You need to download TinyMCE self-hosted source [here](https://www.tiny.cloud/get-tiny/self-hosted/) and then unzip and place inside **public** folder or you can host anywhere you wish to place. Read more about TinyMCE self-hosted [here](https://www.tiny.cloud/blog/get-started-with-tinymce-self-hosted/).
 
 Required `.env.local` file properties.
 
@@ -28,9 +35,15 @@ NEXT_PUBLIC_FIREBASE_APP_ID=
 NEXT_PUBLIC_MAP_API_KEY=
 
 NEXT_PUBLIC_API_URL= # backend api url
+
+# Self-hosted TinyMCE source url 
+NEXT_PUBLIC_TINYMCE_SCRIPT_SOURCE=http://localhost:3000/tinymce/tinymce.min.js
+
 ```
 
-You can modify bootstrap scss file in `/styles/scss/bootstrap-custom.scss` and then compile
+## Styling
+
+This project use [Bootstrap 5](https://getbootstrap.com/docs/5.3/getting-started/introduction/) for styling. You can modify bootstrap scss file in `/styles/scss/bootstrap-custom.scss` and then re-compile
 
 ```bash
 npm run sass
