@@ -399,7 +399,7 @@ const ShopPaymentForm = ({ shopId }: { shopId: number }) => {
 
   useEffect(() => {
     settingState.data && setSetting({ ...settingState.data, shopId: shopId });
-  }, [settingState.data]);
+  }, [shopId, settingState.data, setSetting]);
 
   useEffect(() => {
     if (settingState.error) {

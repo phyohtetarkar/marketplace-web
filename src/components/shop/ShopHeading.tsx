@@ -1,17 +1,16 @@
 "use client";
-import Image from "next/image";
+import { ProgressContext } from "@/common/contexts";
 import { Shop } from "@/common/models";
-import Rating from "../Rating";
-import Dropdown from "../Dropdown";
+import { parseErrorResponse } from "@/common/utils";
+import { uploadShopCover, uploadShopLogo } from "@/services/ShopService";
 import { RiEqualizerLine, RiExternalLinkLine } from "@remixicon/react";
+import Image from "next/image";
 import Link from "next/link";
 import { ChangeEvent, useCallback, useContext, useMemo, useRef } from "react";
-import { ProgressContext } from "@/common/contexts";
 import { toast } from "react-toastify";
-import { parseErrorResponse } from "@/common/utils";
-import { useRouter } from "next/navigation";
-import { uploadShopCover, uploadShopLogo } from "@/services/ShopService";
 import { useSWRConfig } from "swr";
+import Dropdown from "../Dropdown";
+import Rating from "../Rating";
 
 interface ShopHeadingProps {
   shop: Shop;
@@ -64,6 +63,7 @@ function ShopHeading(props: ShopHeadingProps) {
         event.target.value = "";
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 

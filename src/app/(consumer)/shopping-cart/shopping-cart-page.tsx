@@ -90,7 +90,7 @@ function ShoppingCartPage() {
       }
       return old;
     });
-  }, [group]);
+  }, [group, itemComparator]);
 
   const content = () => {
     if (isLoading) {

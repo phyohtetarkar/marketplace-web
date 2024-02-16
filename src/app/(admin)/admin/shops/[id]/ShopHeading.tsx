@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Shop } from "@/common/models";
 import Rating from "@/components/Rating";
 

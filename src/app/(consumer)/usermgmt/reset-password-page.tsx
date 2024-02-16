@@ -8,7 +8,7 @@ import ProgressButton from "@/components/ProgressButton";
 import { PasswordInput } from "@/components/forms";
 import { confirmPasswordReset, verifyPasswordResetCode } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -28,11 +28,7 @@ export default function ResetPasswordPage({ oobCode }: { oobCode: string }) {
     register
   } = useForm<ResetPasswordForm>();
 
-  useEffect(() => {
-    verifyCode();
-  }, [oobCode]);
-
-  const verifyCode = async () => {
+  const verifyCode = useCallback(async () => {
     if (verified) {
       return;
     }
@@ -44,7 +40,11 @@ export default function ResetPasswordPage({ oobCode }: { oobCode: string }) {
     } catch (error) {
       setError(parseErrorResponse(error));
     }
-  };
+  }, [oobCode, verified]);
+
+  useEffect(() => {
+    verifyCode();
+  }, [oobCode, verifyCode]);
 
   const resetPassword = async (values: ResetPasswordForm) => {
     try {

@@ -32,7 +32,7 @@ function LoginPage() {
       router.replace(authContext.user?.emailVerified ? "/" : "/verify-email");
     }
 
-  }, [authContext]);
+  }, [authContext, router]);
 
   const passwordLogin = async (values: LoginInputs) => {
     try {

@@ -53,7 +53,7 @@ function AdminLayoutWrapper({ children }: { children: ReactNode }) {
     if (user && !user.role?.match("ADMIN|OWNER")) {
       router.push("/");
     }
-  }, [user]);
+  }, [user, router]);
 
   if (user?.role !== "ADMIN" && user?.role !== "OWNER") {
     return <></>;

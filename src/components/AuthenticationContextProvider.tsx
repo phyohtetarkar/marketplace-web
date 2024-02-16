@@ -77,7 +77,7 @@ export const AuthenticationContextProvider = ({
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [reloadLoginUser]);
 
   return (
     <AuthenticationContext.Provider value={authState}>

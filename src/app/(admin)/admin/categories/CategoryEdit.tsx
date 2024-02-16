@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 import { useCategories } from "@/common/hooks";
 import makeApiRequest from "@/common/makeApiRequest";
 import { Category, CategoryForm } from "@/common/models";
@@ -271,7 +272,7 @@ function CategoryEdit({ id }: { id: number }) {
                             skipOption={(v) => v.id === id}
                             onChange={(v) => {
                               setValue("category", v);
-                              setValue("categoryId", v.id);
+                              setValue("categoryId", v?.id);
                             }}
                             getNestedData={(v) => v.children}
                             formatSelectedOption={(v) => v.name}

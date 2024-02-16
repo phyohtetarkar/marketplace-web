@@ -31,7 +31,7 @@ function MerchantLayoutWrapper({
     if (error && error instanceof APIError && error.status === 403) {
       router.replace("/profile/shops");
     }
-  }, [error, isLoading]);
+  }, [error, isLoading, router]);
 
   const content = () => {
     if (isLoading) {

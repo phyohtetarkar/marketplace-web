@@ -7,17 +7,13 @@ import Loading from "@/components/Loading";
 import { RiCheckLine } from "@remixicon/react";
 import { applyActionCode } from "firebase/auth";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function VerifyEmailPage({ oobCode }: { oobCode: string }) {
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState<string>();
 
-  useEffect(() => {
-    verifyCode();
-  }, [oobCode]);
-
-  const verifyCode = async () => {
+  const verifyCode = useCallback(async () => {
     if (verified) {
       return;
     }
@@ -29,7 +25,13 @@ export default function VerifyEmailPage({ oobCode }: { oobCode: string }) {
     } catch (error) {
       setError(parseErrorResponse(error));
     }
-  };
+  }, [oobCode, verified]);
+
+  useEffect(() => {
+    verifyCode();
+  }, [oobCode, verifyCode]);
+
+  
 
   const content = () => {
     if (error) {

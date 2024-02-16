@@ -33,7 +33,7 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
         }
       }
     } catch (error) {}
-  }, []);
+  }, [authContext]);
 
   const {
     control,

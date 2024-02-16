@@ -29,7 +29,7 @@ function ForgotPasswordPage() {
     if (status === "success") {
       router.push("/")
     }
-  }, []);
+  }, [router, status]);
 
   const executeSendEmail = async (email: string) => {
     try {

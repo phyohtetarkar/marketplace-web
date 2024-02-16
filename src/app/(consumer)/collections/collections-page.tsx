@@ -59,7 +59,7 @@ function CollectionsPage() {
         }
       }
     }
-  }, [categories]);
+  }, [categories, category]);
 
   if (isLoading) {
     return <Loading />;

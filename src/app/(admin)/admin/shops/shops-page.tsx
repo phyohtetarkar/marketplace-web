@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 import makeApiRequest from "@/common/makeApiRequest";
 import { PageData, Shop, ShopStatus } from "@/common/models";
 import {

@@ -70,7 +70,7 @@ function UpdatePermissionsPage({ userId }: { userId: number }) {
     if (data) {
       setValue("permissions", new Set(data.permissions ?? []));
     }
-  }, [data]);
+  }, [data, setValue]);
 
   if (isLoading) {
     return <Loading />;

@@ -1,6 +1,5 @@
 "use client";
 import Alert from "@/components/Alert";
-import Loading from "@/components/Loading";
 import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthenticationContext } from "./contexts";
@@ -33,7 +32,7 @@ export function withAuthentication<P extends {}>(
         // router.push("/verify-email");
         // setCalledPush(true);
       }
-    }, [calledPush, status, user]);
+    }, [calledPush, router, status, user]);
 
     if (status === "loading") {
       return (

@@ -79,6 +79,7 @@ function Modal(props: ModalProps) {
       element?.removeEventListener("hidden.bs.modal", handleHidden);
       modalInstance.current?.dispose();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
