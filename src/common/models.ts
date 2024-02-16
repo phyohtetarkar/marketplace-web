@@ -6,9 +6,32 @@ export type ShopStatus = "PENDING" | "APPROVED" | "DISABLED";
 
 export type ProductStatus = "DRAFT" | "PUBLISHED";
 
-export type DiscountType = "PERCENTAGE" | "FIXED_AMOUNT";
+export type ValueType = "PERCENTAGE" | "FIXED_AMOUNT";
 
 export type ShopSubscriptionStatus = "PENDING" | "SUCCESS" | "FAILED";
+
+export type UserRole = "USER" | "ADMIN" | "OWNER";
+
+export type Permission =
+  | "DASHBOARD_READ"
+  | "BANNER_READ"
+  | "BANNER_WRITE"
+  | "CATEGORY_READ"
+  | "CATEGORY_WRITE"
+  | "CITY_READ"
+  | "CITY_WRITE"
+  | "SHOP_READ"
+  | "SHOP_WRITE"
+  | "PRODUCT_READ"
+  | "PRODUCT_WRITE"
+  | "USER_READ"
+  | "USER_WRITE"
+  | "SUBSCRIPTION_PLAN_READ"
+  | "SUBSCRIPTION_PLAN_WRITE"
+  | "PROMO_CODE_READ"
+  | "PROMO_CODE_WRITE"
+  | "SUBSCRIPTION_HISTORY_READ"
+  | "SITE_SETTING_WRITE";
 
 export interface PageData<T> {
   contents: T[];
@@ -21,18 +44,31 @@ export interface PageData<T> {
 export interface AuthResult {
   accessToken: string;
   refreshToken: string;
-  user?: User;
+}
+
+export interface Audit {
+  createdAt: number;
+  createdBy?: string;
+  modifiedAt: number;
+  modifiedBy?: string;
 }
 
 export interface User {
-  id?: number;
+  id: number;
   name?: string;
   phone?: string;
-  role?: string;
+  role?: UserRole;
   email?: string;
   image?: string;
   disabled?: boolean;
-  verified?: boolean;
+  emailVerified?: boolean;
+  permissions?: Permission[];
+  audit?: Audit;
+}
+
+export interface UserEdit {
+  name?: string;
+  phone?: string;
 }
 
 export interface UserStatistic {
@@ -43,8 +79,10 @@ export interface UserStatistic {
 
 export interface HomeData {
   banners?: Banner[];
-  mainCategories?: Category[];
   featuredShops?: Shop[];
+  mainCategories?: Category[];
+  featuredProducts?: Product[];
+  discountProducts?: Product[];
 }
 
 export interface Banner {
@@ -54,6 +92,15 @@ export interface Banner {
   position: number;
 }
 
+export interface BannerForm {
+  id?: number;
+  link?: string;
+  position?: number;
+  image?: string;
+  file?: File;
+}
+
+
 export interface Category {
   id: number;
   name: string;
@@ -61,6 +108,24 @@ export interface Category {
   image: string;
   category?: Category;
   children?: Category[];
+  names?: CategoryName[];
+  audit?: Audit;
+}
+
+export interface CategoryName {
+  lang: string;
+  name?: string;
+}
+
+export interface CategoryForm {
+  id?: number;
+  slug?: string;
+  image?: string;
+  featured?: boolean;
+  category?: Category;
+  categoryId?: number;
+  names?: CategoryName[];
+  file?: File;
 }
 
 export interface City {
@@ -76,22 +141,20 @@ export interface ShopMember {
 }
 
 export interface Shop {
-  id?: number;
+  id: number;
   name?: string;
   slug?: string;
   headline?: string;
   rating?: number;
   featured?: boolean;
-  createdAt?: number;
-  pendingOrderCount?: number;
   status?: ShopStatus;
+  city?: City;
   expiredAt?: number;
   logo?: string;
   cover?: string;
   about?: string;
   contact?: ShopContact;
-  logoImage?: File;
-  coverImage?: File;
+  audit?: Audit;
 }
 
 export interface ShopContact {
@@ -103,12 +166,20 @@ export interface ShopContact {
   city?: City;
 }
 
-export interface ShopGeneral {
-  shopId?: number;
+export interface ShopUpdate {
+  shopId: number;
   name?: string;
   slug?: string;
   headline?: string;
   about?: string;
+}
+
+export interface ShopContactUpdate {
+  shopId: number;
+  address?: string;
+  phones?: string[];
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface ShopSetting {
@@ -143,7 +214,7 @@ export interface ShopAcceptedPayment {
 }
 
 export interface ShopSubscription {
-  id: number;
+  invoiceNo: number;
   title: string;
   totalPrice: number;
   discount: number;
@@ -152,9 +223,26 @@ export interface ShopSubscription {
   duration: number;
   startAt: number;
   endAt: number;
-  preSubscription: boolean;
+  promoCode?: string;
   shop?: Shop;
-  createdAt?: number;
+  audit?: Audit;
+}
+
+export interface ShopSubscriptionTransaction {
+  invoiceNo: number;
+  merchantId: string;
+  cardNo?: string;
+  amount: number;
+  currencyCode?: string;
+  tranRef?: string;
+  referenceNo?: string;
+  agentCode?: string;
+  channelCode?: string;
+  approvalCode?: string;
+  eci?: string;
+  transactionDateTime?: string;
+  respCode?: string;
+  respDesc?: string;
 }
 
 export interface ShopCreateForm {
@@ -167,7 +255,6 @@ export interface ShopCreateForm {
   cashOnDelivery?: boolean;
   bankTransfer?: boolean;
   acceptedPayments?: ShopAcceptedPayment[];
-  deliveryCities?: City[];
   logo?: string;
   cover?: string;
   cityId?: number;
@@ -182,45 +269,81 @@ export interface ShopMonthlySale {
 }
 
 export interface Product {
+  id: number;
+  name: string;
+  slug: string;
+  sku?: string;
+  price: number;
+  brand?: string;
+  thumbnail?: string;
+  videoEmbed?: string;
+  available?: boolean;
+  featured?: boolean;
+  newArrival?: boolean;
+  withVariant?: boolean;
+  description?: string;
+  status?: ProductStatus;
+  discount?: Discount;
+  category: Category;
+  shop: Shop;
+  images?: ProductImage[];
+  attributes?: ProductAttribute[];
+  variants?: ProductVariant[];
+  audit?: Audit;
+}
+
+export interface ProductCreate {
   id?: number;
   name?: string;
   slug?: string;
   sku?: string;
   price?: number;
   brand?: string;
-  thumbnail?: string;
-  videoId?: string;
-  stockLeft?: number;
-  featured?: boolean;
+  videoEmbed?: string;
+  available?: boolean;
   newArrival?: boolean;
   withVariant?: boolean;
+  draft?: boolean;
   description?: string;
-  disabled?: boolean;
   status?: ProductStatus;
   discount?: Discount;
-  category?: Category;
-  shop?: Shop;
   images?: ProductImage[];
-  attributes?: ProductAttribute[];
+  attributes?: ProductAttributeEdit[];
   variants?: ProductVariant[];
-  createdAt?: number;
   categoryId?: number;
-  shopId?: number;
+  shopId: number;
   discountId?: number;
+}
+
+export interface ProductUpdate {
+  id: number;
+  shopId: number;
+  name?: string;
+  slug?: string;
+  sku?: string;
+  price?: number;
+  brand?: string;
+  available?: boolean;
+  newArrival?: boolean;
+  categoryId?: number;
+  discountId?: number | null;
+  discount?: Discount | null;
 }
 
 export interface ProductImage {
   id?: number;
-  productId?: number;
   name?: string | null;
-  url?: string | null;
   thumbnail?: boolean;
   file?: File;
   deleted?: boolean;
 }
 
 export interface ProductAttribute {
-  id?: number;
+  name: string;
+  sort: number;
+}
+
+export interface ProductAttributeEdit {
   name?: string;
   sort: number;
   values?: ProductAttributeValue[];
@@ -235,13 +358,12 @@ export interface ProductVariant {
   id?: number;
   sku?: string;
   price?: number;
-  stockLeft?: number;
+  available?: boolean;
   attributes: ProductVariantAttribute[];
   deleted?: boolean;
 }
 
 export interface ProductVariantAttribute {
-  attributeId: number;
   attribute: string;
   value: string;
   sort: number;
@@ -250,21 +372,24 @@ export interface ProductVariantAttribute {
 
 export interface Discount {
   id?: number;
-  shopId?: number;
   title?: string;
   value?: number;
-  type?: DiscountType;
-  createdAt?: number;
+  type?: ValueType;
+  audit?: Audit;
 }
 
 export interface CartItem {
-  id: number;
   quantity: number;
   product: Product;
   variant?: ProductVariant;
 }
 
-export interface AddToCartForm {
+export interface CartItemID {
+  productId: number;
+  variantId?: number;
+}
+
+export interface CartItemForm {
   productId: number;
   variantId?: number;
   quantity: number;
@@ -288,28 +413,24 @@ export interface Order {
   delivery: DeliveryDetail;
   payment: PaymentDetail;
   items: [OrderItem];
-  user?: User;
+  customer?: User;
   shop?: Shop;
-  createdAt: number;
+  audit?: Audit;
 }
 
 export interface OrderItem {
   id: number;
-  productName: string;
-  productSlug: string;
-  productThumbnail?: string;
   unitPrice: number;
-  discount: number;
+  discountPrice: number;
   quantity: number;
   cancelled: boolean;
-  product?: Product;
-  attributes?: ProductVariantAttribute[];
+  product: Product;
+  productVariant?: ProductVariant;
 }
 
 export interface DeliveryDetail {
   name: string;
   phone: string;
-  city: string;
   address: string;
 }
 
@@ -329,11 +450,12 @@ export interface OrderCreateForm {
 }
 
 export interface SubscriptionPlan {
-  id: number;
-  title: string;
-  duration: number;
-  price: number;
-  promoUsable: boolean;
+  id?: number;
+  title?: string;
+  duration?: number;
+  price?: number;
+  promoUsable?: boolean;
+  audit?: Audit;
 }
 
 export interface PaymentTokenResult {
@@ -349,11 +471,41 @@ export interface ProductFilter {
 }
 
 export interface SubscriptionPromo {
-  id: number;
-  code: string;
-  value: number;
+  id?: number;
+  code?: string;
+  value?: number;
   minConstraint?: number;
-  valueType: DiscountType;
-  expiredAt: number;
-  used: boolean;
+  valueType?: ValueType;
+  expiredAt?: number;
+  used?: boolean;
+  audit?: Audit;
+}
+
+export interface StaffUserUpdate {
+  phone?: string;
+  role?: UserRole;
+  permissions?: Set<string>;
+}
+
+export interface SiteSetting {
+  favicon?: string;
+  logo?: string;
+  cover?: string;
+  aboutUs?: string;
+  termsAndConditions?: string;
+  privacyPolicy?: string;
+}
+
+export interface SiteAssets {
+  favicon?: string;
+  logo?: string;
+  cover?: string;
+}
+
+export interface DashboardData {
+  totalSubscription: number;
+  totalShop: number;
+  totalProduct: number;
+  totalUser: number;
+  recentSubscriptions: ShopSubscription[];
 }

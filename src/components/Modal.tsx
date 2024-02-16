@@ -50,22 +50,25 @@ function Modal(props: ModalProps) {
     };
 
     const initModal = async () => {
-      const Modal = (await import("bootstrap")).Modal;
-      element = modalRef.current;
-      if (!element) {
-        return;
-      }
+      try {
+        element = modalRef.current;
+        if (!element) {
+          return;
+        }
 
-      modalInstance.current = Modal.getOrCreateInstance(element, {
-        keyboard: false,
-        backdrop: backdrop ?? "static"
-      });
+        const Modal = (await import("bootstrap")).Modal;
 
-      element.addEventListener("show.bs.modal", handleShown);
+        modalInstance.current = Modal.getOrCreateInstance(element, {
+          keyboard: false,
+          backdrop: backdrop ?? "static"
+        });
 
-      element.addEventListener("hidden.bs.modal", handleHidden);
+        element.addEventListener("show.bs.modal", handleShown);
 
-      document.addEventListener("focusin", handleFocus);
+        element.addEventListener("hidden.bs.modal", handleHidden);
+
+        document.addEventListener("focusin", handleFocus);
+      } catch (error) {}
     };
 
     initModal();
@@ -76,7 +79,6 @@ function Modal(props: ModalProps) {
       element?.removeEventListener("hidden.bs.modal", handleHidden);
       modalInstance.current?.dispose();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

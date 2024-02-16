@@ -1,17 +1,30 @@
-import { CalendarDaysIcon } from "@heroicons/react/24/outline";
+"use client";
 import flatpickr from "flatpickr";
 import { Instance } from "flatpickr/dist/types/instance";
 import { useEffect, useRef, useState } from "react";
 import Input, { InputProps } from "./Input";
+import { RiCalendarLine } from "@remixicon/react";
 
 interface DatePickerInput2Porps extends InputProps<HTMLInputElement> {
   mode?: "single" | "range";
+  enableTime?: boolean;
+  minDate?: Date;
+  dateFormat?: string;
   dates: Date[];
   onDateChange?: (values: Date[]) => void;
 }
 
 function DatePickerInput2(props: DatePickerInput2Porps) {
-  const { mode = "single", dates, onDateChange, ...passThroughProps } = props;
+  const {
+    mode = "single",
+    enableTime,
+    dates,
+    minDate,
+    dateFormat,
+    onDateChange,
+    error,
+    ...passThroughProps
+  } = props;
 
   const [inputElement, setInputElement] = useState<HTMLInputElement | null>(
     null
@@ -23,7 +36,10 @@ function DatePickerInput2(props: DatePickerInput2Porps) {
     if (inputElement) {
       pickerRef.current = flatpickr(inputElement, {
         mode: mode,
+        enableTime: enableTime,
+        minDate: minDate,
         disableMobile: true,
+        minuteIncrement: 1,
         onChange: (dates, str, instance) => {
           if (mode === "range" && dates.length === 2) {
             onDateChange?.(dates);
@@ -31,7 +47,7 @@ function DatePickerInput2(props: DatePickerInput2Porps) {
             onDateChange?.(dates);
           }
         },
-        dateFormat: "M d, Y"
+        dateFormat: dateFormat ?? "M d, Y"
       });
 
       if (dates && dates.length > 0) {
@@ -41,29 +57,23 @@ function DatePickerInput2(props: DatePickerInput2Porps) {
     return () => {
       pickerRef.current?.destroy();
     };
-  }, [inputElement, mode, dates, onDateChange]);
-
-  //   const dateString = (dates: Date[]) => {
-  //     if (mode === "single" && dates.length > 0) {
-  //       return dayjs(dates[0].getTime()).format("MMM DD, YYYY");
-  //     }
-
-  //     if (mode === "range" && dates.length > 1) {
-  //       return `${dayjs(dates[0].getTime()).format("MMM DD, YYYY")} - ${dayjs(
-  //         dates[1].getTime()
-  //       ).format("MMM DD, YYYY")}`;
-  //     }
-
-  //     return "";
-  //   };
+  }, [
+    inputElement,
+    mode,
+    enableTime,
+    dateFormat,
+    minDate,
+    dates,
+    onDateChange
+  ]);
 
   return (
-    <div className="input-group flex-nowrap">
+    <div className={`input-group ${error ? "has-validation" : ""}`}>
       <Input
-        placeholder="Check in date"
         {...passThroughProps}
         ref={setInputElement}
         onChange={() => {}}
+        className={`${error ? "is-invalid" : ""}`}
         onKeyDown={(evt) => {
           if (evt.key === "Backspace") {
             onDateChange?.([]);
@@ -71,8 +81,9 @@ function DatePickerInput2(props: DatePickerInput2Porps) {
         }}
       />
       <span className="input-group-text">
-        <CalendarDaysIcon width={20} />
+        <RiCalendarLine size={20} />
       </span>
+      {error && <div className="invalid-feedback">{error}</div>}
     </div>
   );
 }

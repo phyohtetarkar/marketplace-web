@@ -3,10 +3,9 @@ import { Banner } from "../common/models";
 import { validateResponse } from "../common/utils";
 
 export async function getAllBanners() {
-  const url = "banners";
-  //const resp = await fetch(url);
+  const url = "/content/banners";
 
-  const resp = await makeApiRequest(url);
+  const resp = await makeApiRequest({ url });
 
   await validateResponse(resp);
 

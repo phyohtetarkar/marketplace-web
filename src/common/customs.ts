@@ -8,3 +8,5 @@ export class APIError extends Error {
 }
 
 export class UnauthorizeError extends Error {}
+
+export class ForbiddenError extends Error {}

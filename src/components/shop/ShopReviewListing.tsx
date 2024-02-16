@@ -1,8 +1,9 @@
+"use client";
+import { ShopReview } from "@/common/models";
+import { formatTimestamp, parseErrorResponse } from "@/common/utils";
+import { getReviews } from "@/services/ShopReviewService";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { ShopReview } from "../../common/models";
-import { formatTimestamp, parseErrorResponse } from "../../common/utils";
-import { getReviews } from "../../services/ShopReviewService";
 import Alert from "../Alert";
 import Loading from "../Loading";
 import ProgressButton from "../ProgressButton";
@@ -17,13 +18,14 @@ function Review({ value }: ShopReviewProps) {
   return (
     <div className="list-group-item px-0 py-2h">
       <div className="hstack gap-3 align-items-start">
-        <div className="position-relative flex-shrink-0">
+        <div className="flex-shrink-0">
           <Image
             src={value.reviewer?.image ?? "/images/profile.png"}
+            alt=""
             width={46}
             height={46}
-            alt=""
-            className="rounded-circle"
+            sizes="50vh"
+            className="rounded-circle border"
             style={{
               objectFit: "cover"
             }}
@@ -44,13 +46,7 @@ function Review({ value }: ShopReviewProps) {
   );
 }
 
-function ShopReviewListing({
-  shopId,
-  hideEdit
-}: {
-  shopId: number;
-  hideEdit?: boolean;
-}) {
+function ShopReviewListing({ shopId }: { shopId: number }) {
   const [page, setPage] = useState(0);
   const [reviews, setReviews] = useState<ShopReview[]>();
 
@@ -75,7 +71,7 @@ function ShopReviewListing({
   const loadReviews = async () => {
     try {
       setLoading(true);
-      const result = await getReviews(shopId, "DESC", page);
+      const result = await getReviews(shopId, page);
       setReviews(result.contents);
       setHasNext(result.currentPage < result.totalPage - 1);
       setPage(result.currentPage);
@@ -89,7 +85,7 @@ function ShopReviewListing({
   const loadMoreResult = async () => {
     try {
       setLoadMore(true);
-      const result = await getReviews(shopId, "DESC", page + 1);
+      const result = await getReviews(shopId, page + 1);
       setReviews((old) => {
         if (old) {
           return [...old, ...result.contents];
@@ -121,9 +117,7 @@ function ShopReviewListing({
     return (
       <>
         <ul className="list-group list-group-flush">
-          {reviews?.map((r, i) => (
-            <Review key={i} value={r} />
-          ))}
+          {reviews?.map((r, i) => <Review key={i} value={r} />)}
         </ul>
         {
           <div className="hstack justify-content-center">
@@ -146,17 +140,19 @@ function ShopReviewListing({
   };
 
   return (
-    <div>
-      {!hideEdit && (
+    <div className="row g-3">
+      <div className="col-12 col-xl-8 order-2 order-lg-1">
+        <div className="card">
+          <div className="card-body">{content()}</div>
+        </div>
+      </div>
+      <div className="col-12 col-xl-4 order-1 order-lg-2">
         <ShopReviewEdit
           shopId={shopId}
           reload={() => {
             loadReviews();
           }}
         />
-      )}
-      <div className="card">
-        <div className="card-body">{content()}</div>
       </div>
     </div>
   );

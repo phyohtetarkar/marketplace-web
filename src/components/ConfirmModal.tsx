@@ -5,14 +5,13 @@ import ProgressButton from "./ProgressButton";
 interface ConfirmModalProps {
   show: boolean;
   message: ReactNode;
-  onConfirm?: () => Promise<void>;
+  onConfirm?: (result: boolean) => void;
   onHidden?: () => void;
   close?: () => void;
 }
 
 function ConfirmModal(props: ConfirmModalProps) {
   const { show, message, onConfirm, close, onHidden } = props;
-  const [loading, setLoading] = useState(false);
   return (
     <Modal show={show} onHidden={onHidden}>
       {(isShown) => {
@@ -26,21 +25,27 @@ function ConfirmModal(props: ConfirmModalProps) {
               <button
                 type="button"
                 className="btn btn-default"
-                onClick={close}
-                disabled={loading}
+                onClick={() => {
+                  close?.();
+                  setTimeout(() => {
+                    onConfirm?.(false);
+                  }, 300);
+                }}
               >
                 Cancel
               </button>
               <ProgressButton
-                loading={loading}
                 onClick={() => {
-                  setLoading(true);
-                  onConfirm?.()
-                    .catch((error) => {})
-                    .finally(() => {
-                      setLoading(false);
-                      close?.();
-                    });
+                  // setLoading(true);
+                  close?.();
+                  setTimeout(() => {
+                    onConfirm?.(true);
+                  }, 300);
+                    // .catch((error) => {})
+                    // .finally(() => {
+                    //   setLoading(false);
+                    //   close?.();
+                    // });
                 }}
               >
                 Proceed

@@ -1,3 +1,4 @@
+"use client";
 import { Editor } from "@tinymce/tinymce-react";
 
 type OnEditorChange = (newValue: string) => void;
@@ -150,11 +151,101 @@ function RichTextEditor({
           iframeEmbed
             ? {
                 name: "media",
-                items: ["media"]
+                items: ["image", "iframe-embed-btn"]
               }
             : { name: "media", items: [] },
-          { name: "view", items: ["preview", "fullscreen", "help"] }
-        ]
+          { name: "view", items: ["removeFormat", "preview", "fullscreen", "help"] }
+        ],
+        setup: (editor) => {
+          editor.ui.registry.addButton("iframe-embed-btn", {
+            icon: "embed",
+            tooltip: "Embed iframe",
+            onAction: (api) => {
+              let embedCode = "";
+              let width = "";
+              let height = "";
+              let aspectRatio = "";
+              const node = editor.selection.getNode();
+              if (node.getAttribute("data-mce-object") === "iframe") {
+                embedCode = node.innerHTML;
+                const div = document.createElement("div");
+                div.innerHTML = embedCode;
+                const element = div.firstElementChild;
+                if (element instanceof HTMLIFrameElement) {
+                  width = element.style.width;
+                  height = element.style.height;
+                  aspectRatio = element.style.aspectRatio;
+                }
+              }
+              editor.windowManager.open({
+                title: "Embed Iframe",
+                initialData: {
+                  embedCode: embedCode,
+                  aspectRatio: aspectRatio,
+                  size: {
+                    width: width,
+                    height: height
+                  }
+                },
+                body: {
+                  type: "panel",
+                  items: [
+                    {
+                      type: "textarea",
+                      name: "embedCode",
+                      maximized: true,
+                      label: "Embed code"
+                    },
+                    {
+                      type: "sizeinput",
+                      name: "size",
+                      label: "Dimensions"
+                    },
+                    {
+                      type: "input",
+                      name: "aspectRatio",
+                      label: "Aspect ratio"
+                    }
+                  ]
+                },
+                buttons: [
+                  {
+                    type: "cancel",
+                    name: "closeButton",
+                    text: "Cancel"
+                  },
+                  {
+                    type: "submit",
+                    name: "submitButton",
+                    text: "Insert",
+                    buttonType: "primary"
+                  }
+                ],
+                onSubmit: (api) => {
+                  const data = api.getData();
+                  const embed = data.embedCode ?? "";
+                  const div = document.createElement("div");
+                  div.innerHTML = embed;
+                  var iframe = div.firstElementChild;
+                  if (iframe instanceof HTMLIFrameElement) {
+                    iframe.style.width = data.size.width;
+                    iframe.style.height = data.size.height;
+                    iframe.style.aspectRatio = data.aspectRatio;
+                    iframe.width = "";
+                    iframe.height = "";
+                    editor.execCommand(
+                      "mceInsertContent",
+                      false,
+                      div.innerHTML
+                    );
+                    //editor.dispatch("onEditorChange");
+                  }
+                  api.close();
+                }
+              });
+            }
+          });
+        }
       }}
     />
   );

@@ -1,15 +1,15 @@
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { AuthenticationContext } from "../../common/contexts";
-import { ShopReview } from "../../common/models";
-import { parseErrorResponse } from "../../common/utils";
-import { getUserReview, writeReview } from "../../services/ShopReviewService";
+import { AuthenticationContext } from "@/common/contexts";
+import { ShopReview } from "@/common/models";
+import { parseErrorResponse } from "@/common/utils";
+import { getUserReview, writeReview } from "@/services/ShopReviewService";
 import Dropdown from "../Dropdown";
-import { Textarea } from "../forms";
 import ProgressButton from "../ProgressButton";
 import Rating from "../Rating";
+import { Textarea } from "../forms";
 
 const _ratings = [5, 4, 3, 2, 1];
 
@@ -26,8 +26,12 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
 
   const loadUserReview = useCallback(async (shopId: number) => {
     try {
-      const review = await getUserReview(shopId);
-      review && setReview({ ...review, shopId: shopId });
+      if (authContext.status === "success") {
+        const review = await getUserReview(shopId, authContext.user?.id ?? 0);
+        if (review) {
+          setReview({ ...review, shopId: shopId });
+        }
+      }
     } catch (error) {}
   }, []);
 
@@ -56,14 +60,14 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
         return;
       }
 
-      if (!authContext.payload?.verified) {
-        router.push("/confirm-otp");
+      if (!authContext.user?.emailVerified) {
+        router.push("/verify-email");
         return;
       }
 
       await writeReview({ ...values, shopId: shopId });
       reload?.();
-      await loadUserReview(values.shopId ?? 0);
+      await loadUserReview(shopId);
       toast.success("Review submitted");
     } catch (error) {
       const msg = parseErrorResponse(error);
@@ -80,7 +84,7 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
         })();
       }}
     >
-      <div className="card mb-3">
+      <div className="card">
         <div className="card-header py-3">
           <h5 className="mb-0">{!review ? "Write Review" : "Your Review"}</h5>
         </div>
@@ -151,14 +155,14 @@ function ShopReviewEdit(props: ShopReviewEditProps) {
                         value={field.value ?? ""}
                         onChange={(evt) => {
                           const newLen = evt.target.value.length;
-                          if (newLen < 1000) {
+                          if (newLen <= 800) {
                             setValue("description", evt.target.value);
                           }
                         }}
                       />
                       <div className="clearfix">
                         <div className="float-end small text-muted">
-                          {field.value?.length ?? 0}/1000
+                          {field.value?.length ?? 0}/800
                         </div>
                       </div>
                     </>

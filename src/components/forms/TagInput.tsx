@@ -1,6 +1,7 @@
-import { XMarkIcon } from "@heroicons/react/24/outline";
+"use client";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { formControlHeight } from "../../common/app.config";
+import { RiCloseLine } from "@remixicon/react";
 
 interface TagInputProps {
   data: string[];
@@ -22,16 +23,16 @@ function Tag({ index, name, onRemove }: TagValues) {
       style={{ height: 26 }}
     >
       <div className="small text-light">{name}</div>
-      <a
-        href="#"
+      <div
+        role="button"
         className="ms-2 dark-link"
         onClick={(e) => {
           e.preventDefault();
           onRemove && onRemove(index);
         }}
       >
-        <XMarkIcon width={14} strokeWidth={3.5} />
-      </a>
+        <RiCloseLine size={14} strokeWidth={3.5} />
+      </div>
     </div>
   );
 }

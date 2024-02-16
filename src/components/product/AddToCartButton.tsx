@@ -1,11 +1,12 @@
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/router";
+"use client";
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
-import { AuthenticationContext } from "../../common/contexts";
-import { parseErrorResponse } from "../../common/utils";
-import { addToCart } from "../../services/ShoppingCartService";
+import { AuthenticationContext } from "@/common/contexts";
+import { parseErrorResponse } from "@/common/utils";
+import { addToCart } from "@/services/ShoppingCartService";
+import { RiShoppingCartLine } from "@remixicon/react";
 
 interface AddToCartButtonProps {
   productId: number;
@@ -22,7 +23,7 @@ function AddToCartButton({
   className,
   disabled
 }: AddToCartButtonProps) {
-  const authContext = useContext(AuthenticationContext);
+  const { status, user } = useContext(AuthenticationContext);
   const router = useRouter();
   const { mutate } = useSWRConfig();
   const [adding, setAdding] = useState(false);
@@ -38,9 +39,9 @@ function AddToCartButton({
         className ?? ""
       }`}
       onClick={() => {
-        if (authContext.status === "success") {
-          if (!authContext.payload?.verified) {
-            router.push("/confirm-otp");
+        if (status === "success") {
+          if (!user?.emailVerified) {
+            router.push("/verify-email");
             return;
           }
           setAdding(true);
@@ -51,7 +52,7 @@ function AddToCartButton({
           })
             .then((resp) => {
               toast.success("Product added to cart");
-              mutate(["/profile/cart-count", authContext.payload?.id]);
+              mutate(`/profile/cart-count/${user.id}`);
             })
             .catch((error) => {
               const msg = parseErrorResponse(error);
@@ -69,10 +70,9 @@ function AddToCartButton({
         <span
           className="spinner-border spinner-border-sm "
           role="status"
-          aria-hidden={!adding}
         ></span>
       )}
-      <ShoppingCartIcon width={24} />
+      <RiShoppingCartLine size={24} />
       <span className="text-nowrap">Add to cart</span>
     </button>
   );

@@ -1,8 +1,8 @@
-import { StarIcon } from "@heroicons/react/24/solid";
+import { Shop, ShopStatus } from "@/common/models";
+import { formatTimestamp } from "@/common/utils";
+import { RiEqualizerLine, RiPencilFill, RiStarFill } from "@remixicon/react";
 import Image from "next/image";
 import Link from "next/link";
-import { Shop, ShopStatus } from "../../common/models";
-import { formatTimestamp } from "../../common/utils";
 
 interface ShopManageGridItemProps {
   value: Shop;
@@ -36,7 +36,7 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
           >
             <div className="ratio ratio-1x1" style={{ width: _imageSize }}>
               <Image
-                className="rounded-circle border"
+                className="rounded-circle img-thumbnail"
                 src={value.logo ?? "/images/placeholder.jpeg"}
                 alt="Shop image."
                 fill
@@ -49,49 +49,49 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
             </div>
           </div>
 
-          <Link
-            href={`/account/shops/${value.id}/dashboard`}
-            className="link-dark"
-          >
+          <Link href={`/shops/${value.slug}`} className="link-dark">
             <h6 className="mb-1" style={{ fontSize: 16 }}>
               {value.name}
             </h6>
           </Link>
 
           {value.headline && (
-            <div className="small text-muted mb-4 text-truncate">
+            <div className="small text-muted text-truncate">
               {value.headline}
             </div>
           )}
 
           <div className="flex-grow-1"></div>
 
-          <div className="vstack text-start flex-grow-0">
+          <div className="vstack text-start flex-grow-0 mt-4">
             <div className="hstack">
               <span className="flex-grow-1 text-muted">Rating</span>
               <div className="hstack text-warning gap-1">
                 <span>{value?.rating?.toFixed(1) ?? "0.0"}</span>
-                <StarIcon width={16} />
+                <RiStarFill size={16} />
               </div>
             </div>
-            {/* <hr className="bg-dark-gray my-2h" />
-            <div className="hstack">
-              <span className="flex-grow-1 text-muted">Since</span>
-              <span>{formatTimestamp(value?.createdAt ?? 0)}</span>
-            </div> */}
-            <hr className="bg-dark-gray my-2h" />
+
+            <hr className="text-dark-gray my-2h" />
             <div className="hstack">
               <span className="flex-grow-1 text-muted">Status</span>
               {statusView(value?.status)}
             </div>
-            <hr className="bg-dark-gray my-2h" />
+            <hr className="text-dark-gray my-2h" />
             <div className="hstack">
               <span className="flex-grow-1 text-muted">Expired at</span>
               {(value?.expiredAt ?? 0) > 0
-                ? formatTimestamp(value.expiredAt ?? 0)
+                ? formatTimestamp(value.expiredAt)
                 : "--"}
             </div>
           </div>
+
+          <Link
+            href={`/profile/shops/${value.id}/dashboard`}
+            className="btn btn-default mt-3 hstack justify-content-center"
+          >
+            <RiEqualizerLine size={20} className="me-2" /> Manage
+          </Link>
         </div>
       </div>
     </div>

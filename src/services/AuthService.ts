@@ -1,8 +1,15 @@
-import makeApiRequest from "../common/makeApiRequest";
-import { AuthResult } from "../common/models";
-import { validateResponse } from "../common/utils";
-
-const basePath = "auth";
+import { UnauthorizeError } from "@/common/customs";
+import { firebaseAuth } from "@/common/firebase.config";
+import {
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  applyActionCode,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  updateProfile
+} from "firebase/auth";
 
 export async function login({
   username,
@@ -11,160 +18,80 @@ export async function login({
   username: string;
   password: string;
 }) {
-  // try {
-  //   const user = await Auth.signIn({
-  //     username: username,
-  //     password: password
-  //   });
-  //   console.log(user);
-  //   return user as CognitoUser;
-  // } catch (error) {
-  //   throw error;
-  // }
+  const auth = firebaseAuth;
 
-  const body = { username, password };
+  return await signInWithEmailAndPassword(auth, username, password);
+}
 
-  const url = `${basePath}/sign-in`;
+export async function googleLogin() {
+  const provider = new GoogleAuthProvider();
+  const auth = firebaseAuth;
+  return await signInWithPopup(auth, provider);
+}
 
-  const resp = await makeApiRequest(url, {
-    method: "POST",
-    body: JSON.stringify(body),
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  });
-
-  await validateResponse(resp);
-
-  return resp.json() as Promise<AuthResult>;
+export async function facebookLogin() {
+  const provider = new FacebookAuthProvider();
+  const auth = firebaseAuth;
+  return await signInWithPopup(auth, provider);
 }
 
 export async function signUp({
-  otp,
   name,
-  phone,
+  email,
   password
 }: {
-  otp: string;
   name: string;
-  phone: string;
+  email: string;
   password: string;
 }) {
-  // try {
-  //   const result = await Auth.signUp({
-  //     username: phone,
-  //     password: password,
-  //     attributes: {
-  //       name: name,
-  //       phone_number: phone // optional - E.164 number convention
-  //     },
-  //     autoSignIn: {
-  //       // optional - enables auto sign in after user is confirmed
-  //       enabled: process.env.NEXT_PUBLIC_PROFILE !== "dev"
-  //     }
-  //   });
-  //   console.log(result);
-  //   return result;
-  // } catch (error) {
-  //   throw error;
-  // }
+  const auth = firebaseAuth;
 
-  const body = { otp, fullName: name, username: phone, password };
+  const result = await createUserWithEmailAndPassword(auth, email, password);
 
-  const url = `${basePath}/sign-up`;
+  sendEmailVerification(result.user);
 
-  const resp = await makeApiRequest(url, {
-    method: "POST",
-    body: JSON.stringify(body),
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json"
+  let retry = 0;
+
+  do {
+    try {
+      await updateProfile(result.user, {
+        displayName: name
+      });
+      retry = 3;
+    } catch (error) {
+      retry += 1;
     }
-  });
+  } while (retry < 3);
 
-  await validateResponse(resp);
-
-  return resp.json() as Promise<AuthResult>;
+  return result;
 }
 
 export async function signOut() {
-  const url = `${basePath}/sign-out`;
+  const auth = firebaseAuth;
 
-  const resp = await makeApiRequest(
-    url,
-    {
-      method: "POST",
-      credentials: "include"
-    },
-    true
-  );
+  if (!auth.currentUser) {
+    throw new UnauthorizeError();
+  }
 
-  await validateResponse(resp);
+  await auth.signOut();
 }
 
-export async function verifyUser({
+export async function verifyEmail({
   code
 }: {
   code: string;
-  requestId: number;
 }) {
-  const body = { code };
+  const auth = firebaseAuth;
 
-  const url = `${basePath}/verify`;
-
-  const resp = await makeApiRequest(
-    url,
-    {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    },
-    true
-  );
-
-  await validateResponse(resp);
+  await applyActionCode(auth, code);
 }
 
-export async function resetPassword({
-  phone,
-  password,
-  code
-}: {
-  phone: string;
-  password: string;
-  code: string;
-  requestId: number;
-}) {
-  const body = { phone, password, code };
+export async function sendVerifyEmail() {
+  const auth = firebaseAuth;
 
-  const url = `${basePath}/reset-password`;
+  if (!auth.currentUser) {
+    throw new UnauthorizeError();
+  }
 
-  const resp = await makeApiRequest(url, {
-    method: "POST",
-    body: JSON.stringify(body),
-    headers: {
-      "Content-Type": "application/json"
-    }
-  });
-
-  await validateResponse(resp);
+  sendEmailVerification(auth.currentUser);
 }
-
-// export async function confirmSignUp({
-//   phone,
-//   password,
-//   code
-// }: {
-//   phone: string;
-//   password: string;
-//   code: string;
-// }) {
-//   try {
-//     await Auth.confirmSignUp(phone, code, { forceAliasCreation: false });
-//   } catch (error) {
-//     throw error;
-//   }
-// }

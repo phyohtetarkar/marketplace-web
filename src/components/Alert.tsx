@@ -8,7 +8,7 @@ interface AlertProps {
 function Alert(props: AlertProps) {
   return (
     <div
-      className={`alert alert-${props.variant ?? "dark-gray"} py-2h`}
+      className={`alert alert-${props.variant ?? "info"} py-2h`}
       role="alert"
     >
       {props.message}

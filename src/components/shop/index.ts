@@ -1,18 +1,8 @@
-export { default as DeliveryCityChoice } from "./DeliveryCityChoice";
-export { default as ShopGridItem } from "./ShopGridItem";
-export { default as ShopManageGridItem } from "./ShopManageGridItem";
+export { default as AboutUs } from "../shop/AboutUs";
 export { default as AcceptedPaymentEdit } from "./AcceptedPaymentEdit";
 export { default as PendingOrderCountView } from "./PendingOrderCountView";
-export { default as AboutUs } from "../shop/AboutUs";
-export { default as DiscountListing } from "./DiscountListing";
-export { default as ShopContactEdit } from "./ShopContactEdit";
-export { default as ShopDashboard } from "./ShopDashboard";
-export { default as ShopGeneralEdit } from "./ShopGeneralEdit";
-export { default as ShopProductListing } from "./ShopProductListing";
-export { default as ShopReviewListing } from "./ShopReviewListing";
-export { default as ShopSetting } from "./ShopSetting";
+export { default as ShopGridItem } from "./ShopGridItem";
 export { default as ShopHeading } from "./ShopHeading";
-export { default as ShopManage } from "./ShopManage";
-export { default as ShopSubscription } from "./ShopSubscription";
-export { default as ShopOrderDetail } from "./ShopOrderDetail";
-export { default as ShopOrderListing } from "./ShopOrderListing";
+export { default as ShopManageGridItem } from "./ShopManageGridItem";
+export { default as ShopReviewListing } from "./ShopReviewListing";
+

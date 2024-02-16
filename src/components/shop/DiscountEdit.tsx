@@ -1,23 +1,23 @@
-import { useForm } from "react-hook-form";
-import { formControlHeight } from "../../common/app.config";
-import { Discount } from "../../common/models";
+import { formControlHeight } from "@/common/app.config";
+import { Discount } from "@/common/models";
 import {
   parseErrorResponse,
   setEmptyOrNumber,
   setEmptyOrString
-} from "../../common/utils";
-import { saveDiscount } from "../../services/DiscountService";
-import { Input } from "../forms";
+} from "@/common/utils";
+import { saveDiscount } from "@/services/DiscountService";
+import { useForm } from "react-hook-form";
 import ProgressButton from "../ProgressButton";
+import { Input } from "../forms";
 
 interface DiscountEditProps {
+  shopId: number;
   discount?: Discount;
-  currentPage?: number;
   handleClose?: (result?: boolean) => void;
 }
 
 function DiscountEdit(props: DiscountEditProps) {
-  const { discount = { type: "PERCENTAGE" }, currentPage, handleClose } = props;
+  const { shopId, discount = { type: "PERCENTAGE" }, handleClose } = props;
 
   const {
     register,
@@ -27,7 +27,7 @@ function DiscountEdit(props: DiscountEditProps) {
 
   const save = async (values: Discount) => {
     try {
-      await saveDiscount(values);
+      await saveDiscount(shopId, values);
       handleClose?.(true);
     } catch (error) {
       const msg = parseErrorResponse(error);

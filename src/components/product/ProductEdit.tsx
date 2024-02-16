@@ -1,43 +1,52 @@
-import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import dynamic from "next/dynamic";
-import { default as NextImage } from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import { ProgressContext } from "../../common/contexts";
-import { useCategories } from "../../common/hooks";
+"use client";
+import { withAuthentication } from "@/common/WithAuthentication";
+import { ProgressContext } from "@/common/contexts";
+import { useCategories } from "@/common/hooks";
 import {
   Category,
   Product,
-  ProductAttribute,
+  ProductAttributeEdit,
+  ProductCreate,
   ProductImage,
   ProductVariant,
-  ProductVariantAttribute,
-  Shop
-} from "../../common/models";
+  ProductVariantAttribute
+} from "@/common/models";
 import {
   parseErrorResponse,
   setEmptyOrNumber,
   setEmptyOrString,
   setStringToSlug
-} from "../../common/utils";
+} from "@/common/utils";
 import {
+  createProduct,
   deleteProduct,
   getProductById,
-  saveProduct
-} from "../../services/ProductService";
+} from "@/services/ProductService";
+import { RiAddLine, RiDeleteBin6Line } from "@remixicon/react";
+import dynamic from "next/dynamic";
+import { default as NextImage } from "next/image";
+import { useRouter } from "next/navigation";
+import {
+  CSSProperties,
+  ChangeEvent,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import Alert from "../Alert";
 import ConfirmModal from "../ConfirmModal";
 import DiscountSelect from "../DiscountSelect";
 import Dropdown from "../Dropdown";
-import { AutocompleteSelect, Input } from "../forms";
-import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import Loading from "../Loading";
 import Modal from "../Modal";
+import { AutocompleteSelect, Input } from "../forms";
+import { RichTextEditorInputProps } from "../forms/RichTextEditor";
 import OptionEdit from "./OptionEdit";
-import VaraintEdit from "./VariantEdit";
+import ProductvariantEdit from "./ProductVariantEdit";
+import Link from "next/link";
 
 const DynamicEditor = dynamic<RichTextEditorInputProps>(
   () => import("../forms").then((f) => f.RichTextEditor),
@@ -47,29 +56,28 @@ const DynamicEditor = dynamic<RichTextEditorInputProps>(
 );
 
 interface ProductEditProps {
-  shop: Shop;
-  slug?: string;
+  shopId: number;
+  productId?: number;
 }
 
 function ProductEdit(props: ProductEditProps) {
-  const { shop, slug } = props;
-
-  const router = useRouter();
+  const { shopId, productId } = props;
 
   const progressContext = useContext(ProgressContext);
+  const router = useRouter();
 
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const [fetching, setFetching] = useState(!!slug);
-  const [product, setProduct] = useState<Product>({
-    shopId: shop.id,
-    images: []
+  const [fetching, setFetching] = useState(!!productId);
+  const [product, setProduct] = useState<Product>();
+  const [productEdit, setProductEdit] = useState<ProductCreate>({
+    shopId: shopId,
+    images: [],
+    available: true
   });
 
   const [showOptionModal, setShowOptionModal] = useState(false);
   const [showVariantModal, setShowVariantModal] = useState(false);
-  // const [options, setOptions] = useState<ProductAttribute[]>([]);
-  //const [variants, setVariants] = useState<ProductVariant[]>([]);
   const [withVariant, setWithVariant] = useState<boolean>();
 
   const [error, setError] = useState<string>();
@@ -77,7 +85,7 @@ function ProductEdit(props: ProductEditProps) {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const imagesRef = useRef<HTMLDivElement | null>(null);
 
-  const { categories } = useCategories(true);
+  const { categories } = useCategories(false);
 
   const {
     control,
@@ -87,12 +95,12 @@ function ProductEdit(props: ProductEditProps) {
     setValue,
     getValues,
     clearErrors
-  } = useForm<Product>({
-    values: product,
-    defaultValues: { shopId: shop.id, images: [] }
+  } = useForm({
+    values: productEdit,
+    defaultValues: { shopId: shopId, images: [] }
   });
 
-  const varaintsField = useFieldArray({
+  const variantsField = useFieldArray({
     control,
     name: "variants",
     keyName: "vId",
@@ -129,21 +137,23 @@ function ProductEdit(props: ProductEditProps) {
   });
 
   useEffect(() => {
-    if (typeof slug === "string" && !isNaN(parseInt(slug))) {
-      getProductById(parseInt(slug))
+    if (productId && productId > 0) {
+      getProductById(shopId, productId)
         .then((p) => {
           if (!p) {
             throw "Product not found";
           }
-          setProduct({
+          setProduct(p);
+          setProductEdit({
             ...p,
-            shopId: p.shop?.id,
+            shopId: shopId,
             categoryId: p.category?.id,
             discountId: p.discount?.id
           });
           setWithVariant(p.withVariant);
         })
         .catch((error) => {
+          console.log(error);
           const msg = parseErrorResponse(error);
           setError(msg);
         })
@@ -153,7 +163,7 @@ function ProductEdit(props: ProductEditProps) {
     } else {
       setFetching(false);
     }
-  }, [slug]);
+  }, [productId]);
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
     try {
@@ -181,7 +191,7 @@ function ProductEdit(props: ProductEditProps) {
 
               const image: ProductImage = {
                 file: file,
-                url: result
+                name: result
               };
               imagesField.append(image);
             };
@@ -200,7 +210,7 @@ function ProductEdit(props: ProductEditProps) {
   }
 
   function generateVariant(
-    attributes: ProductAttribute[],
+    attributes: ProductAttributeEdit[],
     index: number,
     variantAttributes?: ProductVariantAttribute[]
   ) {
@@ -215,7 +225,6 @@ function ProductEdit(props: ProductEditProps) {
         values.push({
           value: value.value.trim(),
           sort: values.length,
-          attributeId: attribute.id ?? 0,
           attribute: attribute.name ?? "",
           vSort: value.sort
         });
@@ -228,7 +237,6 @@ function ProductEdit(props: ProductEditProps) {
             {
               value: value.value.trim(),
               sort: values.length,
-              attributeId: attribute.id ?? 0,
               attribute: attribute.name ?? "",
               vSort: value.sort
             }
@@ -240,24 +248,19 @@ function ProductEdit(props: ProductEditProps) {
     return variants;
   }
 
-  const executeSave = async (values: Product) => {
+  const executeSave = async (values: ProductCreate) => {
     try {
       progressContext.update(true);
       const product = { ...values };
+
       if (product.variants && product.variants.length > 0) {
-        //let totalStock = 0;
         product.variants = product.variants.map((v) => {
           const vp = parseFloat(`${v.price}`);
-          // if (!v.deleted) {
-          //   totalStock += v.stockLeft ?? 0;
-          // }
           return {
             ...v,
             price: isNaN(vp) ? undefined : vp
           };
         });
-
-        //product.stockLeft = totalStock;
       }
 
       if (product.price) {
@@ -266,9 +269,12 @@ function ProductEdit(props: ProductEditProps) {
       }
 
       //console.log(product);
-      await saveProduct(product);
+      await createProduct(product);
       toast.success("Product saved");
-      router.back();
+      if (!!product.id) {
+      } else {
+        router.replace(`/profile/shops/${shopId}/products`);
+      }
     } catch (error) {
       const msg = parseErrorResponse(error);
       toast.error(msg);
@@ -279,13 +285,13 @@ function ProductEdit(props: ProductEditProps) {
 
   const executeDelete = async () => {
     try {
-      if (!product.id) {
+      progressContext.update(true);
+      if (!productEdit.id) {
         throw undefined;
       }
-      progressContext.update(true);
-      await deleteProduct(product.id);
+      await deleteProduct(shopId, productEdit.id);
       toast.success("Product deleted successfully");
-      router.back();
+      router.replace(`/profile/shops/${shopId}/products`);
     } catch (error) {
       const msg = parseErrorResponse(error);
       toast.error(msg);
@@ -299,120 +305,308 @@ function ProductEdit(props: ProductEditProps) {
   }
 
   if (error) {
-    return <Alert message={error} />;
+    return <Alert message={error} variant="danger" />;
   }
 
-  const title = (!product.id ? "Create" : "Update") + " product";
+  const title = (!productEdit.id ? "Create" : "Update") + " product";
 
   return (
     <>
-      <div className="header-bar">
-        <div className="container py-4">
-          <div className="row g-3">
-            <div className="col-lg-6">
-              <h4 className="mb-1 fw-semibold text-light">{shop.name}</h4>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb mb-0">
-                  <li className="breadcrumb-item">
-                    <Link href={`/account/shops/${shop.id}/dashboard`}>
-                      Dashboard
-                    </Link>
-                  </li>
-                  <li className="breadcrumb-item">
-                    <Link href={`/account/shops/${shop.id}/products`}>
-                      Products
-                    </Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    {title}
-                  </li>
-                </ol>
-              </nav>
-            </div>
-            <div className="col-lg-6 d-flex">
-              <div className="hstack gap-3 ms-lg-auto">
-                {(product.id ?? 0) > 0 && (
-                  <button
-                    type="button"
-                    className="btn btn-danger py-2"
-                    onClick={() => {
-                      setConfirmDelete(true);
-                    }}
-                  >
-                    Delete
-                  </button>
-                )}
-                <Dropdown
-                  toggle={<div>Save as</div>}
-                  menuClassName="dropdown-menu-end"
-                  toggleClassName="btn btn-light py-2 dropdown-toggle hstack"
+      <div className="row g-3 align-items-center mb-3">
+        <div className="col-lg-6">
+          <nav aria-label="breadcrumb">
+            <ol
+              className="breadcrumb mb-0"
+              style={
+                {
+                  "--bs-breadcrumb-divider-color": "#666",
+                  "--bs-breadcrumb-item-active-color": "#666"
+                } as CSSProperties
+              }
+            >
+              <li className="breadcrumb-item">
+                <Link
+                  href={`/profile/shops/${shopId}/dashboard`}
+                  className="link-anchor"
                 >
-                  <li
-                    className="dropdown-item"
-                    role="button"
-                    onClick={() => {
-                      handleSubmit(async (data) => {
-                        await executeSave({ ...data, status: "DRAFT" });
-                      })();
-                    }}
-                  >
-                    Draft
-                  </li>
-                  <div className="dropdown-divider"></div>
-                  <li
-                    className="dropdown-item"
-                    role="button"
-                    onClick={() => {
-                      handleSubmit(async (data) => {
-                        await executeSave({ ...data, status: "PUBLISHED" });
-                      })();
-                    }}
-                  >
-                    {product.status === "PUBLISHED" ? "Update" : "Publish"}
-                  </li>
-                </Dropdown>
-              </div>
-            </div>
+                  Dashboard
+                </Link>
+              </li>
+              <li className="breadcrumb-item">
+                <Link
+                  href={`/profile/shops/${shopId}/products`}
+                  className="link-anchor"
+                >
+                  Products
+                </Link>
+              </li>
+              <li className="breadcrumb-item active" aria-current="page">
+                {title}
+              </li>
+            </ol>
+          </nav>
+        </div>
+        <div className="col-lg-6 d-flex">
+          <div className="hstack gap-2 ms-lg-auto">
+            {(productEdit.id ?? 0) > 0 && (
+              <button
+                type="button"
+                className="btn btn-danger py-2"
+                onClick={() => {
+                  setConfirmDelete(true);
+                }}
+              >
+                Delete
+              </button>
+            )}
+            <Dropdown
+              toggle={<div>Save as</div>}
+              menuClassName="dropdown-menu-end"
+              toggleClassName="btn btn-default py-2 dropdown-toggle hstack"
+            >
+              <li
+                className="dropdown-item"
+                role="button"
+                onClick={() => {
+                  handleSubmit(async (data) => {
+                    await executeSave({ ...data, draft: true });
+                  })();
+                }}
+              >
+                Draft
+              </li>
+              <div className="dropdown-divider"></div>
+              <li
+                className="dropdown-item"
+                role="button"
+                onClick={() => {
+                  handleSubmit(async (data) => {
+                    await executeSave({ ...data, draft: false });
+                  })();
+                }}
+              >
+                {product?.status === "PUBLISHED" ? "Update" : "Publish"}
+              </li>
+            </Dropdown>
           </div>
         </div>
       </div>
 
-      <div className="container py-3 mb-5">
+      <div className="mb-5">
         <div className="row g-3">
-          <div className="col-12 col-lg-8 order-2 order-lg-1">
-            <div className="card mb-3">
+          <div className="col-12">
+            <div className="card">
               <div className="card-header py-3 border-bottom">
-                <h5 className="mb-0">Product description</h5>
+                <h5 className="mb-0">General</h5>
               </div>
-              <div className="card-body p-0">
-                <Controller
-                  control={control}
-                  name="description"
-                  render={({ field }) => {
-                    return (
-                      <DynamicEditor
-                        id="descriptionInput"
-                        placeholder="Enter product description..."
-                        minHeight={380}
-                        value={field.value}
-                        iframeEmbed
-                        noBorder
-                        onEditorChange={(v) => {
-                          setValue("description", v);
+              <div className="card-body">
+                <div className="row g-3 mb-4">
+                  <div className="col-12 col-lg-6">
+                    <Input
+                      label="Name *"
+                      id="nameInput"
+                      type="text"
+                      placeholder="Enter product name"
+                      {...register("name", {
+                        required: "Please enter product name",
+                        setValueAs: setEmptyOrString,
+                        onChange: (evt) => {
+                          setValue("slug", setStringToSlug(evt.target.value), {
+                            shouldValidate: !!errors.slug?.message
+                          });
+                        }
+                      })}
+                      error={errors.name?.message}
+                    />
+                  </div>
+
+                  <div className="col-12 col-lg-6">
+                    <Controller
+                      control={control}
+                      name="slug"
+                      rules={{
+                        validate: (v) => {
+                          if (!setStringToSlug(v)) {
+                            return "Please enter valid slug";
+                          }
+                          return true;
+                        }
+                      }}
+                      render={({ field, fieldState: { error } }) => {
+                        return (
+                          <>
+                            <Input
+                              label="Slug *"
+                              value={field.value ?? ""}
+                              placeholder="your-product-name"
+                              onChange={(evt) => {
+                                setValue(
+                                  "slug",
+                                  setStringToSlug(evt.target.value),
+                                  {
+                                    shouldValidate: true
+                                  }
+                                );
+                              }}
+                              error={error?.message}
+                            />
+                            {/* {!error?.message && (
+                              <small className="text-muted">{`${
+                                window.location.origin
+                              }/products/${field.value ?? ""}`}</small>
+                            )} */}
+                          </>
+                        );
+                      }}
+                    />
+                  </div>
+
+                  <div className="col-12">
+                    <div>
+                      <label className="form-label">Category *</label>
+                      <Controller
+                        name="categoryId"
+                        control={control}
+                        rules={{
+                          validate: (v) => !!v || "Please select category"
+                        }}
+                        render={({ field, fieldState: { error } }) => {
+                          return (
+                            <AutocompleteSelect<Category, number>
+                              options={categories ?? []}
+                              defaultValue={product?.category}
+                              getOptionLabel={(v) => v.name}
+                              getOptionKey={(v) => v.id}
+                              getNestedData={(v) => v.children}
+                              canSelect={(v) =>
+                                !v.children || v.children?.length === 0
+                              }
+                              onChange={(v) => {
+                                if (!v) {
+                                  return;
+                                }
+                                setValue("categoryId", v.id, {
+                                  shouldValidate: true
+                                });
+                              }}
+                              error={error?.message}
+                            />
+                          );
                         }}
                       />
-                    );
-                  }}
-                />
+                    </div>
+                  </div>
+
+                  <div className="col-12">
+                    <Input
+                      label="Brand name"
+                      id="brandInput"
+                      type="text"
+                      placeholder="Enter brand name"
+                      {...register("brand", {
+                        setValueAs: setEmptyOrString
+                      })}
+                    />
+                  </div>
+
+                  <div className="col-12">
+                    <label className="form-label">Discount</label>
+                    <Controller
+                      control={control}
+                      name="discount"
+                      render={({ field }) => {
+                        return (
+                          <DiscountSelect
+                            shopId={shopId}
+                            value={field.value}
+                            onChange={(value) => {
+                              setValue("discount", value);
+                              setValue("discountId", value?.id);
+                            }}
+                          />
+                        );
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <hr className="text-muted my-4"></hr>
+
+                <div className="row g-3 mb-3">
+                  {!productEdit.id && (
+                    <div className="col-12 col-lg-6">
+                      <div className="form-check">
+                        <label
+                          htmlFor="variantCheck"
+                          className="form-check-label fw-medium ps-0"
+                        >
+                          With variants
+                        </label>
+                        <input
+                          id="variantCheck"
+                          className="form-check-input"
+                          type="checkbox"
+                          {...register("withVariant", {
+                            onChange: (evt) => {
+                              if (!evt.target.checked) {
+                                variantsField.remove();
+                                setValue("attributes", undefined);
+                              } else {
+                                setValue("price", undefined);
+                                setValue("sku", undefined);
+                              }
+                              setValue("available", true);
+                              setWithVariant(evt.target.checked);
+                              clearErrors();
+                            }
+                          })}
+                        ></input>
+                      </div>
+                    </div>
+                  )}
+                  <div className="col-12 col-lg-6">
+                    <div className="form-check">
+                      <label
+                        htmlFor="newArrivalCheck"
+                        className="form-check-label fw-medium ps-0"
+                      >
+                        New arrival
+                      </label>
+                      <input
+                        id="newArrivalCheck"
+                        className="form-check-input"
+                        type="checkbox"
+                        {...register("newArrival")}
+                      ></input>
+                    </div>
+                  </div>
+                  <div className="col-12 col-lg-6">
+                    <div className="form-check">
+                      <label
+                        htmlFor="availableCheck"
+                        className="form-check-label fw-medium ps-0"
+                      >
+                        Available
+                      </label>
+                      <input
+                        id="availableCheck"
+                        className="form-check-input"
+                        type="checkbox"
+                        {...register("available")}
+                      ></input>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-
+          </div>
+          <div className="col-12">
             {withVariant && (
               <div className="card mb-3">
                 <div className="card-header py-3">
                   <div className="hstack justify-content-between">
                     <h5 className="mb-0">Variants</h5>
-                    {!product.id ? (
+                    {!productEdit.id ? (
                       <button
                         type="button"
                         className="btn btn-primary ms-2"
@@ -452,8 +646,8 @@ function ProductEdit(props: ProductEditProps) {
                           <th className="fw-medium" style={{ minWidth: 200 }}>
                             SKU
                           </th>
-                          <th className="fw-medium" style={{ minWidth: 200 }}>
-                            STOCK
+                          <th className="fw-medium" style={{ minWidth: 150 }}>
+                            Available
                           </th>
                           <th className="fw-medium" style={{ minWidth: 100 }}>
                             ACTION
@@ -461,7 +655,7 @@ function ProductEdit(props: ProductEditProps) {
                         </tr>
                       </thead>
                       <tbody className="border-top-0">
-                        {varaintsField.fields.map((variant, i) => {
+                        {variantsField.fields.map((variant, i) => {
                           if (variant.deleted) {
                             return null;
                           }
@@ -503,44 +697,34 @@ function ProductEdit(props: ProductEditProps) {
                                   {...register(`variants.${i}.sku`)}
                                 />
                               </td>
-                              <td className="align-top">
-                                <Input
-                                  type="number"
-                                  placeholder="Enter stock amount"
-                                  height={40}
-                                  {...register(`variants.${i}.stockLeft`, {
-                                    setValueAs: setEmptyOrNumber,
-                                    validate: (v) => {
-                                      const numRegex = "^[0-9]*$";
-                                      if (!`${v}`.match(numRegex)) {
-                                        return "Invalid stock amount input";
-                                      }
-                                      return true;
-                                    }
-                                  })}
-                                  error={
-                                    errors.variants?.[i]?.stockLeft?.message
-                                  }
-                                />
+                              <td className="align-top py-2h">
+                                <div className="form-check form-switch">
+                                  <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    role="switch"
+                                    {...register(`variants.${i}.available`)}
+                                  ></input>
+                                </div>
                               </td>
                               <td className="align-top py-3">
-                                {varaintsField.fields.filter((v) => !v.deleted)
+                                {variantsField.fields.filter((v) => !v.deleted)
                                   .length > 1 && (
                                   <div
                                     role="button"
                                     className="link-danger"
                                     onClick={() => {
                                       if ((variant.id ?? 0) > 0) {
-                                        varaintsField.update(i, {
+                                        variantsField.update(i, {
                                           ...variant,
                                           deleted: true
                                         });
                                       } else {
-                                        varaintsField.remove(i);
+                                        variantsField.remove(i);
                                       }
                                     }}
                                   >
-                                    <TrashIcon width={20} />
+                                    <RiDeleteBin6Line size={20} />
                                   </div>
                                 )}
                               </td>
@@ -578,7 +762,6 @@ function ProductEdit(props: ProductEditProps) {
                         {...register("price", {
                           setValueAs: setEmptyOrNumber,
                           validate: (v, fv) => {
-                            //const floatRegex = "^([0-9]*[.])?[0-9]+$";
                             const floatRegex = "^[0-9]{1,10}([.][0-9]{1,2})?$";
                             if (!fv.withVariant && !`${v}`.match(floatRegex)) {
                               return "Invalid price input";
@@ -598,30 +781,37 @@ function ProductEdit(props: ProductEditProps) {
                         {...register("sku")}
                       />
                     </div>
-                    <div className="col-12">
-                      <Input
-                        label="Stock *"
-                        id="stockInput"
-                        type="number"
-                        disabled={withVariant}
-                        placeholder="Enter stock amount"
-                        {...register("stockLeft", {
-                          setValueAs: setEmptyOrNumber,
-                          validate: (v, fv) => {
-                            const numRegex = "^[0-9]*$";
-                            if (!fv.withVariant && !`${v}`.match(numRegex)) {
-                              return "Invalid stock amount input";
-                            }
-                            return true;
-                          }
-                        })}
-                        error={errors.stockLeft?.message}
-                      />
-                    </div>
                   </div>
                 </div>
               </div>
             )}
+
+            <div className="card mb-3">
+              <div className="card-header py-3 border-bottom">
+                <h5 className="mb-0">Product description</h5>
+              </div>
+              <div className="card-body p-0">
+                <Controller
+                  control={control}
+                  name="description"
+                  render={({ field }) => {
+                    return (
+                      <DynamicEditor
+                        id="descriptionInput"
+                        placeholder="Enter product description..."
+                        minHeight={380}
+                        value={field.value}
+                        iframeEmbed
+                        noBorder
+                        onEditorChange={(v) => {
+                          setValue("description", v);
+                        }}
+                      />
+                    );
+                  }}
+                />
+              </div>
+            </div>
 
             <div ref={imagesRef} className="card">
               <div className="card-header py-3 border-bottom">
@@ -640,7 +830,7 @@ function ProductEdit(props: ProductEditProps) {
                       return (
                         <div key={index} className="position-relative">
                           <NextImage
-                            src={img.url ?? "/images/placeholder.jpeg"}
+                            src={img.name ?? "/images/placeholder.jpeg"}
                             width={150}
                             height={150}
                             alt=""
@@ -703,7 +893,7 @@ function ProductEdit(props: ProductEditProps) {
                               }
                             }}
                           >
-                            <TrashIcon width={18} />
+                            <RiDeleteBin6Line size={18} />
                           </button>
                         </div>
                       );
@@ -725,8 +915,8 @@ function ProductEdit(props: ProductEditProps) {
                           style={{ width: 150, height: 150 }}
                           onClick={() => fileRef.current?.click()}
                         >
-                          <PlusIcon
-                            width={44}
+                          <RiAddLine
+                            size={44}
                             strokeWidth={2}
                             className="text-muted"
                           />
@@ -751,226 +941,6 @@ function ProductEdit(props: ProductEditProps) {
               </div>
             </div>
           </div>
-          <div className="col-12 col-lg-4 order-1 order-lg-2">
-            <div className="card">
-              <div className="card-header py-3 border-bottom">
-                <h5 className="mb-0">General</h5>
-              </div>
-              <div className="card-body">
-                <div className="row g-3 mb-4">
-                  <div className="col-12">
-                    <Input
-                      label="Name *"
-                      id="nameInput"
-                      type="text"
-                      placeholder="Enter product name"
-                      {...register("name", {
-                        required: "Please enter product name",
-                        setValueAs: setEmptyOrString,
-                        onChange: (evt) => {
-                          setValue("slug", setStringToSlug(evt.target.value), {
-                            shouldValidate: !!errors.slug?.message
-                          });
-                        }
-                      })}
-                      error={errors.name?.message}
-                    />
-                  </div>
-
-                  <div className="col-12">
-                    {/* <Input
-                      label="Slug *"
-                      id="slugInput"
-                      type="text"
-                      placeholder="your-product-name"
-                      {...register("slug", {
-                        required: "Please enter slug",
-                        setValueAs: setEmptyOrString
-                      })}
-                      error={errors.slug?.message}
-                    /> */}
-                    <Controller
-                      control={control}
-                      name="slug"
-                      rules={{
-                        validate: (v) => {
-                          if (!setStringToSlug(v)) {
-                            return "Please enter valid slug";
-                          }
-                          return true;
-                        }
-                      }}
-                      render={({ field, fieldState: { error } }) => {
-                        return (
-                          <>
-                            <Input
-                              label="Slug *"
-                              value={field.value ?? ""}
-                              onChange={(evt) => {
-                                const s = evt.target.value
-                                  .replace(/[^\w-\s]*/, "")
-                                  .replace(/\s+/, "-")
-                                  .toLowerCase();
-
-                                setValue("slug", s, {
-                                  shouldValidate: true
-                                });
-                              }}
-                              error={error?.message}
-                            />
-                            {!error?.message && (
-                              <small className="text-muted">{`${
-                                window.location.origin
-                              }/products/${field.value ?? ""}`}</small>
-                            )}
-                          </>
-                        );
-                      }}
-                    />
-                  </div>
-
-                  <div className="col-12">
-                    <div>
-                      <label className="form-label">Category *</label>
-                      <Controller
-                        name="category"
-                        control={control}
-                        rules={{
-                          validate: (v) => !!v || "Please select category"
-                        }}
-                        render={({ field, fieldState: { error } }) => {
-                          return (
-                            <AutocompleteSelect<Category, number>
-                              options={categories ?? []}
-                              defaultValue={field.value}
-                              getOptionLabel={(v) => v.name}
-                              getOptionKey={(v) => v.id}
-                              getNestedData={(v) => v.children}
-                              canSelect={(v) =>
-                                !v.children || v.children?.length === 0
-                              }
-                              onChange={(v) => {
-                                if (!v) {
-                                  return;
-                                }
-                                setValue("category", v, {
-                                  shouldValidate: !!error?.message
-                                });
-                                setValue("categoryId", v.id);
-                              }}
-                              error={error?.message}
-                            />
-                          );
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col-12">
-                    <Input
-                      label="Brand name"
-                      id="brandInput"
-                      type="text"
-                      placeholder="Enter brand name"
-                      {...register("brand", {
-                        setValueAs: setEmptyOrString
-                      })}
-                    />
-                  </div>
-
-                  <div className="col-12">
-                    <label className="form-label">Discount</label>
-                    <Controller
-                      control={control}
-                      name="discount"
-                      render={({ field }) => {
-                        return (
-                          <DiscountSelect
-                            shopId={shop.id ?? 0}
-                            value={field.value}
-                            onChange={(value) => {
-                              setValue("discount", value);
-                            }}
-                          />
-                        );
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <hr className="text-muted"></hr>
-
-                <div className="row g-3">
-                  {!product.id && (
-                    <div className="col-12">
-                      <div className="form-check form-switch ps-0">
-                        <label
-                          htmlFor="variantCheck"
-                          className="form-check-label fw-medium ps-0"
-                        >
-                          With variants
-                        </label>
-                        <div className="flex-grow-1"></div>
-                        <input
-                          id="variantCheck"
-                          className="form-check-input"
-                          type="checkbox"
-                          role="switch"
-                          {...register("withVariant", {
-                            onChange: (evt) => {
-                              if (!evt.target.checked) {
-                                varaintsField.remove();
-                                setValue("attributes", undefined);
-                              } else {
-                                setValue("price", undefined);
-                                setValue("sku", undefined);
-                              }
-                              setValue("stockLeft", undefined);
-                              setWithVariant(evt.target.checked);
-                              clearErrors();
-                            }
-                          })}
-                        ></input>
-                      </div>
-                    </div>
-                  )}
-                  <div className="col-12">
-                    <div className="form-check form-switch ps-0">
-                      <label
-                        htmlFor="newArrivalCheck"
-                        className="form-check-label fw-medium ps-0"
-                      >
-                        New arrival
-                      </label>
-                      <div className="flex-grow-1"></div>
-                      <input
-                        id="newArrivalCheck"
-                        className="form-check-input"
-                        type="checkbox"
-                        role="switch"
-                        {...register("newArrival")}
-                      ></input>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* <div className="card">
-              <div className="card-header py-3 border-bottom">
-                <h5 className="mb-0">Product video</h5>
-              </div>
-              <div className="card-body">
-                <div className="vstack gap-3">
-                  <Input
-                    id="videoInput"
-                    type="text"
-                    placeholder="Enter youtube ID"
-                    {...register("videoId")}
-                  />
-                </div>
-              </div>
-            </div> */}
-          </div>
         </div>
       </div>
 
@@ -983,7 +953,7 @@ function ProductEdit(props: ProductEditProps) {
           const attributes = [...(getValues("attributes") ?? [])];
 
           attributes.forEach((a) => {
-            a.values = varaintsField.fields
+            a.values = variantsField.fields
               .flatMap((v) => v.attributes)
               .filter((va) => va.attribute === a.name)
               .sort((f, s) => f.sort - s.sort)
@@ -1008,7 +978,7 @@ function ProductEdit(props: ProductEditProps) {
                   // );
                   const variants =
                     list.length > 0 ? generateVariant(list, 0) : [];
-                  varaintsField.replace(variants);
+                  variantsField.replace(variants);
                   clearErrors("variants");
                 }
 
@@ -1021,17 +991,17 @@ function ProductEdit(props: ProductEditProps) {
 
       <Modal id="varientEditModal" show={showVariantModal} variant="large">
         {(isShown) => {
-          if (!isShown || !product.id) {
+          if (!isShown || !productEdit.id) {
             return <></>;
           }
 
           const p = { ...getValues() };
 
           return (
-            <VaraintEdit
-              product={p}
+            <ProductvariantEdit
+              product={product!}
               handleSave={(variant) => {
-                varaintsField.append(variant);
+                variantsField.append(variant);
                 setShowVariantModal(false);
               }}
               close={() => setShowVariantModal(false)}
@@ -1045,7 +1015,6 @@ function ProductEdit(props: ProductEditProps) {
         show={confirmDelete}
         close={() => setConfirmDelete(false)}
         onConfirm={async () => {
-          setConfirmDelete(false);
           executeDelete();
         }}
       />
@@ -1053,4 +1022,4 @@ function ProductEdit(props: ProductEditProps) {
   );
 }
 
-export default ProductEdit;
+export default withAuthentication(ProductEdit);

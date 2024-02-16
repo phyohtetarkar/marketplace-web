@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
-import { CartItem } from "../../common/models";
-import { formatNumber, transformDiscount } from "../../common/utils";
+import { CartItem } from "@/common/models";
+import { formatNumber, transformDiscount } from "@/common/utils";
 
 interface PricingCardProps {
   items: CartItem[];
@@ -67,7 +67,7 @@ function PricingCard(props: PricingCardProps) {
           )} */}
           <div className="d-flex justify-content-between">
             <span>Delivery Fee</span>
-            <span className="text-success">Depend on shop</span>
+            <span className="text-success">Depends on shop</span>
           </div>
 
           <hr className="text-muted" />

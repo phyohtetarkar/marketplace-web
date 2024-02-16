@@ -1,13 +1,11 @@
 import makeApiRequest from "../common/makeApiRequest";
-import { AddToCartForm, CartItem } from "../common/models";
+import { CartItem, CartItemForm, CartItemID } from "../common/models";
 import { validateResponse } from "../common/utils";
 
-const basePath = "cart-items";
-
 export async function getCartItemsByUser() {
-  const url = `profile/${basePath}`;
+  const url = `/profile/cart-items`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest({ url, authenticated: true });
 
   await validateResponse(resp);
 
@@ -15,65 +13,65 @@ export async function getCartItemsByUser() {
 }
 
 export async function countCartItemsByUser() {
-  const url = `profile/cart-count`;
+  const url = `/profile/cart-count`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest({ url, authenticated: true });
 
   await validateResponse(resp);
 
   return resp.json() as Promise<number>;
 }
 
-export async function addToCart(value: AddToCartForm) {
-  const url = basePath;
+export async function addToCart(values: CartItemForm) {
+  const url = "/cart-items";
 
-  const resp = await makeApiRequest(
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "POST",
-      body: JSON.stringify(value),
+      body: JSON.stringify(values),
       headers: {
         "Content-Type": "application/json"
       }
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 }
 
-export async function updateQuantity(value: CartItem) {
-  const url = basePath;
+export async function updateQuantity(values: CartItemForm) {
+  const url = "/cart-items";
 
-  const resp = await makeApiRequest(
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "PUT",
-      body: JSON.stringify(value),
+      body: JSON.stringify(values),
       headers: {
         "Content-Type": "application/json"
       }
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 }
 
-export async function removeFromCart(items: [number]) {
-  const url = basePath;
+export async function removeFromCart(items: [CartItemID]) {
+  const url = "/cart-items";
 
-  const resp = await makeApiRequest(
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "DELETE",
       body: JSON.stringify(items),
       headers: {
         "Content-Type": "application/json"
       }
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 }

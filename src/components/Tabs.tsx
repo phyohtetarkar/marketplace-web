@@ -1,3 +1,4 @@
+"use client"
 import { ReactElement, ReactNode, useEffect, useState } from "react";
 
 type RenderTitle = (onTabChange: () => void, isActive: boolean) => ReactNode;

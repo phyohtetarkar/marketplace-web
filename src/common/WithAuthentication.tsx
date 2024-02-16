@@ -1,102 +1,90 @@
-import { NextRouter, withRouter } from "next/router";
-import React from "react";
-import Alert from "../components/Alert";
+"use client";
+import Alert from "@/components/Alert";
+import Loading from "@/components/Loading";
+import { useRouter } from "next/navigation";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthenticationContext } from "./contexts";
 
-interface WithRouterProps {
-  router: NextRouter;
-}
+export function withAuthentication<P extends {}>(
+  Component: React.ComponentType<P>
+) {
+  return function AuthenticatedComponent(props: P) {
+    const router = useRouter();
+    const { status, user } = useContext(AuthenticationContext);
+    const [calledPush, setCalledPush] = useState(false);
 
-interface AuthComponentProps extends WithRouterProps {}
-
-export const withAuthentication = (Component: React.ComponentType<any>) => {
-  return withRouter(
-    class AuthenticatedRoute extends React.Component<
-      AuthComponentProps,
-      { calledPush: boolean }
-    > {
-      static contextType = AuthenticationContext;
-      declare context: React.ContextType<typeof AuthenticationContext>;
-
-      constructor(props: AuthComponentProps) {
-        super(props);
-        this.handleAuthState = this.handleAuthState.bind(this);
-        this.state = {
-          calledPush: false
-        };
+    useEffect(() => {
+      if (calledPush) {
+        return;
       }
 
-      componentDidMount() {
-        this.handleAuthState();
+      if (status === "loading") {
+        return;
       }
 
-      componentDidUpdate() {
-        this.handleAuthState();
+      if (status === "failure") {
+        return;
       }
 
-      handleAuthState() {
-        const { payload, status } = this.context;
-
-        if (this.state.calledPush) {
-          return;
-        }
-
-        if (!status) {
-          this.props.router.push("/");
-          this.setState({
-            calledPush: true
-          });
-          return;
-        }
-
-        if (status === "loading") {
-          return;
-        }
-
-        if (status === "failure") {
-          return;
-        }
-
-        if (status === "unauthorized" || !payload) {
-          this.props.router.push("/login");
-          this.setState({
-            calledPush: true
-          });
-          return;
-        }
-
-        if (!payload?.verified) {
-          this.props.router.push("/confirm-otp");
-          this.setState({
-            calledPush: true
-          });
-        }
+      if (status === "unauthorized") {
+        router.push("/login");
+        setCalledPush(true);
+      } else if (status === "success" && !user?.emailVerified) {
+        // router.push("/verify-email");
+        // setCalledPush(true);
       }
+    }, [calledPush, status, user]);
 
-      render(): React.ReactNode {
-        const { payload, status } = this.context;
-
-        if (status === "failure") {
-          return (
-            <div className="container py-3">
-              <Alert
-                message="Something went wrong. Please try again"
-                variant="danger"
-              />
+    if (status === "loading") {
+      return (
+        <div className="h-100">
+          <div className="container h-100">
+            <div className="hstack h-100">
+              <div className="m-auto hstack gap-2">
+                <div
+                  className="spinner-grow spinner-grow-sm text-primary"
+                  role="status"
+                >
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                <div
+                  className="spinner-grow spinner-grow-sm text-primary"
+                  role="status"
+                >
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                <div
+                  className="spinner-grow spinner-grow-sm text-primary"
+                  role="status"
+                >
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
             </div>
-          );
-        }
-
-        if (status !== "success" || !payload) {
-          return null;
-        }
-
-        if (!payload.verified) {
-          return null;
-        }
-
-        return <Component />;
-      }
+          </div>
+        </div>
+      );
     }
-  );
-};
+
+    if (status === "failure") {
+      return (
+        <div className="container py-3">
+          <Alert
+            message="Something went wrong. Please try again"
+            variant="danger"
+          />
+        </div>
+      );
+    }
+
+    if (status !== "success" || !user) {
+      return null;
+    }
+
+    // if (!payload.verified) {
+    //   return null;
+    // }
+
+    return <Component {...props} />;
+  };
+}

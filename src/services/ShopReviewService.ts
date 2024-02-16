@@ -2,55 +2,41 @@ import makeApiRequest from "../common/makeApiRequest";
 import { PageData, ShopReview } from "../common/models";
 import { buildQueryParams, validateResponse } from "../common/utils";
 
-const basePath = "shop-reviews";
+export async function writeReview(values: ShopReview) {
+  const url = `/content/shops/${values.shopId}/reviews`;
 
-export async function writeReview(value: ShopReview) {
-  const url = `${basePath}`;
-
-  const resp = await makeApiRequest(
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "POST",
-      body: JSON.stringify(value),
+      body: JSON.stringify(values),
       headers: {
         "Content-Type": "application/json"
       }
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 }
 
-export async function getUserReview(shopId: number) {
-  const url = `${basePath}/${shopId}/me`;
-  // const resp = await fetch(url, {
-  //   headers: {
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
+export async function getUserReview(shopId: number, userId: number) {
+  const url = `/content/shops/${shopId}/reviews/${userId}`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest({ url, authenticated: true });
 
   await validateResponse(resp);
 
   return resp.body ? (resp.json() as Promise<ShopReview>) : null;
 }
 
-export async function getReviews(
-  shopId: number,
-  direction: "ASC" | "DESC",
-  page?: number
-) {
+export async function getReviews(shopId: number, page?: number) {
   const query = buildQueryParams({
-    "shop-id": shopId,
-    direction: direction,
     page: page
   });
-  const url = `${basePath}${query}`;
-  //const resp = await fetch(url);
+  const url = `/content/shops/${shopId}/reviews${query}`;
 
-  const resp = await makeApiRequest(url);
+  const resp = await makeApiRequest({ url });
 
   await validateResponse(resp);
 

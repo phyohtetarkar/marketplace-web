@@ -2,41 +2,36 @@ import makeApiRequest from "../common/makeApiRequest";
 import { PageData, Product } from "../common/models";
 import { buildQueryParams, validateResponse } from "../common/utils";
 
-const basePath = "favorite-products";
-
 export async function addToFavoriteProduct(productId: number) {
-  const url = `${basePath}/${productId}`;
-  const resp = await makeApiRequest(
+  const url = `/content/products/${productId}/favorite`;
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "POST"
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 }
 
 export async function deleteFavoriteProduct(productId: number) {
-  const url = `${basePath}/${productId}`;
-  const resp = await makeApiRequest(
+  const url = `/content/products/${productId}/favorite`;
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "DELETE"
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 }
 
 export async function checkFavorite(productId: number) {
-  const query = buildQueryParams({
-    "product-id": productId
-  });
-  const url = `${basePath}/${productId}/check`;
+  const url = `/profile/favorite-products/${productId}/check`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest({ url, authenticated: true });
 
   await validateResponse(resp);
 
@@ -47,9 +42,9 @@ export async function getFavoriteProducts(page?: number) {
   const query = buildQueryParams({
     page: page
   });
-  const url = `profile/${basePath}${query}`;
+  const url = `/profile/favorite-products${query}`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest({ url, authenticated: true });
 
   await validateResponse(resp);
 

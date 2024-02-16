@@ -1,19 +1,20 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { RiDeleteBin6Line } from "@remixicon/react";
 import Image from "next/image";
 import Link from "next/link";
-import { Product } from "../../common/models";
-import { formatNumber, transformDiscount } from "../../common/utils";
+import { Product } from "@/common/models";
+import { formatNumber, transformDiscount } from "@/common/utils";
 
 interface ProductManageGridItemProps {
+  shopId: number;
   value: Product;
-  onDeleteClick?: () => void;
+  onDeleteClick?: () => void
 }
 
 function ProductManageGridItem({
+  shopId,
   value,
-  onDeleteClick
+  onDeleteClick,
 }: ProductManageGridItemProps) {
-  let popular;
   let outOfStock;
 
   let price = <>{formatNumber(value.price ?? 0)} Ks</>;
@@ -35,7 +36,7 @@ function ProductManageGridItem({
     if (value.status === "DRAFT") {
       return (
         <div
-          className="bg-default px-2 py-1 text-light rounded-1 position-absolute top-0 end-0 m-2"
+          className="bg-default px-2 py-1 text-dark rounded-1 position-absolute top-0 end-0 m-2"
           style={{
             fontSize: 12
           }}
@@ -48,17 +49,6 @@ function ProductManageGridItem({
     return null;
   };
 
-  //   if (data.popular) {
-  //     popular = (
-  //       <div
-  //         className="badge bg-danger py-2 position-absolute"
-  //         style={{ top: "1rem", right: "1rem" }}
-  //       >
-  //         Popular
-  //       </div>
-  //     );
-  //   }
-
   if (value.discount) {
     price = (
       <>
@@ -70,7 +60,7 @@ function ProductManageGridItem({
     );
   }
 
-  if (!value.withVariant && (value.stockLeft ?? 0) === 0) {
+  if (!value.withVariant && !value.available) {
     outOfStock = (
       <div className="bg-dark opacity-75 py-2 text-light position-absolute text-center bottom-0 start-0 end-0">
         Out Of Stock
@@ -87,7 +77,7 @@ function ProductManageGridItem({
         >
           <div className="ratio ratio-4x3">
             <Image
-              className="card-img-top"
+              className="card-img-top bg-light"
               src={value.thumbnail ?? "/images/placeholder.jpeg"}
               alt="Product image."
               fill
@@ -99,7 +89,6 @@ function ProductManageGridItem({
             />
           </div>
           {outOfStock && outOfStock}
-          {popular && popular}
           {status()}
         </div>
       </Link>
@@ -123,7 +112,7 @@ function ProductManageGridItem({
 
           <div className="mt-3 hstack align-items-stretch gap-2">
             <Link
-              href={`/account/shops/${value.shop?.id}/products/${value.id}`}
+              href={`/profile/shops/${shopId}/products/${value.id}`}
               className="btn btn-default flex-grow-1"
             >
               <span>Edit</span>
@@ -132,7 +121,7 @@ function ProductManageGridItem({
               className="btn btn-danger"
               onClick={() => onDeleteClick?.()}
             >
-              <TrashIcon width={20} />
+              <RiDeleteBin6Line size={20} />
             </button>
           </div>
         </div>

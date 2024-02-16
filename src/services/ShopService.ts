@@ -1,62 +1,45 @@
-import makeApiRequest from "../common/makeApiRequest";
+import makeApiRequest from "@/common/makeApiRequest";
 import {
   PageData,
   PaymentTokenResult,
   Shop,
   ShopContact,
   ShopCreateForm,
-  ShopGeneral,
   ShopMonthlySale,
   ShopSetting,
-  ShopStatistic
-} from "../common/models";
-import { buildQueryParams, validateResponse } from "../common/utils";
-
-const basePath = "shops";
+  ShopStatistic,
+  ShopUpdate
+} from "@/common/models";
+import { buildQueryParams, validateResponse } from "@/common/utils";
 
 export interface ShopQuery {
   q?: string;
   page?: number;
+  "city-id"?: number;
 }
 
-export async function createShop(value: ShopCreateForm) {
-  const url = `private/${basePath}`;
+export async function createShop(values: ShopCreateForm) {
+  const url = `/vendor/shops`;
   const formData = new FormData();
-  value.name && formData.append("name", value.name);
-  value.slug && formData.append("slug", value.slug);
-  value.phone && formData.append("phone", value.phone);
-  value.headline && formData.append("headline", value.headline);
-  value.about && formData.append("about", value.about);
-  value.address && formData.append("address", value.address);
-  value.cityId && formData.append("cityId", value.cityId.toString());
+  values.name && formData.append("name", values.name);
+  values.slug && formData.append("slug", values.slug);
+  values.phone && formData.append("phone", values.phone);
+  values.headline && formData.append("headline", values.headline);
+  values.about && formData.append("about", values.about);
+  values.address && formData.append("address", values.address);
+  values.cityId && formData.append("cityId", values.cityId.toString());
   formData.append("cashOnDelivery", "true");
-  //formData.append("bankTransfer", value.bankTransfer ? "true" : "false");
-  value.logoImage && formData.append("logo", value.logoImage);
-  value.coverImage && formData.append("cover", value.coverImage);
-  // value.subscriptionPlanId &&
-  //   formData.append("subscriptionPlanId", value.subscriptionPlanId.toString());
+  values.logoImage && formData.append("logo", values.logoImage);
+  values.coverImage && formData.append("cover", values.coverImage);
 
-  // value.acceptedPayments?.forEach((v, i) => {
-  //   //v.id && formData.append(`acceptedPayments[${i}].id`, v.id.toPrecision());
-  //   v.accountType &&
-  //     formData.append(`acceptedPayments[${i}].accountType`, v.accountType);
-  //   v.accountNumber &&
-  //     formData.append(`acceptedPayments[${i}].accountNumber`, v.accountNumber);
-  // });
-
-  value.deliveryCities?.forEach((v, i) => {
-    formData.append(`deliveryCities[${i}].id`, v.id.toString());
-    formData.append(`deliveryCities[${i}].name`, v.name);
-  });
-
-  const resp = await makeApiRequest(
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "POST",
       body: formData
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 
@@ -66,109 +49,100 @@ export async function createShop(value: ShopCreateForm) {
     .catch((e) => undefined);
 }
 
-export async function updateShopGeneral(value: ShopGeneral) {
-  const url = `private/${basePath}/${value.shopId}/general`;
+export async function updateShop(values: ShopUpdate) {
+  const url = `/vendor/shops/${values.shopId}`;
 
-  // const resp = await fetch(url, {
-  //   method: "PUT",
-  //   body: JSON.stringify(value),
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
-
-  const resp = await makeApiRequest(
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "PUT",
-      body: JSON.stringify(value),
+      body: JSON.stringify(values),
       headers: {
         "Content-Type": "application/json"
       }
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 
   return resp.json() as Promise<Shop>;
 }
 
-export async function updateShopContact(value: ShopContact) {
-  const url = `private/${basePath}/${value.shopId}/contact`;
-  const resp = await makeApiRequest(
+export async function updateShopContact(values: ShopContact) {
+  const url = `/vendor/shops/${values.shopId}/contact`;
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "PUT",
-      body: JSON.stringify(value),
+      body: JSON.stringify({ ...values, cityId: values.city?.id }),
       headers: {
         "Content-Type": "application/json"
       }
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 }
 
-export async function updateShopSetting(value: ShopSetting) {
-  const url = `private/${basePath}/${value.shopId}/setting`;
-  const resp = await makeApiRequest(
+export async function updateShopSetting(values: ShopSetting) {
+  const url = `/vendor/shops/${values.shopId}/setting`;
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "PUT",
-      body: JSON.stringify(value),
+      body: JSON.stringify(values),
       headers: {
         "Content-Type": "application/json"
       }
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 }
 
 export async function uploadShopLogo(shopId: number, file: File) {
-  const url = `private/${basePath}/${shopId}/logo`;
+  const url = `/vendor/shops/${shopId}/logo`;
 
   const form = new FormData();
   form.append("file", file);
 
-  const resp = await makeApiRequest(
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "PUT",
       body: form
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 }
 
 export async function uploadShopCover(shopId: number, file: File) {
-  const url = `private/${basePath}/${shopId}/cover`;
+  const url = `/vendor/shops/${shopId}/cover`;
 
   const form = new FormData();
   form.append("file", file);
 
-  const resp = await makeApiRequest(
+  const resp = await makeApiRequest({
     url,
-    {
+    options: {
       method: "PUT",
       body: form
     },
-    true
-  );
+    authenticated: true
+  });
 
   await validateResponse(resp);
 }
 
 export async function getShopById(id: number) {
-  const url = `private/${basePath}/${id}`;
+  const url = `/vendor/shops/${id}`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest({ url, authenticated: true });
 
   await validateResponse(resp);
 
@@ -179,12 +153,11 @@ export async function getShopById(id: number) {
 }
 
 export async function getShopBySlug(slug: String) {
-  const url = `${basePath}/${slug}`;
-  //const resp = await fetch(url);
+  const url = `/content/shops/${slug}`;
 
-  const resp = await makeApiRequest(url);
+  const resp = await makeApiRequest({ url, options: { cache: "no-store" } });
 
-  await validateResponse(resp);
+  await validateResponse(resp, true);
 
   return resp
     .json()
@@ -192,70 +165,24 @@ export async function getShopBySlug(slug: String) {
     .catch((e) => null);
 }
 
-export async function existsShopBySlug(slug: String, excludeId: number) {
-  const query = buildQueryParams({
-    exclude: excludeId
-  });
-  const url = `${basePath}/${slug}/exists${query}`;
-  //const resp = await fetch(url);
-
-  const resp = await makeApiRequest(url);
-
-  await validateResponse(resp);
-
-  return resp.json() as Promise<boolean>;
-}
-
-export async function isShopMember(shopId: number) {
-  try {
-    const url = `shop-members/${shopId}/check-member`;
-
-    const resp = await makeApiRequest(url, {}, true);
-
-    if (resp.ok) {
-      return resp.json() as Promise<boolean>;
-    }
-  } catch (error) {}
-
-  return false;
-}
-
 export async function getMyShops(page?: number) {
   const query = buildQueryParams({
     page: page
   });
-  const url = `profile/${basePath}${query}`;
-  // const resp = await fetch(url, {
-  //   headers: {
-  //     Authorization: await getAuthHeader()
-  //   }
-  // });
+  const url = `/profile/shops${query}`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest({ url, authenticated: true });
 
   await validateResponse(resp);
 
   return resp.json() as Promise<PageData<Shop>>;
 }
 
-export async function getShopHints(q: string) {
-  const query = buildQueryParams({ q: q });
-  const url = `search/shop-hints${query}`;
-  //const resp = await fetch(url);
-
-  const resp = await makeApiRequest(url);
-
-  await validateResponse(resp);
-
-  return resp.json() as Promise<string[]>;
-}
-
 export async function findShops(query: ShopQuery) {
   const q = buildQueryParams({ ...query });
-  const url = `${basePath}${q}`;
-  //const resp = await fetch(url);
+  const url = `/content/shops${q}`;
 
-  const resp = await makeApiRequest(url);
+  const resp = await makeApiRequest({ url });
 
   await validateResponse(resp);
 
@@ -263,9 +190,9 @@ export async function findShops(query: ShopQuery) {
 }
 
 export async function getShopStatistic(shopId: number) {
-  const url = `private/${basePath}/${shopId}/statistic`;
+  const url = `/vendor/shops/${shopId}/statistic`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest({ url, authenticated: true });
 
   await validateResponse(resp);
 
@@ -273,9 +200,9 @@ export async function getShopStatistic(shopId: number) {
 }
 
 export async function getShopSetting(shopId: number) {
-  const url = `private/${basePath}/${shopId}/setting`;
+  const url = `/content/shops/${shopId}/setting`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest({ url, authenticated: true });
 
   await validateResponse(resp);
 
@@ -286,9 +213,9 @@ export async function getShopSetting(shopId: number) {
 }
 
 export async function getPendingOrderCount(shopId: number) {
-  const url = `private/${basePath}/${shopId}/pending-order-count`;
+  const url = `/vendor/shops/${shopId}/pending-order-count`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest({ url, authenticated: true });
 
   await validateResponse(resp);
 
@@ -296,9 +223,9 @@ export async function getPendingOrderCount(shopId: number) {
 }
 
 export async function getMonthlySale(shopId: number, year: number) {
-  const url = `private/${basePath}/${shopId}/monthly-sales?year=${year}`;
+  const url = `/vendor/shops/${shopId}/monthly-sales?year=${year}`;
 
-  const resp = await makeApiRequest(url, {}, true);
+  const resp = await makeApiRequest({ url, authenticated: true });
 
   await validateResponse(resp);
 
