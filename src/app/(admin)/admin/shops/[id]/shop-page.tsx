@@ -33,7 +33,8 @@ const approveShop = async (shopId: number) => {
     url,
     options: {
       method: "PUT"
-    }
+    },
+    authenticated: true
   });
 
   await validateResponse(resp);
@@ -45,7 +46,8 @@ const disableShop = async (shopId: number) => {
     url,
     options: {
       method: "PUT"
-    }
+    },
+    authenticated: true
   });
 
   await validateResponse(resp);

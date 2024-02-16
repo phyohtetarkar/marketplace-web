@@ -36,8 +36,7 @@ NEXT_PUBLIC_MAP_API_KEY=
 
 NEXT_PUBLIC_API_URL= # backend api url
 
-# Self-hosted TinyMCE source url 
-NEXT_PUBLIC_TINYMCE_SCRIPT_SOURCE=http://localhost:3000/tinymce/tinymce.min.js
+NEXT_PUBLIC_TINYMCE_SCRIPT_SOURCE=http://localhost:3000/tinymce/tinymce.min.js # Self-hosted TinyMCE source url 
 
 ```
 
