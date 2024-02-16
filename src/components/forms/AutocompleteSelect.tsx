@@ -1,5 +1,9 @@
 "use client";
-import { RiArrowDropDownFill } from "@remixicon/react";
+import {
+  RiArrowDropDownFill,
+  RiCloseCircleFill,
+  RiCloseFill
+} from "@remixicon/react";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { usePopper } from "react-popper";
 import Input from "./Input";
@@ -22,8 +26,9 @@ interface AutocompleteSelectProps<T = string, Key = string>
   placeholder?: string;
   maxHeight?: number;
   error?: string;
+  isClearable?: boolean;
   formatSelectedOption?: (op: T) => string;
-  onChange?: (newValue: T) => void;
+  onChange?: (newValue?: T) => void;
 }
 
 function Option<T, Key>(
@@ -102,6 +107,7 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
     onChange,
     maxHeight,
     formatSelectedOption,
+    isClearable,
     ...optionProps
   } = props;
 
@@ -110,18 +116,22 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
   );
   const [popperElement, setPopperElement] = useState<HTMLElement | null>(null);
   const [arrowElement, setArrowElement] = useState<HTMLElement | null>(null);
-  const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    modifiers: [
-      { name: "arrow", options: { element: arrowElement } },
-      {
-        name: "offset",
-        options: {
-          offset: [0, 4]
+  const { styles, attributes, update } = usePopper(
+    referenceElement,
+    popperElement,
+    {
+      modifiers: [
+        { name: "arrow", options: { element: arrowElement } },
+        {
+          name: "offset",
+          options: {
+            offset: [0, 4]
+          }
         }
-      }
-    ],
-    placement: "bottom-start"
-  });
+      ],
+      placement: "bottom-start"
+    }
+  );
   const [open, setOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(() => {
     if (props.defaultValue) {
@@ -262,7 +272,10 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
           className={open ? "border-primary" : ""}
           placeholder={props.placeholder ?? "Select"}
           ref={setReferenceElement}
-          onClick={() => setOpen(!open)}
+          onClick={() => {
+            setOpen(!open);
+            update?.();
+          }}
           onChange={() => {}}
           error={props.error}
           style={{
@@ -271,9 +284,28 @@ function AutocompleteSelect<T, Key>(props: AutocompleteSelectProps<T, Key>) {
             paddingRight: "60px !important"
           }}
         />
+
+        {isClearable && (
+          <div
+            className="hstack gap-2 position-absolute end-0 top-50 translate-middle-y"
+            style={{
+              marginRight: 36
+            }}
+          >
+            <div role="button" onClick={() => {
+              props.onChange?.(undefined);
+              setSelectedOption(null);
+            }}>
+              <RiCloseFill size={20} className="link-dark-gray" />
+            </div>
+
+            {/* <div className="vr"></div> */}
+          </div>
+        )}
+
         {!props.error && (
           <div
-            className="hstack gap-2 position-absolute end-0 top-50 translate-middle-y me-3"
+            className="hstack gap-2 position-absolute end-0 top-50 translate-middle-y me-2"
             style={{
               pointerEvents: "none"
             }}

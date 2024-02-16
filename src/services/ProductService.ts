@@ -16,6 +16,7 @@ export interface ProductQuery {
   "category-id"?: number;
   "shop-id"?: number;
   "max-price"?: number;
+  "discount-id"?: number;
   discount?: boolean;
   brand?: string | string[];
   status?: ProductStatus;

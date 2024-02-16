@@ -2,7 +2,7 @@
 
 Multivendor marketplace frontend website build with [Next.js](https://nextjs.org/).
 
-This project is part of [Multi-vendor marketpalce backend](https://github.com/phyohtetarkar/marketplace-backend/)
+This project is a frontend part of [Multi-vendor marketpalce backend](https://github.com/phyohtetarkar/marketplace-backend/)
 
 ## Setup and run
 

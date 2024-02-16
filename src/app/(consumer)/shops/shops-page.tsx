@@ -1,8 +1,11 @@
 "use client";
+import { useCities } from "@/common/hooks";
+import { City } from "@/common/models";
 import { parseErrorResponse } from "@/common/utils";
 import Alert from "@/components/Alert";
 import Loading from "@/components/Loading";
 import Pagination from "@/components/Pagination";
+import { AutocompleteSelect } from "@/components/forms";
 import ShopGridItem from "@/components/shop/ShopGridItem";
 import { ShopQuery, findShops } from "@/services/ShopService";
 import Link from "next/link";
@@ -13,6 +16,8 @@ import useSWR from "swr";
 function ShopsPage({ query }: { query: ShopQuery }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const citiesState = useCities();
 
   const { data, error, isLoading } = useSWR(
     ["/shops", query],
@@ -104,6 +109,38 @@ function ShopsPage({ query }: { query: ShopQuery }) {
         </div>
       </div>
       <div className="container py-3">
+        <div className="row mb-3">
+          <div className="col-12 col-lg-6 offset-lg-6">
+            <div className="d-md-flex justify-content-end">
+              <AutocompleteSelect<City, number>
+                options={citiesState.cities?.sort((f, s) =>
+                  f.name.localeCompare(s.name)
+                )}
+                placeholder="By city"
+                getOptionKey={(c) => c.id}
+                getOptionLabel={(c) => c.name}
+                onChange={(c) => {
+                  const params = new URLSearchParams(searchParams.toString());
+
+                  if (params.has("page")) {
+                    params.delete("page");
+                  }
+
+                  if (params.has("city-id")) {
+                    params.delete("city-id");
+                  }
+
+                  if (c) {
+                    params.set("city-id", c.id.toString());
+                  }
+
+                  router.push("/shops?" + params.toString());
+                }}
+                isClearable
+              />
+            </div>
+          </div>
+        </div>
         <div className="row">
           <div className="col-lg-12">{content()}</div>
         </div>

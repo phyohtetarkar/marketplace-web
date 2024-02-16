@@ -6,13 +6,15 @@ export default function Shops({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
+  const { q, page } = searchParams;
 
-  const { q , page} = searchParams; 
+  const cityId = searchParams["city-id"];
 
   var query: ShopQuery = {
     q: typeof q === "string" ? q : undefined,
-    page: typeof page === "string" ? parseInt(page) : undefined,
-  }
+    "city-id": typeof cityId === "string" ? parseInt(cityId) : undefined,
+    page: typeof page === "string" ? parseInt(page) : undefined
+  };
 
   return <ShopsPage query={query} />;
 }

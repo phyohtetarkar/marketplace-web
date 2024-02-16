@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import Dropdown from "../Dropdown";
+import { useRouter } from "next/navigation";
 
 interface AccountDropdownProps {
   onNavClick?: () => void;
@@ -12,6 +13,8 @@ interface AccountDropdownProps {
 
 function AccountDropdown(props: AccountDropdownProps) {
   const { onNavClick } = props;
+
+  const router = useRouter();
 
   const [loading, setLoading] = useState(false);
 
@@ -103,6 +106,7 @@ function AccountDropdown(props: AccountDropdownProps) {
               signOut()
                 .then(() => {
                   update("unauthorized");
+                  router.push("/");
                 })
                 .catch((error) => {
                   toast.error(parseErrorResponse(error));

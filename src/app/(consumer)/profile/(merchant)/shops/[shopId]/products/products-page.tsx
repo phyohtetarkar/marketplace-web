@@ -29,12 +29,10 @@ function ProductsPage(props: ShopProductListingProps) {
 
   const progressContext = useContext(ProgressContext);
 
-  const [query, setQuery] = useState<ProductQuery>({
-    "shop-id": shopId
-  });
+  const [query, setQuery] = useState<ProductQuery>({});
 
   const { data, error, isLoading, mutate } = useSWR(
-    ["/shop-products", query],
+    [`/vendor/${shopId}/products`, query],
     ([url, query]) => findShopProducts(shopId, query),
     {
       revalidateOnFocus: false

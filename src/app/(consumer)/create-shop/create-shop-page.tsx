@@ -251,7 +251,7 @@ function CreateShopPage() {
                               getOptionKey={(c) => c.id}
                               getOptionLabel={(c) => c.name}
                               onChange={(c) => {
-                                setValue("cityId", c.id, {
+                                setValue("cityId", c?.id, {
                                   shouldValidate: true
                                 });
                               }}
