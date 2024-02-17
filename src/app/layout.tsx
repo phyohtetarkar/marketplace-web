@@ -15,19 +15,17 @@ import "../../styles/flatpickr.airbnb.css";
 import "../../styles/globals.css";
 import { LocalizationContextProvider } from "@/components/LocalizationContextProvider";
 
-const getSiteAssets = cache(async () => {
-  const url = "/content/site-setting/assets";
-  const resp = await makeApiRequest({
-    url,
-    options: { cache: "no-store" }
-  });
-  return resp
-    .json()
-    .then((json) => json as SiteAssets)
-    .catch((e) => undefined);
-});
-
-// export const dynamic = 'force-dynamic';
+// const getSiteAssets = cache(async () => {
+//   const url = "/content/site-setting/assets";
+//   const resp = await makeApiRequest({
+//     url,
+//     options: { cache: "no-store" }
+//   });
+//   return resp
+//     .json()
+//     .then((json) => json as SiteAssets)
+//     .catch((e) => undefined);
+// });
 
 export const viewport: Viewport = {
   themeColor: "black",

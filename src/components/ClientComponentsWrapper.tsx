@@ -1,7 +1,7 @@
 "use client";
 import NextNProgress from "nextjs-progressbar";
 import NProgress from "nprogress";
-import { useContext, useEffect } from "react";
+import { Suspense, useContext, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import { NavigationEvents } from "./NavigationEvents";
 import {
@@ -67,7 +67,7 @@ export default function ClientComponentsWrapper() {
   }, []);
 
   return (
-    <>
+    <Suspense>
       <NavigationEvents />
       <NextNProgress
         color="#36213e"
@@ -85,6 +85,6 @@ export default function ClientComponentsWrapper() {
         theme="colored"
       />
       <ProgressModal show={progressContext.show} />
-    </>
+    </Suspense>
   );
 }

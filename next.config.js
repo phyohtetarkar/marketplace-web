@@ -18,9 +18,9 @@ const nextConfig = {
       },
     ]
   },
-  experimental: {
-    missingSuspenseWithCSRBailout: false,
-  },
+  // experimental: {
+  //   missingSuspenseWithCSRBailout: false,
+  // },
   async redirects() {
     return [
       {
