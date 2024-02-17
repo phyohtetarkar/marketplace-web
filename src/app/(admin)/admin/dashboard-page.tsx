@@ -88,7 +88,10 @@ function DashboardPage() {
                 </div>
               </div>
               <div className="card-footer py-2h">
-                <Link href="/admin/shops" className="text-decoration-none link-anchor">
+                <Link
+                  href="/admin/shops"
+                  className="text-decoration-none link-anchor"
+                >
                   View all
                 </Link>
               </div>
@@ -108,7 +111,10 @@ function DashboardPage() {
                 </div>
               </div>
               <div className="card-footer py-2h">
-                <Link href="/admin/products" className="text-decoration-none link-anchor">
+                <Link
+                  href="/admin/products"
+                  className="text-decoration-none link-anchor"
+                >
                   View all
                 </Link>
               </div>
@@ -128,7 +134,10 @@ function DashboardPage() {
                 </div>
               </div>
               <div className="card-footer py-2h">
-                <Link href="/admin/users" className="text-decoration-none link-anchor">
+                <Link
+                  href="/admin/users"
+                  className="text-decoration-none link-anchor"
+                >
                   View all
                 </Link>
               </div>
@@ -167,13 +176,20 @@ function DashboardPage() {
                     return (
                       <tr key={ss.invoiceNo}>
                         <th scope="row" className="py-3 ps-3">
-                          <Link href={`/admin/shops/${ss.shop?.id}`} className="link-dark">
+                          <Link
+                            href={`/admin/shops/${ss.shop?.id}`}
+                            className="link-dark"
+                          >
                             {ss.shop?.name}
                           </Link>
                         </th>
                         <td>
                           <span>{formatNumber(ss.subTotalPrice ?? 0)}</span>
-                          <span className="text-muted">(-{formatNumber(ss.discount ?? 0)})</span>
+                          {ss.promoCode && (
+                            <span className="text-muted">
+                              (-{formatNumber(ss.discount ?? 0)})
+                            </span>
+                          )}
                         </td>
                         <td>{ss.duration} days</td>
                         <td className="pe-3">

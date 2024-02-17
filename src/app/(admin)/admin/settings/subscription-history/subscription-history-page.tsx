@@ -145,9 +145,11 @@ function SubscripionHistoryPage() {
                     {/* <td>{ss.title}</td> */}
                     <td>
                       <span>{formatNumber(ss.subTotalPrice ?? 0)}</span>
-                      <span className="text-muted">
-                        (-{formatNumber(ss.discount ?? 0)})
-                      </span>
+                      {ss.promoCode && (
+                        <span className="text-muted">
+                          (-{formatNumber(ss.discount ?? 0)})
+                        </span>
+                      )}
                     </td>
                     <td>{ss.invoiceNo}</td>
                     <td>{statusView(ss.status)}</td>
