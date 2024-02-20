@@ -23,7 +23,7 @@ function Footer() {
             <div className="col-lg-4">
               <h5 className="text-light">About us</h5>
               <p className="text-light text-opacity-75 mb-0 small">
-                Multi vendor eCommerce marketplace.
+                {process.env.NEXT_PUBLIC_APP_DESCRIPTION}
               </p>
             </div>
             <div className="col-lg-2">

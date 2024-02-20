@@ -162,7 +162,7 @@ export async function validateResponse(resp: Response, skipNotFound?: boolean) {
   }
   
   if (resp.status === 500) {
-    throw new APIError(resp.status, "server-error");
+    throw new APIError(resp.status, "Server error");
   }
 
   if (skipNotFound && resp.status === 404) {
