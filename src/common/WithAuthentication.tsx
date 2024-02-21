@@ -80,9 +80,9 @@ export function withAuthentication<P extends {}>(
       return null;
     }
 
-    // if (!payload.verified) {
-    //   return null;
-    // }
+    if (!user.emailVerified) {
+      return null;
+    }
 
     return <Component {...props} />;
   };

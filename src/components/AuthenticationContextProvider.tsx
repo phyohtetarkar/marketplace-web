@@ -6,6 +6,7 @@ import {
 } from "@/common/contexts";
 import { UnauthorizeError } from "@/common/customs";
 import { firebaseAuth } from "@/common/firebase.config";
+import { User } from "@/common/models";
 import { getLoginUser } from "@/services/UserService";
 import { onAuthStateChanged } from "firebase/auth";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
@@ -15,7 +16,6 @@ export const AuthenticationContextProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const initRef = useRef(false);
   const updateStatus = useCallback((status?: Status) => {
     setAuthState((old) => {
       if (status === "unauthorized") {
@@ -27,11 +27,12 @@ export const AuthenticationContextProvider = ({
 
   const reloadLoginUser = useCallback(async () => {
     try {
-      await firebaseAuth.authStateReady();
+      // await firebaseAuth.authStateReady();
       const user = firebaseAuth.currentUser;
       if (!user) {
         throw new UnauthorizeError();
       }
+
       setAuthState((old) => {
         return { ...old, status: "loading" };
       });
@@ -47,11 +48,11 @@ export const AuthenticationContextProvider = ({
       // console.log(parseErrorResponse(error, true));
       if (error instanceof UnauthorizeError) {
         setAuthState((old) => {
-          return { ...old, status: "unauthorized", payload: undefined };
+          return { ...old, status: "unauthorized", user: undefined };
         });
       } else {
         setAuthState((old) => {
-          return { ...old, status: "failure", payload: undefined };
+          return { ...old, status: "failure", user: undefined };
         });
       }
     }
@@ -66,16 +67,18 @@ export const AuthenticationContextProvider = ({
   useEffect(() => {
     const auth = firebaseAuth;
 
-    if (!initRef.current) {
-      reloadLoginUser();
-      initRef.current = true;
-    }
-
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
         setAuthState((old) => {
           return { ...old, status: "unauthorized", user: undefined };
         });
+      } else {
+        setAuthState((old) => {
+          return { ...old, status: "loading" };
+        });
+        setTimeout(() => {
+          reloadLoginUser();
+        }, 1000);
       }
     });
 

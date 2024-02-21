@@ -42,7 +42,6 @@ function LoginPage() {
         username: values.username!,
         password: values.password!
       });
-      reload()
     } catch (error: any) {
       setError(parseErrorResponse(error));
     }
@@ -140,7 +139,6 @@ function LoginPage() {
                         try {
                           setError(undefined);
                           await facebookLogin();
-                          reload();
                         } catch (error) {
                           setError(parseErrorResponse(error));
                         }
@@ -163,7 +161,6 @@ function LoginPage() {
                         try {
                           setError(undefined);
                           await googleLogin();
-                          reload();
                         } catch (error) {
                           setError(parseErrorResponse(error));
                         }

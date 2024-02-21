@@ -45,7 +45,6 @@ function SignUpPage() {
         email: values.email!,
         password: values.password!
       });
-      reload();
     } catch (error) {
       setError(parseErrorResponse(error));
     }
@@ -169,7 +168,6 @@ function SignUpPage() {
                         try {
                           setError(undefined);
                           await facebookLogin();
-                          reload();
                         } catch (error) {
                           setError(parseErrorResponse(error));
                         }
@@ -194,7 +192,6 @@ function SignUpPage() {
                         try {
                           setError(undefined);
                           await googleLogin();
-                          reload();
                         } catch (error) {
                           setError(parseErrorResponse(error));
                         }

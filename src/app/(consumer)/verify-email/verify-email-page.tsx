@@ -1,5 +1,4 @@
 "use client";
-import { withAuthentication } from "@/common/WithAuthentication";
 import { AuthenticationContext } from "@/common/contexts";
 import { firebaseAuth } from "@/common/firebase.config";
 import { debounce } from "@/common/utils";
@@ -50,6 +49,10 @@ function VerifyEmailPage() {
       sendVerifyEmail();
     }
   });
+
+  if (authContext.status !== "success") {
+    return <></>;
+  }
 
   return (
     <div className="container py-4">
@@ -149,4 +152,4 @@ function VerifyEmailPage() {
   );
 }
 
-export default withAuthentication(VerifyEmailPage);
+export default VerifyEmailPage;
