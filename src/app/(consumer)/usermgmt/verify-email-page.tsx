@@ -1,37 +1,43 @@
 "use client";
 
+import { AuthenticationContext } from "@/common/contexts";
 import { firebaseAuth } from "@/common/firebase.config";
 import { parseErrorResponse } from "@/common/utils";
 import Alert from "@/components/Alert";
 import Loading from "@/components/Loading";
 import { RiCheckLine } from "@remixicon/react";
-import { applyActionCode } from "firebase/auth";
+import { applyActionCode, reload } from "firebase/auth";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 export default function VerifyEmailPage({ oobCode }: { oobCode: string }) {
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState<string>();
+  const authContext = useContext(AuthenticationContext);
 
   const verifyCode = useCallback(async () => {
     if (verified) {
       return;
     }
+
     try {
       setError(undefined);
       const auth = firebaseAuth;
       await applyActionCode(auth, oobCode);
       setVerified(true);
+      if (auth.currentUser) {
+        await reload(auth.currentUser);
+        authContext.reload();
+      }
     } catch (error) {
       setError(parseErrorResponse(error));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [oobCode, verified]);
 
   useEffect(() => {
     verifyCode();
   }, [oobCode, verifyCode]);
-
-  
 
   const content = () => {
     if (error) {
