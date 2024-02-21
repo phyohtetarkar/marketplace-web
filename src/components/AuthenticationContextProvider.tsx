@@ -8,13 +8,14 @@ import { UnauthorizeError } from "@/common/customs";
 import { firebaseAuth } from "@/common/firebase.config";
 import { getLoginUser } from "@/services/UserService";
 import { onAuthStateChanged } from "firebase/auth";
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 
 export const AuthenticationContextProvider = ({
   children
 }: {
   children: ReactNode;
 }) => {
+  const initRef = useRef(false);
   const updateStatus = useCallback((status?: Status) => {
     setAuthState((old) => {
       if (status === "unauthorized") {
@@ -26,6 +27,7 @@ export const AuthenticationContextProvider = ({
 
   const reloadLoginUser = useCallback(async () => {
     try {
+      await firebaseAuth.authStateReady();
       const user = firebaseAuth.currentUser;
       if (!user) {
         throw new UnauthorizeError();
@@ -64,10 +66,13 @@ export const AuthenticationContextProvider = ({
   useEffect(() => {
     const auth = firebaseAuth;
 
+    if (!initRef.current) {
+      reloadLoginUser();
+      initRef.current = true;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        reloadLoginUser();
-      } else {
+      if (!user) {
         setAuthState((old) => {
           return { ...old, status: "unauthorized", user: undefined };
         });

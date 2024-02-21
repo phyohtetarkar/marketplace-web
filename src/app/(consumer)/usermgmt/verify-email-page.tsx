@@ -8,22 +8,21 @@ import Loading from "@/components/Loading";
 import { RiCheckLine } from "@remixicon/react";
 import { applyActionCode, reload } from "firebase/auth";
 import Link from "next/link";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 
 export default function VerifyEmailPage({ oobCode }: { oobCode: string }) {
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState<string>();
+
   const authContext = useContext(AuthenticationContext);
 
-  const verifyCode = useCallback(async () => {
-    if (verified) {
-      return;
-    }
+  const initRef = useRef(false);
 
+  const verifyCode = useCallback(async (code: string) => {
     try {
       setError(undefined);
       const auth = firebaseAuth;
-      await applyActionCode(auth, oobCode);
+      await applyActionCode(auth, code);
       setVerified(true);
       if (auth.currentUser) {
         await reload(auth.currentUser);
@@ -32,11 +31,14 @@ export default function VerifyEmailPage({ oobCode }: { oobCode: string }) {
     } catch (error) {
       setError(parseErrorResponse(error));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [oobCode, verified]);
+  }, [authContext]);
 
   useEffect(() => {
-    verifyCode();
+    if (initRef.current) {
+      return;
+    }
+    initRef.current = true;
+    verifyCode(oobCode);
   }, [oobCode, verifyCode]);
 
   const content = () => {

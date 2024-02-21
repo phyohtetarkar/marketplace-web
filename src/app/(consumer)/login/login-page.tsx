@@ -2,6 +2,7 @@
 import { AuthenticationContext } from "@/common/contexts";
 import { parseErrorResponse } from "@/common/utils";
 import Alert from "@/components/Alert";
+import Loading from "@/components/Loading";
 import ProgressButton from "@/components/ProgressButton";
 import { Input, PasswordInput } from "@/components/forms";
 import { facebookLogin, googleLogin, login } from "@/services/AuthService";
@@ -18,7 +19,7 @@ interface LoginInputs {
 
 function LoginPage() {
   const router = useRouter();
-  const authContext = useContext(AuthenticationContext);
+  const { status, user, reload } = useContext(AuthenticationContext);
   const [error, setError] = useState<string>();
 
   const {
@@ -28,11 +29,11 @@ function LoginPage() {
   } = useForm<LoginInputs>();
 
   useEffect(() => {
-    if (authContext.status === "success") {
-      router.replace(authContext.user?.emailVerified ? "/" : "/verify-email");
+    if (status === "success") {
+      router.replace(user?.emailVerified ? "/" : "/verify-email");
     }
 
-  }, [authContext, router]);
+  }, [router, status, user]);
 
   const passwordLogin = async (values: LoginInputs) => {
     try {
@@ -41,13 +42,22 @@ function LoginPage() {
         username: values.username!,
         password: values.password!
       });
+      reload()
     } catch (error: any) {
       setError(parseErrorResponse(error));
     }
   };
 
-  if (authContext.status === "success" || authContext.status === "loading") {
-    return <div></div>;
+  if (status === "success") {
+    return <></>;
+  }
+
+  if (status === "loading") {
+    return (
+      <div className="container py-3">
+        <Loading />
+      </div>
+    );
   }
 
   return (
@@ -128,9 +138,10 @@ function LoginPage() {
                       disabled={isSubmitting}
                       onClick={async () => {
                         try {
+                          setError(undefined);
                           await facebookLogin();
+                          reload();
                         } catch (error) {
-                          console.log(error);
                           setError(parseErrorResponse(error));
                         }
                       }}
@@ -150,9 +161,10 @@ function LoginPage() {
                       disabled={isSubmitting}
                       onClick={async () => {
                         try {
+                          setError(undefined);
                           await googleLogin();
+                          reload();
                         } catch (error) {
-                          console.log(error);
                           setError(parseErrorResponse(error));
                         }
                       }}

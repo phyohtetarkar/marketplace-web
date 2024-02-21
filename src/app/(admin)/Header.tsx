@@ -79,7 +79,6 @@ function Header({ onBarClick }: { onBarClick: () => void }) {
                 onClick={() => {
                   signOut()
                     .then(() => {
-                      update("unauthorized");
                       router.push("/login");
                     })
                     .catch((error) => {

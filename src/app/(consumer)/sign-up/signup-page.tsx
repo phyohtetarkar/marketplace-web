@@ -1,7 +1,8 @@
-"use client"
+"use client";
 import { AuthenticationContext } from "@/common/contexts";
 import { parseErrorResponse, setEmptyOrString } from "@/common/utils";
 import Alert from "@/components/Alert";
+import Loading from "@/components/Loading";
 import ProgressButton from "@/components/ProgressButton";
 import { Input, PasswordInput } from "@/components/forms";
 import { facebookLogin, googleLogin, signUp } from "@/services/AuthService";
@@ -20,21 +21,21 @@ interface SignUpInputs {
 
 function SignUpPage() {
   const router = useRouter();
-  const authContext = useContext(AuthenticationContext);
+  const { status, user, reload } = useContext(AuthenticationContext);
   const [error, setError] = useState<string>();
 
   const {
     register,
     control,
     formState: { errors, isSubmitting },
-    handleSubmit,
+    handleSubmit
   } = useForm<SignUpInputs>();
 
   useEffect(() => {
-    if (authContext.status === "success") {
-      router.replace(authContext.user?.emailVerified ? "/" : "/verify-email");
+    if (status === "success") {
+      router.replace(user?.emailVerified ? "/" : "/verify-email");
     }
-  }, [router, authContext]);
+  }, [router, status, user]);
 
   const processSignUp = async (values: SignUpInputs) => {
     try {
@@ -44,13 +45,22 @@ function SignUpPage() {
         email: values.email!,
         password: values.password!
       });
+      reload();
     } catch (error) {
       setError(parseErrorResponse(error));
-    } 
+    }
   };
 
-  if (authContext.status === "success" || authContext.status === "loading") {
-    return <div></div>;
+  if (status === "success") {
+    return <></>;
+  }
+
+  if (status === "loading") {
+    return (
+      <div className="container py-3">
+        <Loading />
+      </div>
+    );
   }
 
   return (
@@ -157,9 +167,10 @@ function SignUpPage() {
                       disabled={isSubmitting}
                       onClick={async () => {
                         try {
+                          setError(undefined);
                           await facebookLogin();
+                          reload();
                         } catch (error) {
-                          console.log(error);
                           setError(parseErrorResponse(error));
                         }
                       }}
@@ -170,7 +181,9 @@ function SignUpPage() {
                         width={28}
                         height={28}
                       />
-                      <span className="text-dark ms-1 text-truncate">Facebook</span>
+                      <span className="text-dark ms-1 text-truncate">
+                        Facebook
+                      </span>
                     </button>
 
                     <button
@@ -179,9 +192,10 @@ function SignUpPage() {
                       disabled={isSubmitting}
                       onClick={async () => {
                         try {
+                          setError(undefined);
                           await googleLogin();
+                          reload();
                         } catch (error) {
-                          console.log(error);
                           setError(parseErrorResponse(error));
                         }
                       }}
@@ -192,7 +206,9 @@ function SignUpPage() {
                         width={28}
                         height={28}
                       />
-                      <span className="text-dark ms-1 text-truncate">Google</span>
+                      <span className="text-dark ms-1 text-truncate">
+                        Google
+                      </span>
                     </button>
                   </div>
                 </div>

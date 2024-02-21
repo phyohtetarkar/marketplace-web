@@ -8,7 +8,7 @@ import ProgressButton from "@/components/ProgressButton";
 import { PasswordInput } from "@/components/forms";
 import { confirmPasswordReset, verifyPasswordResetCode } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -21,6 +21,7 @@ export default function ResetPasswordPage({ oobCode }: { oobCode: string }) {
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState<string>();
   const router = useRouter();
+  const initRef = useRef(false);
 
   const {
     formState: { isSubmitting, errors },
@@ -28,22 +29,23 @@ export default function ResetPasswordPage({ oobCode }: { oobCode: string }) {
     register
   } = useForm<ResetPasswordForm>();
 
-  const verifyCode = useCallback(async () => {
-    if (verified) {
-      return;
-    }
+  const verifyCode = useCallback(async (code: string) => {
     try {
       setError(undefined);
       const auth = firebaseAuth;
-      const email = await verifyPasswordResetCode(auth, oobCode);
+      const email = await verifyPasswordResetCode(auth, code);
       setVerified(true);
     } catch (error) {
       setError(parseErrorResponse(error));
     }
-  }, [oobCode, verified]);
+  }, []);
 
   useEffect(() => {
-    verifyCode();
+    if (initRef.current) {
+      return;
+    }
+    initRef.current = true;
+    verifyCode(oobCode);
   }, [oobCode, verifyCode]);
 
   const resetPassword = async (values: ResetPasswordForm) => {

@@ -111,7 +111,7 @@ function VerifyEmailPage() {
                         <Image
                           src={"/images/mail-sent.jpg"}
                           alt=""
-                          layout="fill"
+                          fill
                           sizes="100vh"
                           priority
                         />
