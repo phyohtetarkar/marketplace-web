@@ -6,10 +6,10 @@ import {
 } from "@/common/contexts";
 import { UnauthorizeError } from "@/common/customs";
 import { firebaseAuth } from "@/common/firebase.config";
-import { User } from "@/common/models";
 import { getLoginUser } from "@/services/UserService";
+import dayjs from "dayjs";
 import { onAuthStateChanged } from "firebase/auth";
-import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 
 export const AuthenticationContextProvider = ({
   children
@@ -68,17 +68,15 @@ export const AuthenticationContextProvider = ({
     const auth = firebaseAuth;
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      const diff = 600000; // 10 min
       if (!user) {
         setAuthState((old) => {
           return { ...old, status: "unauthorized", user: undefined };
         });
-      } else {
-        setAuthState((old) => {
-          return { ...old, status: "loading" };
-        });
-        setTimeout(() => {
-          reloadLoginUser();
-        }, 1000);
+      } else if (user.emailVerified || !!user.displayName) {
+        reloadLoginUser();
+      } else if (Math.abs(dayjs(user.metadata.creationTime).diff()) > diff) {
+        reloadLoginUser();
       }
     });
 

@@ -40,7 +40,7 @@ function SignUpPage() {
   const processSignUp = async (values: SignUpInputs) => {
     try {
       setError(undefined);
-      const result = await signUp({
+      await signUp({
         name: values.fullName!,
         email: values.email!,
         password: values.password!
