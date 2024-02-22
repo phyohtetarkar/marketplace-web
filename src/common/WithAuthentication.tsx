@@ -29,8 +29,8 @@ export function withAuthentication<P extends {}>(
         router.push("/login");
         setCalledPush(true);
       } else if (status === "success" && !user?.emailVerified) {
-        // router.push("/verify-email");
-        // setCalledPush(true);
+        router.push("/verify-email");
+        setCalledPush(true);
       }
     }, [calledPush, router, status, user]);
 
@@ -80,9 +80,9 @@ export function withAuthentication<P extends {}>(
       return null;
     }
 
-    // if (!payload.verified) {
-    //   return null;
-    // }
+    if (!user.emailVerified) {
+      return null;
+    }
 
     return <Component {...props} />;
   };

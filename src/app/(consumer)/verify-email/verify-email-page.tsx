@@ -1,16 +1,18 @@
 "use client";
-import { withAuthentication } from "@/common/WithAuthentication";
 import { AuthenticationContext } from "@/common/contexts";
+import { firebaseAuth } from "@/common/firebase.config";
 import { debounce } from "@/common/utils";
 import { sendVerifyEmail } from "@/services/AuthService";
 import { RiCheckLine } from "@remixicon/react";
+import { reload } from "firebase/auth";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 function VerifyEmailPage() {
   const [resend, setResend] = useState(true);
   const [timer, setTimer] = useState(0);
+  const authContext = useContext(AuthenticationContext);
 
   useEffect(() => {
     if (resend) {
@@ -36,7 +38,21 @@ function VerifyEmailPage() {
     };
   }, [resend]);
 
-  const invokeResend = debounce(() => sendVerifyEmail());
+  const invokeResend = debounce(async () => {
+    if (firebaseAuth.currentUser) {
+      await reload(firebaseAuth.currentUser);
+    }
+
+    if (firebaseAuth.currentUser?.emailVerified) {
+      authContext.reload();
+    } else {
+      sendVerifyEmail();
+    }
+  });
+
+  if (authContext.status !== "success") {
+    return <></>;
+  }
 
   return (
     <div className="container py-4">
@@ -98,7 +114,7 @@ function VerifyEmailPage() {
                         <Image
                           src={"/images/mail-sent.jpg"}
                           alt=""
-                          layout="fill"
+                          fill
                           sizes="100vh"
                           priority
                         />
@@ -136,4 +152,4 @@ function VerifyEmailPage() {
   );
 }
 
-export default withAuthentication(VerifyEmailPage);
+export default VerifyEmailPage;

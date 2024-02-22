@@ -3,6 +3,7 @@
 import { useLocalization } from "@/common/hooks";
 import { HomeData } from "@/common/models";
 import { getCategoryName } from "@/common/utils";
+import Alert from "@/components/Alert";
 import { ProductGridItem } from "@/components/product";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +12,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 const HomePage = ({ data }: { data?: HomeData }) => {
   const { locale } = useLocalization();
+
+  if (!data) {
+    return (
+      <div className="container py-3">
+        <Alert message="No data found" />
+      </div>
+    )
+  }
 
   return (
     <div className="container py-3">

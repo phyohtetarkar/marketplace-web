@@ -7,7 +7,7 @@ import { RiShoppingCartLine } from "@remixicon/react";
 import Tooltip from "../Tooltip";
 
 function ShoppingCartView() {
-  const {user} = useContext(AuthenticationContext);
+  const { user } = useContext(AuthenticationContext);
   const { data, error, isLoading } = useSWR(
     `/profile/cart-count/${user?.id ?? 0}`,
     () => (!user?.id ? 0 : countCartItemsByUser()),

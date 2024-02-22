@@ -105,7 +105,6 @@ function AccountDropdown(props: AccountDropdownProps) {
               setLoading(true);
               signOut()
                 .then(() => {
-                  update("unauthorized");
                   router.push("/");
                 })
                 .catch((error) => {

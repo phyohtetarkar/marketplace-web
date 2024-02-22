@@ -7,6 +7,7 @@ import {
 import { UnauthorizeError } from "@/common/customs";
 import { firebaseAuth } from "@/common/firebase.config";
 import { getLoginUser } from "@/services/UserService";
+import dayjs from "dayjs";
 import { onAuthStateChanged } from "firebase/auth";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 
@@ -26,10 +27,12 @@ export const AuthenticationContextProvider = ({
 
   const reloadLoginUser = useCallback(async () => {
     try {
+      // await firebaseAuth.authStateReady();
       const user = firebaseAuth.currentUser;
       if (!user) {
         throw new UnauthorizeError();
       }
+
       setAuthState((old) => {
         return { ...old, status: "loading" };
       });
@@ -45,11 +48,11 @@ export const AuthenticationContextProvider = ({
       // console.log(parseErrorResponse(error, true));
       if (error instanceof UnauthorizeError) {
         setAuthState((old) => {
-          return { ...old, status: "unauthorized", payload: undefined };
+          return { ...old, status: "unauthorized", user: undefined };
         });
       } else {
         setAuthState((old) => {
-          return { ...old, status: "failure", payload: undefined };
+          return { ...old, status: "failure", user: undefined };
         });
       }
     }
@@ -65,12 +68,15 @@ export const AuthenticationContextProvider = ({
     const auth = firebaseAuth;
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        reloadLoginUser();
-      } else {
+      const diff = 600000; // 10 min
+      if (!user) {
         setAuthState((old) => {
           return { ...old, status: "unauthorized", user: undefined };
         });
+      } else if (user.emailVerified || !!user.displayName) {
+        reloadLoginUser();
+      } else if (Math.abs(dayjs(user.metadata.creationTime).diff()) > diff) {
+        reloadLoginUser();
       }
     });
 

@@ -63,6 +63,13 @@ export async function signUp({
     }
   } while (retry < 3);
 
+  await result.user.reload();
+
+  // For triggering onAuthStateChanged
+  await auth.updateCurrentUser(null);
+
+  await auth.updateCurrentUser(result.user);
+
   return result;
 }
 
