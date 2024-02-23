@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
 
 export async function POST(request: Request) {
-  const url = request.url;
-  let nextUrl = url.replace("payment", "subscriptions");
+  const url = new URL(request.url);
+  const pathname = url.pathname;
+  let nextPathname = pathname.replace("payment", "subscriptions");
 
   if (request.method === "POST") {
     try {
@@ -26,11 +27,13 @@ export async function POST(request: Request) {
     }
   }
 
-  redirect(nextUrl);
+  redirect(process.env.NEXT_PUBLIC_BASE_URL + nextPathname);
 }
 
 export async function GET(request: Request) {
-  const url = request.url;
-  let nextUrl = url.replace("payment", "subscriptions");
-  redirect(nextUrl);
+  const url = new URL(request.url);
+  const pathname = url.pathname;
+  let nextPathname = pathname.replace("payment", "subscriptions");
+
+  redirect(process.env.NEXT_PUBLIC_BASE_URL + nextPathname);
 }
