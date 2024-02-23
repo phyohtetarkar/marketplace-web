@@ -274,7 +274,7 @@ function ShopPage({ shopId }: { shopId: number }) {
             const msg = parseErrorResponse(error);
             toast.error(msg);
           } finally {
-            setConfirmDisable(true);
+            setConfirmDisable(false);
             progressContext.update(false);
           }
         }}
