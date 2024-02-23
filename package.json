@@ -28,6 +28,7 @@
     "react-popper": "^2.3.0",
     "react-select": "^5.8.0",
     "react-toastify": "^10.0.4",
+    "sharp": "^0.33.2",
     "swiper": "^11.0.5",
     "swr": "^2.2.4",
     "uuid": "^9.0.1"

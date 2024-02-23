@@ -2,6 +2,9 @@
   --border-radius: 0.35rem;
 }
 
+@import "bootstrap-custom.css";
+@import "flatpickr.airbnb.css";
+
 @font-face {
   font-family: Inter;
   font-weight: 300;
