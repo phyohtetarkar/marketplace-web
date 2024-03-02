@@ -9,7 +9,8 @@ interface ProgressButtonProps {
     | "warning"
     | "danger"
     | "dark"
-    | "default";
+    | "default"
+    | "light";
   theme?: "fill" | "outline";
   loading?: boolean;
   className?: string;

@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Shop } from "../../common/models";
-import { formatTimestamp } from "../../common/utils";
-import { RiStarFill } from "@remixicon/react";
 import Rating from "../Rating";
 
 const _imageSize = 90;
@@ -15,13 +13,13 @@ function ShopGridItem({ value }: ShopGridItemProps) {
   return (
     <div className="card h-100 overflow-hidden">
       <div className="card-body position-relative h-100">
-        <div
+        {/* <div
           style={{
             height: 108
           }}
           className="position-absolute start-0 top-0 end-0 bg-white"
         >
-          {/* <Image
+          <Image
             src={value.cover ?? "/images/cover.png"}
             alt="Shop cover"
             fill
@@ -31,8 +29,8 @@ function ShopGridItem({ value }: ShopGridItemProps) {
             style={{
               objectFit: "cover"
             }}
-          /> */}
-        </div>
+          />
+        </div> */}
         <div className="vstack text-center h-100">
           <div
             className="rounded-circle bg-white mb-3 align-self-center"
@@ -43,17 +41,19 @@ function ShopGridItem({ value }: ShopGridItemProps) {
               padding: 5
             }}
           >
-            <Image
-              className="rounded-circle img-thumbnail"
-              src={value.logo ?? "/images/placeholder.jpeg"}
-              alt="Shop image"
-              width={_imageSize}
-              height={_imageSize}
-              priority
-              style={{
-                objectFit: "cover"
-              }}
-            />
+            <div className="ratio ratio-1x1" style={{ width: _imageSize }}>
+              <Image
+                className="rounded-circle img-thumbnail"
+                src={value.logo ?? "/images/placeholder.jpeg"}
+                alt="Shop logo"
+                sizes="50vw"
+                fill
+                priority
+                style={{
+                  objectFit: "cover"
+                }}
+              />
+            </div>
           </div>
 
           <div className="text-truncate mb-1">

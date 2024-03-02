@@ -463,9 +463,11 @@ const ShopPaymentForm = ({ shopId }: { shopId: number }) => {
                   type="checkbox"
                   role="switch"
                   name="cashOnDelivery"
-                  disabled={true}
+                  disabled={settingState.isLoading}
                   checked={setting?.cashOnDelivery ?? false}
-                  onChange={() => {}}
+                  onChange={(evt) => {
+                    handleSettingChange(evt);
+                  }}
                 ></input>
                 <label
                   htmlFor="codCheck"
