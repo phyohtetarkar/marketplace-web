@@ -47,7 +47,7 @@ function SubCategoriesPage({ categoryId }: { categoryId: number }) {
     }
 
     const e = (
-      <li className="breadcrumb-item">
+      <li key={"root"} className="breadcrumb-item">
         <Link href={`/admin/categories`}>
           Root
         </Link>

@@ -54,14 +54,15 @@ export function useCities() {
 }
 
 export function useLoginUser() {
-  const { data, error, isLoading } = useSWR("/login-user", getLoginUser, {
+  const { data, error, isLoading, mutate } = useSWR("/login-user", getLoginUser, {
     revalidateOnFocus: false
   });
 
   return {
     user: data,
     error: error,
-    isLoading: isLoading
+    isLoading: isLoading,
+    mutate: mutate
   };
 }
 

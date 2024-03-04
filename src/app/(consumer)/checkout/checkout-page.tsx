@@ -3,6 +3,7 @@ import { withAuthentication } from "@/common/WithAuthentication";
 import { AuthenticationContext, ProgressContext } from "@/common/contexts";
 import {
   CartItem,
+  DeliveryDetail,
   OrderCreateForm,
   ShopAcceptedPayment
 } from "@/common/models";
@@ -113,6 +114,21 @@ function Checkout() {
 
   useEffect(() => {
     try {
+      const deliveryCache = localStorage.getItem("delivery_info_cache");
+      if (!deliveryCache) {
+        return;
+      }
+      const json = JSON.parse(deliveryCache) as DeliveryDetail;
+      setValue("delivery", json);
+    } catch (error) {
+      
+    }
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    try {
       const rawItems = sessionStorage.getItem("cartItems");
       const rawShopId = sessionStorage.getItem("shopId");
       if (!rawItems || !rawShopId) {
@@ -136,6 +152,9 @@ function Checkout() {
 
   const executeSubmitOrder = async (data: OrderCreateForm) => {
     try {
+      if (data.delivery) {
+        localStorage.setItem("delivery_info_cache", JSON.stringify(data.delivery));
+      }
       progressContext.update(true);
       // console.log(values);
       const result = await createOrder(data);

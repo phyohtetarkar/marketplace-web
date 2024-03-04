@@ -1,6 +1,6 @@
 "use client";
 import { withAuthentication } from "@/common/WithAuthentication";
-import { APIError } from "@/common/customs";
+import { APIError, ForbiddenError } from "@/common/customs";
 import { useShop } from "@/common/hooks";
 import { parseErrorResponse } from "@/common/utils";
 import Alert from "@/components/Alert";
@@ -28,7 +28,7 @@ function MerchantLayoutWrapper({
       return;
     }
 
-    if (error && error instanceof APIError && error.status === 403) {
+    if (error && error instanceof ForbiddenError) {
       router.replace("/profile/shops");
     }
   }, [error, isLoading, router]);
@@ -39,6 +39,9 @@ function MerchantLayoutWrapper({
     }
 
     if (error) {
+      if (error instanceof ForbiddenError) {
+        return null;
+      }
       return <Alert message={parseErrorResponse(error)} variant="danger" />;
     }
 
