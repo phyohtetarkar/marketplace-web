@@ -40,7 +40,7 @@ function ShopManageGridItem({ value }: ShopManageGridItemProps) {
                 src={value.logo ?? "/images/placeholder.jpeg"}
                 alt="Shop image."
                 fill
-                sizes="33vw"
+                sizes="50vw"
                 priority
                 style={{
                   objectFit: "cover"

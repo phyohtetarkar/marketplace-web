@@ -37,7 +37,7 @@ const HomePage = ({ data }: { data?: HomeData }) => {
                             <Link
                               key={e.id}
                               href={`/collections/${e.slug}`}
-                              className="my-list-item rounded user-select-none"
+                              className="my-list-item rounded user-select-none py-1"
                             >
                               {getCategoryName(locale, e)}
                             </Link>

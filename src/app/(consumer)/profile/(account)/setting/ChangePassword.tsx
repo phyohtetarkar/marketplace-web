@@ -83,6 +83,7 @@ export default function ChangePassword() {
                 <PasswordInput
                   label="Old password"
                   placeholder="Enter old password"
+                  autoComplete="current-password"
                   {...register("oldPassword", {
                     required: "Please enter old password",
                     setValueAs: setEmptyOrString
@@ -94,6 +95,7 @@ export default function ChangePassword() {
                 <PasswordInput
                   label="New password"
                   placeholder="Enter new password"
+                  autoComplete="new-password"
                   {...register("newPassword", {
                     required: true,
                     minLength: 8,
@@ -109,6 +111,7 @@ export default function ChangePassword() {
                 <PasswordInput
                   label="Confirm password"
                   placeholder="Re-enter new password"
+                  autoComplete="new-password"
                   {...register("confirmPassoword", {
                     required: "Please re-enter new password",
                     setValueAs: setEmptyOrString,

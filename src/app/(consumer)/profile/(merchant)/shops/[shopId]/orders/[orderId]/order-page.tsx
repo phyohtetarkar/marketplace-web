@@ -100,7 +100,7 @@ function OrderPage({ shopId, orderId }: Props) {
           </nav>
         </div>
         <div className="col-lg-6 d-flex">
-          <div className="hstack gap-3 ms-lg-auto">
+          <div className="d-flex flex-wrap gap-3 ms-lg-auto">
             {data?.paymentMethod === "BANK_TRANSFER" && (
               <button
                 className="btn btn-default text-nowrap"
@@ -368,11 +368,18 @@ function OrderPage({ shopId, orderId }: Props) {
                     }}
                   />
                 </div> */}
-                <div className="">
+                <div className="vstack">
                   <h6 className="mb-0">{data.customer?.name ?? "Deleted"}</h6>
-                  <span className="text-muted small">
-                    {data.customer?.phone ?? data.customer?.email ?? ""}
-                  </span>
+                  {data.customer?.phone && (
+                    <div className="text-muted small">
+                      {data.customer.phone}
+                    </div>
+                  )}
+                  {data.customer?.email && (
+                    <div className="text-muted small">
+                      {data.customer?.email}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -458,7 +465,9 @@ function OrderPage({ shopId, orderId }: Props) {
               <div className="modal-body p-0">
                 {data?.payment?.receiptImage ? (
                   <Image
-                    src={data.payment.receiptImage + "?t=" + new Date().getTime()}
+                    src={
+                      data.payment.receiptImage + "?t=" + new Date().getTime()
+                    }
                     alt=""
                     sizes="100vw"
                     width={0}

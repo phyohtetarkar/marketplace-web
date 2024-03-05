@@ -23,6 +23,7 @@ function SignUpPage() {
   const router = useRouter();
   const { status, user, reload } = useContext(AuthenticationContext);
   const [error, setError] = useState<string>();
+  const [oauthLogin, setOauthLogin] = useState<"facebook"|"google">();
 
   const {
     register,
@@ -139,6 +140,7 @@ function SignUpPage() {
                   <ProgressButton
                     type="submit"
                     className="w-100 py-2h"
+                    disabled={isSubmitting || !!oauthLogin}
                     loading={isSubmitting}
                   >
                     Sign up
@@ -160,16 +162,21 @@ function SignUpPage() {
 
                 <div className="col-md-12">
                   <div className="hstack gap-2 align-items-center">
-                    <button
-                      type="button"
-                      className="btn btn-outline-light border w-50 d-flex align-items-center"
-                      disabled={isSubmitting}
+                    <ProgressButton
+                      className="border w-50"
+                      variant="light"
+                      theme="outline"
+                      disabled={isSubmitting || !!oauthLogin}
+                      loading={oauthLogin === "facebook"}
                       onClick={async () => {
                         try {
                           setError(undefined);
+                          setOauthLogin("facebook");
                           await facebookLogin();
                         } catch (error) {
                           setError(parseErrorResponse(error));
+                        } finally {
+                          setOauthLogin(undefined);
                         }
                       }}
                     >
@@ -182,18 +189,23 @@ function SignUpPage() {
                       <span className="text-dark ms-1 text-truncate">
                         Facebook
                       </span>
-                    </button>
+                    </ProgressButton>
 
-                    <button
-                      type="button"
-                      className="btn btn-outline-light border w-50 d-flex align-items-center"
-                      disabled={isSubmitting}
+                    <ProgressButton
+                      className="border w-50"
+                      variant="light"
+                      theme="outline"
+                      disabled={isSubmitting || !!oauthLogin}
+                      loading={oauthLogin === "google"}
                       onClick={async () => {
                         try {
                           setError(undefined);
+                          setOauthLogin("google");
                           await googleLogin();
                         } catch (error) {
                           setError(parseErrorResponse(error));
+                        } finally {
+                          setOauthLogin(undefined);
                         }
                       }}
                     >
@@ -206,7 +218,7 @@ function SignUpPage() {
                       <span className="text-dark ms-1 text-truncate">
                         Google
                       </span>
-                    </button>
+                    </ProgressButton>
                   </div>
                 </div>
               </form>

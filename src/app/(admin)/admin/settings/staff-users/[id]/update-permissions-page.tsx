@@ -132,6 +132,13 @@ function UpdatePermissionsPage({ userId }: { userId: number }) {
                                   control={control}
                                   name="permissions"
                                   render={({ field }) => {
+                                    let disabled = false;
+                                    if (p === "Read") {
+                                      const writeKey = `${g.name}_Write`
+                                                .replace(/\s+/, "_")
+                                                .toUpperCase() as Permission;
+                                      disabled = field.value.has(writeKey);
+                                    }
                                     return (
                                       <div className="form-check">
                                         <input
@@ -140,6 +147,7 @@ function UpdatePermissionsPage({ userId }: { userId: number }) {
                                           type="checkbox"
                                           name={key}
                                           checked={field.value.has(key)}
+                                          disabled={disabled}
                                           onChange={(evt) => {
                                             const isChecked =
                                               evt.target.checked;
@@ -148,6 +156,16 @@ function UpdatePermissionsPage({ userId }: { userId: number }) {
                                             );
                                             if (isChecked) {
                                               permissions.add(key);
+
+                                              if (p === "Write" && g.permissions.find(v => v === "Read")) {
+                                                const readKey = `${g.name}_Read`
+                                                .replace(/\s+/, "_")
+                                                .toUpperCase() as Permission;
+
+                                                if (!permissions.has(readKey)) {
+                                                  permissions.add(readKey);
+                                                }
+                                              }
                                             } else {
                                               permissions.delete(key);
                                             }

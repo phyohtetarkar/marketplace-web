@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 export default function ProfileUpdate() {
-  const {user, isLoading, error} = useLoginUser();
+  const { user, isLoading, error, mutate } = useLoginUser();
 
   const progressContext = useContext(ProgressContext);
 
@@ -161,6 +161,8 @@ export default function ProfileUpdate() {
                       progressContext.update(true);
 
                       await uploadUserImage(file);
+
+                      mutate();
                     }
                   } catch (error) {
                     const msg = parseErrorResponse(error);
