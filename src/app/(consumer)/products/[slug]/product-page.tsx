@@ -113,7 +113,7 @@ function ProductPage({ product }: { product: Product | null }) {
     setVariant(selection);
   }, [product, selectedAttributes]);
 
-  if (!product || !product.available || product.status !== "PUBLISHED") {
+  if (!product || product.status !== "PUBLISHED") {
     return (
       <div className="container py-3">
         <Alert message="Product not found" />

@@ -1,15 +1,15 @@
-import { AuthenticationContextProvider } from "@/components/AuthenticationContextProvider";
-import ClientComponentsWrapper from "@/components/ClientComponentsWrapper";
-import { LocalizationContextProvider } from "@/components/LocalizationContextProvider";
-import ProgressContextProvider from "@/components/ProgressContextProvider";
-import { Metadata, Viewport } from "next";
-import { ReactNode } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/zoom";
 import "../../styles/globals.css";
+import { AuthenticationContextProvider } from "@/components/AuthenticationContextProvider";
+import ClientComponentsWrapper from "@/components/ClientComponentsWrapper";
+import { LocalizationContextProvider } from "@/components/LocalizationContextProvider";
+import ProgressContextProvider from "@/components/ProgressContextProvider";
+import { Metadata, Viewport } from "next";
+import { ReactNode } from "react";
 
 // const getSiteAssets = cache(async () => {
 //   const url = "/content/site-setting/assets";
