@@ -41,7 +41,7 @@ export default function ClientComponentsWrapper() {
     const handleAnchorClick = (event: MouseEvent) => {
       const targetUrl = (event.currentTarget as HTMLAnchorElement).href;
       const currentUrl = location.href;
-      if (targetUrl !== currentUrl) {
+      if (targetUrl !== currentUrl && !targetUrl.match(/(http|https|mailto|tel)\\w+/)) {
         NProgress.start();
       }
     };
@@ -49,7 +49,8 @@ export default function ClientComponentsWrapper() {
     const handleMutation: MutationCallback = () => {
       const anchorElements = document.querySelectorAll("a");
       anchorElements.forEach((anchor) => {
-        if (anchor.target !== "_blank") {
+        const isExternalLink = !anchor.href.startsWith(location.origin);
+        if (anchor.target !== "_blank" && !isExternalLink) {
           anchor.addEventListener("click", handleAnchorClick);
         }
       });
@@ -62,7 +63,7 @@ export default function ClientComponentsWrapper() {
       apply: (target, thisArg, argArray: PushStateInput) => {
         NProgress.done();
         return target.apply(thisArg, argArray);
-      }
+      },
     });
   }, []);
 

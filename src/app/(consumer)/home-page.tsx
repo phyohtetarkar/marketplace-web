@@ -18,7 +18,7 @@ const HomePage = ({ data }: { data?: HomeData }) => {
       <div className="container py-3">
         <Alert message="No data found" />
       </div>
-    )
+    );
   }
 
   return (
@@ -32,17 +32,23 @@ const HomePage = ({ data }: { data?: HomeData }) => {
                   <div className="h-100 overflow-auto scrollbar-custom">
                     <div className="position-relative">
                       <div className="d-flex flex-column gap-1 position-absolute top-0 bottom-0 start-0 end-0">
-                        {data?.mainCategories?.map((e, i) => {
-                          return (
-                            <Link
-                              key={e.id}
-                              href={`/collections/${e.slug}`}
-                              className="my-list-item rounded user-select-none py-1"
-                            >
-                              {getCategoryName(locale, e)}
-                            </Link>
-                          );
-                        })}
+                        {data?.mainCategories
+                          ?.sort((a, b) => {
+                            const nameA = getCategoryName(locale, a);
+                            const nameB = getCategoryName(locale, b);
+                            return nameA.localeCompare(nameB);
+                          })
+                          .map((e, i) => {
+                            return (
+                              <Link
+                                key={e.id}
+                                href={`/collections/${e.slug}`}
+                                className="my-list-item rounded user-select-none py-1"
+                              >
+                                {getCategoryName(locale, e)}
+                              </Link>
+                            );
+                          })}
                         <a href="#" className="invisible p-1"></a>
                       </div>
                     </div>

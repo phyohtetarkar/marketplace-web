@@ -216,7 +216,7 @@ function PromoCodesPage() {
         close={() => setShowDeleteConfirm(false)}
         onConfirm={async (result) => {
           try {
-            if (result) {
+            if (!result) {
               return;
             }
             if (!promo?.id) {
