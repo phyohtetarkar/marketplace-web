@@ -5,7 +5,7 @@ import { validateResponse } from "../common/utils";
 export async function getAllCities() {
   const url = "/content/cities";
 
-  const resp = await makeApiRequest({url, authenticated: true});
+  const resp = await makeApiRequest({url});
 
   await validateResponse(resp);
 

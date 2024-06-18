@@ -29,8 +29,18 @@ function AboutUs({ shop }: { shop: Shop }) {
                   <dt className="col-12 fw-medium">Address</dt>
                   <dd className="col-12 text-muted">{shop.contact?.address}</dd>
                   <dt className="col-12 fw-medium">Phone numbers</dt>
-                  <dd className="col-12 text-muted mb-0">
-                    {shop.contact?.phones?.join(", ")}
+                  <dd className="col-12 mb-0">
+                    <div className="d-flex flex-wrap gap-2">
+                      {shop.contact?.phones?.map((p, i, ary) => {
+                        const len = ary.length;
+                        return (
+                          <span key={i}>
+                            <a href={`tel:${p}`}>{p}</a>
+                            {i < len - 1 && <span>,</span>}
+                          </span>
+                        );
+                      })}
+                    </div>
                   </dd>
                 </dl>
               </div>
