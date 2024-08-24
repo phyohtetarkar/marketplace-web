@@ -21,7 +21,7 @@ export function formatNumber(value?: number) {
   if (typeof value !== "number" && typeof value !== "bigint") {
     return "";
   }
-  
+
   if (isNaN(value)) {
     return "";
   }
@@ -117,8 +117,7 @@ export function setZeroOrNumber(v: any) {
 
 export function setStringToSlug(v?: string) {
   return v
-    ?.trim()
-    .replaceAll(/[^\w-\s]*/g, "")
+    ?.replaceAll(/[^\w-\s]*/g, "")
     .replaceAll(/\s+/g, "-")
     .toLowerCase();
 }
@@ -160,7 +159,7 @@ export async function validateResponse(resp: Response, skipNotFound?: boolean) {
   if (resp.status === 403) {
     throw new ForbiddenError();
   }
-  
+
   if (resp.status === 500) {
     throw new APIError(resp.status, "Server error");
   }
@@ -175,7 +174,7 @@ export async function validateResponse(resp: Response, skipNotFound?: boolean) {
 export function parseErrorResponse(error: any, skipAuth?: boolean) {
   if (error instanceof UnauthorizeError) {
     if (!skipAuth) {
-      const href =  `${window?.location?.origin}/login`;
+      const href = `${window?.location?.origin}/login`;
       window.location.href = href;
     }
 
@@ -200,31 +199,31 @@ export function parseErrorResponse(error: any, skipAuth?: boolean) {
     if (error.code === AuthErrorCodes.USER_DELETED) {
       return "User not found.";
     }
-  
+
     if (error.code === AuthErrorCodes.INVALID_PASSWORD) {
       return "Password incorrect.";
     }
-  
+
     if (error.code === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS) {
       return "Email or password incorrect.";
     }
-  
+
     if (error.code === AuthErrorCodes.NETWORK_REQUEST_FAILED) {
       return "Network connection error.";
     }
-  
+
     if (error.code === AuthErrorCodes.EMAIL_EXISTS) {
       return "Account already exists with this email address.";
     }
-  
+
     if (error.code === AuthErrorCodes.EXPIRED_OOB_CODE) {
       return "Verification code expired.";
     }
-  
+
     if (error.code === AuthErrorCodes.INVALID_OOB_CODE) {
       return "Invalid verification code";
     }
-  
+
     if (error.code === AuthErrorCodes.TOO_MANY_ATTEMPTS_TRY_LATER) {
       return "Too many attempts. Please try again later.";
     }
@@ -248,7 +247,7 @@ export function getCategoryName(locale: string, category?: Category) {
     return "";
   }
 
-  const localizedName = category.names?.find(c => c.lang === locale)?.name;
+  const localizedName = category.names?.find((c) => c.lang === locale)?.name;
 
   if (!localizedName) {
     return category.name;

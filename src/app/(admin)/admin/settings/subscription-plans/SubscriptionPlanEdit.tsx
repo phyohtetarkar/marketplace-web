@@ -19,10 +19,12 @@ import { useRouter } from "next/navigation";
 import { withAuthorization } from "@/common/withAuthorization";
 
 const duration = [
-  { value: 1, label: "1 day" },
   { value: 30, label: "30 days" },
   { value: 60, label: "60 days" },
-  { value: 90, label: "90 days" }
+  { value: 90, label: "90 days" },
+  { value: 180, label: "6 month" },
+  { value: 365, label: "1 year" },
+  { value: 730, label: "2 year" },
 ];
 
 const getSubscriptionPlan = async (id: number) => {

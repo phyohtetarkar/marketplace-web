@@ -1,12 +1,17 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
+import { useLocalization } from "@/common/hooks";
 import {
   Category,
   Product,
   ProductVariant,
   ProductVariantAttribute
 } from "@/common/models";
-import { formatNumber, getCategoryName, transformDiscount } from "@/common/utils";
+import {
+  formatNumber,
+  getCategoryName,
+  transformDiscount
+} from "@/common/utils";
 import Alert from "@/components/Alert";
 import Rating from "@/components/Rating";
 import Tabs from "@/components/Tabs";
@@ -19,7 +24,6 @@ import Swiper from "swiper";
 import { Navigation, Pagination, Zoom } from "swiper/modules";
 import { SwiperSlide, Swiper as SwiperView } from "swiper/react";
 import RelatedProducts from "./RelatedProducts";
-import { useLocalization } from "@/common/hooks";
 
 function ProductPage({ product }: { product: Product | null }) {
   const [variant, setVariant] = useState<ProductVariant>();
@@ -497,7 +501,8 @@ function ProductPage({ product }: { product: Product | null }) {
               <div className="card-body">
                 <div className="vstack">
                   <div className="d-flex align-items-start">
-                    <div
+                    <Link
+                      href={`/shops/${product.shop?.slug}`}
                       className="flex-shrink-0"
                       onContextMenu={(evt) => evt.preventDefault()}
                     >
@@ -511,12 +516,15 @@ function ProductPage({ product }: { product: Product | null }) {
                           objectFit: "cover"
                         }}
                       />
-                    </div>
+                    </Link>
 
                     <div className="vstack ms-2 overflow-hidden">
-                      <h5 className="mb-0 text-truncate">
+                      <Link
+                        href={`/shops/${product.shop?.slug}`}
+                        className="h5 text-decoration-none text-dark text-truncate mb-0"
+                      >
                         {product.shop?.name}
-                      </h5>
+                      </Link>
                       <div className="text-muted small text-truncate mb-2">
                         {product.shop?.headline}
                       </div>
@@ -524,13 +532,20 @@ function ProductPage({ product }: { product: Product | null }) {
                     </div>
                   </div>
 
-                  <div className="clearfix mt-3">
-                    <Link
-                      href={`/shops/${product.shop?.slug}`}
-                      className="btn btn-outline-light border text-secondary float-end"
-                    >
-                      Visit store
-                    </Link>
+                  <hr className="text-muted" />
+
+                  <h6>Contact us</h6>
+
+                  <div className="d-flex flex-wrap gap-2 mb-3">
+                    {product.shop.contact?.phones?.map((p, i, ary) => {
+                      const len = ary.length;
+                      return (
+                        <span key={i}>
+                          <a href={`tel:${p}`}>{p}</a>
+                          {i < len - 1 && <span>,</span>}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
               </div>

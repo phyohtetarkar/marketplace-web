@@ -1,7 +1,4 @@
 "use client";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { useCategories, useLocalization } from "@/common/hooks";
 import { Category } from "@/common/models";
 import { getCategoryName, parseErrorResponse } from "@/common/utils";
@@ -9,6 +6,9 @@ import Accordion from "@/components/Accordion";
 import Alert from "@/components/Alert";
 import Loading from "@/components/Loading";
 import { RiImageLine } from "@remixicon/react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface CollectionItemProps {
   item: Category;
@@ -61,6 +61,13 @@ function CollectionsPage() {
     }
   }, [categories, category]);
 
+  const sortByName = (a: Category, b: Category) => {
+    const nameA = getCategoryName(locale, a);
+    const nameB = getCategoryName(locale, b);
+
+    return nameA.localeCompare(nameB);
+  };
+
   if (isLoading) {
     return <Loading />;
   }
@@ -81,17 +88,19 @@ function CollectionsPage() {
           style={{ width: 108 }}
         >
           <ul className="list-group list-group-flush">
-            {categories?.map((e, i) => {
-              return (
-                <li key={i} className="list-group-item p-0">
-                  <CollectionItem
-                    item={e}
-                    locale={locale}
-                    onClick={(c) => setCategory(c)}
-                  />
-                </li>
-              );
-            })}
+            {categories
+              ?.sort((a, b) => sortByName(a, b))
+              .map((e, i) => {
+                return (
+                  <li key={i} className="list-group-item p-0">
+                    <CollectionItem
+                      item={e}
+                      locale={locale}
+                      onClick={(c) => setCategory(c)}
+                    />
+                  </li>
+                );
+              })}
           </ul>
         </div>
         <div
@@ -100,53 +109,57 @@ function CollectionsPage() {
         >
           <div className="position-relative" style={{ height: "70vh" }}>
             <div className="vstack position-absolute top-0 bottom-0 start-0 end-0">
-              {category?.children?.map((e, i) => {
-                if (!e.children || e.children.length === 0) {
+              {category?.children
+                ?.sort((a, b) => sortByName(a, b))
+                .map((e, i) => {
+                  if (!e.children || e.children.length === 0) {
+                    return (
+                      <div
+                        key={i}
+                        role="button"
+                        className="fw-semibold px-3 py-2h border-bottom bg-white"
+                        onClick={() => {
+                          router.push(`/collections/${e.slug}`);
+                        }}
+                      >
+                        <div className="text-truncate">{e.name}</div>
+                      </div>
+                    );
+                  }
                   return (
-                    <div
+                    <Accordion
                       key={i}
-                      role="button"
-                      className="fw-semibold px-3 py-2h border-bottom bg-white"
-                      onClick={() => {
-                        router.push(`/collections/${e.slug}`);
-                      }}
-                    >
-                      <div className="text-truncate">{e.name}</div>
-                    </div>
-                  );
-                }
-                return (
-                  <Accordion
-                    key={i}
-                    open={false}
-                    header={(open) => {
-                      return (
-                        <div className="fw-semibold text-truncate">
-                          {getCategoryName(locale, e)}
-                        </div>
-                      );
-                    }}
-                    headerClassName="px-3 py-2h border-bottom"
-                    iconType="plus-minus"
-                  >
-                    <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3 border-bottom">
-                      {e.children.map((c, i) => {
+                      open={false}
+                      header={(open) => {
                         return (
-                          <div key={i} className="col">
-                            <CollectionItem
-                              item={c}
-                              locale={locale}
-                              onClick={(item) => {
-                                router.push(`/collections/${item?.slug}`);
-                              }}
-                            />
+                          <div className="fw-semibold text-truncate">
+                            {getCategoryName(locale, e)}
                           </div>
                         );
-                      })}
-                    </div>
-                  </Accordion>
-                );
-              })}
+                      }}
+                      headerClassName="px-3 py-2h border-bottom"
+                      iconType="plus-minus"
+                    >
+                      <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3 border-bottom">
+                        {e.children
+                          .sort((a, b) => sortByName(a, b))
+                          .map((c, i) => {
+                            return (
+                              <div key={i} className="col">
+                                <CollectionItem
+                                  item={c}
+                                  locale={locale}
+                                  onClick={(item) => {
+                                    router.push(`/collections/${item?.slug}`);
+                                  }}
+                                />
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </Accordion>
+                  );
+                })}
             </div>
           </div>
         </div>
